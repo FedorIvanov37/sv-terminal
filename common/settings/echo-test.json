@@ -1,0 +1,18 @@
+{
+  "config": {
+    "generate_fields": [
+      7,
+      11
+    ],
+    "max_amount": 0
+  },
+  "transaction": {
+    "message_type_indicator": "0800",
+    "id": "",
+    "fields": {
+      "7": "0000000000",
+      "11": "000000",
+      "70": "301"
+    }
+  }
+}
