@@ -15,7 +15,7 @@ class TransactionModel(BaseModel):
     original_id: str = str()
     external_id: UUID1 = Field(default_factory=lambda: str(uuid()))
     utrnno: str = str()
-    message_type_indicator: str
+    message_type: str
     fields: TypeFields
 
 

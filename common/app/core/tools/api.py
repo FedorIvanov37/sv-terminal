@@ -17,7 +17,7 @@ json = '''{
   },
   "transaction": {
     "id": "default_transaction_id",
-    "message_type_indicator": "0200",
+    "message_type": "0200",
     "fields": {
       "2": "5486736712458564",
       "3": "000000",

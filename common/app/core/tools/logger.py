@@ -61,6 +61,10 @@ class Logger:
 
         debug("Logger started")
 
+    def print_dump(self, message):
+        for string in self.parser.create_sv_dump(message).split("\n"):
+            debug(string)
+
     def print_config(self, config=None, level=_default_level):
         level("### Configuration Parameters ###")
 
@@ -83,7 +87,7 @@ class Logger:
         if message.transaction.utrnno:
             level("[UTRNNO  ][%s]", message.transaction.utrnno)
 
-        level("[MSG TYPE][%s]", message.transaction.message_type_indicator)
+        level("[MSG TYPE][%s]", message.transaction.message_type)
         level("[BITMAP  ][%s]", bitmap.get_bitmap(str))
 
         for field, field_data in message.transaction.fields.items():

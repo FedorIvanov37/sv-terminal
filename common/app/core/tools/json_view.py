@@ -127,16 +127,17 @@ class JsonView(QObject):
                 item.setText(column, value)
                 break
 
-    def parse_json(self, incoming_json: Message) -> None:
+    def parse_message(self, message: Message) -> None:
         self.clean()
-        self.parse_fields(incoming_json.transaction.fields)
+        self.parse_fields(message.transaction.fields)
 
         for item in self.root.get_children():
             field = item.text(int())
 
-            if field in Spec.generated_fields:
-                state = True if field in incoming_json.config.generate_fields else False
-                item.set_checkbox(state)
+            if field not in Spec.generated_fields:
+                continue
+
+            item.set_checkbox(checked=field in message.config.generate_fields)
 
         self.make_order()
 

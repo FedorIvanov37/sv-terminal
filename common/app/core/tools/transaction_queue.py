@@ -11,7 +11,7 @@ from common.app.core.tools.fields_generator import FieldsGenerator
 
 
 class TransactionQueue(QObject):
-    _queue: deque = deque(maxlen=512)
+    _queue: deque = deque(maxlen=1024)
     _transactions_count: int = int()
     _transaction_accepted: pyqtSignal = pyqtSignal(str)
     _message_ready_to_send: pyqtSignal = pyqtSignal()
@@ -42,66 +42,44 @@ class TransactionQueue(QObject):
         self.config: Config = config
         self.parser: Parser = Parser(self.config)
 
-    def create_transaction(self, request: Message) -> Transaction:
-        if not request.transaction.id:
-            request.transaction.id = FieldsGenerator.trans_id()
+    def create_transaction(self, message: Message) -> None:
+        if not message.transaction.id:
+            message.transaction.id = FieldsGenerator.trans_id()
 
-        transaction: Transaction = Transaction(request=request, trans_id=request.transaction.id)
-        self.queue.append(transaction)
-        return transaction
+        self.queue.append(Transaction(request=message, trans_id=message.transaction.id))
 
     def get_reversible_transactions(self) -> list[Transaction]:
         return [
             trans for trans in self.queue
-            if trans.request.transaction.message_type_indicator in self.spec.reversible_messages
+            if trans.request.transaction.message_type in self.spec.reversible_messages
         ]
 
-    def get_last_transaction(self, reversible: Optional[bool] = False) -> Optional[Transaction]:
-        if not reversible:
-            id_list = self.queue
-
-        else:
-            id_list: list[str] | tuple | deque = list()
-
-            for trans in self.queue:
-                mti = trans.request.transaction.message_type_indicator
-
-                if not self.spec.is_reversible(mti):
-                    continue
-
-                id_list.append(trans.trans_id)
-
-        return self.get_transaction(trans_id=max(id_list))
+    def get_last_reversible_transaction_id(self) -> str:
+        if reversible := self.get_reversible_transactions():
+            return max(trans.trans_id for trans in reversible)
 
     def remove_from_queue(self, transaction):
         self.queue.remove(transaction)
 
-    def get_transaction(self, trans_id: str = None, reversible: Optional[bool] = False) -> Optional[Transaction]:
+    def get_transaction(self, trans_id) -> Transaction | None:
         transaction = None
 
-        if trans_id is None:
-            return self.get_last_transaction(reversible=reversible)
-
         for trans in self.queue:
-            if trans.trans_id == trans_id:
+            if trans_id == trans.trans_id:
                 transaction = trans
                 break
 
-        if transaction is None:
-            return
-
-        is_reversible = self.spec.is_reversible(transaction.request.transaction.message_type_indicator)
-
-        if reversible and not is_reversible:
-            return
-
         return transaction
 
-    def put_response(self, response: Message):
+    def put_response_message(self, response: Message):
+        transaction: Transaction
+
         for transaction in self.queue:
-            if transaction.match(response=response):
-                resp_time = round(transaction.timer.total_seconds(), 3)
-                info("Transaction ID [%s] matched. Response time seconds: %s ", transaction.trans_id, resp_time)
-                response.transaction.id = transaction.trans_id
-                transaction.put_response(response)
-                return transaction.trans_id
+            if not transaction.match(request=transaction.request, response=response):
+                continue
+
+            resp_time = round(transaction.timer.total_seconds(), 3)
+            info(f"Transaction ID [{transaction.trans_id}] matched. Response time seconds: {resp_time}")
+            transaction.put_response(response)
+
+            return

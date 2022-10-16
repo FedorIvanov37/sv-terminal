@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from PyQt5.Qt import QObject
 from common.app.data_models.message import Message
 from common.app.core.tools.epay_specification import EpaySpecification
-from logging import warning
+from logging import warning, error
 
 
 class Transaction(QObject):
@@ -89,22 +89,11 @@ class Transaction(QObject):
         self.trans_id = trans_id
         self.put_request(request)
 
-    def match(self, request: Message = None, response: Message = None):
+    def match(self, request: Message, response: Message):
         if self.matched:
             return False
 
-        if request is None:
-            request: Message = self.request
-
-        if response is None:
-            response: Message = self.response
-
-        if request is None and response is None:
-            return False
-
-        resp_type = self.spec.get_resp_mti(request.transaction.message_type_indicator)
-
-        if resp_type != response.transaction.message_type_indicator:
+        if response.transaction.message_type != self.spec.get_resp_mti(request.transaction.message_type):
             return False
 
         for field in self.spec.get_match_fields():
@@ -115,17 +104,7 @@ class Transaction(QObject):
 
         return self.matched
 
-    def set_request_trans_id(self, path, value):
-        # TODO
-        try:
-            self.request.transaction.fields[path[0]][path[1]] = value
-        except KeyError:
-            return
-
     def put_request(self, request: Message):
-        if request is None:
-            return
-
         self.request: Message = request
 
     def set_utrnno(self, message: Message | None = None) -> None:
@@ -139,9 +118,7 @@ class Transaction(QObject):
         fields = message.transaction.fields.copy()
 
         for field in utrnno_path:
-            fields = fields.get(field)
-
-            if fields is None:
+            if (fields := fields.get(field)) is None:
                 self.utrnno = ""
                 return
 
@@ -156,15 +133,20 @@ class Transaction(QObject):
             warning("Cannot set utrnno for transaction")
 
     def put_response(self, response: Message):
+        self.match(request=self.request, response=response)
+
+        if not self.matched:
+            return
+
+        response.transaction.id = self.trans_id
         self.response: Message = response
-        self._stop_timer()
-        self.matched = self.match()
+        self.stop_timer()
         self.set_utrnno()
 
     def start_timer(self):
         self.start_time = datetime.now()
         self.timer_started = True
 
-    def _stop_timer(self):
+    def stop_timer(self):
         self.timer = datetime.now() - self.start_time
         self.timer_started = False

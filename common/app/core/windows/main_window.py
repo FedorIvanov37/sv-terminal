@@ -1,13 +1,13 @@
-from os.path import splitext
-from logging import debug, info, error, warning
-from pydantic import ValidationError
+from common.app.core.windows.reversal_window import ReversalWindow
+from logging import info, error
 from PyQt5.QtGui import QPalette, QColor, QIcon
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMenu, QAction
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMenu
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtNetwork import QTcpSocket
 from PyQt5.QtWinExtras import QtWin
 from common.app.forms.mainwindow import Ui_MainWindow
 from common.app.core.tools.parser import Parser
+from common.app.constants.ButtonActions import ButtonAction
 from common.app.constants.ConnectionStatus import ConnectionStatus
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.constants.FilePath import FilePath
@@ -44,7 +44,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.setup()
 
     def setup(self):
-        debug("Setup MainWindow")
         self._setup()
 
     def _connect(self):
@@ -70,32 +69,44 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             button.pressed.connect(method)
 
     def _setup(self):
-        QtWin.setCurrentProcessExplicitAppUserModelID(" ")
+        QtWin.setCurrentProcessExplicitAppUserModelID("MainWindow.py")
         self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
         self.set_connection_status(QTcpSocket.UnconnectedState, log=False)
         self.set_api_status(state=False)
         self.JsonView: JsonView = JsonView(self.FieldsTree)
         self.JsonView.item_changed.connect(self.set_bitmap)
 
-        button_print_menu = QMenu()
-        button_save_menu = QMenu()
-        button_reverse_menu = QMenu()
+        for button in (self.ButtonReverse, self.ButtonSave, self.ButtonPrintData):
+            button.setMenu(QMenu())
 
-        for action in ("Last", "Other"):
-            button_reverse_menu.addAction(action, self.reverse)
-            button_reverse_menu.addSeparator()
+        buttons_menu_structure = {
+            self.ButtonReverse: {
+                ButtonAction.LAST: lambda: self.reverse(reverse_last_transaction=True),
+                ButtonAction.OTHER: lambda: self.reverse(reverse_last_transaction=False)
+            },
 
-        for action in DataFormats.get_print_data_formats():
-            button_print_menu.addAction(action, self.print_data)
-            button_print_menu.addSeparator()
+            self.ButtonPrintData: {
+                DataFormats.DUMP: lambda: self.print_data(DataFormats.DUMP),
+                DataFormats.JSON: lambda: self.print_data(DataFormats.JSON),
+                DataFormats.INI: lambda: self.print_data(DataFormats.INI),
+                DataFormats.SPEC: lambda: self.print_data(DataFormats.SPEC),
+                DataFormats.SV_TERMINAL: lambda: self.print_data(DataFormats.SV_TERMINAL)
+            },
 
-        for action in DataFormats.get_output_file_formats():
-            button_save_menu.addAction(action, self.save)
-            button_save_menu.addSeparator()
+            self.ButtonSave: {
+                DataFormats.JSON: lambda: self.save(DataFormats.JSON),
+                DataFormats.INI: lambda: self.save(DataFormats.INI),
+                DataFormats.DUMP: lambda: self.save(DataFormats.DUMP)
+            }
+        }
 
-        self.ButtonReverse.setMenu(button_reverse_menu)
-        self.ButtonSave.setMenu(button_save_menu)
-        self.ButtonPrintData.setMenu(button_print_menu)
+        for button, actions in buttons_menu_structure.items():
+            button.setMenu(QMenu())
+
+            for action, function in actions.items():
+                button.menu().addAction(action, function)
+                button.menu().addSeparator()
+
         self.PlusButton = ActionButton("+")
         self.MinusButton = ActionButton("-")
         self.NextLevelButton = ActionButton("↵")
@@ -113,11 +124,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.LogArea.setText(TextConstants.HELLO_MESSAGE)
         self._connect()
 
-    def closeEvent(self, a0: QCloseEvent) -> None:
-        self.hide()
-        self.terminal.disconnect()
-        a0.accept()
-
     def set_api_status(self, state):
         self.terminal.set_api_status(state)
 
@@ -125,21 +131,39 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.terminal.run_http_server()
         self.set_api_status(state=True)
 
-    def reverse(self, trans_id: str | None = None):
-        sender: QAction = self.sender()
+    def get_last_transaction_id(self):
+        transaction_id = str()
 
-        if sender.text().upper() == "OTHER":
-            trans_id = self.terminal.get_reversal_id()
+        for transaction in self.terminal.get_reversible_transactions():
+            if transaction.trans_id > transaction_id:
+                transaction_id = transaction.trans_id
 
-            if not trans_id:
-                return
+        if not transaction_id:
+            error("Transaction Queue has no reversible transactions")
 
-            info("Building reversal for transaction %s", trans_id)
+        return transaction_id
 
-        if trans_id is None:
-            info("Building reversal for the last transaction")
+    def show_reversal_window(self):
+        transaction_list: list = self.terminal.get_reversible_transactions()
+        reversal_window = ReversalWindow(transaction_list)
 
-        self.terminal.reverse(trans_id)
+        if reversal_window.exec_():
+            if not reversal_window.reversal_id:
+                error("No transaction ID recognized. The Reversal wasn't sent")
+
+            return reversal_window.reversal_id
+
+        info("Reversal sending is cancelled by user")
+
+    def reverse(self, reverse_last_transaction: bool):
+        if reverse_last_transaction:
+            original_transaction_id = self.get_last_transaction_id()
+
+        else:
+            original_transaction_id = self.show_reversal_window()
+
+        if original_transaction_id:
+            self.terminal.reverse_transaction(original_transaction_id)
 
     def plus(self):
         self.JsonView.plus()
@@ -155,11 +179,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.parse_file(FilePath.DEFAULT_FILE)
             info("Default file parsed")
 
-        except Exception as E:
-            error("Default file parsing error! Exception: %s" % E)
+        except Exception as parsing_error:
+            error("Default file parsing error! Exception: %s" % parsing_error)
 
     def lock_connection_buttons(self, lock=True):
-        for button in (self.ButtonReconnect, self.ButtonSend, self.ButtonEchoTest):
+        for button in (self.ButtonReconnect, self.ButtonSend, self.ButtonEchoTest, self.ButtonReverse):
             button.setDisabled(lock)
 
     def reconnect(self):
@@ -168,21 +192,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def clear_log(self):
         self.LogArea.setText(str())
 
-    def send(self, message: Message = None):
-        if message is None:
-            try:
-                message: Message = self.parser.parse_form(self)
-            except Exception as e:
-                error(e)
-                return
-
-        if message is None:
-            return
-
+    def send(self) -> None:
         try:
+            message: Message = self.parser.parse_form(self)
             self.terminal.send(message)
-        except Exception as e:
-            error(e)
+        except Exception as sending_error:
+            error(f"Message sending error: {sending_error}")
 
     def get_fields(self) -> TypeFields:
         return self.JsonView.generate_fields(validation=True)
@@ -191,72 +206,19 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         return self.JsonView.get_checkboxes()
 
     def parse_file(self, filename: str | None = None) -> None:
-        if filename is None:
-            try:
-                filename: str = QFileDialog.getOpenFileName()[0]
-            except Exception as get_file_error:
-                error("Filename get error: %s", get_file_error)
-                return
-
-        if not filename:
+        if filename is None and not (filename := QFileDialog.getOpenFileName()[0]):
             info("No input filename recognized")
             return
 
-        file_name, file_extension = splitext(filename)
-        file_extension = file_extension.upper().replace(".", "")
-
-        if file_extension not in DataFormats.get_input_file_formats():
-            file_extension = DataFormats.OTHER
-
-        parsing_error_text = "File parsing error: %s"
-        message: Message | None = None
-
         try:
-            match file_extension:
-                case DataFormats.JSON:
-                    message = self.parser.parse_json_file(filename)
-
-                case DataFormats.TXT:
-                    message = self.parser.parse_dump_file(filename)
-
-                case DataFormats.INI:
-                    message = self.parser.ini_to_message(filename)
-
-                case DataFormats.OTHER:
-                    warning("Unknown file extension, trying to guess the format")
-
-                    for data_processor in (self.parser.parse_json_file,
-                                           self.parser.parse_dump_file,
-                                           self.parser.ini_to_message):
-                        try:
-                            message = data_processor(filename)
-
-                        except Exception as parsing_error:
-                            error("Parsing error: %s", parsing_error)
-                            continue
-
-                        else:
-                            break
-                case _:
-                    warning(parsing_error_text, f"Unknown file extension {file_extension}")
-                    return
-
-        except ValidationError as validation_error:
-            error_text = str(validation_error.json(indent=4))
-            error("File validation error: %s", error_text)
+            message = self.parser.parse_file(filename)
+        except (TypeError, ValueError, Exception) as parsing_error:
+            error(f"File parsing error: {parsing_error}")
             return
 
-        except Exception as parsing_error:
-            error(parsing_error_text, parsing_error)
-            return
-
-        if not message:
-            error("File parsing error")
-            return
-
+        self.set_mti(message.transaction.message_type)
         self.set_fields(message)
-        self.set_mti(message.transaction.message_type_indicator)
-        self.set_bitmap()
+
         info("File successfully parsed: %s", filename)
 
     def set_mti(self, mti: str):
@@ -268,32 +230,32 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         self.msgtype.setCurrentIndex(index)
 
-    def save(self):
-        data_format = self.sender().text()
-
+    def save(self, data_format) -> None:
         try:
-            filename: str = self.get_output_filename()
-            message: Message = self.parser.parse_form(self)
+            if not (filename := self.get_output_filename()):
+                error("No output filename recognized")
+                return
 
-        except Exception as e:
-            error(str(e))
-            return
+            if not (message := self.parser.parse_form(self)):
+                error("No data to save")
+                return
 
-        if not filename:
-            error("No output filename recognized")
-            return
+            self.terminal.save_message_to_file(message, filename, data_format)
 
-        if message is None:
-            error("No data to save")
-            return
+        except Exception as file_saving_error:
+            error("File saving error: %s", file_saving_error)
 
-        try:
-            self.terminal.save_message_to_file(filename, message, data_format)
-        except Exception as e:
-            error(str(e))
+    def set_fields(self, message: Message):
+        self.JsonView.parse_message(message)
+        self.set_bitmap()
 
-    def set_fields(self, message: Message = None):
-        self.JsonView.parse_json(message)
+    def set_generated_fields(self, message: Message):
+        for field in message.config.generate_fields:
+
+            if (field_data := message.transaction.fields.get(field, str())) is str():
+                error("Lost field data for field %s")
+
+            self.JsonView.set_field_value(field, field_data)
 
     def settings(self):
         self.terminal.settings()
@@ -302,16 +264,19 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.terminal.specification()
 
     def echo_test(self):
-        message = self.parser.parse_json_file(FilePath.ECHO_TEST)
-        self.send(message)
+        message = self.parser.parse_file(FilePath.ECHO_TEST)
+        self.terminal.send(message)
 
     def clear_message(self):
         self.msgtype.setCurrentIndex(-1)
         self.JsonView.clean()
         self.set_bitmap()
 
-    def print_data(self):
-        data_format = self.sender().text()
+    def print_data(self, data_format):
+        if data_format not in DataFormats.get_print_data_formats():
+            error("Wrong data format for printing!")
+            return
+
         self.terminal.print_data(data_format)
 
     def set_field_value(self, field, value):
@@ -319,13 +284,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     @staticmethod
     def get_output_filename():
-        filename = QFileDialog()
-        filename.setFileMode(QFileDialog.AnyFile)
-        filename = filename.getSaveFileName()[0]
-
-        if not filename:
-            info("The file did not save, because the operation is canceled")
-
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.AnyFile)
+        filename = file_dialog.getSaveFileName()[0]
         return filename
 
     def set_api_status(self, state):
@@ -346,59 +307,43 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.ConnectionScreen.setPalette(palette)
 
     def set_bitmap(self):
+        default_bitmap_text = str()
 
-        fields = self.JsonView.generate_fields(validation=False)
-
-        if not fields:
-            self.Bitmap.setText(str())
+        if not (fields := self.JsonView.generate_fields(validation=False)):
+            self.Bitmap.setText(default_bitmap_text)
             return
 
-        bitmap: set | str = set(fields.keys())
+        bitmap: set = set(fields)
 
-        for field in self.JsonView.get_checkboxes():
-            bitmap.add(field)
+        for bit in bitmap.copy():
+            if int(bit) not in range(1, self.spec.MessageLength.second_bitmap_capacity + 1):
+                bitmap.remove(bit)
+
+        if not bitmap:
+            self.Bitmap.setText(default_bitmap_text)
+            return
 
         if max(map(int, bitmap)) >= self.spec.MessageLength.first_bitmap_capacity:
             bitmap.add(self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY)
 
-        for bit in bitmap:
-            if int(bit) not in range(1, self.spec.MessageLength.second_bitmap_capacity + 1):
-                bitmap.remove(bit)
-                break
-
-        if not bitmap:
-            return
-
-        bitmap = ", ".join(sorted(bitmap, key=int))
+        bitmap: str = ", ".join(sorted(bitmap, key=int))
 
         self.Bitmap.setText(bitmap)
 
     def get_mti(self):
-        mti = self.msgtype.currentText()
-
-        if len(mti) > 0:
-            mti = mti[:self.spec.MessageLength.message_type_length]
-
+        mti: str = self.msgtype.currentText()
+        mti: str = mti[:self.spec.MessageLength.message_type_length]
         return mti
 
     def copy_bitmap(self):
-        data = self.Bitmap.text()
-
-        if not data:
-            error("No data to copy")
-            return
-
-        self.terminal.set_clipboard_text(data)
-
+        self.terminal.set_clipboard_text(self.Bitmap.text())
         info("Bitmap copied to clipboard")
 
     def copy_log(self):
-        data = self.LogArea.toPlainText()
-
-        if not data:
-            error("No data to copy")
-            return
-
-        self.terminal.set_clipboard_text(data)
-
+        self.terminal.set_clipboard_text(self.LogArea.toPlainText())
         info("Log copied to clipboard")
+
+    def closeEvent(self, a0: QCloseEvent) -> None:
+        self.hide()
+        self.terminal.disconnect()
+        a0.accept()

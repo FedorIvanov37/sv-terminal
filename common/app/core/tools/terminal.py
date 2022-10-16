@@ -66,6 +66,7 @@ class Terminal(QObject):
         self.connector.moveToThread(self._connection_thread)
         self._need_reconnect.connect(self.connector.connect_sv)
         self._send_message.connect(self.connector.send_message)
+        self.connector.message_sent.connect(self.start_transaction_timer)
         self._connection_thread.started.connect(self.connector.run)
         self.connector.connected.connect(lambda: self.window.set_connection_status(QTcpSocket.ConnectedState))
         self.connector.disconnected.connect(lambda: self.window.set_connection_status(QTcpSocket.UnconnectedState))
@@ -107,41 +108,36 @@ class Terminal(QObject):
         
         error("Received socket error: %s", self.connector.error_string())
 
-    def send(self, message: Message) -> None:
+    def start_transaction_timer(self, message: Message):
+        transaction = self.trans_queue.get_transaction(message.transaction.id)
+        transaction.start_timer()
+
+    def send(self, message: Message):
         if self.config.debug.clear_log:
             self.window.clear_log()
 
-        message.transaction.id = self.generator.trans_id()
+        message: Message = self.generator.set_generated_fields(message)
 
-        for field in message.transaction.fields:
-            if field not in message.config.generate_fields:
-                continue
+        if not message.transaction.id:
+            message.transaction.id = self.generator.trans_id()
 
-            field_data = self.generator.generate_field(field)
-            message.transaction.fields[field] = field_data
+        if self.config.fields.send_internal_id:
+            message: Message = self.generator.set_trans_id_to_47_072(message)
 
-            if self.sender() is self.window.button_send:
-                self.window.set_field_value(field, field_data)
+        if self.sender() is self.window.button_send:
+            self.window.set_generated_fields(message)
 
-        if self.config.fields.send_internal_id:  # TODO
-            try:
-                message.transaction.fields["47"]["072"] = message.transaction.id
-            except (KeyError, TypeError):
-                ...
-
-        for string in self.parser.create_sv_dump(message).split("\n"):
-            debug(string)
+        self.logger.print_dump(message)
 
         try:
-            transaction: Transaction = self.trans_queue.create_transaction(request=message)
+            self.trans_queue.create_transaction(message)
         except ConnectionError:
             return
 
-        info("Processing transaction with internal ID [%s]", transaction.trans_id)
+        info(f"Processing transaction with internal ID [{message.transaction.id}]")
 
         self.logger.print_message(message)
         self._send_message.emit(message)
-        transaction.start_timer()
 
     def settings(self):
         SettingsWindow(self.config).exec_()
@@ -151,38 +147,25 @@ class Terminal(QObject):
         spec_window.spec_accepted.connect(lambda: info("Specification accepted"))
         spec_window.exec_()
 
-    def get_reversal_id(self):
-        transaction_list: list[Transaction] = self.trans_queue.get_reversible_transactions()
-        return ReversalWindow.get_reversal_id(transaction_list)
+    def save_message_to_file(self, message: Message, filename: str, file_format: str) -> None:
+        data_processing_map = {
+            DataFormats.JSON: lambda _message: dumps(_message.dict(), indent=4),
+            DataFormats.INI: lambda _message: self.parser.get_transaction_data_ini(_message, string=True),
+            DataFormats.DUMP: lambda _message: self.parser.create_sv_dump(_message)[1:]
+        }
 
-    def save_message_to_file(self, filename: str, message: Message, file_format: str) -> None:
-        file_data = None
-
-        if file_format not in DataFormats.get_output_file_formats():
-            error("Wrong output file format")
+        if not (data_processing_function := data_processing_map.get(file_format)):
+            error("Unknown output file format")
             return
 
-        match file_format:
-
-            case DataFormats.JSON:
-                file_data = dumps(message.dict(), indent=4)
-
-            case DataFormats.INI:
-                file_data = self.parser.message_to_ini_string(message)
-
-            case DataFormats.DUMP:
-                file_data = self.parser.create_sv_dump(message)
-                file_data = file_data[1:]
-
-        if file_data is not None:
-            with open(filename, "w") as file:
-                file.write(file_data)
-
-            info(f"The message was saved successfully to {filename}")
-
+        if not (file_data := data_processing_function(message)):
+            error("No data to save")
             return
 
-        error("File writing error")
+        with open(filename, "w") as file:
+            file.write(file_data)
+
+        info(f"The message was saved successfully to {filename}")
 
     def disconnect(self):
         self.connector.disconnect_sv()
@@ -196,15 +179,12 @@ class Terminal(QObject):
 
         try:
             message: Message = self.parser.parse_dump(data=data)
-        except Exception as e:
-            error("Incoming message parsing error: %s", e)
+        except Exception as parsing_error:
+            error("Incoming message parsing error: %s", parsing_error)
             return
 
-        self.trans_queue.put_response(message)
-
-        for string in self.parser.create_sv_dump(message).split("\n"):
-            debug(string)
-
+        self.trans_queue.put_response_message(message)
+        self.logger.print_dump(message)
         self.logger.print_message(message)
 
     def print_data(self, data_format: str) -> None:
@@ -212,21 +192,20 @@ class Terminal(QObject):
             error("Wrong format of output data: %s", data_format)
             return
 
-        message: Message = self.parser.parse_form(self.window)
-
-        if message is None:
-            error("MainWindow parsing error")
-            return
+        if data_format in (DataFormats.JSON, DataFormats.DUMP, DataFormats.INI):
+            if self.parser.parse_form(self.window) is None:
+                error("Cannot parse the MainWindow")
+                return
 
         match data_format:
             case DataFormats.JSON:
-                text = dumps(message.dict(), indent=4)
+                text = dumps(self.parser.parse_form(self.window).dict(), indent=4)
 
             case DataFormats.DUMP:
-                text = self.parser.create_sv_dump(message)
+                text = self.parser.create_sv_dump(self.parser.parse_form(self.window))
 
             case DataFormats.INI:
-                text = self.parser.message_to_ini_string(message)
+                text = self.parser.get_transaction_data_ini(self.parser.parse_form(self.window), string=True)
 
             case DataFormats.SPEC:
                 text = dumps(self.spec.spec.dict(), indent=4)
@@ -240,52 +219,59 @@ class Terminal(QObject):
 
         self.window.log_browser.setText(text)
 
+    def get_reversible_transactions(self):
+        return self.trans_queue.get_reversible_transactions()
+
     @staticmethod
     def set_clipboard_text(data: str) -> None:
         QApplication.clipboard().setText(data)
 
-    def reverse(self, trans_id: str | None = None) -> None:
-        try:
-            trans = self.trans_queue.get_transaction(trans_id=trans_id, reversible=True)
-        except ValueError:
-            error("Transaction queue has no reversible transactions. Cannot build the reversal")
+    def get_reversal_id(self):
+        transaction_list: list = self.trans_queue.get_reversible_transactions()
+        reversal_window: ReversalWindow = ReversalWindow(transaction_list)
+        original_transaction_id = reversal_window.get_reversal_id(transaction_list)
+
+        if reversal_window.accepted and not original_transaction_id:
+            error("No transaction ID recognized. The Reversal wasn't sent")
+
+        return original_transaction_id
+
+    def reverse_transaction(self, original_transaction_id: str):
+        if not (reversal_message := self.build_reversal(original_transaction_id)):
+            error("Cannot build reversal")
             return
 
-        if trans is None:
-            error("The transaction with id %s wasn't found or has non-reversible MTI", trans_id)
+        self.send(reversal_message)
+
+    def build_reversal(self, original_trans_id: str) -> Message | None:
+        if not (original_transaction := self.trans_queue.get_transaction(trans_id=original_trans_id)):
+            error(f"Lost transaction with ID {original_trans_id}, Cannot build the reversal")
             return
 
-        reversal = self.build_reversal(trans)
-
-        if reversal is None:
+        if not original_transaction.response:
+            error(f"Lost response for transaction {original_transaction.trans_id}. Cannot build the reversal")
             return
 
-        self.send(reversal)
-
-    def build_reversal(self, transaction: Transaction) -> Optional[Message]:
-        if not transaction.response:
-            error("Lost response for transaction %s. Cannot build the reversal", transaction.trans_id)
-            return
-
-        reversal_trans_id = transaction.trans_id + "_R"
+        reversal_trans_id = original_transaction.trans_id + "_R"
         existed_reversal = self.trans_queue.get_transaction(reversal_trans_id)
 
         if existed_reversal:
             self.trans_queue.remove_from_queue(existed_reversal)
-            return Message(transaction=existed_reversal.request.transaction)
+            message = Message(transaction=existed_reversal.request.transaction)
+            return message
 
-        fields = transaction.request.transaction.fields.copy()
+        fields = original_transaction.request.transaction.fields.copy()
 
         for field in self.spec.get_reversal_fields():
-            fields[field] = transaction.response.transaction.fields.get(field)
+            fields[field] = original_transaction.response.transaction.fields.get(field)
 
         if self.config.fields.build_fld_90:
             fields[self.spec.FIELD_SET.FIELD_090_ORIGINAL_DATA_ELEMENTS] = \
-                self.generator.generate_original_data_elements(transaction.request)
+                self.generator.generate_original_data_elements(original_transaction.request)
 
-        reversal_mti = self.spec.get_reversal_mti(transaction.request.transaction.message_type_indicator)
-        reversal = Message(transaction=TransactionModel(message_type_indicator=reversal_mti, fields=fields))
-        reversal.transaction.original_id = transaction.trans_id
-        reversal.transaction.id = transaction.trans_id + "_R"
+        reversal_mti = self.spec.get_reversal_mti(original_transaction.request.transaction.message_type)
+        reversal = Message(transaction=TransactionModel(message_type=reversal_mti, fields=fields))
+        reversal.transaction.original_id = original_transaction.trans_id
+        reversal.transaction.id = reversal_trans_id
         reversal.config.generate_fields = list()
         return reversal

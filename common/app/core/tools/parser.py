@@ -1,13 +1,15 @@
-from json import loads, dumps
-from logging import error, warning
+from os.path import splitext
+from json import loads
+from logging import error, warning, info
 from binascii import hexlify, unhexlify
-from configparser import ConfigParser, NoOptionError
+from configparser import ConfigParser
 from common.app.exceptions.exceptions import DumpFileParsingError
 from common.app.constants.DumpDefinition import DumpDefinition
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.core.tools.bitmap import Bitmap
 from common.app.data_models.message import Message, TransactionModel, MessageConfig
 from common.app.constants.IniMessageDefinition import IniMessageDefinition
+from common.app.constants.DataFormats import DataFormats
 from common.app.data_models.config import Config
 from common.app.data_models.epay_specification import IsoField, FieldSet, RawFieldSet
 from common.app.core.tools.fields_generator import FieldsGenerator
@@ -25,7 +27,7 @@ class Parser(object):
         self.generator = FieldsGenerator(self.config)
 
     def create_dump(self, message: Message, body: bool = False) -> bytes | str:
-        msgtype: bytes = message.transaction.message_type_indicator.encode()
+        msgtype: bytes = message.transaction.message_type.encode()
         bitmap: Bitmap = Bitmap(message.transaction.fields)
         bitmap: bytes = bitmap.get_bitmap(bytes)
 
@@ -55,7 +57,7 @@ class Parser(object):
         return msgtype + bitmap + msg_body
 
     def create_sv_dump(self, message: Message) -> str | None:
-        mti: str = message.transaction.message_type_indicator
+        mti: str = message.transaction.message_type
         bitmap: hex = Bitmap(message.transaction.fields)
         bitmap: hex = bitmap.get_bitmap(hex)
 
@@ -170,7 +172,7 @@ class Parser(object):
 
         message: Message = Message(
             transaction=TransactionModel(
-                message_type_indicator=message_type_indicator,
+                message_type=message_type_indicator,
                 fields=fields
             )
         )
@@ -178,31 +180,21 @@ class Parser(object):
         return message
 
     def parse_form(self, form) -> Message | None:
-        if not form.get_fields():
+        if not (fields := form.get_fields()):
             error("No data to send")
             return
 
-        if not form.get_mti():
+        if not (mti := form.get_mti()):
             error("Invalid MTI")
             return
 
-        mti = form.get_mti()
-        fields = form.get_fields()
         generate_fields = form.get_fields_to_generate()
         config = MessageConfig(generate_fields=generate_fields, max_amount=self.config.fields.max_amount)
-        transaction = TransactionModel(message_type_indicator=mti, fields=fields)
+        transaction = TransactionModel(message_type=mti, fields=fields)
         message = Message(transaction=transaction, config=config)
         return message
 
-    def parse_json_file(self, filename: str) -> Message:
-        message: Message = Message.parse_file(filename)
-
-        for field in message.config.generate_fields:
-            message.transaction.fields[field] = self.generator.generate_field(field)
-
-        return message
-
-    def message_to_ini(self, message: Message) -> ConfigParser | None:
+    def get_transaction_data_ini(self, message: Message, string: bool = False) -> ConfigParser | str:
         ini: ConfigParser = ConfigParser()
 
         generate_fields = ", ".join(sorted(message.config.generate_fields, key=int))
@@ -210,7 +202,7 @@ class Parser(object):
         ini_data = [
             (IniMessageDefinition.CONFIG, IniMessageDefinition.MAX_AMOUNT, message.config.max_amount),
             (IniMessageDefinition.CONFIG, IniMessageDefinition.GENERATE_FIELDS, generate_fields),
-            (IniMessageDefinition.MTI, IniMessageDefinition.MTI, message.transaction.message_type_indicator)
+            (IniMessageDefinition.MTI, IniMessageDefinition.MTI, message.transaction.message_type)
         ]
 
         for field, field_data in message.transaction.fields.items():
@@ -227,17 +219,21 @@ class Parser(object):
             value = "[%s]" % value
             ini.set(section, option, value)
 
+        if string:
+            ini: str = self.ini_to_string(ini)
+
         return ini
 
-    def message_to_ini_string(self, message: Message) -> str:
-        ini_data: ConfigParser = self.message_to_ini(message)
+    @staticmethod
+    def ini_to_string(ini: ConfigParser) -> str:
         result: str = str()
 
-        for section in ini_data.sections():
-            result: str = "%s[%s]\n" % (result, section)
+        for section in ini.sections():
+            result += f"[{section}]\n"
 
-            for option in ini_data.options(section):
-                result: str = "%s%s = %s\n" % (result, option, ini_data.get(section, option))
+            for option in ini.options(section):
+                value = ini.get(section, option)
+                result += f"{option} = {value}\n"
 
         result: str = result.replace("%", "%%")
 
@@ -279,7 +275,39 @@ class Parser(object):
 
         return complex_field_data
 
-    def ini_to_message(self, filename):
+    def parse_file(self, filename: str) -> Message:
+        file_extension = splitext(filename)[-1].upper().replace(".", "")
+
+        data_processing_map = {
+            DataFormats.JSON: self._parse_json_file,
+            DataFormats.INI: self._parse_ini_file,
+            DataFormats.TXT: self._parse_dump_file
+        }
+
+        if function := data_processing_map.get(file_extension):
+            return function(filename)
+
+        warning("Unknown file extension, trying to guess the format")
+
+        for extension in data_processing_map:
+            info(f"Trying to parse file as {extension}")
+            function = data_processing_map.get(extension)
+
+            try:
+                return function(filename)
+
+            except Exception as parsing_error:
+                warning(f"Cannot parse file as {extension}: {parsing_error}")
+                continue
+
+        raise TypeError("Can't parse incoming file using known formats")
+
+    @staticmethod
+    def _parse_json_file(filename: str) -> Message:
+        message: Message = Message.parse_file(filename)
+        return message
+
+    def _parse_ini_file(self, filename):
         def unpack(data: str) -> str:
             return data.removeprefix('[').removesuffix(']')
 
@@ -301,11 +329,11 @@ class Parser(object):
 
             fields[field] = value
 
-        max_amount = 100
-        generate_fields = []
+        max_amount = self.config.fields.max_amount
+        generate_fields = list()
 
         if IniMessageDefinition.CONFIG in ini.sections():
-            options = [option.upper() for option in ini.options(IniMessageDefinition.CONFIG)]
+            options = list(option.upper() for option in ini.options(IniMessageDefinition.CONFIG))
 
             if IniMessageDefinition.MAX_AMOUNT.upper() in options:
                 max_amount = int(unpack(ini.get(IniMessageDefinition.CONFIG, IniMessageDefinition.MAX_AMOUNT)))
@@ -319,7 +347,7 @@ class Parser(object):
         )
 
         transaction = TransactionModel(
-            message_type_indicator=unpack(ini.get(IniMessageDefinition.MTI, IniMessageDefinition.MTI)),
+            message_type=unpack(ini.get(IniMessageDefinition.MTI, IniMessageDefinition.MTI)),
             fields=fields
         )
 
@@ -330,7 +358,7 @@ class Parser(object):
 
         return message
 
-    def parse_dump_file(self, filename: str) -> Message:
+    def _parse_dump_file(self, filename: str) -> Message:
         string = str()
 
         with open(filename) as file:

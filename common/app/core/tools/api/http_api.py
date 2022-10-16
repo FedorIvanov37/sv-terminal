@@ -45,7 +45,7 @@ class FastApiApp(QObject):
                 "max_amount": 0
             },
             "transaction": {
-                "message_type_indicator": "0800",
+                "message_type": "0800",
                 "id": trans_id,
                 "fields": {
                     "7": "0000000000",

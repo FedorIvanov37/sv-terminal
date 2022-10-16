@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog
 from re import search
 from typing import Optional
-from logging import info
+from logging import info, error
 from common.app.forms.reversal import Ui_ReversalWindow
 from common.app.constants.FilePath import FilePath
 from common.app.core.tools.transaction import Transaction
@@ -11,6 +11,15 @@ from common.app.core.tools.transaction import Transaction
 
 class ReversalWindow(Ui_ReversalWindow, QDialog):
     _reversal_id: Optional[str] = None
+    _accepted: bool = False
+
+    @property
+    def accepted(self):
+        return self._accepted
+
+    @accepted.setter
+    def accepted(self, accepted):
+        self._accepted = accepted
 
     @property
     def reversal_id(self):
@@ -28,16 +37,15 @@ class ReversalWindow(Ui_ReversalWindow, QDialog):
     def setup(self, transactions: list[Transaction]) -> None:
         self.setWindowFlags(Qt.WindowCloseButtonHint)
         self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
-        self.TransactionIdField.textEdited.connect(self.set_reversal_id)
         self.ComboBoxId.currentIndexChanged.connect(lambda index: self.id_item_changed())
+        self.buttonBox.accepted.connect(self.set_reversal_id)
         self.ComboBoxId.addItem("> Transaction queue")
-
         transaction: Transaction
 
         for transaction in transactions:
             item = "ID: %s | MTI: %s | UTRNNO: %s" % (
                 transaction.trans_id,
-                transaction.request.transaction.message_type_indicator,
+                transaction.request.transaction.message_type,
                 transaction.utrnno
             )
 
@@ -49,17 +57,6 @@ class ReversalWindow(Ui_ReversalWindow, QDialog):
         self.TransactionIdField.setText(str())
         self.TransactionIdField.setDisabled(bool(value))
         self.TransactionIdField.setText(value)
-        self.set_reversal_id()
 
     def set_reversal_id(self):
         self.reversal_id = self.TransactionIdField.text()
-
-    @staticmethod
-    def get_reversal_id(id_list: list[Transaction] | None = None) -> str | None:
-        window = ReversalWindow(id_list)
-        result = window.exec_()
-
-        if result == QDialog.Accepted:
-            return window.reversal_id
-
-        info("Reversal sending cancelled")
