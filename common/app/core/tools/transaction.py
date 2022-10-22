@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from PyQt5.Qt import QObject
+from logging import warning
 from common.app.data_models.message import Message
 from common.app.core.tools.epay_specification import EpaySpecification
-from logging import warning, error
 
 
 class Transaction(QObject):

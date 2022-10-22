@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class FilePath:
     CONFIG: str = r"common\settings\config.json"
     ECHO_TEST: str = r"common\settings\echo-test.json"

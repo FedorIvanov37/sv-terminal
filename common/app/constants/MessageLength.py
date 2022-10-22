@@ -1,7 +1,8 @@
-from pydantic import BaseModel
+from dataclasses import dataclass
 
 
-class MessageLength(BaseModel):  # TODO
+@dataclass(frozen=True)
+class MessageLength:
     message_type_length: int = 4
     bitmap_length: int = 8
     first_bitmap_capacity: int = 64

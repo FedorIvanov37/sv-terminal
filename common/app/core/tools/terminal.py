@@ -1,10 +1,8 @@
 from PyQt5.Qt import QApplication
 from PyQt5.QtCore import QThread, pyqtSignal, QObject
 from PyQt5.QtNetwork import QTcpSocket
-# from PyQt5.QtWidgets import QPushButton
 from json import dumps
 from logging import error, info, debug
-from typing import Optional
 from common.app.core.windows.main_window import MainWindow
 from common.app.core.windows.reversal_window import ReversalWindow
 from common.app.core.windows.settings_window import SettingsWindow
@@ -13,7 +11,6 @@ from common.app.core.tools.parser import Parser
 from common.app.core.tools.logger import Logger
 from common.app.core.tools.transaction_queue import TransactionQueue
 from common.app.data_models.config import Config
-from common.app.core.tools.transaction import Transaction
 from common.app.constants.DataFormats import DataFormats
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.constants.TextConstants import TextConstants
@@ -22,6 +19,7 @@ from common.app.data_models.message import TransactionModel
 from common.app.core.tools.connector import ConnectionWorker
 from common.app.core.tools.fields_generator import FieldsGenerator
 from common.app.core.tools.api.api import TerminalApi
+from common.app.core.tools.validator import Validator
 
 
 class Terminal(QObject):
@@ -59,6 +57,7 @@ class Terminal(QObject):
         self.trans_queue: TransactionQueue = TransactionQueue(self.config)
         self.api: TerminalApi = TerminalApi(self.config)
         self.api.adapter.message_ready.connect(lambda message: self.process_api_call(message))
+        self.validator = Validator()
 
         # Working with connection thread
         self._connection_thread: QThread = QThread()
@@ -66,7 +65,7 @@ class Terminal(QObject):
         self.connector.moveToThread(self._connection_thread)
         self._need_reconnect.connect(self.connector.connect_sv)
         self._send_message.connect(self.connector.send_message)
-        self.connector.message_sent.connect(self.start_transaction_timer)
+        self.connector.message_sent.connect(self.trans_queue.start_transaction_timer)
         self._connection_thread.started.connect(self.connector.run)
         self.connector.connected.connect(lambda: self.window.set_connection_status(QTcpSocket.ConnectedState))
         self.connector.disconnected.connect(lambda: self.window.set_connection_status(QTcpSocket.UnconnectedState))
@@ -95,12 +94,14 @@ class Terminal(QObject):
         if self.config.terminal.connect_on_startup:
             self.reconnect()
 
-        if self.config.terminal.run_api:
-            self.run_http_server()
-            self.window.set_api_status(state=True)
-
         self.logger.print_config(level=debug)
         info("Startup finished")
+
+    def run_api(self):
+        ...
+
+    def stop_api(self):
+        ...
 
     def socket_error(self):
         if self.connector.error() == -1:  # TODO
@@ -108,15 +109,12 @@ class Terminal(QObject):
         
         error("Received socket error: %s", self.connector.error_string())
 
-    def start_transaction_timer(self, message: Message):
-        transaction = self.trans_queue.get_transaction(message.transaction.id)
-        transaction.start_timer()
-
     def send(self, message: Message):
         if self.config.debug.clear_log:
             self.window.clear_log()
 
-        message: Message = self.generator.set_generated_fields(message)
+        if message.config.generate_fields:
+            message: Message = self.generator.set_generated_fields(message)
 
         if not message.transaction.id:
             message.transaction.id = self.generator.trans_id()
@@ -127,15 +125,16 @@ class Terminal(QObject):
         if self.sender() is self.window.button_send:
             self.window.set_generated_fields(message)
 
+        if self.config.fields.validation:
+            try:
+                self.validator.validate_message(message)
+            except (ValueError, TypeError) as validation_error:
+                error(f"Transaction validation error {validation_error}")
+                return
+
         self.logger.print_dump(message)
-
-        try:
-            self.trans_queue.create_transaction(message)
-        except ConnectionError:
-            return
-
+        self.trans_queue.create_transaction(request=message)
         info(f"Processing transaction with internal ID [{message.transaction.id}]")
-
         self.logger.print_message(message)
         self._send_message.emit(message)
 
@@ -183,7 +182,7 @@ class Terminal(QObject):
             error("Incoming message parsing error: %s", parsing_error)
             return
 
-        self.trans_queue.put_response_message(message)
+        self.trans_queue.put_response_message(response=message)
         self.logger.print_dump(message)
         self.logger.print_message(message)
 
@@ -192,49 +191,53 @@ class Terminal(QObject):
             error("Wrong format of output data: %s", data_format)
             return
 
-        if data_format in (DataFormats.JSON, DataFormats.DUMP, DataFormats.INI):
-            if self.parser.parse_form(self.window) is None:
-                error("Cannot parse the MainWindow")
-                return
+        data_processing_map = {
+            DataFormats.JSON: lambda: dumps(self.parser.parse_form(self.window).dict(), indent=4),
+            DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parser.parse_form(self.window)),
+            DataFormats.INI: lambda: self.parser.get_transaction_data_ini(self.parser.parse_form(self.window), string=True),
+            DataFormats.SV_TERMINAL: lambda: TextConstants.HELLO_MESSAGE,
+            DataFormats.SPEC: lambda: dumps(self.spec.spec.dict(), indent=4)
+        }
 
-        match data_format:
-            case DataFormats.JSON:
-                text = dumps(self.parser.parse_form(self.window).dict(), indent=4)
+        from pydantic import ValidationError
 
-            case DataFormats.DUMP:
-                text = self.parser.create_sv_dump(self.parser.parse_form(self.window))
+        if not (function := data_processing_map.get(data_format)):
+            error(f"Wrong data format for printing: {data_format}")
+            return
 
-            case DataFormats.INI:
-                text = self.parser.get_transaction_data_ini(self.parser.parse_form(self.window), string=True)
+        try:
+            self.window.log_browser.setText(function())
+        except ValidationError as validation_error:
+            error(f"{validation_error}")
 
-            case DataFormats.SPEC:
-                text = dumps(self.spec.spec.dict(), indent=4)
+    def get_last_reversible_transaction_id(self):
+        transaction_id = None
 
-            case DataFormats.SV_TERMINAL:
-                text = TextConstants.HELLO_MESSAGE
+        try:
+            transaction_id = max(transaction.trans_id for transaction in self.get_reversible_transactions())
+        except ValueError:
+            error("Transaction Queue has no reversible transactions")
 
-            case _:
-                error("Incorrect data format")
-                return
-
-        self.window.log_browser.setText(text)
+        return transaction_id
 
     def get_reversible_transactions(self):
         return self.trans_queue.get_reversible_transactions()
 
+    def show_reversal_window(self):
+        transaction_list: list = self.get_reversible_transactions()
+        reversal_window = ReversalWindow(transaction_list)
+
+        if reversal_window.exec_():
+            if not reversal_window.reversal_id:
+                error("No transaction ID recognized. The Reversal wasn't sent")
+
+            return reversal_window.reversal_id
+
+        info("Reversal sending is cancelled by user")
+
     @staticmethod
     def set_clipboard_text(data: str) -> None:
         QApplication.clipboard().setText(data)
-
-    def get_reversal_id(self):
-        transaction_list: list = self.trans_queue.get_reversible_transactions()
-        reversal_window: ReversalWindow = ReversalWindow(transaction_list)
-        original_transaction_id = reversal_window.get_reversal_id(transaction_list)
-
-        if reversal_window.accepted and not original_transaction_id:
-            error("No transaction ID recognized. The Reversal wasn't sent")
-
-        return original_transaction_id
 
     def reverse_transaction(self, original_transaction_id: str):
         if not (reversal_message := self.build_reversal(original_transaction_id)):

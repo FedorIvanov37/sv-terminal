@@ -180,18 +180,29 @@ class Parser(object):
         return message
 
     def parse_form(self, form) -> Message | None:
-        if not (fields := form.get_fields()):
-            error("No data to send")
-            return
+        fields = form.get_fields()
+
+        if not fields:
+            raise ValueError("No data to send")
 
         if not (mti := form.get_mti()):
-            error("Invalid MTI")
-            return
+            raise ValueError("Invalid MTI")
 
-        generate_fields = form.get_fields_to_generate()
-        config = MessageConfig(generate_fields=generate_fields, max_amount=self.config.fields.max_amount)
-        transaction = TransactionModel(message_type=mti, fields=fields)
-        message = Message(transaction=transaction, config=config)
+        transaction = TransactionModel(
+            message_type=mti,
+            fields=fields
+        )
+
+        config = MessageConfig(
+            generate_fields=form.get_fields_to_generate(),
+            max_amount=self.config.fields.max_amount
+        )
+
+        message = Message(
+            transaction=transaction,
+            config=config
+        )
+
         return message
 
     def get_transaction_data_ini(self, message: Message, string: bool = False) -> ConfigParser | str:

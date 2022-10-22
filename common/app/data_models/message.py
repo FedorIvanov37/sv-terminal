@@ -1,8 +1,10 @@
-from pydantic import BaseModel, Field, UUID1
+from pydantic import BaseModel, Field, UUID1, validator
 from uuid import uuid1 as uuid
+from common.app.core.tools.validator import Validator
 
 
 TypeFields = dict[str, str | dict]
+TerminalValidator = Validator()
 
 
 class MessageConfig(BaseModel):
@@ -17,6 +19,10 @@ class TransactionModel(BaseModel):
     utrnno: str = str()
     message_type: str
     fields: TypeFields
+
+    @validator("fields")
+    def respect_specification(cls, fields: TypeFields):
+        return TerminalValidator.validate_fields(fields)
 
 
 class Message(BaseModel):

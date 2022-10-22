@@ -11,12 +11,13 @@
     },
     "debug": {
         "level": "INFO",
-        "clear_log": true,
+        "clear_log": false,
         "parse_subfields": false
     },
     "fields": {
-        "max_amount": "103",
+        "max_amount": "100",
         "build_fld_90": true,
-        "send_internal_id": true
+        "send_internal_id": true,
+        "validation": true
     }
 }

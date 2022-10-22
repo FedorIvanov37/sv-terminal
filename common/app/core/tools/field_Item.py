@@ -1,9 +1,11 @@
 from PyQt5.QtWidgets import QTreeWidgetItem
-from PyQt5.QtCore import Qt, QVariant
+from PyQt5.QtCore import Qt, QVariant, pyqtSignal
+from PyQt5 import QtGui
 from common.app.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.app.data_models.epay_specification import IsoField
-from common.app.core.tools.item_ import AbstractItem
-from logging import error
+from common.app.core.tools.abstract_item import AbstractItem
+from common.app.core.tools.validator import Validator
+from logging import warning
 
 
 class Item(AbstractItem):
@@ -12,6 +14,12 @@ class Item(AbstractItem):
     _field_data: str = str()
     _field_number: str = str()
     _is_field_complex: bool = False
+    _validator: Validator = None
+    _data_was_set: pyqtSignal = pyqtSignal()
+
+    @property
+    def data_was_set(self):
+        return self._data_was_set
 
     @property
     def is_field_complex(self):
@@ -23,45 +31,19 @@ class Item(AbstractItem):
 
     @property
     def length(self):
-        return self._length
+        return self.get_field_length()
 
     @property
     def field_data(self):
-        return self._field_data
+        return self.text(Spec.columns_order.get(Spec.VALUE))
 
     @property
     def field_number(self):
-        return self._field_number
+        return self.text(Spec.columns_order.get(Spec.FIELD))
 
     @spec.setter
     def spec(self, spec: IsoField):
         self._spec: IsoField = spec
-
-    @field_number.setter
-    def field_number(self, field_number: str):
-        if not field_number.isdigit():
-            return
-
-        self._field_number = str(field_number)
-        path: list[str] = self.get_field_path()
-        self.spec: Spec = self.epay_spec.get_field_spec(path=path)
-
-        if self.spec is None and self.parent():
-            error("No specification for field %s. Set the field length manually" % self.get_field_path(string=True))
-            return
-
-        if self.spec is not None:
-            self.is_field_complex = bool(self.spec.fields)
-
-    @field_data.setter
-    def field_data(self, field_data: str):
-        self._field_data: str = field_data
-        self.spec: IsoField = self.epay_spec.get_field_spec(self.get_field_path())
-        self.set_length()
-
-    @length.setter
-    def length(self, length):
-        self._length = length
 
     @is_field_complex.setter
     def is_field_complex(self, is_field_complex: bool):
@@ -69,16 +51,12 @@ class Item(AbstractItem):
 
     def __init__(self, item_data: list[str]):
         super(Item, self).__init__(item_data)
-
-        try:
-            self.field_number = item_data[Spec.columns_order.get(Spec.FIELD)]
-            self.field_data = item_data[Spec.columns_order.get(Spec.VALUE)]
-        except IndexError:
-            pass
-
         field_path = self.get_field_path()
-
         self.spec: IsoField = self.epay_spec.get_field_spec(field_path)
+        self._validator = Validator()
+
+    def validate(self):
+        self._validator.validate_field(self.get_field_path(), self.field_data)
 
     def addChild(self, item):
         item.spec = self.epay_spec.get_field_spec(item.get_field_path())
@@ -104,31 +82,38 @@ class Item(AbstractItem):
         self.setText(column_number, Spec.GENERATE)
 
     def set_description(self):
-        column_number = Spec.columns_order.get(Spec.DESCRIPTION)
-        description = self.epay_spec.get_field_description(self.get_field_path())
-        self.setText(column_number, description)
-
-    def setText(self, column: int, atext: str) -> None:
-        if column == Spec.columns_order.get(Spec.FIELD):
-            parent = self.parent()
-
-            if parent and parent.spec:
-                atext = atext.zfill(parent.spec.tag_length)
-
-            self.field_number = atext
-
-        if column == Spec.columns_order.get(Spec.VALUE):
-            self.field_data = atext
-
-        QTreeWidgetItem.setText(self, column, atext)
-
-    def set_length(self, clear: bool = False) -> None:
-        if clear:
-            self.setText(2, "")
+        if not self.spec:
             return
 
+        self.setText(Spec.columns_order.get(Spec.DESCRIPTION), self.spec.description)
+
+    def setData(self, column: int, role: int, value) -> None:
+        QTreeWidgetItem.setData(self, column, role, value)
+
+        if column not in (Spec.columns_order.get(Spec.FIELD), Spec.columns_order.get(Spec.VALUE)):
+            return
+
+        if role == Qt.ForegroundRole:
+            return
+
+        text_color_red = False
+
+        try:
+            self.validate()
+        except (TypeError, ValueError) as validation_error:
+            warning(validation_error)
+            text_color_red = True
+
+        self.set_item_color(red=text_color_red)
+        self.process_change_item()
+
+    def process_change_item(self):
+        self.set_spec()
+        self.set_length()
+        self.set_description()
+
+    def set_length(self) -> None:
         column = Spec.columns_order.get(Spec.LENGTH)
-        self.length = self.get_field_length()
         length = str(self.length).zfill(3)
         self.setText(column, length)
 
@@ -144,3 +129,9 @@ class Item(AbstractItem):
             length = len(self.text(column))
 
         return length
+
+    def set_item_color(self, red=True):
+        color = "#ff0000" if red else "#000000"
+
+        for column in range(self.columnCount()):
+            self.setForeground(column, QtGui.QBrush(QtGui.QColor(color)))

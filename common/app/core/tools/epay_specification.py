@@ -3,11 +3,9 @@ from logging import error
 from pydantic import ValidationError
 from dataclasses import asdict
 from common.app.constants.MessageLength import MessageLength
-from common.app.data_models.epay_specification import IsoField
 from common.app.decorators.singleton import singleton
 from common.app.constants.FilePath import FilePath
-from common.app.data_models.epay_specification import EpaySpecModel
-from common.app.data_models.epay_specification import Mti
+from common.app.data_models.epay_specification import EpaySpecModel, Mti, IsoField
 from common.app.constants.EpaySpecificationConstants import EpaySpecificationData
 
 
@@ -53,6 +51,14 @@ class EpaySpecification(EpaySpecificationData):
                 message_types.append(f"{message_type}: {desc}")
 
             return message_types
+
+        def get_mti_codes(self):
+            mti_codes: set[str] = set()
+
+            for mti in self.get_mti_list():
+                mti_codes.add(mti[:MessageLength.message_type_length])
+
+            return list(mti_codes)
 
         def get_resp_mti(self, request_mti):
             for mti in self.spec.mti:
@@ -126,7 +132,7 @@ class EpaySpecification(EpaySpecificationData):
     def get_match_fields(self):
         return [field for field, field_data in self.fields.items() if field_data.matching]
 
-    def get_field_description(self, path: list) -> str | None:
+    def get_field_description(self, path: list[str]) -> str | None:
         field_spec: IsoField = self.get_field_spec(path)
 
         try:
@@ -212,6 +218,9 @@ class EpaySpecification(EpaySpecificationData):
 
     def get_mti_list(self):
         return self._MessageTypeSpec.get_mti_list()
+
+    def get_mti_codes(self):
+        return self._MessageTypeSpec.get_mti_codes()
 
     def get_resp_mti(self, request_mti):
         return self._MessageTypeSpec.get_resp_mti(request_mti)

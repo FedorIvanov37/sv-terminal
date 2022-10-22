@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
 from common.app.data_models.epay_specification import IsoField
 from common.app.constants.SpecFieldDef import SpecFieldDef
-from common.app.core.tools.item_ import AbstractItem
+from common.app.core.tools.abstract_item import AbstractItem
 
 
 class SpecItem(AbstractItem):

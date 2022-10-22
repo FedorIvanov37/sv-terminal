@@ -40,7 +40,6 @@ class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):
         self.MtiTable.verticalHeader().hide()
         self.ButtonPlus.setDisabled(True)
         self.ButtonMinus.setDisabled(True)
-        self.MtiTable.itemChanged.connect(self.changed.emit)
 
     def plus(self):
         ...

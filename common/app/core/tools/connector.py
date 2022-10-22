@@ -1,12 +1,11 @@
 from struct import pack
-from PyQt5.QtNetwork import QTcpSocket, QNetworkProxy
+from PyQt5.QtNetwork import QTcpSocket
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 from common.app.core.tools.parser import Parser
 from logging import info, error, debug, warning
 from common.app.data_models.config import Config
 from common.app.data_models.message import Message
 from PyQt5.QtWidgets import QApplication
-from typing import Optional
 
 
 class Connector(QTcpSocket):
@@ -31,9 +30,6 @@ class Connector(QTcpSocket):
         port = int(port)
 
         debug("Connecting to %s:%s", host, port)
-
-        # if not self.config.smartvista.use_proxy:
-        #     self.setProxy(QNetworkProxy(QNetworkProxy.NoProxy))
 
         self.connectToHost(host, port)
         self.waitForConnected(msecs=10000)
@@ -147,7 +143,7 @@ class ConnectionWorker(QObject):
         self.connector.readyRead.connect(self.ready_read.emit)
         self.connector.disconnected.connect(lambda: self.socker_error.emit(self.connector.error()))
         self.connector.errorOccurred.connect(lambda sock_err: self.socker_error.emit(sock_err))
-        self.message: Optional[Message] = None
+        self.message: Message | None = None
 
     def run(self):
         self._in_progress = True

@@ -1,5 +1,4 @@
 from PyQt5.Qt import QObject, pyqtSignal
-from typing import Optional
 from logging import info
 from collections import deque
 from common.app.core.tools.transaction import Transaction
@@ -16,6 +15,11 @@ class TransactionQueue(QObject):
     _transaction_accepted: pyqtSignal = pyqtSignal(str)
     _message_ready_to_send: pyqtSignal = pyqtSignal()
     _spec: EpaySpecification = EpaySpecification()
+    _send_message: pyqtSignal = pyqtSignal(Message)
+
+    @property
+    def send_message(self):
+        return self._send_message
 
     @property
     def spec(self):
@@ -24,10 +28,6 @@ class TransactionQueue(QObject):
     @property
     def transaction_accepted(self):
         return self._transaction_accepted
-
-    @property
-    def queue(self):
-        return self._queue
 
     @property
     def transaction_count(self):
@@ -42,15 +42,17 @@ class TransactionQueue(QObject):
         self.config: Config = config
         self.parser: Parser = Parser(self.config)
 
-    def create_transaction(self, message: Message) -> None:
-        if not message.transaction.id:
-            message.transaction.id = FieldsGenerator.trans_id()
+    def create_transaction(self, request: Message):
+        if not request.transaction.id:
+            request.transaction.id = FieldsGenerator.trans_id()
 
-        self.queue.append(Transaction(request=message, trans_id=message.transaction.id))
+        transaction = Transaction(request=request, trans_id=request.transaction.id)
+
+        self._queue.append(transaction)
 
     def get_reversible_transactions(self) -> list[Transaction]:
         return [
-            trans for trans in self.queue
+            trans for trans in self._queue
             if trans.request.transaction.message_type in self.spec.reversible_messages
         ]
 
@@ -59,12 +61,12 @@ class TransactionQueue(QObject):
             return max(trans.trans_id for trans in reversible)
 
     def remove_from_queue(self, transaction):
-        self.queue.remove(transaction)
+        self._queue.remove(transaction)
 
     def get_transaction(self, trans_id) -> Transaction | None:
         transaction = None
 
-        for trans in self.queue:
+        for trans in self._queue:
             if trans_id == trans.trans_id:
                 transaction = trans
                 break
@@ -74,7 +76,7 @@ class TransactionQueue(QObject):
     def put_response_message(self, response: Message):
         transaction: Transaction
 
-        for transaction in self.queue:
+        for transaction in self._queue:
             if not transaction.match(request=transaction.request, response=response):
                 continue
 
@@ -83,3 +85,9 @@ class TransactionQueue(QObject):
             transaction.put_response(response)
 
             return
+
+    def start_transaction_timer(self, request: Message):
+        if not (transaction := self.get_transaction(request.transaction.id)):
+            return
+
+        transaction.start_timer()

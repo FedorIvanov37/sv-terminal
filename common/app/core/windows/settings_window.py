@@ -53,6 +53,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.ParseSubfields.setChecked(self.config.debug.parse_subfields)
         self.BuildFld90.setChecked(self.config.fields.build_fld_90)
         self.SendInternalId.setChecked(self.config.fields.send_internal_id)
+        self.ValidationEnabled.setChecked(self.config.fields.validation)
 
     def process_debug_level_change(self, _):
         disabled = False
@@ -84,6 +85,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.config.fields.max_amount = self.MaxAmount.text()
         self.config.fields.build_fld_90 = self.BuildFld90.isChecked()
         self.config.fields.send_internal_id = self.SendInternalId.isChecked()
+        self.config.fields.validation = self.ValidationEnabled.isChecked()
 
         with open(FilePath.CONFIG, "w") as file:
             file.write(dumps(self.config.dict(), indent=4))

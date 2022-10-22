@@ -1,25 +1,26 @@
 from collections import OrderedDict
 from logging import error, warning
-from PyQt5.QtCore import pyqtSignal, QObject, Qt
+from PyQt5.QtCore import QObject, Qt
 from PyQt5.QtWidgets import QTreeWidgetItem, QTreeWidget
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.app.core.tools.field_Item import Item
 from common.app.data_models.message import Message
 from common.app.data_models.message import TypeFields
+from common.app.data_models.config import Config
 
 
 class JsonView(QObject):
+    _spec: EpaySpecification = EpaySpecification()
     root: Item = Item(["Message"])
-    item_changed = pyqtSignal()
-    _spec = EpaySpecification()
 
     @property
     def spec(self):
         return self._spec
 
-    def __init__(self, tree: QTreeWidget, spec=None):
+    def __init__(self, config: Config, tree: QTreeWidget, spec=None):
         super(JsonView, self).__init__()
+        self.config = config
         self.tree: QTreeWidget = tree
         self.setup(spec)
 
@@ -32,7 +33,7 @@ class JsonView(QObject):
         self.tree.itemCollapsed.connect(lambda _: self.resize_all())
         self.tree.itemExpanded.connect(lambda _: self.resize_all())
         self.tree.itemDoubleClicked.connect(lambda item, column: self.edit(item, column))
-        self.tree.itemChanged.connect(self.process_change_item)
+        self.tree.itemChanged.connect(self.resize_all)
         self.tree.setFocusPolicy(Qt.StrongFocus)
         self.make_order()
 
@@ -66,7 +67,6 @@ class JsonView(QObject):
         parent: Item | QTreeWidgetItem = item.parent()
         parent.takeChild(parent.indexOfChild(item))
         parent.set_length()
-        self.item_changed.emit()
 
     def next_level(self):
         item = Item([])
@@ -89,35 +89,10 @@ class JsonView(QObject):
         self.tree.currentItem().addChild(item)
         self.tree.setCurrentItem(item)
         self.edit(item, int())
-        self.item_changed.emit()
 
     def clean(self):
         self.root.takeChildren()
         self.root.set_length()
-
-    def process_change_item(self, item: Item, column: int):
-        if item is self.root:
-            self.root.setText(0, "Message")  # TODO
-            self.root.setText(1, "")  # TODO
-            return
-
-        if item.spec:
-            item.set_length()
-
-        self.resize_all()
-
-        if not item.text(column):
-            return
-
-        if column == 0:  # TODO
-            item.setText(column, item.text(column))
-            item.set_description()
-            item.set_checkbox()
-
-        if column == 1:  # TODO
-            item.setText(column, item.text(column))
-
-        self.item_changed.emit()
 
     def set_field_value(self, field, value):
         column = 1  # TODO
@@ -129,19 +104,18 @@ class JsonView(QObject):
 
     def parse_message(self, message: Message) -> None:
         self.clean()
-        self.parse_fields(message.transaction.fields)
-
-        for item in self.root.get_children():
-            field = item.text(int())
-
-            if field not in Spec.generated_fields:
-                continue
-
-            item.set_checkbox(checked=field in message.config.generate_fields)
-
+        self._parse_fields(message.transaction.fields)
+        self.set_checkboxes(message)
         self.make_order()
 
-    def parse_fields(self, input_json: dict, parent: QTreeWidgetItem = None, specification=None):
+    def set_checkboxes(self, message):
+        for item in self.root.get_children():
+            if item.field_number not in Spec.generated_fields:
+                continue
+
+            item.set_checkbox(item.field_number in message.config.generate_fields)
+
+    def _parse_fields(self, input_json: dict, parent: QTreeWidgetItem = None, specification=None):
         if parent is None:
             parent = self.root
 
@@ -155,12 +129,13 @@ class JsonView(QObject):
             if isinstance(field_data, str):
                 string_data = [field, field_data, None, description]
                 child: Item = Item(string_data)
+                self.tree.itemChanged.connect(child.process_change_item)
                 child.set_length()
 
             else:
                 child = Item([field])
                 child.setText(3, description)  # TODO
-                self.parse_fields(field_data, parent=child, specification=specification.fields.get(field))
+                self._parse_fields(field_data, parent=child, specification=specification.fields.get(field))
 
             parent.addChild(child)
 
@@ -169,13 +144,6 @@ class JsonView(QObject):
             return
 
         self.tree.setCurrentItem(item)
-        item.set_spec()
-
-        if item.childCount():
-            if column == 0:  # TODO
-                self.tree.editItem(item, column)
-
-            return
 
         if column in (1, 0):  # TODO
             self.tree.editItem(item, column)
@@ -189,9 +157,8 @@ class JsonView(QObject):
         self.tree.expandToDepth(-1)
         self.resize_all()
 
-    def generate_fields(self, parent=None, validation: bool = False):
+    def generate_fields(self, parent=None):
         result: TypeFields = dict()
-        checked_boxes = self.get_checkboxes()
 
         if parent is None:
             parent = self.root
@@ -200,25 +167,23 @@ class JsonView(QObject):
 
         for row in parent.get_children():
             field_number: str = row.field_number
-            row.set_spec()
+            field_data: str = row.field_data
 
             if not field_number:
+                warning(f"Lost field number. The field will not be sent")
                 continue
 
-            if field_number in result and validation:
-                error("Parsing error: field %s set twice or more" % field_number)
-                return
+            if not field_number.isdigit():
+                raise ValueError(f"Error: non-numeric field number found: {row.get_field_path(string=True)}")
 
-            if row.childCount():
-                result[field_number] = self.generate_fields(row, validation=validation)
-            else:
-                if row.text(1) or row.field_number in checked_boxes:
-                    result[field_number] = row.text(1)
+            if field_number in result:
+                raise ValueError(f"Error: duplicated field number {row.get_field_path(string=True)} found")
 
-            if not row.text(2) and validation:
-                warning("Parsing error: No specification for field %s" % row.get_field_path(string=True))
-                warning("You have to set the length for the field manually before sending or change the \
-                                  specification file: /common/settings/specification.json")
+            if not field_data and field_number not in self.get_checkboxes() and not row.get_children():
+                warning(f"No value for field {field_number}. The field will not be sent")
+                continue
+
+            result[field_number] = self.generate_fields(row) if row.childCount() else field_data
 
         if parent is self.root:
             return OrderedDict({k: result[k] for k in sorted(result.keys(), key=int)})
@@ -226,12 +191,10 @@ class JsonView(QObject):
         return result
 
     def get_checkboxes(self) -> list:
-        result = set()
+        column = Spec.columns_order.get(Spec.PROPERTY)
+        return [item.field_number for item in self.root.get_children() if item.checkState(column)]
 
-        for item in self.root.get_children():
-            checked = bool(item.checkState(4))
-
-            if checked:
-                result.add(item.field_number)
-
-        return list(result)
+    def get_field_set(self):
+        field_set = [field.field_number for field in self.root.get_children() if field.field_data]
+        field_set = field_set + self.get_checkboxes()
+        return field_set

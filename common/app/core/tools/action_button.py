@@ -2,7 +2,7 @@ from PyQt5.QtGui import QMouseEvent
 from PyQt5.QtWidgets import QPushButton
 
 
-# Qt bug fix
+# Fix Qt bug
 
 
 class ActionButton(QPushButton):
