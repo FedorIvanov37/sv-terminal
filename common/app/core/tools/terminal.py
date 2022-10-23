@@ -59,10 +59,6 @@ class SvTerminal(QObject):
     def message_ready(self):
         return self._message_ready
 
-    def run_sv_terminal(self):
-        self.window.show()
-        exit(self._pyqt_application.exec_())
-
     def __init__(self):
         super(SvTerminal, self).__init__()
         self.parser: Parser = Parser(self.config)
@@ -77,6 +73,10 @@ class SvTerminal(QObject):
 
         if self.config.terminal.connect_on_startup:
             self.reconnect()
+
+    def run(self):
+        self.window.show()
+        exit(self._pyqt_application.exec_())
 
     def start_connection_thread(self):
         self.connector.moveToThread(self._connection_thread)

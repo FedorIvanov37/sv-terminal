@@ -13,10 +13,10 @@
 ```
 
 
-
 Released in Oct 2022, under construction
 
-#
+## Description
+
 
 SV-Terminal simplifies sending of banking card e-commerce transactions to SmartVista using a useful visual interface making simple things simple to achieve.
 
