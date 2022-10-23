@@ -211,10 +211,10 @@ class Parser(object):
 
         ini_data: list[str] | str = [
             f"[{IniMessageDefinition.CONFIG}]",
-            IniMessageDefinition.MAX_AMOUNT + f" = [{message.config.max_amount}]",
-            IniMessageDefinition.GENERATE_FIELDS + f" = [{generate_fields}]",
+            f"{IniMessageDefinition.MAX_AMOUNT} = [{message.config.max_amount}]",
+            f"{IniMessageDefinition.GENERATE_FIELDS} = [{generate_fields}]",
             f"[{IniMessageDefinition.MTI}]",
-            f"{IniMessageDefinition.MTI} = {message.transaction.message_type}",
+            f"{IniMessageDefinition.MTI} = [{message.transaction.message_type}]",
             f"[{IniMessageDefinition.MESSAGE}]"
         ]
 
