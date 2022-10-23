@@ -58,4 +58,3 @@ pip install -r requirements.txt
 
 * Field validation added to the Terminal. The validation can be turned off through settings window
 * Added internal config to ini files for storing max amount and generated fields
-*
