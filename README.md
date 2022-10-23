@@ -2,6 +2,7 @@
   # SmartVista Electronic Commerce Terminal
 
 ```
+
        ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::
       :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:
       +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+
@@ -10,7 +11,7 @@
       #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#
        ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ##########
    
-   Version: v0.15 
+       Version: v0.15 
 ```
 
 
@@ -56,6 +57,6 @@ pip install -r requirements.txt
 
 ## What's new in this version
 
-* Validation added to the Terminal. Validation can be turned off trought settings window
-* Added initernal config to ini files 
+* Field validation added to the Terminal. The validation can be turned off trought settings window
+* Added initernal config to ini files for storing max amount and generated fields
 * 
