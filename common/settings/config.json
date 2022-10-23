@@ -1,16 +1,14 @@
 {
     "smartvista": {
-        "host": "192.169.0.1",
-        "port": "16677",
-        "api_port": "5001"
+        "host": "192.168.1.2",
+        "port": "16677"
     },
     "terminal": {
         "process_default_dump": true,
-        "connect_on_startup": false,
-        "run_api": false
+        "connect_on_startup": false
     },
     "debug": {
-        "level": "INFO",
+        "level": "DEBUG",
         "clear_log": false,
         "parse_subfields": false
     },

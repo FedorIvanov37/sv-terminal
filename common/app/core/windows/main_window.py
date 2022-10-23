@@ -61,7 +61,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.PlusButton: self.plus,
             self.MinusButton: self.minus,
             self.NextLevelButton: self.next_level,
-            self.ButtonRunApi: self.run_api
         }
 
         for button, method in buttons_connection_scheme.items():
@@ -123,12 +122,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.set_bitmap()
         self.LogArea.setText(TextConstants.HELLO_MESSAGE)
         self._connect()
-
-    def run_api(self):
-        self.terminal.run_api()
-
-    def stop_api(self):
-        self.terminal.stop_api()
 
     def plus(self):
         self.json_view.plus()
