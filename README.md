@@ -44,16 +44,14 @@ Fedor Ivanov
 
 ## Requirements and installation
 
-Python 3.10+ required
-
-
-* PyQt5
+* Python 3.10+
+* PyQt5 or PyQt6
 * pydantic
 
 
 To begin, you have to install Python 3.10 or above and use the following command in the program directory. Then use double click on sv_terminal.pyw file for run the Terminal.
 
-```cmd
+```
 pip install -r requirements.txt
 ```
 
