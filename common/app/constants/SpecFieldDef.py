@@ -1,4 +1,4 @@
-class SpecFieldDef:
+class SpecFieldDef(object):
     FIELD: str = "Field"
     DESCRIPTION: str = "Description"
     MIX_LENGTH: str = "Min Len"

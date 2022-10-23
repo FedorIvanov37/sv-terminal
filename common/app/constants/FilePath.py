@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class FilePath:
+class FilePath(object):
     CONFIG: str = r"common\settings\config.json"
     ECHO_TEST: str = r"common\settings\echo-test.json"
     DEFAULT_FILE: str = r"common\settings\default.json"

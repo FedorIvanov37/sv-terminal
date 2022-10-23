@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class ButtonAction:
+class ButtonAction(object):
     LAST = "Last"
     OTHER = "Other"
 

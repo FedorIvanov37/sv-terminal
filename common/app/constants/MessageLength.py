@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class MessageLength:
+class MessageLength(object):
     message_type_length: int = 4
     bitmap_length: int = 8
     first_bitmap_capacity: int = 64

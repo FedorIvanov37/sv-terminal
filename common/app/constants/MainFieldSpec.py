@@ -1,7 +1,7 @@
 from common.app.core.tools.epay_specification import EpaySpecification
 
 
-class MainFieldSpec:
+class MainFieldSpec(object):
     spec: EpaySpecification = EpaySpecification()
     FIELD: str = "Field"
     VALUE: str = "Value"

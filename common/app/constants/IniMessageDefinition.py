@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class IniMessageDefinition:
+class IniMessageDefinition(object):
     MTI = "MTI"
     MESSAGE = "MESSAGE"
     CONFIG = "CONFIG"

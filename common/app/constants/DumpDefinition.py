@@ -1,4 +1,4 @@
-class DumpDefinition:
+class DumpDefinition(object):
     LINE_LENGTH = 32
     HEX_LINE_LENGTH = 51
     ASCII_LINE_LENGTH = 16

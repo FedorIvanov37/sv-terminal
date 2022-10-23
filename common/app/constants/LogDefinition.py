@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class LogDefinition:
+class LogDefinition(object):
     DEBUG = "DEBUG"
     INFO = "INFO"
     WARNING = "WARNING"

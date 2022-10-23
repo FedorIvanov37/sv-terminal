@@ -1,7 +1,7 @@
 from PyQt5.QtNetwork import QTcpSocket
 
 
-class ConnectionStatus:
+class ConnectionStatus(object):
     CONNECTED: str = "SVFE Connected"
     DISCONNECTED: str = "SVFE Disconnected"
     IN_PROGRESS: str = "SVFE Connection in progress"

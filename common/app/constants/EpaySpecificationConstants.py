@@ -135,7 +135,7 @@ class FieldSet:
 
 
 @dataclass(frozen=True)
-class DataTypes:
+class DataTypes(object):
     FIELD_TYPE_ALPHA: str = "FIELD_TYPE_ALPHA"
     FIELD_TYPE_NUMERIC: str = "FIELD_TYPE_NUMERIC"
     FIELD_TYPE_SPECIAL: str = "FIELD_TYPE_SPECIAL"
@@ -143,7 +143,7 @@ class DataTypes:
 
 
 @dataclass(frozen=True)
-class FieldDataKit:
+class FieldDataKit(object):
     FIELD_TYPE_ALPHA: str = ascii_letters
     FIELD_TYPE_NUMERIC: str = digits
     FIELD_TYPE_SPECIAL: str = punctuation + " "
@@ -151,7 +151,7 @@ class FieldDataKit:
 
 
 @dataclass(frozen=True)
-class FieldDateFormat:
+class FieldDateFormat(object):
     FIELD_007_TRANSMISSION_DATE_AND_TIME = "%m%d%H%M%S"
     FIELD_012_TRANSACTION_LOCAL_DATE_AND_TIME = "%y%m%d%H%M%S"
     FIELD_014_EXPIRATION_DATE_YYMM = "%y%m"
@@ -159,7 +159,7 @@ class FieldDateFormat:
 
 
 @dataclass(frozen=True)
-class EpaySpecificationData:
+class EpaySpecificationData(object):
     DATA_TYPES: DataTypes = DataTypes()
     FIELD_SET: FieldSet = FieldSet()
     FIELD_DATA_KIT: FieldDataKit = FieldDataKit()
