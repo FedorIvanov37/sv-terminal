@@ -12,6 +12,10 @@
        ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ##########
    
        Version: v0.15 
+
+
+
+
 ```
 
 
@@ -57,6 +61,7 @@ pip install -r requirements.txt
 
 ## What's new in this version
 
-* Field validation added to the Terminal. The validation can be turned off trought settings window
-* Added initernal config to ini files for storing max amount and generated fields
-* 
+
+* Field validation added to the Terminal. The validation can be turned off through settings window
+* Added internal config to ini files for storing max amount and generated fields
+*
