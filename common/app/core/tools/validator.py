@@ -17,8 +17,8 @@ class Validator(object):
         return self._spec
 
     def __init__(self, config: Config = None):
-        if config is not None and not self._config:
-            self._config: Config = config
+        if config is not None:
+            self._config = config
 
     def validate_message(self, message):
         if not message:

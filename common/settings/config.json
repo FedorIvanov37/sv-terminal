@@ -1,6 +1,6 @@
 {
     "smartvista": {
-        "host": "192.168.1.2",
+        "host": "172.21.30.5",
         "port": "16677"
     },
     "terminal": {
@@ -8,14 +8,14 @@
         "connect_on_startup": false
     },
     "debug": {
-        "level": "DEBUG",
-        "clear_log": false,
+        "level": "INFO",
+        "clear_log": true,
         "parse_subfields": false
     },
     "fields": {
-        "max_amount": "100",
+        "max_amount": "1000",
         "build_fld_90": true,
         "send_internal_id": true,
-        "validation": true
+        "validation": false
     }
 }

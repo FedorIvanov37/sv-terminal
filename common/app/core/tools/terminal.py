@@ -1,8 +1,9 @@
+from json import dumps
+from logging import error, info
 from PyQt5.Qt import QApplication
 from PyQt5.QtCore import QThread, pyqtSignal, QObject
 from PyQt5.QtNetwork import QTcpSocket
-from json import dumps
-from logging import error, info, debug
+from PyQt5 import QtWidgets
 from common.app.core.windows.main_window import MainWindow
 from common.app.core.windows.reversal_window import ReversalWindow
 from common.app.core.windows.settings_window import SettingsWindow
@@ -10,24 +11,36 @@ from common.app.core.windows.spec_window import SpecWindow
 from common.app.core.tools.parser import Parser
 from common.app.core.tools.logger import Logger
 from common.app.core.tools.transaction_queue import TransactionQueue
-from common.app.data_models.config import Config
-from common.app.constants.DataFormats import DataFormats
 from common.app.core.tools.epay_specification import EpaySpecification
-from common.app.constants.TextConstants import TextConstants
-from common.app.data_models.message import Message
-from common.app.data_models.message import TransactionModel
 from common.app.core.tools.connector import ConnectionWorker
 from common.app.core.tools.fields_generator import FieldsGenerator
 from common.app.core.tools.validator import Validator
+from common.app.constants.TextConstants import TextConstants
+from common.app.constants.DataFormats import DataFormats
+from common.app.constants.FilePath import FilePath
+from common.app.data_models.config import Config
+from common.app.data_models.message import Message
+from common.app.data_models.message import TransactionModel
 
 
-class Terminal(QObject):
+class SvTerminal(QObject):
+    _config: Config = Config.parse_file(FilePath.CONFIG)
+    _pyqt_application = QtWidgets.QApplication([])
+    _validator = Validator(_config)
     _message_ready: pyqtSignal = pyqtSignal(Message)
     _need_reconnect: pyqtSignal = pyqtSignal()
     _spec: EpaySpecification = EpaySpecification()
     _new_connector: ConnectionWorker
     _connection_thread: QThread
     _send_message: pyqtSignal = pyqtSignal(Message)
+
+    @property
+    def config(self):
+        return self._config
+
+    @property
+    def validator(self):
+        return self._validator
 
     @property
     def new_connector(self):
@@ -45,20 +58,26 @@ class Terminal(QObject):
     def message_ready(self):
         return self._message_ready
 
-    def __init__(self, config: Config):
-        super(Terminal, self).__init__()
-        self.config: Config = config
+    def run_sv_terminal(self):
+        self.window.show()
+        exit(self._pyqt_application.exec_())
+
+    def __init__(self):
+        super(SvTerminal, self).__init__()
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator(self.config)
         self.connector: ConnectionWorker = ConnectionWorker(self.config)
         self.window: MainWindow = MainWindow(self.config, self)
         self.logger: Logger = Logger(self.window.log_browser, self.config)
         self.trans_queue: TransactionQueue = TransactionQueue(self.config)
-        self.validator = Validator()
-
-        # Working with connection thread
         self._connection_thread: QThread = QThread()
         self.connector = ConnectionWorker(self.config)
+        self.start_connection_thread()
+
+        if self.config.terminal.connect_on_startup:
+            self.reconnect()
+
+    def start_connection_thread(self):
         self.connector.moveToThread(self._connection_thread)
         self._need_reconnect.connect(self.connector.connect_sv)
         self._send_message.connect(self.connector.send_message)
@@ -71,17 +90,6 @@ class Terminal(QObject):
         self.connector.connection_finished.connect(lambda: self.window.lock_connection_buttons(lock=False))
         self.connector.ready_read.connect(self.read_from_socket)
         self._connection_thread.start()
-
-    def run(self):  # Start the terminal
-        self.setup()
-        self.window.show()
-
-    def setup(self):
-        if self.config.terminal.connect_on_startup:
-            self.reconnect()
-
-        self.logger.print_config(level=debug)
-        info("Startup finished")
 
     def socket_error(self):
         if self.connector.error() == -1:  # TODO
@@ -190,6 +198,10 @@ class Terminal(QObject):
         except ValidationError as validation_error:
             error(f"{validation_error}")
 
+    @staticmethod
+    def set_clipboard_text(data: str) -> None:
+        QApplication.clipboard().setText(data)
+
     def get_last_reversible_transaction_id(self):
         transaction_id = None
 
@@ -214,10 +226,6 @@ class Terminal(QObject):
             return reversal_window.reversal_id
 
         info("Reversal sending is cancelled by user")
-
-    @staticmethod
-    def set_clipboard_text(data: str) -> None:
-        QApplication.clipboard().setText(data)
 
     def reverse_transaction(self, original_transaction_id: str):
         if not (reversal_message := self.build_reversal(original_transaction_id)):

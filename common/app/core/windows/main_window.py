@@ -38,14 +38,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         super().__init__()
         self.config: Config = config
         self.terminal = terminal
-        self.setupUi(self)
         self.parser: Parser = Parser(self.config)
-        self.setup()
-
-    def setup(self):
         self._setup()
 
-    def _connect(self):
+    def _connect_buttons(self):
         buttons_connection_scheme = {  # Define method of MainWindow for each button object
             self.ButtonSend: self.send,
             self.ButtonClearLog: self.clear_log,
@@ -67,7 +63,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             button.pressed.connect(method)
 
     def _setup(self):
-        QtWin.setCurrentProcessExplicitAppUserModelID("MainWindow.py")
+        self.setupUi(self)
         self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
         self.set_connection_status(QTcpSocket.UnconnectedState, log=False)
         self.json_view: JsonView = JsonView(self.config, self.FieldsTree)
@@ -121,7 +117,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         self.set_bitmap()
         self.LogArea.setText(TextConstants.HELLO_MESSAGE)
-        self._connect()
+        self._connect_buttons()
+        QtWin.setCurrentProcessExplicitAppUserModelID("MainWindow.py")
 
     def plus(self):
         self.json_view.plus()
