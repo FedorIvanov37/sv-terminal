@@ -23,6 +23,5 @@
 # ...
 # ... 
 #
-#
 
 import common.sv_terminal
