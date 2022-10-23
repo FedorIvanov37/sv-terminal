@@ -18,7 +18,6 @@ from common.app.data_models.message import Message
 from common.app.data_models.message import TransactionModel
 from common.app.core.tools.connector import ConnectionWorker
 from common.app.core.tools.fields_generator import FieldsGenerator
-from common.app.core.tools.api.api import TerminalApi
 from common.app.core.tools.validator import Validator
 
 
@@ -55,8 +54,6 @@ class Terminal(QObject):
         self.window: MainWindow = MainWindow(self.config, self)
         self.logger: Logger = Logger(self.window.log_browser, self.config)
         self.trans_queue: TransactionQueue = TransactionQueue(self.config)
-        self.api: TerminalApi = TerminalApi(self.config)
-        self.api.adapter.message_ready.connect(lambda message: self.process_api_call(message))
         self.validator = Validator()
 
         # Working with connection thread
@@ -75,17 +72,6 @@ class Terminal(QObject):
         self.connector.ready_read.connect(self.read_from_socket)
         self._connection_thread.start()
 
-    def run_http_server(self):
-        from common.app.core.tools.api.http_api import Adapter, FastApiApp
-        self.adapter = Adapter()
-        self.adapter.got_incoming_message.connect(lambda m: self.send(m))
-
-        # from common.app.core.tools.api.http_api import run_app
-        # run_app()
-
-    def process_api_call(self, data: Message) -> None:
-        self.send(data)
-
     def run(self):  # Start the terminal
         self.setup()
         self.window.show()
@@ -96,12 +82,6 @@ class Terminal(QObject):
 
         self.logger.print_config(level=debug)
         info("Startup finished")
-
-    def run_api(self):
-        ...
-
-    def stop_api(self):
-        ...
 
     def socket_error(self):
         if self.connector.error() == -1:  # TODO

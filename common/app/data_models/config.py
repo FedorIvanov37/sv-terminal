@@ -4,13 +4,11 @@ from pydantic import BaseModel
 class SmartVista(BaseModel):
     host: str = str()
     port: str = str()
-    api_port: str = str()
 
 
 class Terminal(BaseModel):
     process_default_dump: bool = True
     connect_on_startup: bool = True
-    run_api: bool = False
 
 
 class Debug(BaseModel):
