@@ -8,7 +8,16 @@ TypeFields = dict[str, str | dict]
 
 class MessageConfig(BaseModel):
     generate_fields: list[str] = list()
-    max_amount: int = 100
+    max_amount: str = "100"
+
+    @validator("max_amount")
+    def amount_should_be_digit(cls, max_amount: str):
+        max_amount = str(max_amount)
+
+        if not max_amount.isdigit():
+            raise ValueError("Max transaction amount should be digits only")
+
+        return max_amount
 
 
 class TransactionModel(BaseModel):

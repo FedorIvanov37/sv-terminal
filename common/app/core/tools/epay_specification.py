@@ -183,11 +183,11 @@ class EpaySpecification(EpaySpecificationData):
 
             return getattr(self.FIELD_DATE_FORMAT, field_name, "")
 
-    def get_field_data_kit(self, field):
-        field_spec: IsoField = self.get_field_spec([field])
+    def get_field_data_kit(self, field_path: list[str]):
+        field_spec: IsoField = self.get_field_spec(field_path)
 
         if not field_spec:
-            raise ValueError("Lost field spec for field %s" % field)
+            raise ValueError("Lost field spec for field %s" % ".".join(field_path))
 
         data_map: dict[str, bool] = {
             self.DATA_TYPES.FIELD_TYPE_ALPHA: field_spec.alpha,

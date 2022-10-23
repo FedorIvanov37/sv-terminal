@@ -4,6 +4,7 @@ from PyQt5.Qt import QApplication
 from PyQt5.QtCore import QThread, pyqtSignal, QObject
 from PyQt5.QtNetwork import QTcpSocket
 from PyQt5 import QtWidgets
+from pydantic import ValidationError
 from common.app.core.windows.main_window import MainWindow
 from common.app.core.windows.reversal_window import ReversalWindow
 from common.app.core.windows.settings_window import SettingsWindow
@@ -137,7 +138,7 @@ class SvTerminal(QObject):
     def save_message_to_file(self, message: Message, filename: str, file_format: str) -> None:
         data_processing_map = {
             DataFormats.JSON: lambda _message: dumps(_message.dict(), indent=4),
-            DataFormats.INI: lambda _message: self.parser.get_transaction_data_ini(_message, string=True),
+            DataFormats.INI: lambda _message: self.parser.message_to_ini_string(_message),
             DataFormats.DUMP: lambda _message: self.parser.create_sv_dump(_message)[1:]
         }
 
@@ -182,12 +183,10 @@ class SvTerminal(QObject):
         data_processing_map = {
             DataFormats.JSON: lambda: dumps(self.parser.parse_form(self.window).dict(), indent=4),
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parser.parse_form(self.window)),
-            DataFormats.INI: lambda: self.parser.get_transaction_data_ini(self.parser.parse_form(self.window), string=True),
+            DataFormats.INI: lambda: self.parser.message_to_ini_string(self.parser.parse_form(self.window)),
             DataFormats.SV_TERMINAL: lambda: TextConstants.HELLO_MESSAGE,
             DataFormats.SPEC: lambda: dumps(self.spec.spec.dict(), indent=4)
         }
-
-        from pydantic import ValidationError
 
         if not (function := data_processing_map.get(data_format)):
             error(f"Wrong data format for printing: {data_format}")
@@ -203,20 +202,13 @@ class SvTerminal(QObject):
         QApplication.clipboard().setText(data)
 
     def get_last_reversible_transaction_id(self):
-        transaction_id = None
-
-        try:
-            transaction_id = max(transaction.trans_id for transaction in self.get_reversible_transactions())
-        except ValueError:
+        if not (transaction_id := self.trans_queue.get_last_reversible_transaction_id()):
             error("Transaction Queue has no reversible transactions")
 
         return transaction_id
 
-    def get_reversible_transactions(self):
-        return self.trans_queue.get_reversible_transactions()
-
     def show_reversal_window(self):
-        transaction_list: list = self.get_reversible_transactions()
+        transaction_list: list = self.trans_queue.get_reversible_transactions()
         reversal_window = ReversalWindow(transaction_list)
 
         if reversal_window.exec_():

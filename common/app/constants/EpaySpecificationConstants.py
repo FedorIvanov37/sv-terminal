@@ -1,4 +1,4 @@
-from string import ascii_letters, digits
+from string import ascii_letters, digits, punctuation
 from dataclasses import dataclass
 
 
@@ -146,7 +146,7 @@ class DataTypes:
 class FieldDataKit:
     FIELD_TYPE_ALPHA: str = ascii_letters
     FIELD_TYPE_NUMERIC: str = digits
-    FIELD_TYPE_SPECIAL: str = ascii_letters + digits + " "
+    FIELD_TYPE_SPECIAL: str = punctuation + " "
     FIELD_TYPE_BYTES: str | None = None
 
 

@@ -6,6 +6,3 @@
 
 PyQt5
 pydantic
-flask
-uvicorn
-fastapi

@@ -1,7 +1,7 @@
-try:
-    from common.app.core.tools.terminal import SvTerminal
-    from common.app.core.windows.error_window import ErrorWindow
+from common.app.core.windows.error_window import ErrorWindow
+from common.app.core.tools.terminal import SvTerminal
 
+try:
     terminal = SvTerminal()
     terminal.run_sv_terminal()
 

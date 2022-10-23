@@ -207,7 +207,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.set_mti(message.transaction.message_type)
         self.set_fields(message)
 
-        info("File successfully parsed: %s", filename)
+        if self.sender() is self.ButtonParseDump:
+            info(f"File successfully parsed: {filename}")
 
     def set_mti(self, mti: str):
         index = self.msgtype.findText(f"{mti}: {self.spec.get_desc(mti)}")

@@ -13,9 +13,9 @@
         "parse_subfields": false
     },
     "fields": {
-        "max_amount": "1000",
+        "max_amount": "100",
         "build_fld_90": true,
         "send_internal_id": true,
-        "validation": false
+        "validation": true
     }
 }
