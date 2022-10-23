@@ -39,7 +39,7 @@ In case of any questions about the Terminal contact Fedor Ivanov. Your feedback 
 
 ## Author
 
-Fedor Ivanov
+Designed and developed by Fedor Ivanov
 
 
 ## Requirements and installation
