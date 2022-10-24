@@ -6,87 +6,25 @@ from common.app.constants.MessageLength import MessageLength
 from common.app.decorators.singleton import singleton
 from common.app.constants.FilePath import FilePath
 from common.app.data_models.epay_specification import EpaySpecModel, Mti, IsoField
-from common.app.constants.EpaySpecificationConstants import EpaySpecificationData
+from common.app.constants.EpaySpecificationData import EpaySpecificationData
 
 
 @singleton
 class EpaySpecification(EpaySpecificationData):
-
-    class MessageTypeSpec:
-        _spec: EpaySpecModel = EpaySpecModel.parse_file(FilePath.SPECIFICATION)
-
-        @property
-        def spec(self):
-            return self._spec
-
-        @property
-        def message_types_description(self) -> dict[str, str]:
-            desc: dict[str, str] = {}
-            mti: Mti
-
-            for mti in self.spec.mti:
-                desc[mti.request] = mti.description + " Request"  # TODO raw strings
-                desc[mti.response] = mti.description + " Response"  # TODO raw strings
-
-            return desc
-
-        @property
-        def reversible_messages(self):
-            return [mti.request for mti in self.spec.mti if mti.is_reversible]
-
-        @staticmethod
-        def get_reversal_mti(request_mti):
-            return "0400"   # TODO hardcode
-
-        def get_desc(self, mti):
-            try:
-                return self.message_types_description[mti]
-            except KeyError:
-                return str()
-
-        def get_mti_list(self):
-            message_types = list()
-
-            for message_type, desc in self.message_types_description.items():
-                message_types.append(f"{message_type}: {desc}")
-
-            return message_types
-
-        def get_mti_codes(self):
-            mti_codes: set[str] = set()
-
-            for mti in self.get_mti_list():
-                mti_codes.add(mti[:MessageLength.message_type_length])
-
-            return list(mti_codes)
-
-        def get_resp_mti(self, request_mti):
-            for mti in self.spec.mti:
-                if mti.request == request_mti:
-                    return mti.response
-
-        def is_reversible(self, mti):
-            return mti in self.reversible_messages
+    _MessageLength: MessageLength = MessageLength()
 
     try:
         _specification_model: EpaySpecModel = EpaySpecModel.parse_file(FilePath.SPECIFICATION)
-        _MessageTypeSpec: MessageTypeSpec = MessageTypeSpec()
-        _MessageLength = MessageLength()
     except ValidationError as JsonParsingError:
-        error(f"Specification JSON parsing error: {JsonParsingError.json()}")
-        raise JsonParsingError
+        error(f"Critical error! Cannot parse Specification: {JsonParsingError.json()}")
 
     @property
-    def spec(self):
+    def spec(self) -> EpaySpecModel:
         return self._specification_model
 
     @property
-    def mti(self):
+    def mti(self) -> list[Mti]:
         return self.spec.mti
-
-    @mti.setter
-    def mti(self, mti: list[Mti]):
-        self.spec.mti = mti
 
     @property
     def name(self):
@@ -108,13 +46,41 @@ class EpaySpecification(EpaySpecificationData):
     def get_utrnno_path():  # TODO hardcode
         return ["47", "064"]
 
-    @property
-    def message_types_description(self) -> dict[str, str]:
-        return self._MessageTypeSpec.message_types_description
+    def get_reversal_mti(self, request_mti):
+        for mti in self.spec.mti:
+            if not (mti.reversal_mti and mti.is_reversible):
+                continue
 
-    @property
-    def reversible_messages(self):
-        return self._MessageTypeSpec.reversible_messages
+            if mti.request == request_mti:
+                return mti.reversal_mti
+
+    def get_mti_codes(self) -> list[str]:
+        message_type_identifiers: set[str] = set()
+
+        message_type: Mti
+
+        for message_type in self.spec.mti:
+            [message_type_identifiers.add(mti) for mti in (message_type.request, message_type.response)]
+
+        message_type_identifiers: list[str] = list(message_type_identifiers)
+
+        return message_type_identifiers
+
+    def get_resp_mti(self, request_mti):
+        for message_type_identifier in self.spec.mti:
+            if message_type_identifier.request != request_mti:
+                continue
+
+            return message_type_identifier.response
+
+    def get_mti_list(self) -> list[str]:
+        message_type_desc: list[str] = []
+
+        for message_type in self.spec.mti:
+            message_type_desc.append(f"{message_type.request}: {message_type.description} Request")
+            message_type_desc.append(f"{message_type.response}: {message_type.description} Response")
+
+        return message_type_desc
 
     def reload_spec(self, spec: EpaySpecModel, commit: bool):
         self.spec.fields = spec.fields
@@ -204,26 +170,3 @@ class EpaySpecification(EpaySpecificationData):
             field_data_kit += getattr(self.FIELD_DATA_KIT, field_type, "")
 
         return field_data_kit
-
-    def get_reversal_mti(self, request_mti):
-        for mti in self.spec.mti:
-            if not mti.reversal_mti or not mti.is_reversible:
-                continue
-
-            if mti.request == request_mti:
-                return mti.reversal_mti
-
-    def get_desc(self, mti):
-        return self._MessageTypeSpec.get_desc(mti)
-
-    def get_mti_list(self):
-        return self._MessageTypeSpec.get_mti_list()
-
-    def get_mti_codes(self):
-        return self._MessageTypeSpec.get_mti_codes()
-
-    def get_resp_mti(self, request_mti):
-        return self._MessageTypeSpec.get_resp_mti(request_mti)
-
-    def is_reversible(self, mti):
-        return self._MessageTypeSpec.is_reversible(mti)

@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import BaseModel, Field
 
 
@@ -29,10 +28,10 @@ class IsoField(BaseModel):
     bytes: bool = False
     reserved_for_future: bool = False
     description: str = str()
-    fields: Optional[FieldSet]
+    fields: FieldSet | None
 
 
 class EpaySpecModel(BaseModel):
-    name: Optional[str] = "ISO-8583 E-pay Specification"
+    name: str | None = "ISO-8583 E-pay Specification"
     mti: list[Mti] = Field(min_items=1, alias="mti")
     fields: FieldSet = {}

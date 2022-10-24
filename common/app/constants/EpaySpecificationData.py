@@ -160,7 +160,7 @@ class FieldDateFormat(object):
 
 @dataclass(frozen=True)
 class EpaySpecificationData(object):
-    DATA_TYPES: DataTypes = DataTypes()
     FIELD_SET: FieldSet = FieldSet()
+    DATA_TYPES: DataTypes = DataTypes()
     FIELD_DATA_KIT: FieldDataKit = FieldDataKit()
     FIELD_DATE_FORMAT: FieldDateFormat = FieldDateFormat()

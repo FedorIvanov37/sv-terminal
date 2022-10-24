@@ -1,7 +1,7 @@
 from logging import info, error
-from PyQt5.QtGui import QPalette, QColor, QIcon
+from PyQt5.QtGui import QPalette, QColor, QIcon, QCloseEvent
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMenu
-from PyQt5.QtGui import QCloseEvent
+from PyQt5.QtCore import Qt
 from PyQt5.QtNetwork import QTcpSocket
 from PyQt5.QtWinExtras import QtWin
 from common.app.forms.mainwindow import Ui_MainWindow
@@ -208,13 +208,13 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.set_fields(message)
 
         if self.sender() is self.ButtonParseDump:
-            info(f"File successfully parsed: {filename}")
+            info(f"File parsed: {filename}")
 
     def set_mti(self, mti: str):
-        index = self.msgtype.findText(f"{mti}: {self.spec.get_desc(mti)}")
+        index = self.msgtype.findText(mti, flags=Qt.MatchContains)
 
         if index == -1:
-            error("Cannot set MTI")
+            error(f"Cannot set Message Type Identifier {mti}. Mti not in specification")
             return
 
         self.msgtype.setCurrentIndex(index)

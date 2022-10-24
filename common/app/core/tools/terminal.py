@@ -207,8 +207,8 @@ class SvTerminal(QObject):
         return transaction_id
 
     def show_reversal_window(self):
-        transaction_list: list = self.trans_queue.get_reversible_transactions()
-        reversal_window = ReversalWindow(transaction_list)
+        messages_list: list[Message] = self.trans_queue.get_reversible_transactions()
+        reversal_window = ReversalWindow(messages_list)
 
         if reversal_window.exec_():
             if not reversal_window.reversal_id:
