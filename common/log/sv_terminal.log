@@ -128,3 +128,50 @@
 12:43:50 [INFO] [070][003][301]
 12:43:50 [INFO] 
 12:43:59 [INFO] Connection status changed to SVFE Disconnected
+12:48:00 [INFO] Processing transaction with internal ID [20221024_124800_187923475]
+12:48:00 [INFO] 
+12:48:00 [INFO] [TRANS ID][20221024_124800_187923475]
+12:48:00 [INFO] [MSG TYPE][0800]
+12:48:00 [INFO] [BITMAP  ][1, 7, 11, 70]
+12:48:00 [INFO] [007][010][1024124800]
+12:48:00 [INFO] [011][006][835292]
+12:48:00 [INFO] [070][003][301]
+12:48:00 [INFO] 
+12:48:00 [WARNING] Connection is not Established, trying to connect
+12:48:00 [INFO] Message was sent
+12:48:00 [INFO] Connection status changed to SVFE Connected
+12:48:00 [INFO] 
+12:48:00 [INFO] Transaction ID [20221024_124800_187923475] matched. Response time seconds: 0.178
+12:48:00 [INFO] 
+12:48:00 [INFO] [TRANS ID][20221024_124800_187923475]
+12:48:00 [INFO] [MSG TYPE][0810]
+12:48:00 [INFO] [BITMAP  ][1, 7, 11, 39, 70]
+12:48:00 [INFO] [007][010][1024124800]
+12:48:00 [INFO] [011][006][835292]
+12:48:00 [INFO] [039][002][00]
+12:48:00 [INFO] [070][003][301]
+12:48:00 [INFO] 
+12:48:30 [INFO] Processing transaction with internal ID [20221024_124830_185468585]
+12:48:30 [INFO] 
+12:48:30 [INFO] [TRANS ID][20221024_124830_185468585]
+12:48:30 [INFO] [MSG TYPE][0800]
+12:48:30 [INFO] [BITMAP  ][1, 7, 11, 70]
+12:48:30 [INFO] [007][010][1024124830]
+12:48:30 [INFO] [011][006][660861]
+12:48:30 [INFO] [070][003][301]
+12:48:30 [INFO] 
+12:48:30 [WARNING] Connection is not Established, trying to connect
+12:48:30 [INFO] Message was sent
+12:48:30 [INFO] Connection status changed to SVFE Connected
+12:48:30 [INFO] 
+12:48:30 [INFO] Transaction ID [20221024_124830_185468585] matched. Response time seconds: 0.073
+12:48:30 [INFO] 
+12:48:30 [INFO] [TRANS ID][20221024_124830_185468585]
+12:48:30 [INFO] [MSG TYPE][0810]
+12:48:30 [INFO] [BITMAP  ][1, 7, 11, 39, 70]
+12:48:30 [INFO] [007][010][1024124830]
+12:48:30 [INFO] [011][006][660861]
+12:48:30 [INFO] [039][002][00]
+12:48:30 [INFO] [070][003][301]
+12:48:30 [INFO] 
+12:48:32 [INFO] Connection status changed to SVFE Disconnected

@@ -1,4 +1,4 @@
-sv_terminal.log
+common/log/sv_terminal.log
 .gitignore
 .idea
 venv
