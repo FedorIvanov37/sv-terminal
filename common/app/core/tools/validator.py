@@ -75,6 +75,9 @@ class Validator(object):
             raise ValueError(f"Lost spec for field {path}")
 
         for letter in value:
+            if letter not in ascii_letters + digits + punctuation + " ":
+                raise ValueError(f"Incorrect letters in field {path}. Seems like problem with encoding")
+
             if letter in ascii_letters and not field_spec.alpha:
                 raise ValueError(f"Alphabetic values not allowed in field {path} - {field_spec.description}")
 
