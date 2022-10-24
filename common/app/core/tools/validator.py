@@ -5,7 +5,7 @@ from common.app.decorators.singleton import singleton
 
 
 TypeFields = dict[str, str | dict]
-
+specials = punctuation + " "
 
 @singleton
 class Validator(object):
@@ -75,7 +75,7 @@ class Validator(object):
             raise ValueError(f"Lost spec for field {path}")
 
         for letter in value:
-            if letter not in ascii_letters + digits + punctuation + " ":
+            if letter not in ascii_letters + digits + specials:
                 raise ValueError(f"Incorrect letters in field {path}. Seems like problem with encoding")
 
             if letter in ascii_letters and not field_spec.alpha:
@@ -84,7 +84,7 @@ class Validator(object):
             if letter in digits and not field_spec.numeric:
                 raise ValueError(f"Numeric values not allowed in field {path} - {field_spec.description}")
 
-            if letter in punctuation + " " and not field_spec.special:
+            if letter in specials and not field_spec.special:
                 raise ValueError(f"Special values not allowed in field {path} - {field_spec.description}")
 
         length = len(value)
