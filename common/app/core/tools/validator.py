@@ -4,8 +4,9 @@ from common.app.data_models.config import Config
 from common.app.decorators.singleton import singleton
 
 
-TypeFields = dict[str, str | dict]
 specials = punctuation + " "
+TypeFields = dict[str, str | dict]
+
 
 @singleton
 class Validator(object):
