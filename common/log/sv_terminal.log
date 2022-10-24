@@ -175,3 +175,6 @@
 12:48:30 [INFO] [070][003][301]
 12:48:30 [INFO] 
 12:48:32 [INFO] Connection status changed to SVFE Disconnected
+12:49:56 [INFO] [Re]connecting...
+12:49:56 [INFO] Connection status changed to SVFE Connected
+12:49:59 [INFO] Connection status changed to SVFE Disconnected

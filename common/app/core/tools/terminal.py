@@ -68,7 +68,6 @@ class SvTerminal(QObject):
         self.logger: Logger = Logger(self.window.log_browser, self.config)
         self.trans_queue: TransactionQueue = TransactionQueue(self.config)
         self._connection_thread: QThread = QThread()
-        self.connector = ConnectionWorker(self.config)
         self.start_connection_thread()
 
         if self.config.terminal.connect_on_startup:
