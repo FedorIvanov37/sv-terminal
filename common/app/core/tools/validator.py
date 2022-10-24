@@ -4,7 +4,6 @@ from common.app.data_models.config import Config
 from common.app.decorators.singleton import singleton
 
 
-specials = punctuation + " "
 TypeFields = dict[str, str | dict]
 
 
@@ -54,6 +53,11 @@ class Validator(object):
         return fields
 
     def validate_field(self, field_path: list[str], value: TypeFields | str):
+        alphabetic = ascii_letters
+        numeric = digits
+        specials = punctuation + " "
+        valid_values = alphabetic + numeric + specials
+
         if not self._config.fields.validation:
             return
 
@@ -76,7 +80,7 @@ class Validator(object):
             raise ValueError(f"Lost spec for field {path}")
 
         for letter in value:
-            if letter not in ascii_letters + digits + specials:
+            if letter not in valid_values:
                 raise ValueError(f"Incorrect letters in field {path}. Seems like problem with encoding")
 
             if letter in ascii_letters and not field_spec.alpha:
