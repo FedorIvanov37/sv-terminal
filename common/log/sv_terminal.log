@@ -178,3 +178,26 @@
 12:49:56 [INFO] [Re]connecting...
 12:49:56 [INFO] Connection status changed to SVFE Connected
 12:49:59 [INFO] Connection status changed to SVFE Disconnected
+12:53:02 [INFO] Processing transaction with internal ID [20221024_125302_082712607]
+12:53:02 [INFO] 
+12:53:02 [INFO] [TRANS ID][20221024_125302_082712607]
+12:53:02 [INFO] [MSG TYPE][0800]
+12:53:02 [INFO] [BITMAP  ][1, 7, 11, 70]
+12:53:02 [INFO] [007][010][1024125302]
+12:53:02 [INFO] [011][006][360760]
+12:53:02 [INFO] [070][003][301]
+12:53:02 [INFO] 
+12:53:02 [WARNING] Connection is not Established, trying to connect
+12:53:02 [INFO] Message was sent
+12:53:02 [INFO] Connection status changed to SVFE Connected
+12:53:02 [INFO] 
+12:53:02 [INFO] Transaction ID [20221024_125302_082712607] matched. Response time seconds: 0.092
+12:53:02 [INFO] 
+12:53:02 [INFO] [TRANS ID][20221024_125302_082712607]
+12:53:02 [INFO] [MSG TYPE][0810]
+12:53:02 [INFO] [BITMAP  ][1, 7, 11, 39, 70]
+12:53:02 [INFO] [007][010][1024125302]
+12:53:02 [INFO] [011][006][360760]
+12:53:02 [INFO] [039][002][00]
+12:53:02 [INFO] [070][003][301]
+12:53:02 [INFO] 
