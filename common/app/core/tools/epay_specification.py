@@ -38,20 +38,12 @@ class EpaySpecification(EpaySpecificationData):
     def MessageLength(self):
         return self._MessageLength
 
-    @staticmethod
-    def get_internal_id_path() -> list[str]:  # TODO hardcode
-        return ["47", "072"]
-
-    @staticmethod
-    def get_utrnno_path():  # TODO hardcode
-        return ["47", "064"]
-
-    def get_reversal_mti(self, request_mti):
+    def get_reversal_mti(self, original_mti: str):
         for mti in self.spec.mti:
             if not (mti.reversal_mti and mti.is_reversible):
                 continue
 
-            if mti.request == request_mti:
+            if mti.request == original_mti:
                 return mti.reversal_mti
 
     def get_mti_codes(self) -> list[str]:
