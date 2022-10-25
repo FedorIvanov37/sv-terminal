@@ -3,6 +3,7 @@ from random import randint, choice
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.data_models.message import Message
 from common.app.exceptions.exceptions import ParsingError
+from common.app.data_models.transaction import Transaction
 
 
 class FieldsGenerator(object):
@@ -29,22 +30,22 @@ class FieldsGenerator(object):
 
         return f"{mti}{stan}{date}"
 
-    def set_trans_id_to_47_072(self, message: Message) -> Message:  # TODO
-        if not message.transaction.id:
-            message = self.trans_id()
+    def set_trans_id_to_47_072(self, transaction: Transaction) -> Transaction:  # TODO
+        if not transaction.trans_id:
+            transaction.trans_id = self.trans_id()
 
         try:
-            message.transaction.fields["47"]["072"] = message.transaction.id
+            transaction.data_fields["47"]["072"] = transaction.trans_id
         except (KeyError, TypeError):
             ...
 
-        return message
+        return transaction
 
-    def set_generated_fields(self, message: Message) -> Message:
-        for field in message.config.generate_fields:
-            message.transaction.fields[field] = self.generate_field(field)
+    def set_generated_fields(self, transaction: Transaction) -> Transaction:
+        for field in transaction.generate_fields:
+            transaction.data_fields[field] = self.generate_field(field)
 
-        return message
+        return transaction
 
     def generate_field(self, field: str):
         if field == self.spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT:

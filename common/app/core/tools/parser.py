@@ -13,6 +13,7 @@ from common.app.constants.DataFormats import DataFormats
 from common.app.data_models.message import Message, TransactionModel, MessageConfig
 from common.app.data_models.config import Config
 from common.app.data_models.epay_specification import IsoField, FieldSet, RawFieldSet
+from common.app.data_models.transaction import TypeFields, Transaction
 
 
 class Parser(object):
@@ -26,17 +27,15 @@ class Parser(object):
         self.config: Config = config
         self.generator = FieldsGenerator(self.config)
 
-    def create_dump(self, message: Message, body: bool = False) -> bytes | str:
-        msg_type: bytes = message.transaction.message_type.encode()
-        bitmap: Bitmap = Bitmap(message.transaction.fields)
+    def create_dump(self, transaction: Transaction, body: bool = False) -> bytes | str:
+        msg_type: bytes = transaction.message_type.encode()
+        bitmap: Bitmap = Bitmap(transaction.data_fields)
         bitmap: bytes = bitmap.get_bitmap(bytes)
 
         msg_body: bytes = bytes()
 
-        for field in sorted(message.transaction.fields.keys(), key=int):
-            text = message.transaction.fields.get(field)
-
-            if not text:
+        for field in sorted(transaction.data_fields.keys(), key=int):
+            if not (text := transaction.data_fields.get(field)):
                 warning("No value for field %s. IsoField was ignored" % field)
                 continue
 
@@ -56,13 +55,13 @@ class Parser(object):
 
         return msg_type + bitmap + msg_body
 
-    def create_sv_dump(self, message: Message) -> str | None:
-        mti: str = message.transaction.message_type
-        bitmap: hex = Bitmap(message.transaction.fields)
+    def create_sv_dump(self, transaction: Transaction) -> str | None:
+        mti: str = transaction.message_type
+        bitmap: hex = Bitmap(transaction.data_fields)
         bitmap: hex = bitmap.get_bitmap(hex)
 
         try:
-            body: str = self.create_dump(message, body=True)
+            body: str = self.create_dump(transaction, body=True)
         except Exception as exc:
             error("Dump generating error: %s", exc)
             return
@@ -128,7 +127,7 @@ class Parser(object):
 
         return result
 
-    def parse_dump(self, data):
+    def parse_dump(self, data) -> Transaction:
         fields: RawFieldSet = {}
         position = int()
         message_type_indicator = data[position:self.spec.MessageLength.message_type_length].decode()
@@ -170,40 +169,27 @@ class Parser(object):
             if self.spec.is_field_complex(field):
                 fields[field]: RawFieldSet = self.split_complex_field(field, fields[field])
 
-        message: Message = Message(
-            transaction=TransactionModel(
-                message_type=message_type_indicator,
-                fields=fields
-            )
-        )
+        transaction: Transaction = Transaction(message_type=message_type_indicator, data_fields = fields)
 
-        return message
+        return transaction
 
-    def parse_form(self, form) -> Message | None:
-        fields = form.get_fields()
+    def parse_form(self, form) -> Transaction:
+        data_fields: TypeFields = form.get_fields()
 
-        if not fields:
+        if not data_fields:
             raise ValueError("No data to send")
 
-        if not (mti := form.get_mti()):
+        if not (message_type := form.get_mti()):
             raise ValueError("Invalid MTI")
 
-        config = MessageConfig(
+        transaction = Transaction(
             generate_fields=form.get_fields_to_generate(),
-            max_amount=self.config.fields.max_amount
+            message_type=message_type,
+            max_amount=self.config.fields.max_amount,
+            data_fields=data_fields
         )
 
-        transaction = TransactionModel(
-            message_type=mti,
-            fields=fields
-        )
-
-        message = Message(
-            config=config,
-            transaction=transaction
-        )
-
-        return message
+        return transaction
 
     def message_to_ini_string(self, message: Message):
         generate_fields: list[str] = sorted(message.config.generate_fields, key=int)

@@ -1,12 +1,12 @@
 from PyQt5.Qt import QObject, pyqtSignal
 from logging import info
 from collections import deque
-from common.app.core.tools.transaction import Transaction
 from common.app.core.tools.parser import Parser
 from common.app.data_models.message import Message
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.data_models.config import Config
 from common.app.core.tools.fields_generator import FieldsGenerator
+from common.app.data_models.transaction import Transaction
 
 
 class TransactionQueue(QObject):
@@ -42,11 +42,9 @@ class TransactionQueue(QObject):
         self.config: Config = config
         self.parser: Parser = Parser(self.config)
 
-    def create_transaction(self, request: Message):
-        if not request.transaction.id:
-            request.transaction.id = FieldsGenerator.trans_id()
-
-        transaction = Transaction(request=request, trans_id=request.transaction.id)
+    def put_transaction(self, transaction: Transaction) -> None:
+        if not transaction.trans_id:
+            transaction.trans_id = FieldsGenerator.trans_id()
 
         self._queue.append(transaction)
 
@@ -80,21 +78,51 @@ class TransactionQueue(QObject):
 
         return transaction
 
-    def put_response_message(self, response: Message):
-        transaction: Transaction
+    def is_matched(self, request: Transaction, response: Transaction) -> bool:
+        if request.matched or response.matched:
+            return False
 
-        for transaction in self._queue:
-            if not transaction.match(request=transaction.request, response=response):
+        if response.message_type != self.spec.get_resp_mti(request.message_type):
+            return False
+
+        for field in self.spec.get_match_fields():
+            if request.data_fields.get(field) != response.data_fields.get(field):
+                return False
+
+        return True
+
+    def match_transaction(self, response: Transaction) -> bool:
+        matched_request: Transaction | None = None
+
+        for request in self._queue:
+            if not self.is_matched(request, response):
                 continue
 
-            resp_time = round(transaction.timer.total_seconds(), 3)
-            info(f"Transaction ID [{transaction.trans_id}] matched. Response time seconds: {resp_time}")
-            transaction.put_response(response)
+            matched_request = request
 
+        if not matched_request:
+            return  False
+
+        matched_request.matched = True
+        response.matched = True
+        response.match_id = matched_request.trans_id
+        matched_request.match_id = response.trans_id
+        return True
+
+    def put_response(self, response: Transaction):
+        if not response.trans_id:
+            response.trans_id = FieldsGenerator.trans_id()
+
+        self._queue.append(response)
+
+        if not self.match_transaction(response):
             return
 
-    def start_transaction_timer(self, request: Message):
-        if not (transaction := self.get_transaction(request.transaction.id)):
-            return
+        resp_time = 3 # round(transaction.timer.total_seconds(), 3)
+        info(f"Transaction ID [{response.match_id}] matched. Response time seconds: {resp_time}")
 
-        transaction.start_timer()
+    # def start_transaction_timer(self, request: Message):
+    #     if not (transaction := self.get_transaction(request.transaction.id)):
+    #         return
+    #
+    #     transaction.start_timer()

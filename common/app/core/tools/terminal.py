@@ -22,6 +22,7 @@ from common.app.constants.FilePath import FilePath
 from common.app.data_models.config import Config
 from common.app.data_models.message import Message
 from common.app.data_models.message import TransactionModel
+from common.app.data_models.transaction import Transaction
 
 
 class SvTerminal(QObject):
@@ -33,7 +34,7 @@ class SvTerminal(QObject):
     _spec: EpaySpecification = EpaySpecification()
     _new_connector: ConnectionWorker
     _connection_thread: QThread
-    _send_message: pyqtSignal = pyqtSignal(Message)
+    _send_transaction: pyqtSignal = pyqtSignal(Transaction)
 
     @property
     def config(self):
@@ -80,8 +81,8 @@ class SvTerminal(QObject):
     def start_connection_thread(self):
         self.connector.moveToThread(self._connection_thread)
         self._need_reconnect.connect(self.connector.connect_sv)
-        self._send_message.connect(self.connector.send_message)
-        self.connector.message_sent.connect(self.trans_queue.start_transaction_timer)
+        self._send_transaction.connect(self.connector.send_transaction)
+        # self.connector.transaction_sent.connect(self.trans_queue.start_transaction_timer)
         self._connection_thread.started.connect(self.connector.run)
         self.connector.connected.connect(lambda: self.window.set_connection_status(QTcpSocket.ConnectedState))
         self.connector.disconnected.connect(lambda: self.window.set_connection_status(QTcpSocket.UnconnectedState))
@@ -97,34 +98,35 @@ class SvTerminal(QObject):
         
         error("Received socket error: %s", self.connector.error_string())
 
-    def send(self, message: Message):
+
+    def send(self, transaction: Transaction):
         if self.config.debug.clear_log:
             self.window.clear_log()
 
-        if message.config.generate_fields:
-            message: Message = self.generator.set_generated_fields(message)
+        if transaction.generate_fields:
+            transaction: Transaction = self.generator.set_generated_fields(transaction)
 
-        if not message.transaction.id:
-            message.transaction.id = self.generator.trans_id()
+        if not transaction.trans_id:
+            transaction.trans_id = self.generator.trans_id()
 
         if self.config.fields.send_internal_id:
-            message: Message = self.generator.set_trans_id_to_47_072(message)
+            transaction: Transaction = self.generator.set_trans_id_to_47_072(transaction)
 
         if self.sender() is self.window.button_send:
-            self.window.set_generated_fields(message)
+            self.window.set_generated_fields(transaction)
 
-        if self.config.fields.validation:
-            try:
-                self.validator.validate_message(message)
-            except (ValueError, TypeError) as validation_error:
-                error(f"Transaction validation error {validation_error}")
-                return
+        # if self.config.fields.validation:
+        #     try:
+        #         self.validator.validate_message(transaction)
+        #     except (ValueError, TypeError) as validation_error:
+        #         error(f"Transaction validation error {validation_error}")
+        #         return
 
-        self.logger.print_dump(message)
-        self.trans_queue.create_transaction(request=message)
-        info(f"Processing transaction with internal ID [{message.transaction.id}]")
-        self.logger.print_message(message)
-        self._send_message.emit(message)
+        self.logger.print_dump(transaction)
+        self.trans_queue.put_transaction(transaction)
+        info(f"Processing transaction with internal ID [{transaction.trans_id}]")
+        self.logger.print_transaction(transaction)
+        self._send_transaction.emit(transaction)
 
     def settings(self):
         SettingsWindow(self.config).exec_()
@@ -134,18 +136,18 @@ class SvTerminal(QObject):
         spec_window.spec_accepted.connect(lambda: info("Specification accepted"))
         spec_window.exec_()
 
-    def save_message_to_file(self, message: Message, filename: str, file_format: str) -> None:
+    def save_transaction_to_file(self, transaction: Transaction, filename: str, file_format: str) -> None:
         data_processing_map = {
-            DataFormats.JSON: lambda _message: dumps(_message.dict(), indent=4),
-            DataFormats.INI: lambda _message: self.parser.message_to_ini_string(_message),
-            DataFormats.DUMP: lambda _message: self.parser.create_sv_dump(_message)[1:]
+            DataFormats.JSON: lambda _trans: dumps(_trans.dict(), indent=4),
+            DataFormats.INI: lambda _trans: self.parser.message_to_ini_string(_trans),
+            DataFormats.DUMP: lambda _trans: self.parser.create_sv_dump(_trans)[1:]
         }
 
         if not (data_processing_function := data_processing_map.get(file_format)):
             error("Unknown output file format")
             return
 
-        if not (file_data := data_processing_function(message)):
+        if not (file_data := data_processing_function(transaction)):
             error("No data to save")
             return
 
@@ -165,14 +167,14 @@ class SvTerminal(QObject):
         data = self.connector.read_from_socket().data()
 
         try:
-            message: Message = self.parser.parse_dump(data=data)
+            transaction: Transaction = self.parser.parse_dump(data=data)
         except Exception as parsing_error:
             error("Incoming message parsing error: %s", parsing_error)
             return
 
-        self.trans_queue.put_response_message(response=message)
-        self.logger.print_dump(message)
-        self.logger.print_message(message)
+        self.trans_queue.put_response(response=transaction)
+        self.logger.print_dump(transaction)
+        self.logger.print_transaction(transaction)
 
     def print_data(self, data_format: str) -> None:
         if data_format not in DataFormats.get_print_data_formats():

@@ -9,6 +9,7 @@ from common.app.data_models.message import Message
 from common.app.core.tools.bitmap import Bitmap
 from common.app.data_models.config import Config
 from common.app.constants.FilePath import FilePath
+from common.app.data_models.transaction import Transaction
 
 
 class Logger:
@@ -61,8 +62,8 @@ class Logger:
 
         debug("Logger started")
 
-    def print_dump(self, message):
-        for string in self.parser.create_sv_dump(message).split("\n"):
+    def print_dump(self, transaction):
+        for string in self.parser.create_sv_dump(transaction).split("\n"):
             debug(string)
 
     def print_config(self, config=None, level=_default_level):
@@ -73,24 +74,24 @@ class Logger:
 
         level(dumps(config.dict(), indent=4))
 
-    def print_message(self, message: Message, level=_default_level) -> None:
+    def print_transaction(self, transaction: Transaction, level=_default_level) -> None:
         def put(string, size=0):
             return (f" [%{size}s]" % string).strip()
 
-        bitmap = Bitmap(message.transaction.fields)
+        bitmap = Bitmap(transaction.data_fields)
 
         level("")
 
-        if message.transaction.id:
-            level("[TRANS_ID][%s]", message.transaction.id)
+        if transaction.trans_id:
+            level("[TRANS_ID][%s]", transaction.trans_id)
 
-        if message.transaction.utrnno:
-            level("[UTRNNO  ][%s]", message.transaction.utrnno)
+        if transaction.utrnno:
+            level("[UTRNNO  ][%s]", transaction.utrnno)
 
-        level("[MSG_TYPE][%s]", message.transaction.message_type)
+        level("[MSG_TYPE][%s]", transaction.message_type)
         level("[BITMAP  ][%s]", bitmap.get_bitmap(str))
 
-        for field, field_data in message.transaction.fields.items():
+        for field, field_data in transaction.data_fields.items():
             if field == self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
                 continue
 

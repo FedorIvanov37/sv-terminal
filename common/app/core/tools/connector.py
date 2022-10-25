@@ -4,8 +4,8 @@ from PyQt5.QtCore import QObject, pyqtSignal, QThread
 from common.app.core.tools.parser import Parser
 from logging import info, error, debug, warning
 from common.app.data_models.config import Config
-from common.app.data_models.message import Message
 from PyQt5.QtWidgets import QApplication
+from common.app.data_models.transaction import Transaction
 
 
 class Connector(QTcpSocket):
@@ -48,20 +48,20 @@ class Connector(QTcpSocket):
 
         self.connect_sv()
 
-    def send_message(self, message: Message = None) -> bool:
-        if message is None:
+    def send_transaction(self, transaction: Transaction = None) -> bool:
+        if transaction is None:
             return False
 
         if self.state() != self.ConnectedState:
             error("Connection with SmartVista is not established")
             return False
 
-        dump: bytes = self.parser.create_dump(message)
+        dump: bytes = self.parser.create_dump(transaction)
         dump = pack("!H", len(dump)) + dump
         bytes_sent = self.write(dump)
 
         if bytes_sent > int():
-            info("Message was sent")
+            info("Transaction was sent")
             info("")
             debug("bytes sent %s", bytes_sent)
             self.flush()
@@ -81,11 +81,11 @@ class ConnectionWorker(QObject):
     _ready_read: pyqtSignal = pyqtSignal()
     _connection_started: pyqtSignal = pyqtSignal()
     _connection_finished: pyqtSignal = pyqtSignal()
-    _message_sent: pyqtSignal = pyqtSignal(Message)
+    _transaction_sent: pyqtSignal = pyqtSignal(Transaction)
 
     @property
-    def message_sent(self):
-        return self._message_sent
+    def transaction_sent(self):
+        return self._transaction_sent
 
     @property
     def connected(self):
@@ -143,7 +143,7 @@ class ConnectionWorker(QObject):
         self.connector.readyRead.connect(self.ready_read.emit)
         self.connector.disconnected.connect(lambda: self.socker_error.emit(self.connector.error()))
         self.connector.errorOccurred.connect(lambda sock_err: self.socker_error.emit(sock_err))
-        self.message: Message | None = None
+        self.transaction: Transaction | None = None
 
     def run(self):
         self._in_progress = True
@@ -172,7 +172,7 @@ class ConnectionWorker(QObject):
     def read_from_socket(self):
         return self.connector.read_from_socket()
 
-    def send_message(self, message: Message):
+    def send_transaction(self, transaction: Transaction):
         if self.connector.state() != self.connector.ConnectedState:
             warning("Connection is not Established, trying to connect")
             self.connect_sv()
@@ -181,11 +181,11 @@ class ConnectionWorker(QObject):
             error("Cannot establish the connection with SmartVista")
             return
 
-        if self.connector.send_message(message):
-            self.message_sent.emit(message)
+        if self.connector.send_transaction(transaction):
+            self._transaction_sent.emit(transaction)
             return
 
-        error("The message wasn't sent")
+        error("The transaction wasn't sent")
 
     def disconnect_sv(self):
         self.connector.abort()

@@ -17,6 +17,7 @@ from common.app.data_models.message import TypeFields
 from common.app.data_models.message import Message
 from common.app.data_models.config import Config
 from common.app.core.tools.action_button import ActionButton
+from common.app.data_models.transaction import Transaction
 
 
 class MainWindow(Ui_MainWindow, QMainWindow):
@@ -168,14 +169,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def send(self) -> None:
         try:
-            message: Message = self.parser.parse_form(self)
+            transaction: Transaction = self.parser.parse_form(self)
         except Exception as building_error:
-            error(f"Message building error")
+            error(f"Transaction building error")
             [error(err.strip()) for err in str(building_error).splitlines()]
             return
 
         try:
-            self.terminal.send(message)
+            self.terminal.send(transaction)
         except Exception as sending_error:
             error(f"Message sending error: {sending_error}")
 
@@ -225,19 +226,19 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 error("No output filename recognized")
                 return
 
-            if not (message := self.parser.parse_form(self)):
+            if not (transaction := self.parser.parse_form(self)):
                 error("No data to save")
                 return
 
-            self.terminal.save_message_to_file(message, filename, data_format)
+            self.terminal.save_transaction_to_file(transaction, filename, data_format)
 
         except Exception as file_saving_error:
             error("File saving error: %s", file_saving_error)
 
-    def set_generated_fields(self, message: Message):
-        for field in message.config.generate_fields:
+    def set_generated_fields(self, transaction: Transaction):
+        for field in transaction.generate_fields:
 
-            if (field_data := message.transaction.fields.get(field, str())) is str():
+            if not (field_data := transaction.data_fields.get(field)):
                 error("Lost field data for field %s")
 
             self.json_view.set_field_value(field, field_data)
