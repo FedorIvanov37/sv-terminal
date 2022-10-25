@@ -2203,3 +2203,35 @@
 22:31:57 [INFO] 
 22:31:57 [WARNING] Connection is not Established, trying to connect
 22:31:58 [ERROR] Cannot establish the connection with SmartVista
+22:36:11 [INFO] Processing transaction with internal ID [20221025_223611_185737457]
+22:36:11 [INFO] 
+22:36:11 [INFO] [TRANS_ID][20221025_223611_185737457]
+22:36:11 [INFO] [MSG_TYPE][0800]
+22:36:11 [INFO] [BITMAP  ][1, 7, 11, 70]
+22:36:11 [INFO] [007][010][1025223611]
+22:36:11 [INFO] [011][006][221901]
+22:36:11 [INFO] [070][003][301]
+22:36:11 [INFO] 
+22:36:11 [WARNING] Connection is not Established, trying to connect
+22:36:19 [ERROR] Cannot establish the connection with SmartVista
+22:36:52 [INFO] Processing transaction with internal ID [20221025_223652_565944371]
+22:36:52 [INFO] 
+22:36:52 [INFO] [TRANS_ID][20221025_223652_565944371]
+22:36:52 [INFO] [MSG_TYPE][0800]
+22:36:52 [INFO] [BITMAP  ][1, 7, 11, 70]
+22:36:52 [INFO] [007][010][1025223652]
+22:36:52 [INFO] [011][006][590822]
+22:36:52 [INFO] [070][003][301]
+22:36:52 [INFO] 
+22:36:52 [WARNING] Connection is not Established, trying to connect
+22:37:02 [ERROR] Cannot establish the connection with SmartVista
+22:39:54 [INFO] Processing transaction with internal ID [20221025_223954_103665869]
+22:39:54 [INFO] 
+22:39:54 [INFO] [TRANS_ID][20221025_223954_103665869]
+22:39:54 [INFO] [MSG_TYPE][0800]
+22:39:54 [INFO] [BITMAP  ][1, 7, 11, 70]
+22:39:54 [INFO] [070][003][301]
+22:39:54 [INFO] [007][010][1025223954]
+22:39:54 [INFO] [011][006][001742]
+22:39:54 [INFO] 
+22:39:54 [WARNING] Connection is not Established, trying to connect
