@@ -37,3 +37,13 @@ class TransactionModel(BaseModel):
 class Message(BaseModel):
     config: MessageConfig = MessageConfig()
     transaction: TransactionModel
+
+
+class TransMod(BaseModel):
+    trans_id: str = ""
+    match_id: str = ""
+    generate_fields: list[str] = []
+    max_amount: str = "100"
+    message_type: str = ""
+    utrnno: str = ""
+    data_fields: dict[str, str | dict]

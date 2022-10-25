@@ -14,7 +14,6 @@ from common.app.constants.TextConstants import TextConstants
 from common.app.constants.DataFormats import DataFormats
 from common.app.core.tools.json_view import JsonView
 from common.app.data_models.message import TypeFields
-from common.app.data_models.message import Message
 from common.app.data_models.config import Config
 from common.app.core.tools.action_button import ActionButton
 from common.app.data_models.transaction import Transaction
@@ -178,7 +177,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         try:
             self.terminal.send(transaction)
         except Exception as sending_error:
-            error(f"Message sending error: {sending_error}")
+            error(f"Transaction sending error: {sending_error}")
 
     def reverse(self, reverse_last_transaction: bool):
         original_transaction_id: str | None = None
@@ -200,13 +199,13 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             return
 
         try:
-            message = self.parser.parse_file(filename)
+            transaction: Transaction = self.parser.parse_file(filename)
         except (TypeError, ValueError, Exception) as parsing_error:
             error(f"File parsing error: {parsing_error}")
             return
 
-        self.set_mti(message.transaction.message_type)
-        self.set_fields(message)
+        self.set_mti(transaction.message_type)
+        self.set_fields(transaction)
 
         if self.sender() is self.ButtonParseDump:
             info(f"File parsed: {filename}")
@@ -243,8 +242,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
             self.json_view.set_field_value(field, field_data)
 
-    def set_fields(self, message: Message):
-        self.json_view.parse_message(message)
+    def set_fields(self, transaction: Transaction):
+        self.json_view.parse_transaction(transaction)
         self.set_bitmap()
 
     def settings(self):
@@ -254,8 +253,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.terminal.specification()
 
     def echo_test(self):
-        message: Message = self.parser.parse_file(FilePath.ECHO_TEST)
-        self.terminal.send(message)
+        transaction: Transaction = self.parser.parse_file(FilePath.ECHO_TEST)
+        self.terminal.send(transaction)
 
     def clear_message(self):
         self.msgtype.setCurrentIndex(-1)

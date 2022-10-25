@@ -20,8 +20,6 @@ from common.app.constants.TextConstants import TextConstants
 from common.app.constants.DataFormats import DataFormats
 from common.app.constants.FilePath import FilePath
 from common.app.data_models.config import Config
-from common.app.data_models.message import Message
-from common.app.data_models.message import TransactionModel
 from common.app.data_models.transaction import Transaction
 
 
@@ -29,7 +27,6 @@ class SvTerminal(QObject):
     _config: Config = Config.parse_file(FilePath.CONFIG)
     _pyqt_application = QtWidgets.QApplication([])
     _validator = Validator(_config)
-    _message_ready: pyqtSignal = pyqtSignal(Message)
     _need_reconnect: pyqtSignal = pyqtSignal()
     _spec: EpaySpecification = EpaySpecification()
     _new_connector: ConnectionWorker
@@ -56,10 +53,6 @@ class SvTerminal(QObject):
     def spec(self):
         return self._spec
 
-    @property
-    def message_ready(self):
-        return self._message_ready
-
     def __init__(self):
         super(SvTerminal, self).__init__()
         self.parser: Parser = Parser(self.config)
@@ -82,7 +75,6 @@ class SvTerminal(QObject):
         self.connector.moveToThread(self._connection_thread)
         self._need_reconnect.connect(self.connector.connect_sv)
         self._send_transaction.connect(self.connector.send_transaction)
-        # self.connector.transaction_sent.connect(self.trans_queue.start_transaction_timer)
         self._connection_thread.started.connect(self.connector.run)
         self.connector.connected.connect(lambda: self.window.set_connection_status(QTcpSocket.ConnectedState))
         self.connector.disconnected.connect(lambda: self.window.set_connection_status(QTcpSocket.UnconnectedState))
@@ -97,7 +89,6 @@ class SvTerminal(QObject):
             return
         
         error("Received socket error: %s", self.connector.error_string())
-
 
     def send(self, transaction: Transaction):
         if self.config.debug.clear_log:
@@ -115,12 +106,12 @@ class SvTerminal(QObject):
         if self.sender() is self.window.button_send:
             self.window.set_generated_fields(transaction)
 
-        # if self.config.fields.validation:
-        #     try:
-        #         self.validator.validate_message(transaction)
-        #     except (ValueError, TypeError) as validation_error:
-        #         error(f"Transaction validation error {validation_error}")
-        #         return
+        if self.config.fields.validation:
+            try:
+                self.validator.validate_transaction(transaction)
+            except (ValueError, TypeError) as validation_error:
+                error(f"Transaction validation error {validation_error}")
+                return
 
         self.logger.print_dump(transaction)
         self.trans_queue.put_transaction(transaction)
@@ -139,7 +130,7 @@ class SvTerminal(QObject):
     def save_transaction_to_file(self, transaction: Transaction, filename: str, file_format: str) -> None:
         data_processing_map = {
             DataFormats.JSON: lambda _trans: dumps(_trans.dict(), indent=4),
-            DataFormats.INI: lambda _trans: self.parser.message_to_ini_string(_trans),
+            DataFormats.INI: lambda _trans: self.parser.transaction_to_ini_string(_trans),
             DataFormats.DUMP: lambda _trans: self.parser.create_sv_dump(_trans)[1:]
         }
 
@@ -154,7 +145,7 @@ class SvTerminal(QObject):
         with open(filename, "w") as file:
             file.write(file_data)
 
-        info(f"The message was saved successfully to {filename}")
+        info(f"The transaction was saved successfully to {filename}")
 
     def disconnect(self):
         self.connector.disconnect_sv()
@@ -169,7 +160,7 @@ class SvTerminal(QObject):
         try:
             transaction: Transaction = self.parser.parse_dump(data=data)
         except Exception as parsing_error:
-            error("Incoming message parsing error: %s", parsing_error)
+            error("Incoming transaction parsing error: %s", parsing_error)
             return
 
         self.trans_queue.put_response(response=transaction)
@@ -184,7 +175,7 @@ class SvTerminal(QObject):
         data_processing_map = {
             DataFormats.JSON: lambda: dumps(self.parser.parse_form(self.window).dict(), indent=4),
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parser.parse_form(self.window)),
-            DataFormats.INI: lambda: self.parser.message_to_ini_string(self.parser.parse_form(self.window)),
+            DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parser.parse_form(self.window)),
             DataFormats.SV_TERMINAL: lambda: TextConstants.HELLO_MESSAGE,
             DataFormats.SPEC: lambda: dumps(self.spec.spec.dict(), indent=4)
         }
@@ -209,8 +200,8 @@ class SvTerminal(QObject):
         return transaction_id
 
     def show_reversal_window(self):
-        messages_list: list[Message] = self.trans_queue.get_reversible_transactions()
-        reversal_window = ReversalWindow(messages_list)
+        reversible_transactions_list: list[Transaction] = self.trans_queue.get_reversible_transactions()
+        reversal_window = ReversalWindow(reversible_transactions_list)
 
         if reversal_window.exec_():
             if not reversal_window.reversal_id:
@@ -221,18 +212,16 @@ class SvTerminal(QObject):
         info("Reversal sending is cancelled by user")
 
     def reverse_transaction(self, original_transaction_id: str):
-        if not (reversal_message := self.build_reversal(original_transaction_id)):
-            error("Cannot build reversal")
+        original: Transaction = self.trans_queue.get_transaction(original_transaction_id)
+        reversal: Transaction = self.build_reversal(original)
+
+        if not reversal:
             return
 
-        self.send(reversal_message)
+        self.send(reversal)
 
-    def build_reversal(self, original_trans_id: str) -> Message | None:
-        if not (original_transaction := self.trans_queue.get_transaction(trans_id=original_trans_id)):
-            error(f"Lost transaction with ID {original_trans_id}, Cannot build the reversal")
-            return
-
-        if not original_transaction.response:
+    def build_reversal(self, original_transaction: Transaction) -> Transaction | None:
+        if not (original_transaction.matched and original_transaction.match_id):
             error(f"Lost response for transaction {original_transaction.trans_id}. Cannot build the reversal")
             return
 
@@ -241,21 +230,25 @@ class SvTerminal(QObject):
 
         if existed_reversal:
             self.trans_queue.remove_from_queue(existed_reversal)
-            message = Message(transaction=existed_reversal.request.transaction)
-            return message
+            transaction: Transaction = Transaction.parse_obj(existed_reversal)
+            return transaction
 
-        fields = original_transaction.request.transaction.fields.copy()
+        fields = original_transaction.data_fields.copy()
 
         for field in self.spec.get_reversal_fields():
-            fields[field] = original_transaction.response.transaction.fields.get(field)
+            fields[field] = original_transaction.data_fields.get(field)
 
         if self.config.fields.build_fld_90:
             fields[self.spec.FIELD_SET.FIELD_090_ORIGINAL_DATA_ELEMENTS] = \
-                self.generator.generate_original_data_elements(original_transaction.request)
+                self.generator.generate_original_data_elements(original_transaction)
 
-        reversal_mti = self.spec.get_reversal_mti(original_transaction.request.transaction.message_type)
-        reversal = Message(transaction=TransactionModel(message_type=reversal_mti, fields=fields))
-        reversal.transaction.original_id = original_transaction.trans_id
-        reversal.transaction.id = reversal_trans_id
-        reversal.config.generate_fields = list()
+        reversal_mti = self.spec.get_reversal_mti(original_transaction.message_type)
+
+        reversal = Transaction(
+            message_type=reversal_mti,
+            data_fields=fields,
+            trans_id=reversal_trans_id,
+            generate_fields=list(),
+        )
+
         return reversal

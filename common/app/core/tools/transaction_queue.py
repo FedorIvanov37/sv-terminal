@@ -2,7 +2,6 @@ from PyQt5.Qt import QObject, pyqtSignal
 from logging import info
 from collections import deque
 from common.app.core.tools.parser import Parser
-from common.app.data_models.message import Message
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.data_models.config import Config
 from common.app.core.tools.fields_generator import FieldsGenerator
@@ -15,11 +14,6 @@ class TransactionQueue(QObject):
     _transaction_accepted: pyqtSignal = pyqtSignal(str)
     _message_ready_to_send: pyqtSignal = pyqtSignal()
     _spec: EpaySpecification = EpaySpecification()
-    _send_message: pyqtSignal = pyqtSignal(Message)
-
-    @property
-    def send_message(self):
-        return self._send_message
 
     @property
     def spec(self):
@@ -48,27 +42,27 @@ class TransactionQueue(QObject):
 
         self._queue.append(transaction)
 
-    def get_reversible_transactions(self) -> list[Message]:
-        transactions: list[Message] = []
+    def get_reversible_transactions(self) -> list[Transaction]:
+        transactions: list[Transaction] = []
 
         transaction: Transaction
 
         for transaction in self._queue:
-            if not self.spec.get_reversal_mti(transaction.request.transaction.message_type):
+            if not self.spec.get_reversal_mti(transaction.message_type):
                 continue
 
-            transactions.append(transaction.request)
+            transactions.append(transaction)
 
         return transactions
 
     def get_last_reversible_transaction_id(self) -> str:
-        if reversible := self.get_reversible_transactions():
-            return max(message.transaction.id for message in reversible)
+        if reversible_transactions := self.get_reversible_transactions():
+            return max(transaction.trans_id for transaction in reversible_transactions)
 
     def remove_from_queue(self, transaction):
         self._queue.remove(transaction)
 
-    def get_transaction(self, trans_id) -> Transaction | None:
+    def get_transaction(self, trans_id: str) -> Transaction | None:
         transaction = None
 
         for trans in self._queue:

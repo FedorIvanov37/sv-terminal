@@ -2,9 +2,7 @@ from common.app.core.tools.epay_specification import EpaySpecification
 from string import digits, ascii_letters, punctuation
 from common.app.data_models.config import Config
 from common.app.decorators.singleton import singleton
-
-
-TypeFields = dict[str, str | dict]
+from common.app.data_models.transaction import Transaction, TypeFields
 
 
 @singleton
@@ -20,16 +18,13 @@ class Validator(object):
         if config is not None:
             self._config = config
 
-    def validate_message(self, message):
-        if not message:
-            raise ValueError("Validation error: empty transaction message")
-
-        self.validate_mti(message.transaction.message_type)
-        self.validate_fields(message.transaction.fields)
+    def validate_transaction(self, transaction: Transaction):
+        self.validate_mti(transaction.message_type)
+        self.validate_fields(transaction.data_fields)
 
     def validate_mti(self, mti):
         if mti not in self.spec.get_mti_codes():
-            raise ValueError(f"unknown MTI: {mti}")
+            raise ValueError(f"Unknown MTI: {mti}")
 
     def validate_fields(self, fields: TypeFields, field_path: list[str] | None = None):
         if not self._config.fields.validation:

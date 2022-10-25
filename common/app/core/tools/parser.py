@@ -10,7 +10,6 @@ from common.app.core.tools.fields_generator import FieldsGenerator
 from common.app.constants.DumpDefinition import DumpDefinition
 from common.app.constants.IniMessageDefinition import IniMessageDefinition
 from common.app.constants.DataFormats import DataFormats
-from common.app.data_models.message import Message, TransactionModel, MessageConfig
 from common.app.data_models.config import Config
 from common.app.data_models.epay_specification import IsoField, FieldSet, RawFieldSet
 from common.app.data_models.transaction import TypeFields, Transaction
@@ -191,20 +190,20 @@ class Parser(object):
 
         return transaction
 
-    def message_to_ini_string(self, message: Message):
-        generate_fields: list[str] = sorted(message.config.generate_fields, key=int)
+    def transaction_to_ini_string(self, transaction: Transaction):
+        generate_fields: list[str] = sorted(transaction.generate_fields, key=int)
         generate_fields: str = ", ".join(generate_fields)
 
         ini_data: list[str] | str = [
             f"[{IniMessageDefinition.CONFIG}]",
-            f"{IniMessageDefinition.MAX_AMOUNT} = [{message.config.max_amount}]",
+            f"{IniMessageDefinition.MAX_AMOUNT} = [{transaction.max_amount}]",
             f"{IniMessageDefinition.GENERATE_FIELDS} = [{generate_fields}]",
             f"[{IniMessageDefinition.MTI}]",
-            f"{IniMessageDefinition.MTI} = [{message.transaction.message_type}]",
+            f"{IniMessageDefinition.MTI} = [{transaction.message_type}]",
             f"[{IniMessageDefinition.MESSAGE}]"
         ]
 
-        for field_number, field_data in message.transaction.fields.items():
+        for field_number, field_data in transaction.data_fields.items():
             if isinstance(field_data, dict):
                 field_data = self.join_complex_field(field_number, field_data)
 
@@ -252,7 +251,7 @@ class Parser(object):
 
         return complex_field_data
 
-    def parse_file(self, filename: str) -> Message:
+    def parse_file(self, filename: str) -> Transaction:
         file_extension = splitext(filename)[-1].upper().replace(".", "")
 
         data_processing_map = {
@@ -280,18 +279,18 @@ class Parser(object):
         raise TypeError("Can't parse incoming file using known formats")
 
     @staticmethod
-    def _parse_json_file(filename: str) -> Message:
-        message: Message = Message.parse_file(filename)
+    def _parse_json_file(filename: str) -> Transaction:
+        message: Transaction = Transaction.parse_file(filename)
         return message
 
     @staticmethod
     def unpack_ini_field(data: str) -> str:
         return data.removeprefix('[').removesuffix(']')
 
-    def _parse_ini_file(self, filename) -> Message:
+    def _parse_ini_file(self, filename) -> Transaction:
         ini = ConfigParser()
         ini.read(filename)
-        fields = self._parse_ini_fields(ini)
+        fields: TypeFields = self._parse_ini_fields(ini)
 
         ini_def = IniMessageDefinition
 
@@ -308,22 +307,14 @@ class Parser(object):
 
         mti = self.unpack_ini_field(ini.get(ini_def.MTI, ini_def.MTI))
 
-        message_config = MessageConfig(
-            generate_fields=generate_fields,
-            max_amount=max_amount
-        )
-
-        transaction = TransactionModel(
+        transaction = Transaction(
             message_type=mti,
-            fields=fields
+            generate_fields=generate_fields,
+            max_amount=max_amount,
+            data_fields=fields
         )
 
-        message = Message(
-            config=message_config,
-            transaction=transaction
-        )
-
-        return message
+        return transaction
 
     def _parse_ini_fields(self, ini: ConfigParser):
         fields: RawFieldSet = dict()
@@ -342,7 +333,7 @@ class Parser(object):
 
         return fields
 
-    def _parse_dump_file(self, filename: str) -> Message:
+    def _parse_dump_file(self, filename: str) -> Transaction:
         string = str()
 
         with open(filename) as file:
@@ -364,5 +355,5 @@ class Parser(object):
         string = string[len(bitmap):]
         bitmap = Bitmap(bitmap, hex).get_bitmap(bytes)
         pre_message = unhexlify(mti) + bitmap + unhexlify(string)
-        message: Message = self.parse_dump(pre_message)
-        return message
+        transaction: Transaction = self.parse_dump(pre_message)
+        return transaction

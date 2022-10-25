@@ -5,9 +5,9 @@ from PyQt5.QtWidgets import QTreeWidgetItem, QTreeWidget
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.app.core.tools.field_Item import Item
-from common.app.data_models.message import Message
 from common.app.data_models.message import TypeFields
 from common.app.data_models.config import Config
+from common.app.data_models.transaction import Transaction
 
 
 class JsonView(QObject):
@@ -102,18 +102,18 @@ class JsonView(QObject):
                 item.setText(column, value)
                 break
 
-    def parse_message(self, message: Message) -> None:
+    def parse_transaction(self, transaction: Transaction) -> None:
         self.clean()
-        self._parse_fields(message.transaction.fields)
-        self.set_checkboxes(message)
+        self._parse_fields(transaction.data_fields)
+        self.set_checkboxes(transaction)
         self.make_order()
 
-    def set_checkboxes(self, message):
+    def set_checkboxes(self, transaction: Transaction):
         for item in self.root.get_children():
             if item.field_number not in Spec.generated_fields:
                 continue
 
-            item.set_checkbox(item.field_number in message.config.generate_fields)
+            item.set_checkbox(item.field_number in transaction.generate_fields)
 
     def _parse_fields(self, input_json: dict, parent: QTreeWidgetItem = None, specification=None):
         if parent is None:

@@ -1,7 +1,6 @@
 from datetime import datetime
 from random import randint, choice
 from common.app.core.tools.epay_specification import EpaySpecification
-from common.app.data_models.message import Message
 from common.app.exceptions.exceptions import ParsingError
 from common.app.data_models.transaction import Transaction
 
@@ -20,11 +19,11 @@ class FieldsGenerator(object):
     def trans_id() -> str:
         return datetime.now().strftime("%Y%m%d_%H%M%S_%f") + str(randint(0, 999)).zfill(3)
 
-    def generate_original_data_elements(self, message: Message) -> str:
+    def generate_original_data_elements(self, transaction: Transaction) -> str:
         try:
-            mti: str = message.transaction.message_type
-            stan: str = message.transaction.fields[self.spec.FIELD_SET.FIELD_011_SYSTEM_TRACE_AUDIT_NUMBER]
-            date: str = message.transaction.fields[self.spec.FIELD_SET.FIELD_007_TRANSMISSION_DATE_AND_TIME]
+            mti: str = transaction.message_type
+            stan: str = transaction.data_fields[self.spec.FIELD_SET.FIELD_011_SYSTEM_TRACE_AUDIT_NUMBER]
+            date: str = transaction.data_fields[self.spec.FIELD_SET.FIELD_007_TRANSMISSION_DATE_AND_TIME]
         except KeyError:
             raise ParsingError("Original data elements generating error!")
 

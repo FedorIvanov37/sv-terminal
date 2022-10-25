@@ -5,7 +5,6 @@ from common.app.constants.LogDefinition import LogDefinition
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.core.tools.wireless_log_handler import WirelessHandler
 from common.app.core.tools.parser import Parser
-from common.app.data_models.message import Message
 from common.app.core.tools.bitmap import Bitmap
 from common.app.data_models.config import Config
 from common.app.constants.FilePath import FilePath

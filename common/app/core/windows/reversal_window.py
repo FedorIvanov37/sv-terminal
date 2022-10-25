@@ -5,7 +5,7 @@ from re import search
 from typing import Optional
 from common.app.forms.reversal import Ui_ReversalWindow
 from common.app.constants.FilePath import FilePath
-from common.app.data_models.message import Message
+from common.app.data_models.transaction import Transaction
 
 
 class ReversalWindow(Ui_ReversalWindow, QDialog):
@@ -28,23 +28,23 @@ class ReversalWindow(Ui_ReversalWindow, QDialog):
     def reversal_id(self, reversal_id):
         self._reversal_id = reversal_id
 
-    def __init__(self, transactions: list[Message]):
+    def __init__(self, transactions: list[Transaction]):
         super().__init__()
         self.setupUi(self)
         self.setup(transactions)
 
-    def setup(self, transactions: list[Message]) -> None:
+    def setup(self, transactions: list[Transaction]) -> None:
         self.setWindowFlags(Qt.WindowCloseButtonHint)
         self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
         self.ComboBoxId.currentIndexChanged.connect(lambda index: self.id_item_changed())
         self.buttonBox.accepted.connect(self.set_reversal_id)
         self.ComboBoxId.addItem("> Transaction queue")
 
-        for message in transactions:
+        for transaction in transactions:
             item = "ID: %s | MTI: %s | UTRNNO: %s" % (
-                message.transaction.id,
-                message.transaction.message_type,
-                message.transaction.utrnno
+                transaction.trans_id,
+                transaction.message_type,
+                transaction.utrnno
             )
 
             self.ComboBoxId.addItem(item)
