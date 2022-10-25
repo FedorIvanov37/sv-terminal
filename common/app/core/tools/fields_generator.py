@@ -17,7 +17,7 @@ class FieldsGenerator(object):
 
     @staticmethod
     def trans_id() -> str:
-        return datetime.now().strftime("%Y%m%d_%H%M%S_%f") + str(randint(0, 999)).zfill(3)
+        return f"{datetime.now():%Y%m%d_%H%M%S_%f}{randint(0, 999):03}"
 
     def generate_original_data_elements(self, transaction: Transaction) -> str:
         try:
@@ -49,12 +49,13 @@ class FieldsGenerator(object):
     def generate_field(self, field: str):
         if field == self.spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT:
             max_amount = str(randint(0, int(self.config.fields.max_amount) * 100))
-            max_amount = max_amount.zfill(self.spec.get_field_length(self.spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT))
+            field_length = self.spec.get_field_length(self.spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT)
+            max_amount = f"{max_amount:0{field_length}}"
 
             return max_amount
 
         if date_format := self.spec.get_field_date_format(field):
-            return datetime.strftime(datetime.now(), date_format)
+            return f"{datetime.now():{date_format}}"
 
         data_kit = self.spec.get_field_data_kit([field])
         length = self.spec.get_field_length(field)

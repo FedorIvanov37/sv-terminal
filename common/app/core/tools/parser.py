@@ -44,7 +44,7 @@ class Parser(object):
             field_length_var = self.spec.get_field_length_var(field)
 
             if field_length_var:
-                text: str = str(len(text)).zfill(field_length_var) + text
+                text: str = f"{len(text):0{field_length_var}}{text}"
 
             if text is not None:
                 msg_body: bytes = msg_body + text.encode()
@@ -105,7 +105,7 @@ class Parser(object):
                 length = str()
 
                 if field_spec:
-                    length = str(len(subfield_data)).zfill(field_spec.tag_length)
+                    length = f"{len(subfield_data)}:0{field_spec.tag_length}"
 
                 result += f"{subfield}{length}{subfield_data}"
                 path.pop()
@@ -122,7 +122,7 @@ class Parser(object):
 
         if len(path) > 1:
             field_spec: IsoField = self.spec.get_field_spec(path)
-            result = f"{field}{str(len(result)).zfill(field_spec.var_length)}{result}"
+            result = f"{field}{len(result):0{field_spec.var_length}}{result}"
 
         return result
 
@@ -208,7 +208,7 @@ class Parser(object):
                 field_data = self.join_complex_field(field_number, field_data)
 
             field_data = field_data.replace("%", "%%")
-            field_number = "F" + str(field_number).zfill(3)
+            field_number = f"F{field_number:03}"
             ini_data.append(f"{field_number} = [{field_data}]")
 
         ini_data = "\n".join(ini_data)

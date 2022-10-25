@@ -148,8 +148,8 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def backup(self):
         spec = self.SpecView.generate_spec()
-        data_format = "%Y%m%d_%H%M%S"  # TODO Hardcode
-        filename = "spec_backup_" + datetime.strftime(datetime.now(), data_format) + ".json"  # TODO Hardcode
+        date_format = "%Y%m%d_%H%M%S"
+        filename = f"spec_backup_{datetime.now():{date_format}}.json"
 
         with open(f'{FilePath.SPEC_BACKUP_DIR}/{filename}', "w") as file:
             file.write(dumps(spec.dict(), indent=4))

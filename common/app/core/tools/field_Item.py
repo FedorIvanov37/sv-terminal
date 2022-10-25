@@ -114,7 +114,7 @@ class Item(AbstractItem):
 
     def set_length(self) -> None:
         column = Spec.columns_order.get(Spec.LENGTH)
-        length = str(self.length).zfill(3)
+        length = f"{self.length:03}"
         self.setText(column, length)
 
         if self.parent() is not None:

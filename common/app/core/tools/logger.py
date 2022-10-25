@@ -95,12 +95,12 @@ class Logger:
                 continue
 
             log_set = str()
-            log_set += put(str(field).zfill(3))
+            log_set += put(f"{field:03}")
 
             if isinstance(field_data, dict):
                 field_data = self.parser.join_complex_field(field, field_data)
 
-            log_set += put(str(len(field_data)).zfill(3))
+            log_set += put(f"{len(field_data):03}")
             log_set += put(field_data)
             log_set = log_set.strip()
 
