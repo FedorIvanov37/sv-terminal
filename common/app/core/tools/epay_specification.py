@@ -6,7 +6,7 @@ from common.app.constants.MessageLength import MessageLength
 from common.app.decorators.singleton import singleton
 from common.app.constants.FilePath import FilePath
 from common.app.data_models.epay_specification import EpaySpecModel, Mti, IsoField
-from common.app.constants.EpaySpecificationConstants import EpaySpecificationData
+from common.app.constants.EpaySpecificationData import EpaySpecificationData
 
 
 @singleton
@@ -33,10 +33,6 @@ class EpaySpecification(EpaySpecificationData):
         @property
         def reversible_messages(self):
             return [mti.request for mti in self.spec.mti if mti.is_reversible]
-
-        @staticmethod
-        def get_reversal_mti(request_mti):
-            return "0400"   # TODO hardcode
 
         def get_desc(self, mti):
             try:
@@ -183,11 +179,11 @@ class EpaySpecification(EpaySpecificationData):
 
             return getattr(self.FIELD_DATE_FORMAT, field_name, "")
 
-    def get_field_data_kit(self, field):
-        field_spec: IsoField = self.get_field_spec([field])
+    def get_field_data_kit(self, field_path: list[str]):
+        field_spec: IsoField = self.get_field_spec(field_path)
 
         if not field_spec:
-            raise ValueError("Lost field spec for field %s" % field)
+            raise ValueError("Lost field spec for field %s" % ".".join(field_path))
 
         data_map: dict[str, bool] = {
             self.DATA_TYPES.FIELD_TYPE_ALPHA: field_spec.alpha,

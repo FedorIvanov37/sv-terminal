@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class DataFormats:
+class DataFormats(object):
     INI: str = "INI"
     JSON: str = "JSON"
     DUMP: str = "DUMP"

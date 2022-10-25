@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class ReleaseDefinition:
+class ReleaseDefinition(object):
     AUTHOR = "Fedor Ivanov | Unlimint"
     VERSION = "v0.15"
     CONTACT = "f.ivanov@unlimint.com"

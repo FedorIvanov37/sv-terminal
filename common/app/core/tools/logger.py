@@ -82,12 +82,12 @@ class Logger:
         level("")
 
         if message.transaction.id:
-            level("[TRANS ID][%s]", message.transaction.id)
+            level("[TRANS_ID][%s]", message.transaction.id)
 
         if message.transaction.utrnno:
             level("[UTRNNO  ][%s]", message.transaction.utrnno)
 
-        level("[MSG TYPE][%s]", message.transaction.message_type)
+        level("[MSG_TYPE][%s]", message.transaction.message_type)
         level("[BITMAP  ][%s]", bitmap.get_bitmap(str))
 
         for field, field_data in message.transaction.fields.items():

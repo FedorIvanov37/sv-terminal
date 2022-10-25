@@ -1,8 +1,10 @@
+from json import dumps
+from logging import error, info
 from PyQt5.Qt import QApplication
 from PyQt5.QtCore import QThread, pyqtSignal, QObject
 from PyQt5.QtNetwork import QTcpSocket
-from json import dumps
-from logging import error, info, debug
+from PyQt5 import QtWidgets
+from pydantic import ValidationError
 from common.app.core.windows.main_window import MainWindow
 from common.app.core.windows.reversal_window import ReversalWindow
 from common.app.core.windows.settings_window import SettingsWindow
@@ -10,25 +12,36 @@ from common.app.core.windows.spec_window import SpecWindow
 from common.app.core.tools.parser import Parser
 from common.app.core.tools.logger import Logger
 from common.app.core.tools.transaction_queue import TransactionQueue
-from common.app.data_models.config import Config
-from common.app.constants.DataFormats import DataFormats
 from common.app.core.tools.epay_specification import EpaySpecification
-from common.app.constants.TextConstants import TextConstants
-from common.app.data_models.message import Message
-from common.app.data_models.message import TransactionModel
 from common.app.core.tools.connector import ConnectionWorker
 from common.app.core.tools.fields_generator import FieldsGenerator
-from common.app.core.tools.api.api import TerminalApi
 from common.app.core.tools.validator import Validator
+from common.app.constants.TextConstants import TextConstants
+from common.app.constants.DataFormats import DataFormats
+from common.app.constants.FilePath import FilePath
+from common.app.data_models.config import Config
+from common.app.data_models.message import Message
+from common.app.data_models.message import TransactionModel
 
 
-class Terminal(QObject):
+class SvTerminal(QObject):
+    _config: Config = Config.parse_file(FilePath.CONFIG)
+    _pyqt_application = QtWidgets.QApplication([])
+    _validator = Validator(_config)
     _message_ready: pyqtSignal = pyqtSignal(Message)
     _need_reconnect: pyqtSignal = pyqtSignal()
     _spec: EpaySpecification = EpaySpecification()
     _new_connector: ConnectionWorker
     _connection_thread: QThread
     _send_message: pyqtSignal = pyqtSignal(Message)
+
+    @property
+    def config(self):
+        return self._config
+
+    @property
+    def validator(self):
+        return self._validator
 
     @property
     def new_connector(self):
@@ -46,22 +59,25 @@ class Terminal(QObject):
     def message_ready(self):
         return self._message_ready
 
-    def __init__(self, config: Config):
-        super(Terminal, self).__init__()
-        self.config: Config = config
+    def __init__(self):
+        super(SvTerminal, self).__init__()
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator(self.config)
         self.connector: ConnectionWorker = ConnectionWorker(self.config)
         self.window: MainWindow = MainWindow(self.config, self)
         self.logger: Logger = Logger(self.window.log_browser, self.config)
         self.trans_queue: TransactionQueue = TransactionQueue(self.config)
-        self.api: TerminalApi = TerminalApi(self.config)
-        self.api.adapter.message_ready.connect(lambda message: self.process_api_call(message))
-        self.validator = Validator()
-
-        # Working with connection thread
         self._connection_thread: QThread = QThread()
-        self.connector = ConnectionWorker(self.config)
+        self.start_connection_thread()
+
+        if self.config.terminal.connect_on_startup:
+            self.reconnect()
+
+    def run(self):
+        self.window.show()
+        exit(self._pyqt_application.exec_())
+
+    def start_connection_thread(self):
         self.connector.moveToThread(self._connection_thread)
         self._need_reconnect.connect(self.connector.connect_sv)
         self._send_message.connect(self.connector.send_message)
@@ -74,34 +90,6 @@ class Terminal(QObject):
         self.connector.connection_finished.connect(lambda: self.window.lock_connection_buttons(lock=False))
         self.connector.ready_read.connect(self.read_from_socket)
         self._connection_thread.start()
-
-    def run_http_server(self):
-        from common.app.core.tools.api.http_api import Adapter, FastApiApp
-        self.adapter = Adapter()
-        self.adapter.got_incoming_message.connect(lambda m: self.send(m))
-
-        # from common.app.core.tools.api.http_api import run_app
-        # run_app()
-
-    def process_api_call(self, data: Message) -> None:
-        self.send(data)
-
-    def run(self):  # Start the terminal
-        self.setup()
-        self.window.show()
-
-    def setup(self):
-        if self.config.terminal.connect_on_startup:
-            self.reconnect()
-
-        self.logger.print_config(level=debug)
-        info("Startup finished")
-
-    def run_api(self):
-        ...
-
-    def stop_api(self):
-        ...
 
     def socket_error(self):
         if self.connector.error() == -1:  # TODO
@@ -149,7 +137,7 @@ class Terminal(QObject):
     def save_message_to_file(self, message: Message, filename: str, file_format: str) -> None:
         data_processing_map = {
             DataFormats.JSON: lambda _message: dumps(_message.dict(), indent=4),
-            DataFormats.INI: lambda _message: self.parser.get_transaction_data_ini(_message, string=True),
+            DataFormats.INI: lambda _message: self.parser.message_to_ini_string(_message),
             DataFormats.DUMP: lambda _message: self.parser.create_sv_dump(_message)[1:]
         }
 
@@ -194,12 +182,10 @@ class Terminal(QObject):
         data_processing_map = {
             DataFormats.JSON: lambda: dumps(self.parser.parse_form(self.window).dict(), indent=4),
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parser.parse_form(self.window)),
-            DataFormats.INI: lambda: self.parser.get_transaction_data_ini(self.parser.parse_form(self.window), string=True),
+            DataFormats.INI: lambda: self.parser.message_to_ini_string(self.parser.parse_form(self.window)),
             DataFormats.SV_TERMINAL: lambda: TextConstants.HELLO_MESSAGE,
             DataFormats.SPEC: lambda: dumps(self.spec.spec.dict(), indent=4)
         }
-
-        from pydantic import ValidationError
 
         if not (function := data_processing_map.get(data_format)):
             error(f"Wrong data format for printing: {data_format}")
@@ -210,22 +196,19 @@ class Terminal(QObject):
         except ValidationError as validation_error:
             error(f"{validation_error}")
 
-    def get_last_reversible_transaction_id(self):
-        transaction_id = None
+    @staticmethod
+    def set_clipboard_text(data: str) -> None:
+        QApplication.clipboard().setText(data)
 
-        try:
-            transaction_id = max(transaction.trans_id for transaction in self.get_reversible_transactions())
-        except ValueError:
+    def get_last_reversible_transaction_id(self):
+        if not (transaction_id := self.trans_queue.get_last_reversible_transaction_id()):
             error("Transaction Queue has no reversible transactions")
 
         return transaction_id
 
-    def get_reversible_transactions(self):
-        return self.trans_queue.get_reversible_transactions()
-
     def show_reversal_window(self):
-        transaction_list: list = self.get_reversible_transactions()
-        reversal_window = ReversalWindow(transaction_list)
+        messages_list: list[Message] = self.trans_queue.get_reversible_transactions()
+        reversal_window = ReversalWindow(messages_list)
 
         if reversal_window.exec_():
             if not reversal_window.reversal_id:
@@ -234,10 +217,6 @@ class Terminal(QObject):
             return reversal_window.reversal_id
 
         info("Reversal sending is cancelled by user")
-
-    @staticmethod
-    def set_clipboard_text(data: str) -> None:
-        QApplication.clipboard().setText(data)
 
     def reverse_transaction(self, original_transaction_id: str):
         if not (reversal_message := self.build_reversal(original_transaction_id)):

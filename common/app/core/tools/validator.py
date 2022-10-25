@@ -17,8 +17,8 @@ class Validator(object):
         return self._spec
 
     def __init__(self, config: Config = None):
-        if config is not None and not self._config:
-            self._config: Config = config
+        if config is not None:
+            self._config = config
 
     def validate_message(self, message):
         if not message:
@@ -53,6 +53,11 @@ class Validator(object):
         return fields
 
     def validate_field(self, field_path: list[str], value: TypeFields | str):
+        alphabetic = ascii_letters
+        numeric = digits
+        specials = punctuation + " "
+        valid_values = alphabetic + numeric + specials
+
         if not self._config.fields.validation:
             return
 
@@ -75,13 +80,16 @@ class Validator(object):
             raise ValueError(f"Lost spec for field {path}")
 
         for letter in value:
+            if letter not in valid_values:
+                raise ValueError(f"Incorrect letters in field {path}. Seems like problem with encoding")
+
             if letter in ascii_letters and not field_spec.alpha:
                 raise ValueError(f"Alphabetic values not allowed in field {path} - {field_spec.description}")
 
             if letter in digits and not field_spec.numeric:
                 raise ValueError(f"Numeric values not allowed in field {path} - {field_spec.description}")
 
-            if letter in punctuation + " " and not field_spec.special:
+            if letter in specials and not field_spec.special:
                 raise ValueError(f"Special values not allowed in field {path} - {field_spec.description}")
 
         length = len(value)

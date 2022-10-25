@@ -1,7 +1,7 @@
 from logging import info, error
-from PyQt5.QtGui import QPalette, QColor, QIcon
+from PyQt5.QtGui import QPalette, QColor, QIcon, QCloseEvent
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMenu
-from PyQt5.QtGui import QCloseEvent
+from PyQt5.QtCore import Qt
 from PyQt5.QtNetwork import QTcpSocket
 from PyQt5.QtWinExtras import QtWin
 from common.app.forms.mainwindow import Ui_MainWindow
@@ -38,14 +38,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         super().__init__()
         self.config: Config = config
         self.terminal = terminal
-        self.setupUi(self)
         self.parser: Parser = Parser(self.config)
-        self.setup()
-
-    def setup(self):
         self._setup()
 
-    def _connect(self):
+    def _connect_buttons(self):
         buttons_connection_scheme = {  # Define method of MainWindow for each button object
             self.ButtonSend: self.send,
             self.ButtonClearLog: self.clear_log,
@@ -61,14 +57,13 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.PlusButton: self.plus,
             self.MinusButton: self.minus,
             self.NextLevelButton: self.next_level,
-            self.ButtonRunApi: self.run_api
         }
 
         for button, method in buttons_connection_scheme.items():
             button.pressed.connect(method)
 
     def _setup(self):
-        QtWin.setCurrentProcessExplicitAppUserModelID("MainWindow.py")
+        self.setupUi(self)
         self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
         self.set_connection_status(QTcpSocket.UnconnectedState, log=False)
         self.json_view: JsonView = JsonView(self.config, self.FieldsTree)
@@ -122,13 +117,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         self.set_bitmap()
         self.LogArea.setText(TextConstants.HELLO_MESSAGE)
-        self._connect()
-
-    def run_api(self):
-        self.terminal.run_api()
-
-    def stop_api(self):
-        self.terminal.stop_api()
+        self._connect_buttons()
+        QtWin.setCurrentProcessExplicitAppUserModelID("MainWindow.py")
 
     def plus(self):
         self.json_view.plus()
@@ -217,13 +207,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.set_mti(message.transaction.message_type)
         self.set_fields(message)
 
-        info("File successfully parsed: %s", filename)
+        if self.sender() is self.ButtonParseDump:
+            info(f"File parsed: {filename}")
 
     def set_mti(self, mti: str):
-        index = self.msgtype.findText(f"{mti}: {self.spec.get_desc(mti)}")
+        index = self.msgtype.findText(mti, flags=Qt.MatchContains)
 
         if index == -1:
-            error("Cannot set MTI")
+            error(f"Cannot set Message Type Identifier {mti}. Mti not in specification")
             return
 
         self.msgtype.setCurrentIndex(index)

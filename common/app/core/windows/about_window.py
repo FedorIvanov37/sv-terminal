@@ -30,7 +30,8 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         for element in data_bind:
             element.setText("%s %s" % (element.text(), data_bind.get(element)))
 
-        url = QUrl.fromLocalFile(FilePath.VVVVVV)
-        music = QMediaContent(url)
-        self._player.setMedia(music)
-        self._player.play()  # TODO Does not play 
+        # TODO Does not play
+        # url = QUrl.fromLocalFile(FilePath.VVVVVV)
+        # music = QMediaContent(url)
+        # self._player.setMedia(music)
+        # self._player.play()

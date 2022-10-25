@@ -53,10 +53,10 @@ class Item(AbstractItem):
         super(Item, self).__init__(item_data)
         field_path = self.get_field_path()
         self.spec: IsoField = self.epay_spec.get_field_spec(field_path)
-        self._validator = Validator()
 
     def validate(self):
-        self._validator.validate_field(self.get_field_path(), self.field_data)
+        validator = Validator()
+        validator.validate_field(self.get_field_path(), self.field_data)
 
     def addChild(self, item):
         item.spec = self.epay_spec.get_field_spec(item.get_field_path())

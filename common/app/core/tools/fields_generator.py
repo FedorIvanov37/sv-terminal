@@ -56,7 +56,7 @@ class FieldsGenerator(object):
         if date_format := self.spec.get_field_date_format(field):
             return datetime.strftime(datetime.now(), date_format)
 
-        data_kit = self.spec.get_field_data_kit(field)
+        data_kit = self.spec.get_field_data_kit([field])
         length = self.spec.get_field_length(field)
         data = (choice(data_kit) for _ in range(length))
         data = "".join(data)

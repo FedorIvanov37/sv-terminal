@@ -1,16 +1,14 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 
 class SmartVista(BaseModel):
     host: str = str()
     port: str = str()
-    api_port: str = str()
 
 
 class Terminal(BaseModel):
     process_default_dump: bool = True
     connect_on_startup: bool = True
-    run_api: bool = False
 
 
 class Debug(BaseModel):
@@ -20,10 +18,19 @@ class Debug(BaseModel):
 
 
 class Fields(BaseModel):
-    max_amount: int = 1000
+    max_amount: str = "1000"
     build_fld_90: bool = False
     send_internal_id: bool = False
     validation: bool = False
+
+    @validator("max_amount")
+    def amount_should_be_digit(cls, max_amount: str):
+        max_amount = str(max_amount)
+
+        if not max_amount.isdigit():
+            raise ValueError("Max transaction amount should be digits only")
+
+        return max_amount
 
 
 class Config(BaseModel):

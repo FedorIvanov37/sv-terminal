@@ -1,18 +1,18 @@
-from os.path import splitext
 from json import loads
+from os.path import splitext
 from logging import error, warning, info
 from binascii import hexlify, unhexlify
-from configparser import ConfigParser
+from configparser import ConfigParser, NoSectionError, NoOptionError
 from common.app.exceptions.exceptions import DumpFileParsingError
-from common.app.constants.DumpDefinition import DumpDefinition
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.core.tools.bitmap import Bitmap
-from common.app.data_models.message import Message, TransactionModel, MessageConfig
+from common.app.core.tools.fields_generator import FieldsGenerator
+from common.app.constants.DumpDefinition import DumpDefinition
 from common.app.constants.IniMessageDefinition import IniMessageDefinition
 from common.app.constants.DataFormats import DataFormats
+from common.app.data_models.message import Message, TransactionModel, MessageConfig
 from common.app.data_models.config import Config
 from common.app.data_models.epay_specification import IsoField, FieldSet, RawFieldSet
-from common.app.core.tools.fields_generator import FieldsGenerator
 
 
 class Parser(object):
@@ -27,7 +27,7 @@ class Parser(object):
         self.generator = FieldsGenerator(self.config)
 
     def create_dump(self, message: Message, body: bool = False) -> bytes | str:
-        msgtype: bytes = message.transaction.message_type.encode()
+        msg_type: bytes = message.transaction.message_type.encode()
         bitmap: Bitmap = Bitmap(message.transaction.fields)
         bitmap: bytes = bitmap.get_bitmap(bytes)
 
@@ -54,7 +54,7 @@ class Parser(object):
         if body:
             return msg_body.decode()
 
-        return msgtype + bitmap + msg_body
+        return msg_type + bitmap + msg_body
 
     def create_sv_dump(self, message: Message) -> str | None:
         mti: str = message.transaction.message_type
@@ -188,67 +188,47 @@ class Parser(object):
         if not (mti := form.get_mti()):
             raise ValueError("Invalid MTI")
 
-        transaction = TransactionModel(
-            message_type=mti,
-            fields=fields
-        )
-
         config = MessageConfig(
             generate_fields=form.get_fields_to_generate(),
             max_amount=self.config.fields.max_amount
         )
 
+        transaction = TransactionModel(
+            message_type=mti,
+            fields=fields
+        )
+
         message = Message(
-            transaction=transaction,
-            config=config
+            config=config,
+            transaction=transaction
         )
 
         return message
 
-    def get_transaction_data_ini(self, message: Message, string: bool = False) -> ConfigParser | str:
-        ini: ConfigParser = ConfigParser()
+    def message_to_ini_string(self, message: Message):
+        generate_fields: list[str] = sorted(message.config.generate_fields, key=int)
+        generate_fields: str = ", ".join(generate_fields)
 
-        generate_fields = ", ".join(sorted(message.config.generate_fields, key=int))
-
-        ini_data = [
-            (IniMessageDefinition.CONFIG, IniMessageDefinition.MAX_AMOUNT, message.config.max_amount),
-            (IniMessageDefinition.CONFIG, IniMessageDefinition.GENERATE_FIELDS, generate_fields),
-            (IniMessageDefinition.MTI, IniMessageDefinition.MTI, message.transaction.message_type)
+        ini_data: list[str] | str = [
+            f"[{IniMessageDefinition.CONFIG}]",
+            f"{IniMessageDefinition.MAX_AMOUNT} = [{message.config.max_amount}]",
+            f"{IniMessageDefinition.GENERATE_FIELDS} = [{generate_fields}]",
+            f"[{IniMessageDefinition.MTI}]",
+            f"{IniMessageDefinition.MTI} = [{message.transaction.message_type}]",
+            f"[{IniMessageDefinition.MESSAGE}]"
         ]
 
-        for field, field_data in message.transaction.fields.items():
+        for field_number, field_data in message.transaction.fields.items():
             if isinstance(field_data, dict):
-                field_data = self.join_complex_field(field, field_data)
+                field_data = self.join_complex_field(field_number, field_data)
 
             field_data = field_data.replace("%", "%%")
-            ini_data.append((IniMessageDefinition.MESSAGE, "F" + field.zfill(3), field_data))
+            field_number = "F" + str(field_number).zfill(3)
+            ini_data.append(f"{field_number} = [{field_data}]")
 
-        for section, option, value in ini_data:
-            if section not in ini.sections():
-                ini.add_section(section)
+        ini_data = "\n".join(ini_data)
 
-            value = "[%s]" % value
-            ini.set(section, option, value)
-
-        if string:
-            ini: str = self.ini_to_string(ini)
-
-        return ini
-
-    @staticmethod
-    def ini_to_string(ini: ConfigParser) -> str:
-        result: str = str()
-
-        for section in ini.sections():
-            result += f"[{section}]\n"
-
-            for option in ini.options(section):
-                value = ini.get(section, option)
-                result += f"{option} = {value}\n"
-
-        result: str = result.replace("%", "%%")
-
-        return result
+        return ini_data
 
     def split_complex_field(self, field: str, field_data: str, spec: dict | None = None) -> RawFieldSet | None:
         complex_field_data: RawFieldSet = dict()
@@ -318,39 +298,29 @@ class Parser(object):
         message: Message = Message.parse_file(filename)
         return message
 
-    def _parse_ini_file(self, filename):
-        def unpack(data: str) -> str:
-            return data.removeprefix('[').removesuffix(']')
+    @staticmethod
+    def unpack_ini_field(data: str) -> str:
+        return data.removeprefix('[').removesuffix(']')
 
+    def _parse_ini_file(self, filename) -> Message:
         ini = ConfigParser()
         ini.read(filename)
+        fields = self._parse_ini_fields(ini)
 
-        fields = dict()
+        ini_def = IniMessageDefinition
 
-        for option in ini.options(IniMessageDefinition.MESSAGE):
-            if not option.startswith("f"):
-                error("Wrong field name: %s. Should start from f. For example: f002", option)
-                return
+        try:
+            max_amount = ini.get(ini_def.CONFIG, ini_def.MAX_AMOUNT)
+            max_amount = self.unpack_ini_field(max_amount)
+        except (NoSectionError, NoOptionError):
+            max_amount = self.config.fields.max_amount
 
-            field = str(int(option.removeprefix("f")))
-            value = unpack(ini.get(IniMessageDefinition.MESSAGE, option))
+        try:
+            generate_fields = loads(ini.get(ini_def.CONFIG, ini_def.GENERATE_FIELDS))
+        except(NoSectionError, NoOptionError):
+            generate_fields: list[str] = []
 
-            if self.spec.is_field_complex(field):
-                value = self.split_complex_field(field, value)
-
-            fields[field] = value
-
-        max_amount = self.config.fields.max_amount
-        generate_fields = list()
-
-        if IniMessageDefinition.CONFIG in ini.sections():
-            options = list(option.upper() for option in ini.options(IniMessageDefinition.CONFIG))
-
-            if IniMessageDefinition.MAX_AMOUNT.upper() in options:
-                max_amount = int(unpack(ini.get(IniMessageDefinition.CONFIG, IniMessageDefinition.MAX_AMOUNT)))
-
-            if IniMessageDefinition.GENERATE_FIELDS.upper() in options:
-                generate_fields = loads(ini.get(IniMessageDefinition.CONFIG, IniMessageDefinition.GENERATE_FIELDS))
+        mti = self.unpack_ini_field(ini.get(ini_def.MTI, ini_def.MTI))
 
         message_config = MessageConfig(
             generate_fields=generate_fields,
@@ -358,7 +328,7 @@ class Parser(object):
         )
 
         transaction = TransactionModel(
-            message_type=unpack(ini.get(IniMessageDefinition.MTI, IniMessageDefinition.MTI)),
+            message_type=mti,
             fields=fields
         )
 
@@ -368,6 +338,23 @@ class Parser(object):
         )
 
         return message
+
+    def _parse_ini_fields(self, ini: ConfigParser):
+        fields: RawFieldSet = dict()
+
+        for option in ini.options(IniMessageDefinition.MESSAGE):
+            if not option.startswith("f"):
+                raise ValueError("Wrong field name: %s. Should start from f. For example: f002", option)
+
+            field = str(int(option.removeprefix("f")))
+            value = self.unpack_ini_field(ini.get(IniMessageDefinition.MESSAGE, option))
+
+            if self.spec.is_field_complex(field):
+                value = self.split_complex_field(field, value)
+
+            fields[field] = value
+
+        return fields
 
     def _parse_dump_file(self, filename: str) -> Message:
         string = str()

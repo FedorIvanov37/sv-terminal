@@ -1,15 +1,23 @@
-from pydantic import BaseModel, Field, UUID1, validator
 from uuid import uuid1 as uuid
+from pydantic import BaseModel, Field, UUID1, validator
 from common.app.core.tools.validator import Validator
 
 
 TypeFields = dict[str, str | dict]
-TerminalValidator = Validator()
 
 
 class MessageConfig(BaseModel):
     generate_fields: list[str] = list()
-    max_amount: int = 100
+    max_amount: str = "100"
+
+    @validator("max_amount")
+    def amount_should_be_digit(cls, max_amount: str):
+        max_amount = str(max_amount)
+
+        if not max_amount.isdigit():
+            raise ValueError("Max transaction amount should be digits only")
+
+        return max_amount
 
 
 class TransactionModel(BaseModel):
@@ -22,7 +30,8 @@ class TransactionModel(BaseModel):
 
     @validator("fields")
     def respect_specification(cls, fields: TypeFields):
-        return TerminalValidator.validate_fields(fields)
+        message_validator = Validator()
+        return message_validator.validate_fields(fields)
 
 
 class Message(BaseModel):

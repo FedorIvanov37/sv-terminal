@@ -26,7 +26,7 @@ class Croak(Ui_HelpWindow, QDialog):
             self.movie.start()
             self.exec_()
 
-        except Exception:
+        except:
             ...
 
     def keyPressEvent(self, a0: QKeyEvent) -> None:  # TODO does not work :(

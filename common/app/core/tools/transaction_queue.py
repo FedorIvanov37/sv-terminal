@@ -50,15 +50,22 @@ class TransactionQueue(QObject):
 
         self._queue.append(transaction)
 
-    def get_reversible_transactions(self) -> list[Transaction]:
-        return [
-            trans for trans in self._queue
-            if trans.request.transaction.message_type in self.spec.reversible_messages
-        ]
+    def get_reversible_transactions(self) -> list[Message]:
+        transactions: list[Message] = []
+
+        transaction: Transaction
+
+        for transaction in self._queue:
+            if not self.spec.get_reversal_mti(transaction.request.transaction.message_type):
+                continue
+
+            transactions.append(transaction.request)
+
+        return transactions
 
     def get_last_reversible_transaction_id(self) -> str:
         if reversible := self.get_reversible_transactions():
-            return max(trans.trans_id for trans in reversible)
+            return max(message.transaction.id for message in reversible)
 
     def remove_from_queue(self, transaction):
         self._queue.remove(transaction)
