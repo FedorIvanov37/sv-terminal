@@ -50,7 +50,7 @@ class FieldsGenerator(object):
         if field == self.spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT:
             max_amount = str(randint(0, int(self.config.fields.max_amount) * 100))
             field_length = self.spec.get_field_length(self.spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT)
-            max_amount = f"{max_amount:0{field_length}}"
+            max_amount = max_amount.zfill(field_length)
 
             return max_amount
 

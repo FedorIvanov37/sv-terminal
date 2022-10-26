@@ -36,12 +36,6 @@ class TransactionQueue(QObject):
         self.config: Config = config
         self.parser: Parser = Parser(self.config)
 
-    def put_transaction(self, transaction: Transaction) -> None:
-        if not transaction.trans_id:
-            transaction.trans_id = FieldsGenerator.trans_id()
-
-        self._queue.append(transaction)
-
     def get_reversible_transactions(self) -> list[Transaction]:
         transactions: list[Transaction] = []
 
@@ -95,7 +89,7 @@ class TransactionQueue(QObject):
             matched_request = request
 
         if not matched_request:
-            return  False
+            return False
 
         matched_request.matched = True
         response.matched = True
@@ -103,20 +97,30 @@ class TransactionQueue(QObject):
         matched_request.match_id = response.trans_id
         return True
 
-    def put_response(self, response: Transaction):
-        if not response.trans_id:
-            response.trans_id = FieldsGenerator.trans_id()
+    def put_transaction(self, transaction: Transaction) -> None:
+        if self.is_request(transaction):
+            self._queue.append(transaction)
+            return
 
-        self._queue.append(response)
+        if not transaction.trans_id:
+            transaction.trans_id = FieldsGenerator.trans_id()
 
-        if not self.match_transaction(response):
+        if not self.match_transaction(transaction):
             return
 
         resp_time = 3 # round(transaction.timer.total_seconds(), 3)
-        info(f"Transaction ID [{response.match_id}] matched. Response time seconds: {resp_time}")
+        info(f"Transaction ID [{transaction.match_id}] matched. Response time seconds: {resp_time}")
 
-    # def start_transaction_timer(self, request: Message):
-    #     if not (transaction := self.get_transaction(request.transaction.id)):
-    #         return
-    #
-    #     transaction.start_timer()
+    def is_request(self, transaction: Transaction) -> bool:
+        is_request = False
+
+        if not transaction.message_type in self.spec.get_mti_codes():
+            raise ValueError(f"Incorrect MTI {transaction.message_type}")
+
+        for mti in self.spec.mti:
+            if transaction.message_type != mti.request:
+                continue
+
+            is_request = True
+
+        return is_request

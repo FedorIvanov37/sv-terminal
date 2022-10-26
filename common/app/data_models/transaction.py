@@ -1,7 +1,7 @@
 from pydantic import BaseModel
+from collections import OrderedDict
 
-
-TypeFields = dict[str, str | dict]
+TypeFields = OrderedDict[str, str | OrderedDict]
 
 
 class Transaction(BaseModel):
@@ -13,3 +13,4 @@ class Transaction(BaseModel):
     max_amount: str = "100"
     message_type: str = ""
     data_fields: TypeFields = {}
+

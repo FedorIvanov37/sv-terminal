@@ -163,7 +163,7 @@ class SvTerminal(QObject):
             error("Incoming transaction parsing error: %s", parsing_error)
             return
 
-        self.trans_queue.put_response(response=transaction)
+        self.trans_queue.put_transaction(transaction)
         self.logger.print_dump(transaction)
         self.logger.print_transaction(transaction)
 

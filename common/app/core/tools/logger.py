@@ -74,33 +74,36 @@ class Logger:
         level(dumps(config.dict(), indent=4))
 
     def print_transaction(self, transaction: Transaction, level=_default_level) -> None:
-        def put(string, size=0):
-            return (f" [%{size}s]" % string).strip()
-
-        bitmap = Bitmap(transaction.data_fields)
+        def put(string: str, size=0):
+            return f"[{string.zfill(size)}]"
 
         level("")
 
-        if transaction.trans_id:
-            level("[TRANS_ID][%s]", transaction.trans_id)
+        utrnno: str = transaction.utrnno
+        trans_id: str = transaction.match_id if transaction.match_id else transaction.trans_id
+        msg_type: str = transaction.message_type
+        bitmap = Bitmap(transaction.data_fields)
+
+        level(f"[TRANS_ID][{trans_id}]")
 
         if transaction.utrnno:
-            level("[UTRNNO  ][%s]", transaction.utrnno)
+            level(f"[UTRNNO  ][{utrnno}]")
 
-        level("[MSG_TYPE][%s]", transaction.message_type)
-        level("[BITMAP  ][%s]", bitmap.get_bitmap(str))
+        level(f"[MSG_TYPE][{msg_type}]")
+        level(f"[BITMAP  ][{bitmap.get_bitmap(str)}]")
 
         for field, field_data in transaction.data_fields.items():
             if field == self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
                 continue
 
             log_set = str()
-            log_set += put(f"{field:03}")
+            log_set += put(field, size=3)
 
             if isinstance(field_data, dict):
                 field_data = self.parser.join_complex_field(field, field_data)
 
-            log_set += put(f"{len(field_data):03}")
+            length = str(len(field_data))
+            log_set += put(length, size=3)
             log_set += put(field_data)
             log_set = log_set.strip()
 
