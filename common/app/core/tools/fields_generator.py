@@ -44,6 +44,10 @@ class FieldsGenerator(object):
         for field in transaction.generate_fields:
             transaction.data_fields[field] = self.generate_field(field)
 
+        transaction.data_fields = {
+            field: transaction.data_fields[field] for field in sorted(transaction.data_fields.keys(), key=int)
+        }
+
         return transaction
 
     def generate_field(self, field: str):
