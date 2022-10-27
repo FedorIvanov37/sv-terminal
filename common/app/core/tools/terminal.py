@@ -61,6 +61,7 @@ class SvTerminal(QObject):
         self.window: MainWindow = MainWindow(self.config, self)
         self.logger: Logger = Logger(self.window.log_browser, self.config)
         self.trans_queue: TransactionQueue = TransactionQueue(self.config)
+        self.trans_queue.transaction_matched.connect(self.transaction_matched)
         self._connection_thread: QThread = QThread()
         self.start_connection_thread()
 
@@ -149,6 +150,9 @@ class SvTerminal(QObject):
 
     def disconnect(self):
         self.connector.disconnect_sv()
+
+    def transaction_matched(self, trans_id, resp_time_seconds):
+        info(f"Transaction ID [{trans_id}] matched. Response time seconds: {resp_time_seconds}")
 
     def reconnect(self):
         info("[Re]connecting...")

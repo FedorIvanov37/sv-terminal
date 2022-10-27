@@ -1,35 +1,25 @@
 from PyQt5.Qt import QObject, pyqtSignal
-from logging import info
 from collections import deque
 from common.app.core.tools.parser import Parser
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.data_models.config import Config
 from common.app.core.tools.fields_generator import FieldsGenerator
 from common.app.data_models.transaction import Transaction
+from common.app.core.tools.transaction_timer import TransactionTimer
 
 
 class TransactionQueue(QObject):
-    _queue: deque = deque(maxlen=1024)
-    _transactions_count: int = int()
-    _transaction_accepted: pyqtSignal = pyqtSignal(str)
-    _message_ready_to_send: pyqtSignal = pyqtSignal()
     _spec: EpaySpecification = EpaySpecification()
+    _queue: deque = deque(maxlen=1024)
+    _transaction_matched: pyqtSignal = pyqtSignal(str, float)
 
     @property
     def spec(self):
         return self._spec
 
     @property
-    def transaction_accepted(self):
-        return self._transaction_accepted
-
-    @property
-    def transaction_count(self):
-        return self._transactions_count
-
-    @transaction_count.setter
-    def transaction_count(self, transaction_count):
-        self._transactions_count = transaction_count
+    def transaction_matched(self):
+        return self._transaction_matched
 
     def __init__(self, config: Config):
         QObject.__init__(self)
@@ -108,19 +98,14 @@ class TransactionQueue(QObject):
         if not self.match_transaction(transaction):
             return
 
-        resp_time = 3 # round(transaction.timer.total_seconds(), 3)
-        info(f"Transaction ID [{transaction.match_id}] matched. Response time seconds: {resp_time}")
+        self.transaction_matched.emit(transaction.match_id, 0.568)
 
     def is_request(self, transaction: Transaction) -> bool:
-        is_request = False
-
         if not transaction.message_type in self.spec.get_mti_codes():
             raise ValueError(f"Incorrect MTI {transaction.message_type}")
 
         for mti in self.spec.mti:
-            if transaction.message_type != mti.request:
-                continue
+            if transaction.message_type == mti.request:
+                return True
 
-            is_request = True
-
-        return is_request
+        return False
