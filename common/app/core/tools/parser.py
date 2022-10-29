@@ -168,7 +168,11 @@ class Parser(object):
             if self.spec.is_field_complex(field):
                 fields[field]: RawFieldSet = self.split_complex_field(field, fields[field])
 
-        transaction: Transaction = Transaction(message_type=message_type_indicator, data_fields = fields)
+        transaction: Transaction = Transaction(
+            trans_id=FieldsGenerator.trans_id(),
+            message_type=message_type_indicator,
+            data_fields=fields
+        )
 
         return transaction
 
@@ -182,12 +186,15 @@ class Parser(object):
             raise ValueError("Invalid MTI")
 
         message_type = message_type[:self.spec.MessageLength.message_type_length]
+        generate_fields = form.get_fields_to_generate()
+        max_amount = self.config.fields.max_amount
 
         transaction = Transaction(
+            trans_id=FieldsGenerator.trans_id(),
             message_type=message_type,
-            data_fields=data_fields,
-            generate_fields=form.get_fields_to_generate(),
-            max_amount=self.config.fields.max_amount,
+            max_amount=max_amount,
+            generate_fields=generate_fields,
+            data_fields=data_fields
         )
 
         return transaction
@@ -282,8 +289,9 @@ class Parser(object):
 
     @staticmethod
     def _parse_json_file(filename: str) -> Transaction:
-        message: Transaction = Transaction.parse_file(filename)
-        return message
+        transaction: Transaction = Transaction.parse_file(filename)
+        transaction.trans_id = FieldsGenerator.trans_id()
+        return transaction
 
     @staticmethod
     def unpack_ini_field(data: str) -> str:

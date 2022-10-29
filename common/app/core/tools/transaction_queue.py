@@ -13,73 +13,115 @@ from PyQt5.QtCore import QTimer
 class TransactionQueue(QObject):
     _spec: EpaySpecification = EpaySpecification()
     _queue: deque[Transaction] = deque(maxlen=1024)
-    _transaction_matched: pyqtSignal = pyqtSignal(Transaction, float)
     _incoming_transaction: pyqtSignal = pyqtSignal(Transaction)
     _outgoing_transaction: pyqtSignal = pyqtSignal(Transaction)
-    _resp_received: pyqtSignal = pyqtSignal(Transaction)
+    _transaction_timeout: pyqtSignal = pyqtSignal(Transaction, float)
+    _ready_to_send: pyqtSignal = pyqtSignal(Transaction)
 
     @property
     def spec(self):
         return self._spec
 
     @property
-    def transaction_matched(self):
-        return self._transaction_matched
-
-    @property
     def incoming_transaction(self):
         return self._incoming_transaction
+
+    @property
+    def outgoing_transaction(self):
+        return self._outgoing_transaction
+
+    @property
+    def transaction_timeout(self):
+        return self._transaction_timeout
 
     def __init__(self, config: Config, connector: ConnectionWorker):
         QObject.__init__(self)
         self.config: Config = config
         self.connector: ConnectionWorker = connector
         self.parser: Parser = Parser(self.config)
+        self.generator: FieldsGenerator = FieldsGenerator(self.config)
         self.timers: dict[str, QTimer] = {}
         self._start_connection_thread()
 
     def _start_connection_thread(self):
         self._connection_thread: QThread = QThread()
         self.connector.moveToThread(self._connection_thread)
-        self._outgoing_transaction.connect(self.connector.send_transaction)
+        self._ready_to_send.connect(self.connector.send_transaction)
         self._connection_thread.started.connect(self.connector.run)
         self.connector.ready_read.connect(self.read_from_socket)
-        self.connector.transaction_sent.connect(self.start_transaction_timer)
-        self._resp_received.connect(self.stop_transaction_timer)
+        self.connector.transaction_sent.connect(self.request_was_sent)
         self._connection_thread.start()
 
-    def start_transaction_timer(self, transaction: Transaction, timeout=60):
-        if not (timer := self.timers.get(transaction.trans_id)):
-            timer: QTimer = QTimer()
+    def put_request(self, request: Transaction):
+        request.is_request = self.spec.is_request(request)
 
-        self.timers[transaction.trans_id] = timer
+        if not request.is_request:
+            raise TypeError("Fatal error: Trying to parse transaction request as a response")
+
+        self._queue.append(request)
+        self._ready_to_send.emit(request)
+
+    def put_response(self, response: Transaction):
+        response.is_request = self.spec.is_request(response)
+
+        if response.is_request:
+            raise TypeError("Fatal error: Trying to parse transaction response as a request")
+
+        self._queue.append(response)
+
+        if self.match_transaction(response):
+            response.resp_time_seconds = self.stop_transaction_timer(response)
+            request = self.get_transaction(response.match_id)
+            self.generator.merge_trans_data(request, response)
+
+        if not response.trans_id:
+            response.trans_id = FieldsGenerator.trans_id()
+
+        self.incoming_transaction.emit(response)
+
+    def start_transaction_timer(self, transaction: Transaction, timeout=60):
+        timer: QTimer = QTimer()
         timer.timeout.connect(lambda: self.process_timeout(transaction))
+        self.timers[transaction.trans_id] = timer
         timer.start(timeout * 1000)
 
-    def stop_transaction_timer(self, transaction):
+    def stop_transaction_timer(self, response):
         timer: QTimer
 
-        if not (timer := self.timers.get(transaction.trans_id)):
+        if not (timer := self.timers.get(response.match_id)):
             return
 
         if not timer.isActive():
             return
 
         time_spend = (timer.interval() - timer.remainingTime()) / 1000
-        self.transaction_matched.emit(transaction, time_spend)
         timer.stop()
+        return time_spend
+
+    def process_timeout(self, transaction):
+        timer: QTimer
+
+        if not (timer := self.timers.get(transaction.trans_id)):
+            return
+
+        timeout_secs = int(timer.interval() / 1000)
+        self.transaction_timeout.emit(transaction, timeout_secs)
+        timer.stop()
+
+    def request_was_sent(self, request):
+        self.start_transaction_timer(request)
+        self.outgoing_transaction.emit(request)
 
     def read_from_socket(self):
         data = self.connector.read_from_socket().data()
 
         try:
-            transaction: Transaction = self.parser.parse_dump(data=data)
+            response: Transaction = self.parser.parse_dump(data=data)
         except Exception as parsing_error:
             error("Incoming transaction parsing error: %s", parsing_error)
             return
 
-        self.put_transaction(transaction)
-        self.incoming_transaction.emit(transaction)
+        self.put_response(response)
 
     def get_reversible_transactions(self) -> list[Transaction]:
         transactions: list[Transaction] = []
@@ -141,37 +183,6 @@ class TransactionQueue(QObject):
         response.match_id = matched_request.trans_id
         matched_request.match_id = response.trans_id
         return True
-
-    def process_timeout(self, transaction):
-        timer: QTimer
-
-        if not (timer := self.timers.get(transaction.trans_id)):
-            return
-
-        timeout_secs = int(timer.interval() / 1000)
-        error(f"Transaction [{transaction.trans_id}] got SV timeout after {timeout_secs} seconds of waiting")
-        timer.stop()
-
-    def put_transaction(self, transaction: Transaction) -> None:
-        timer: QTimer
-
-        if self.is_request(transaction):
-            self._outgoing_transaction.emit(transaction)
-            self._queue.append(transaction)
-            timer = QTimer()
-            self.timers[transaction.trans_id] = timer
-            return
-
-        if not transaction.trans_id:
-            transaction.trans_id = FieldsGenerator.trans_id()
-
-        self._queue.append(transaction)
-
-        if not self.match_transaction(transaction):
-            warning(f"Received unmatched response [{transaction.trans_id}]")
-            return
-
-        self._resp_received.emit(self.get_transaction(transaction.match_id))
 
     def is_request(self, transaction: Transaction) -> bool:
         if transaction.message_type not in self.spec.get_mti_codes():

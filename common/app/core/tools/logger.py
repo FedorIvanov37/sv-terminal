@@ -61,7 +61,7 @@ class Logger:
 
         debug("Logger started")
 
-    def print_dump(self, transaction):
+    def print_dump(self, transaction: Transaction):
         for string in self.parser.create_sv_dump(transaction).split("\n"):
             debug(string)
 
@@ -79,18 +79,19 @@ class Logger:
 
         level("")
 
-        utrnno: str = transaction.utrnno
-        trans_id: str = transaction.match_id if transaction.match_id else transaction.trans_id
-        msg_type: str = transaction.message_type
-        bitmap = Bitmap(transaction.data_fields)
+        bitmap: str = Bitmap(transaction.data_fields).get_bitmap(str)
+        trans_id = transaction.trans_id
+
+        if transaction.matched and not transaction.is_request:
+            trans_id = transaction.match_id
 
         level(f"[TRANS_ID][{trans_id}]")
 
         if transaction.utrnno:
-            level(f"[UTRNNO  ][{utrnno}]")
+            level(f"[UTRNNO  ][{transaction.utrnno}]")
 
-        level(f"[MSG_TYPE][{msg_type}]")
-        level(f"[BITMAP  ][{bitmap.get_bitmap(str)}]")
+        level(f"[MSG_TYPE][{transaction.message_type}]")
+        level(f"[BITMAP  ][{bitmap}]")
 
         for field, field_data in transaction.data_fields.items():
             if field == self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:

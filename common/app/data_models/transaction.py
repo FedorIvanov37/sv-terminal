@@ -1,15 +1,19 @@
-from pydantic import BaseModel, Field
-from common.app.core.tools.trans_id import trans_id
+from pydantic import BaseModel
+
 
 TypeFields = dict[str, str | dict]
 
 
 class Transaction(BaseModel):
-    message_type: str = ""
-    trans_id: str = Field(default_factory=trans_id)
-    match_id: str = ""
-    generate_fields: list[str] = []
-    data_fields: TypeFields = {}
-    max_amount: str = "100"
-    matched: bool = False
+    trans_id: str = str()
+    match_id: str = str()
     utrnno: str = str()
+    message_type: str = str()
+    matched: bool | None = None
+    success: bool | None = None
+    max_amount: str = "100"
+    resp_time_seconds: float | None = None
+    generate_fields: list[str] = []
+    data_fields: dict = {}
+    is_request: bool | None = None
+    is_reversal: bool | None = None

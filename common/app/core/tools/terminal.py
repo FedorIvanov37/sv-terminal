@@ -1,5 +1,5 @@
 from json import dumps
-from logging import error, info
+from logging import error, info, warning
 from pydantic import ValidationError
 from PyQt5 import QtWidgets
 from PyQt5.Qt import QApplication
@@ -98,62 +98,86 @@ class SvTerminal(QObject):
         window.window_close.connect(self.disconnect)
         window.menu_button_clicked.connect(self.proces_button_menu)
         window.field_changed.connect(self.set_bitmap)
-        self.trans_queue.incoming_transaction.connect(self.logger.print_dump)
-        self.trans_queue.incoming_transaction.connect(self.logger.print_transaction)
+        self.trans_queue.incoming_transaction.connect(self.transaction_received)
         self.connector.connected.connect(self.connected)
         self.connector.disconnected.connect(self.disconnected)
         self.connector.connection_started.connect(self.window.lock_connection_buttons)
         self.connector.connection_finished.connect(lambda: self.window.lock_connection_buttons(lock=False))
         self._need_reconnect.connect(self.connector.connect_sv)
-        self.trans_queue.transaction_matched.connect(self.transaction_matched)
+        self.trans_queue.outgoing_transaction.connect(self.transaction_sent)
+        self.trans_queue.transaction_timeout.connect(self.got_timeout)
+
+    @staticmethod
+    def got_timeout(transaction, timeout_secs):
+        error(f"Transaction [{transaction.trans_id}] timeout after {int(timeout_secs)} seconds of waiting SmartVista")
 
     def socket_error(self):
         if self.connector.error() == -1:  # TODO
             return
 
-        error("SVFE host received a socket error: %s", self.connector.error_string())
+        error(f"Received a socket error from SmartVista host: {self.connector.error_string()}")
 
     def connected(self):
         self.window.set_connection_status(QTcpSocket.ConnectedState)
-        info("SVFE host connection ESTABLISHED")
+        info("SmartVista host connection ESTABLISHED")
 
     def disconnected(self):
         self.window.set_connection_status(QTcpSocket.UnconnectedState)
-        info("SVFE host DISCONNECTED")
+        info("SmartVista host DISCONNECTED")
 
-    def send(self, request: Transaction | None = None):
+    def send(self, transaction: Transaction | None = None):
         if self.config.debug.clear_log:
             self.window.clear_log()
 
-        if not request:
+        if not transaction:
             try:
-                request: Transaction = self.parser.parse_form(self.window)
+                transaction: Transaction = self.parser.parse_form(self.window)
             except Exception as building_error:
                 error(f"Transaction building error")
                 [error(err.strip()) for err in str(building_error).splitlines()]
                 return
 
-        info(f"Processing transaction ID [{request.trans_id}]")
+        info(f"Processing transaction ID [{transaction.trans_id}]")
 
-        if request.generate_fields:
-            request: Transaction = self.generator.set_generated_fields(request)
+        if transaction.generate_fields:
+            transaction: Transaction = self.generator.set_generated_fields(transaction)
 
         if self.config.fields.send_internal_id:
-            request: Transaction = self.generator.set_trans_id_to_47_072(request)
+            transaction: Transaction = self.generator.set_trans_id_to_47_072(transaction)
 
         if self.sender() is self.window.button_send:
-            self.set_generated_fields(request)
+            self.set_generated_fields(transaction)
 
         if self.config.fields.validation:
             try:
-                self.validator.validate_transaction(request)
+                self.validator.validate_transaction(transaction)
             except (ValueError, TypeError) as validation_error:
                 error(f"Transaction validation error {validation_error}")
                 return
 
+        self.trans_queue.put_request(transaction)
+
+    def transaction_received(self, response: Transaction):
+        self.logger.print_dump(response)
+        self.logger.print_transaction(response)
+
+        if not response.matched:
+            match_fields = [field for field in self.spec.get_match_fields() if field in response.data_fields]
+            match_fields = ', '.join(match_fields)
+            warning(f"Non-matched Transaction received. Transaction ID [{response.trans_id}]")
+            warning(f"Fields {match_fields} from the response don't correspond to any requests in the current session")
+            return
+
+        if not response.resp_time_seconds:
+            warning(f"Transaction ID [{response.match_id}] received and matched after timeout 60 seconds")
+            return
+
+        info(f"Transaction ID [{response.match_id}] matched, response time seconds: {response.resp_time_seconds}")
+
+    def transaction_sent(self, request: Transaction):
         self.logger.print_dump(request)
         self.logger.print_transaction(request)
-        self.trans_queue.put_transaction(request)
+        info("Transaction was sent ")
 
     def settings(self):
         SettingsWindow(self.config).exec_()
@@ -199,10 +223,6 @@ class SvTerminal(QObject):
             file.write(file_data)
 
         info(f"The transaction was saved successfully to {filename}")
-
-    @staticmethod
-    def transaction_matched(tranaction: Transaction, resp_time_seconds: float):
-        info(f"Transaction ID [{tranaction.trans_id}] matched. Response time seconds: {resp_time_seconds}")
 
     def disconnect(self):
         self.connector.disconnect_sv()

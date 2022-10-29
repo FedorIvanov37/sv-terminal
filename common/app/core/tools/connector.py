@@ -61,8 +61,6 @@ class Connector(QTcpSocket):
         bytes_sent = self.write(dump)
 
         if bytes_sent > int():
-            info("Transaction was sent")
-            info("")
             debug("bytes sent %s", bytes_sent)
             self.flush()
             return True
@@ -178,7 +176,7 @@ class ConnectionWorker(QObject):
             self.connect_sv()
 
         if self.connector.state() != self.connector.ConnectedState:
-            error("Cannot establish the connection with SmartVista")
+            error("Cannot establish the connection to SmartVista")
             return
 
         if self.connector.send_transaction(transaction):

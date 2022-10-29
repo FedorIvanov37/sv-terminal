@@ -38,6 +38,12 @@ class EpaySpecification(EpaySpecificationData):
     def MessageLength(self):
         return self._MessageLength
 
+    def is_reversal(self, mti: str):
+        if mti in ("0400", "0410", "0420", "0430"):
+            return True
+
+        return False
+
     def get_reversal_mti(self, original_mti: str):
         for mti in self.spec.mti:
             if not (mti.reversal_mti and mti.is_reversible):
@@ -103,6 +109,17 @@ class EpaySpecification(EpaySpecificationData):
             return field_spec.description
         except AttributeError:
             return ""
+
+    def is_request(self, transaction):
+        if not transaction.message_type:
+            return
+
+        for mti in self.mti:
+            if transaction.message_type == mti.request:
+                return True
+
+            if transaction.message_type == mti.response:
+                return False
 
     def get_field_spec(self, path: list[str], spec=None) -> IsoField | None:
         if spec is None:
