@@ -38,7 +38,8 @@ class EpaySpecification(EpaySpecificationData):
     def MessageLength(self):
         return self._MessageLength
 
-    def is_reversal(self, mti: str):
+    @staticmethod
+    def is_reversal(mti: str):
         if mti in ("0400", "0410", "0420", "0430"):
             return True
 

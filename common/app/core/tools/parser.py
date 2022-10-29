@@ -24,7 +24,7 @@ class Parser(object):
 
     def __init__(self, config: Config):
         self.config: Config = config
-        self.generator = FieldsGenerator(self.config)
+        self.generator = FieldsGenerator()
 
     def create_dump(self, transaction: Transaction, body: bool = False) -> bytes | str:
         msg_type: bytes = transaction.message_type.encode()

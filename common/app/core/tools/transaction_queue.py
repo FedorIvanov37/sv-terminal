@@ -1,13 +1,10 @@
-from logging import error, warning
 from collections import deque
 from PyQt5.Qt import QObject, pyqtSignal, QThread
+from PyQt5.QtCore import QTimer
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.core.tools.fields_generator import FieldsGenerator
-from common.app.data_models.config import Config
-from common.app.core.tools.parser import Parser
 from common.app.core.tools.connector import ConnectionWorker
 from common.app.data_models.transaction import Transaction
-from PyQt5.QtCore import QTimer
 
 
 class TransactionQueue(QObject):
@@ -34,12 +31,10 @@ class TransactionQueue(QObject):
     def transaction_timeout(self):
         return self._transaction_timeout
 
-    def __init__(self, config: Config, connector: ConnectionWorker):
+    def __init__(self, connector: ConnectionWorker):
         QObject.__init__(self)
-        self.config: Config = config
         self.connector: ConnectionWorker = connector
-        self.parser: Parser = Parser(self.config)
-        self.generator: FieldsGenerator = FieldsGenerator(self.config)
+        self.generator: FieldsGenerator = FieldsGenerator()
         self.timers: dict[str, QTimer] = {}
         self._start_connection_thread()
 
@@ -48,26 +43,29 @@ class TransactionQueue(QObject):
         self.connector.moveToThread(self._connection_thread)
         self._ready_to_send.connect(self.connector.send_transaction)
         self._connection_thread.started.connect(self.connector.run)
-        self.connector.ready_read.connect(self.read_from_socket)
+        self.connector.transaction_received.connect(self.put_transaction)
         self.connector.transaction_sent.connect(self.request_was_sent)
         self._connection_thread.start()
 
-    def put_request(self, request: Transaction):
-        request.is_request = self.spec.is_request(request)
+    def put_transaction(self, transaction):
+        transaction.is_request = self.spec.is_request(transaction)
+        self._queue.append(transaction)
 
+        if transaction.is_request:
+            self._put_request(transaction)
+            return
+
+        self._put_response(transaction)
+
+    def _put_request(self, request: Transaction):
         if not request.is_request:
-            raise TypeError("Fatal error: Trying to parse transaction request as a response")
+            raise TypeError("Wrong MTI")
 
-        self._queue.append(request)
         self._ready_to_send.emit(request)
 
-    def put_response(self, response: Transaction):
-        response.is_request = self.spec.is_request(response)
-
+    def _put_response(self, response: Transaction):
         if response.is_request:
-            raise TypeError("Fatal error: Trying to parse transaction response as a request")
-
-        self._queue.append(response)
+            raise TypeError("Wrong MTI")
 
         if self.match_transaction(response):
             response.resp_time_seconds = self.stop_transaction_timer(response)
@@ -75,7 +73,7 @@ class TransactionQueue(QObject):
             self.generator.merge_trans_data(request, response)
 
         if not response.trans_id:
-            response.trans_id = FieldsGenerator.trans_id()
+            response.trans_id = self.generator.trans_id()
 
         self.incoming_transaction.emit(response)
 
@@ -112,16 +110,9 @@ class TransactionQueue(QObject):
         self.start_transaction_timer(request)
         self.outgoing_transaction.emit(request)
 
-    def read_from_socket(self):
-        data = self.connector.read_from_socket().data()
-
-        try:
-            response: Transaction = self.parser.parse_dump(data=data)
-        except Exception as parsing_error:
-            error("Incoming transaction parsing error: %s", parsing_error)
-            return
-
-        self.put_response(response)
+    def get_last_reversible_transaction_id(self) -> str:
+        if reversible_transactions := self.get_reversible_transactions():
+            return max(transaction.trans_id for transaction in reversible_transactions)
 
     def get_reversible_transactions(self) -> list[Transaction]:
         transactions: list[Transaction] = []
@@ -136,12 +127,13 @@ class TransactionQueue(QObject):
 
         return transactions
 
-    def get_last_reversible_transaction_id(self) -> str:
-        if reversible_transactions := self.get_reversible_transactions():
-            return max(transaction.trans_id for transaction in reversible_transactions)
-
     def remove_from_queue(self, transaction):
-        self._queue.remove(transaction)
+        transactions_to_remove = [
+            trans for trans in self._queue if transaction.trans_id in (trans.trans_id, trans.match_id)
+        ]
+
+        for transaction in transactions_to_remove:
+            self._queue.remove(transaction)
 
     def get_transaction(self, trans_id: str) -> Transaction | None:
         transaction = None
@@ -183,13 +175,3 @@ class TransactionQueue(QObject):
         response.match_id = matched_request.trans_id
         matched_request.match_id = response.trans_id
         return True
-
-    def is_request(self, transaction: Transaction) -> bool:
-        if transaction.message_type not in self.spec.get_mti_codes():
-            raise ValueError(f"Incorrect MTI {transaction.message_type}")
-
-        for mti in self.spec.mti:
-            if transaction.message_type == mti.request:
-                return True
-
-        return False

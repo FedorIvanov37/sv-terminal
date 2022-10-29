@@ -48,11 +48,11 @@ class SvTerminal(QObject):
     def __init__(self):
         super(SvTerminal, self).__init__()
         self.parser: Parser = Parser(self.config)
-        self.generator = FieldsGenerator(self.config)
+        self.generator = FieldsGenerator()
         self.window: MainWindow = MainWindow()
         self.logger: Logger = Logger(self.window.log_browser, self.config)
         self.connector: ConnectionWorker = ConnectionWorker(self.config)
-        self.trans_queue: TransactionQueue = TransactionQueue(self.config, self.connector)
+        self.trans_queue: TransactionQueue = TransactionQueue(self.connector)
         self.connector.socker_error.connect(self.socket_error)
         self.setup()
 
@@ -95,12 +95,14 @@ class SvTerminal(QObject):
         for button, slot in buttons_connection_map.items():
             button.clicked.connect(slot)
 
-        window.window_close.connect(self.disconnect)
-        window.menu_button_clicked.connect(self.proces_button_menu)
-        window.field_changed.connect(self.set_bitmap)
+        self.window.window_close.connect(self.disconnect)
+        self.window.menu_button_clicked.connect(self.proces_button_menu)
+        self.window.field_changed.connect(self.set_bitmap)
         self.trans_queue.incoming_transaction.connect(self.transaction_received)
-        self.connector.connected.connect(self.connected)
-        self.connector.disconnected.connect(self.disconnected)
+        self.connector.connected.connect(lambda: self.window.set_connection_status(QTcpSocket.ConnectedState))
+        self.connector.connected.connect(lambda: info("SmartVista host connection ESTABLISHED"))
+        self.connector.disconnected.connect(lambda: self.window.set_connection_status(QTcpSocket.UnconnectedState))
+        self.connector.disconnected.connect(lambda: info("SmartVista host DISCONNECTED"))
         self.connector.connection_started.connect(self.window.lock_connection_buttons)
         self.connector.connection_finished.connect(lambda: self.window.lock_connection_buttons(lock=False))
         self._need_reconnect.connect(self.connector.connect_sv)
@@ -117,13 +119,12 @@ class SvTerminal(QObject):
 
         error(f"Received a socket error from SmartVista host: {self.connector.error_string()}")
 
-    def connected(self):
-        self.window.set_connection_status(QTcpSocket.ConnectedState)
-        info("SmartVista host connection ESTABLISHED")
+    def disconnect(self):
+        self.connector.disconnect_sv()
 
-    def disconnected(self):
-        self.window.set_connection_status(QTcpSocket.UnconnectedState)
-        info("SmartVista host DISCONNECTED")
+    def reconnect(self):
+        info("[Re]connecting...")
+        self._need_reconnect.emit()
 
     def send(self, transaction: Transaction | None = None):
         if self.config.debug.clear_log:
@@ -155,29 +156,32 @@ class SvTerminal(QObject):
                 error(f"Transaction validation error {validation_error}")
                 return
 
-        self.trans_queue.put_request(transaction)
+        self.trans_queue.put_transaction(transaction)
 
     def transaction_received(self, response: Transaction):
         self.logger.print_dump(response)
         self.logger.print_transaction(response)
 
+        if response.matched and response.resp_time_seconds:
+            info(f"Transaction ID [{response.match_id}] matched, response time seconds: {response.resp_time_seconds}")
+            return
+
         if not response.matched:
             match_fields = [field for field in self.spec.get_match_fields() if field in response.data_fields]
             match_fields = ', '.join(match_fields)
             warning(f"Non-matched Transaction received. Transaction ID [{response.trans_id}]")
-            warning(f"Fields {match_fields} from the response don't correspond to any requests in the current session")
+            warning(f"Fields {match_fields} from the response don't correspond to any requests in the current session "
+                    f"or request was matched before")
             return
 
         if not response.resp_time_seconds:
             warning(f"Transaction ID [{response.match_id}] received and matched after timeout 60 seconds")
             return
 
-        info(f"Transaction ID [{response.match_id}] matched, response time seconds: {response.resp_time_seconds}")
-
     def transaction_sent(self, request: Transaction):
         self.logger.print_dump(request)
         self.logger.print_transaction(request)
-        info("Transaction was sent ")
+        info(f"Transaction [{request.trans_id}] was sent ")
 
     def settings(self):
         SettingsWindow(self.config).exec_()
@@ -224,13 +228,6 @@ class SvTerminal(QObject):
 
         info(f"The transaction was saved successfully to {filename}")
 
-    def disconnect(self):
-        self.connector.disconnect_sv()
-
-    def reconnect(self):
-        info("[Re]connecting...")
-        self._need_reconnect.emit()
-
     def print_data(self, data_format: str) -> None:
         if data_format not in DataFormats.get_print_data_formats():
             error("Wrong format of output data: %s", data_format)
@@ -272,34 +269,35 @@ class SvTerminal(QObject):
 
         info("Reversal sending is cancelled by user")
 
-    def reverse_transaction(self, last_or_other: str):
-        match last_or_other:
-            case ButtonAction.LAST:
-                if not (original_id := self.trans_queue.get_last_reversible_transaction_id()):
-                    error("Transaction Queue has no reversible transactions")
-                    return
+    def reverse_transaction(self, id_source: str):
+        id_source_map = {
+            ButtonAction.LAST: self.trans_queue.get_last_reversible_transaction_id,
+            ButtonAction.OTHER: self.show_reversal_window
+        }
 
-            case ButtonAction.OTHER:
-                if not (original_id := self.show_reversal_window()):
-                    error("No transaction ID recognized. The Reversal wasn't sent")
-                    return
+        if not (original_id_function := id_source_map.get(id_source)):
+            error("Cannot get ID for reversal")
+            return
 
-            case _:
-                error("Wrong action during reverse the transaction")
-                return
+        if not(original_id := original_id_function()):
+            error("No transaction ID recognized. The Reversal wasn't sent")
+            return
 
-        original: Transaction = self.trans_queue.get_transaction(original_id)
-        reversal: Transaction = self.build_reversal(original)
+        if not (original := self.trans_queue.get_transaction(original_id)):
+            error(f"Wrong Transaction ID {original_id}, cannot generate the reversal")
+            return
 
-        if not reversal:
+        try:
+            reversal: Transaction = self.build_reversal(original)
+        except LookupError as lookup_error:
+            error(lookup_error)
             return
 
         self.send(reversal)
 
-    def build_reversal(self, original_transaction: Transaction) -> Transaction | None:
+    def build_reversal(self, original_transaction: Transaction) -> Transaction:
         if not (original_transaction.matched and original_transaction.match_id):
-            error(f"Lost response for transaction {original_transaction.trans_id}. Cannot build the reversal")
-            return
+            raise LookupError(f"Lost response for transaction {original_transaction.trans_id}. Cannot build reversal")
 
         reversal_trans_id = original_transaction.trans_id + "_R"
         existed_reversal = self.trans_queue.get_transaction(reversal_trans_id)
@@ -307,6 +305,8 @@ class SvTerminal(QObject):
         if existed_reversal:
             self.trans_queue.remove_from_queue(existed_reversal)
             transaction: Transaction = Transaction.parse_obj(existed_reversal)
+            transaction.matched = None
+            transaction.generate_fields = []
             return transaction
 
         fields = original_transaction.data_fields.copy()
@@ -315,8 +315,8 @@ class SvTerminal(QObject):
             fields[field] = original_transaction.data_fields.get(field)
 
         if self.config.fields.build_fld_90:
-            fields[self.spec.FIELD_SET.FIELD_090_ORIGINAL_DATA_ELEMENTS] = \
-                self.generator.generate_original_data_elements(original_transaction)
+            field90 = self.generator.generate_original_data_elements(original_transaction)
+            fields[self.spec.FIELD_SET.FIELD_090_ORIGINAL_DATA_ELEMENTS] = field90
 
         reversal_mti = self.spec.get_reversal_mti(original_transaction.message_type)
 

@@ -1,8 +1,8 @@
 from datetime import datetime
 from random import randint, choice
-from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.exceptions.exceptions import ParsingError
 from common.app.data_models.transaction import Transaction
+from common.app.core.tools.epay_specification import EpaySpecification
 
 
 class FieldsGenerator(object):
@@ -11,9 +11,6 @@ class FieldsGenerator(object):
     @property
     def spec(self):
         return self._spec
-
-    def __init__(self, config):
-        self.config = config
 
     @staticmethod
     def trans_id() -> str:
@@ -43,7 +40,7 @@ class FieldsGenerator(object):
             if not self.spec.can_be_generated([field]):
                 continue
 
-            transaction.data_fields[field] = self.generate_field(field)
+            transaction.data_fields[field] = self.generate_field(field, max_amount=transaction.max_amount)
 
         transaction.data_fields = {
             field: transaction.data_fields[field] for field in sorted(transaction.data_fields, key=int)
@@ -51,9 +48,9 @@ class FieldsGenerator(object):
 
         return transaction
 
-    def generate_field(self, field: str):
+    def generate_field(self, field: str, max_amount="100"):
         if field == self.spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT:
-            max_amount = str(randint(0, int(self.config.fields.max_amount) * 100))
+            max_amount = str(randint(0, int(max_amount) * 100))
             field_length = self.spec.get_field_length(self.spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT)
             max_amount = max_amount.zfill(field_length)
 
