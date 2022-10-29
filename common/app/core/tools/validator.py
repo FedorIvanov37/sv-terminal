@@ -3,7 +3,6 @@ from string import digits, ascii_letters, punctuation
 from common.app.data_models.config import Config
 from common.app.decorators.singleton import singleton
 from common.app.data_models.transaction import Transaction, TypeFields
-# from common.app.core.tools.field_Item import Item
 
 
 @singleton
@@ -28,6 +27,9 @@ class Validator(object):
             raise ValueError(f"Unknown MTI: {mti}")
 
     def validate_fields(self, fields: TypeFields, field_path: list[str] | None = None):
+        if self._config is None:
+            return
+
         if not self._config.fields.validation:
             return fields
 
@@ -42,27 +44,28 @@ class Validator(object):
                 field_path.pop()
                 continue
 
-            self.validate_field(field_path, value)
+            self.validate_field_data(field_path, value)
 
             field_path.pop()
 
         return fields
 
-    @staticmethod
-    def validate_field_item(item):
+    def validate_field_item(self, item):
         if not item.field_number:
             raise ValueError(f"Lost field number. The field will not be sent")
 
         if not item.field_number.isdigit():
-            raise ValueError(f"Error: non-numeric field number found: {item.get_field_path(string=True)}")
+            raise ValueError(f"Non-numeric field number found: {item.get_field_path(string=True)}")
 
         if item.is_duplicated():
-            raise ValueError(f"Error: duplicated field number {item.get_field_path(string=True)} found")
+            raise ValueError(f"Duplicated field number {item.get_field_path(string=True)} found")
 
-        if not item.field_data and item.generate_checkbox_checked and not item.get_children():
-            raise ValueError(f"No value for field {item.get_field_path(string=True)}. The field will not be sent")
+        if not (item.field_data or item.generate_checkbox_checked() or item.get_children()):
+            raise ValueError(f"No value for field {item.get_field_path(string=True)}. The field cannot be sent")
 
-    def validate_field(self, field_path: list[str], value: TypeFields | str):
+        self.validate_field_data(item.get_field_path(), item.field_data)
+
+    def validate_field_data(self, field_path: list[str], value: TypeFields | str):
         alphabetic = ascii_letters
         numeric = digits
         specials = punctuation + " "

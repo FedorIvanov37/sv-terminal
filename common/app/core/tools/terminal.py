@@ -3,7 +3,7 @@ from logging import error, info
 from pydantic import ValidationError
 from PyQt5 import QtWidgets
 from PyQt5.Qt import QApplication
-from PyQt5.QtCore import QThread, pyqtSignal, QObject
+from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtNetwork import QTcpSocket
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QIcon
@@ -15,7 +15,6 @@ from common.app.core.tools.parser import Parser
 from common.app.core.tools.logger import Logger
 from common.app.core.tools.transaction_queue import TransactionQueue
 from common.app.core.tools.epay_specification import EpaySpecification
-from common.app.core.tools.connector import ConnectionWorker
 from common.app.core.tools.fields_generator import FieldsGenerator
 from common.app.core.tools.validator import Validator
 from common.app.constants.TextConstants import TextConstants
@@ -24,17 +23,15 @@ from common.app.constants.FilePath import FilePath
 from common.app.data_models.config import Config
 from common.app.data_models.transaction import Transaction
 from common.app.constants.ButtonActions import ButtonAction
+from common.app.core.tools.connector import ConnectionWorker
 
 
 class SvTerminal(QObject):
     _config: Config = Config.parse_file(FilePath.CONFIG)
     _pyqt_application = QtWidgets.QApplication([])
     _validator = Validator(_config)
-    _need_reconnect: pyqtSignal = pyqtSignal()
     _spec: EpaySpecification = EpaySpecification()
-    _new_connector: ConnectionWorker
-    _connection_thread: QThread
-    _send_transaction: pyqtSignal = pyqtSignal(Transaction)
+    _need_reconnect: pyqtSignal = pyqtSignal()
 
     @property
     def config(self):
@@ -45,14 +42,6 @@ class SvTerminal(QObject):
         return self._validator
 
     @property
-    def new_connector(self):
-        return self._new_connector
-
-    @new_connector.setter
-    def new_connector(self, new_connector):
-        self._new_connector = new_connector
-
-    @property
     def spec(self):
         return self._spec
 
@@ -60,11 +49,11 @@ class SvTerminal(QObject):
         super(SvTerminal, self).__init__()
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator(self.config)
-        self.connector: ConnectionWorker = ConnectionWorker(self.config)
         self.window: MainWindow = MainWindow()
         self.logger: Logger = Logger(self.window.log_browser, self.config)
-        self.trans_queue: TransactionQueue = TransactionQueue(self.config)
-        self.trans_queue.transaction_matched.connect(self.transaction_matched)
+        self.connector: ConnectionWorker = ConnectionWorker(self.config)
+        self.trans_queue: TransactionQueue = TransactionQueue(self.config, self.connector)
+        self.connector.socker_error.connect(self.socket_error)
         self.setup()
 
     def run(self):
@@ -72,9 +61,8 @@ class SvTerminal(QObject):
         exit(status)
 
     def setup(self):
-        self.start_connection_thread()
         self.connect_widgets()
-        self.window.set_mti_list(self.spec.get_mti_list())
+        self.window.set_mti_values(self.spec.get_mti_list())
         self.window.set_log_data(TextConstants.HELLO_MESSAGE)
         self.window.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
         self.window.set_connection_status(QTcpSocket.UnconnectedState)
@@ -86,20 +74,6 @@ class SvTerminal(QObject):
             self.set_default_values()
 
         self.window.show()
-
-    def start_connection_thread(self):
-        self._connection_thread: QThread = QThread()
-        self.connector.moveToThread(self._connection_thread)
-        self._need_reconnect.connect(self.connector.connect_sv)
-        self._send_transaction.connect(self.connector.send_transaction)
-        self._connection_thread.started.connect(self.connector.run)
-        self.connector.connected.connect(lambda: self.window.set_connection_status(QTcpSocket.ConnectedState))
-        self.connector.disconnected.connect(lambda: self.window.set_connection_status(QTcpSocket.UnconnectedState))
-        self.connector.socker_error.connect(lambda err: self.socket_error())
-        self.connector.connection_started.connect(self.window.lock_connection_buttons)
-        self.connector.connection_finished.connect(lambda: self.window.lock_connection_buttons(lock=False))
-        self.connector.ready_read.connect(self.read_from_socket)
-        self._connection_thread.start()
 
     def connect_widgets(self):
         window = self.window
@@ -124,43 +98,62 @@ class SvTerminal(QObject):
         window.window_close.connect(self.disconnect)
         window.menu_button_clicked.connect(self.proces_button_menu)
         window.field_changed.connect(self.set_bitmap)
+        self.trans_queue.incoming_transaction.connect(self.logger.print_dump)
+        self.trans_queue.incoming_transaction.connect(self.logger.print_transaction)
+        self.connector.connected.connect(self.connected)
+        self.connector.disconnected.connect(self.disconnected)
+        self.connector.connection_started.connect(self.window.lock_connection_buttons)
+        self.connector.connection_finished.connect(lambda: self.window.lock_connection_buttons(lock=False))
+        self._need_reconnect.connect(self.connector.connect_sv)
+        self.trans_queue.transaction_matched.connect(self.transaction_matched)
 
-    def send(self, transaction: Transaction | None = None):
+    def socket_error(self):
+        if self.connector.error() == -1:  # TODO
+            return
+
+        error("SVFE host received a socket error: %s", self.connector.error_string())
+
+    def connected(self):
+        self.window.set_connection_status(QTcpSocket.ConnectedState)
+        info("SVFE host connection ESTABLISHED")
+
+    def disconnected(self):
+        self.window.set_connection_status(QTcpSocket.UnconnectedState)
+        info("SVFE host DISCONNECTED")
+
+    def send(self, request: Transaction | None = None):
         if self.config.debug.clear_log:
             self.window.clear_log()
 
-        if not transaction:
+        if not request:
             try:
-                transaction: Transaction = self.parser.parse_form(self.window)
+                request: Transaction = self.parser.parse_form(self.window)
             except Exception as building_error:
                 error(f"Transaction building error")
                 [error(err.strip()) for err in str(building_error).splitlines()]
                 return
 
-        if transaction.generate_fields:
-            transaction: Transaction = self.generator.set_generated_fields(transaction)
+        info(f"Processing transaction ID [{request.trans_id}]")
 
-        if not transaction.trans_id:
-            transaction.trans_id = self.generator.trans_id()
+        if request.generate_fields:
+            request: Transaction = self.generator.set_generated_fields(request)
 
         if self.config.fields.send_internal_id:
-            transaction: Transaction = self.generator.set_trans_id_to_47_072(transaction)
+            request: Transaction = self.generator.set_trans_id_to_47_072(request)
 
         if self.sender() is self.window.button_send:
-            self.set_generated_fields(transaction)
+            self.set_generated_fields(request)
 
         if self.config.fields.validation:
             try:
-                self.validator.validate_transaction(transaction)
+                self.validator.validate_transaction(request)
             except (ValueError, TypeError) as validation_error:
                 error(f"Transaction validation error {validation_error}")
                 return
 
-        self.logger.print_dump(transaction)
-        self.trans_queue.put_transaction(transaction)
-        info(f"Processing transaction with internal ID [{transaction.trans_id}]")
-        self.logger.print_transaction(transaction)
-        self._send_transaction.emit(transaction)
+        self.logger.print_dump(request)
+        self.logger.print_transaction(request)
+        self.trans_queue.put_transaction(request)
 
     def settings(self):
         SettingsWindow(self.config).exec_()
@@ -208,8 +201,8 @@ class SvTerminal(QObject):
         info(f"The transaction was saved successfully to {filename}")
 
     @staticmethod
-    def transaction_matched(trans_id, resp_time_seconds):
-        info(f"Transaction ID [{trans_id}] matched. Response time seconds: {resp_time_seconds}")
+    def transaction_matched(tranaction: Transaction, resp_time_seconds: float):
+        info(f"Transaction ID [{tranaction.trans_id}] matched. Response time seconds: {resp_time_seconds}")
 
     def disconnect(self):
         self.connector.disconnect_sv()
@@ -217,19 +210,6 @@ class SvTerminal(QObject):
     def reconnect(self):
         info("[Re]connecting...")
         self._need_reconnect.emit()
-
-    def read_from_socket(self):
-        data = self.connector.read_from_socket().data()
-
-        try:
-            transaction: Transaction = self.parser.parse_dump(data=data)
-        except Exception as parsing_error:
-            error("Incoming transaction parsing error: %s", parsing_error)
-            return
-
-        self.trans_queue.put_transaction(transaction)
-        self.logger.print_dump(transaction)
-        self.logger.print_transaction(transaction)
 
     def print_data(self, data_format: str) -> None:
         if data_format not in DataFormats.get_print_data_formats():
@@ -348,7 +328,7 @@ class SvTerminal(QObject):
             error(f"File parsing error: {parsing_error}")
             return
 
-        self.window.set_mti(transaction.message_type)
+        self.window.set_mti_value(transaction.message_type)
         self.window.set_fields(transaction)
         self.set_bitmap()
 
@@ -390,12 +370,6 @@ class SvTerminal(QObject):
             bitmap.add(bit)
 
         self.window.set_bitmap(", ".join(sorted(bitmap, key=int)))
-
-    def socket_error(self):
-        if self.connector.error() == -1:  # TODO
-            return
-
-        error("Received socket error: %s", self.connector.error_string())
 
     def proces_button_menu(self, button, action: str):
         data_processing_map = {

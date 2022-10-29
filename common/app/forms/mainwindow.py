@@ -139,7 +139,7 @@ class Ui_MainWindow(object):
         font.setFamily("Courier New")
         font.setPointSize(11)
         self.LogArea.setFont(font)
-        self.LogArea.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.LogArea.setFocusPolicy(QtCore.Qt.ClickFocus)
         self.LogArea.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
         self.LogArea.setReadOnly(True)
         self.LogArea.setAcceptRichText(False)

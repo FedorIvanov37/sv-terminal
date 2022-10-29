@@ -71,7 +71,7 @@ class Item(AbstractItem):
             raise ValueError(f"Duplicated field {self.get_field_path(string=True)}")
 
         validator = Validator()
-        validator.validate_field(self.get_field_path(), self.field_data)
+        validator.validate_field_data(self.get_field_path(), self.field_data)
 
     def addChild(self, item):
         item.spec = self.epay_spec.get_field_spec(item.get_field_path())
@@ -119,7 +119,7 @@ class Item(AbstractItem):
         try:
             self.validate()
 
-        except (TypeError, ValueError) as validation_error:
+        except (TypeError, ValueError, Exception) as validation_error:
             warning(validation_error)
             text_color_red = True
 

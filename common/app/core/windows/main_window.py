@@ -92,10 +92,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
         self._setup()
 
     def _setup(self):
+        self.setupUi(self)
         self._json_view: JsonView = JsonView()
         self._json_view.itemChanged.connect(self.field_changed.emit)
         self.FieldsTreeLayout.addWidget(self._json_view)
@@ -179,11 +179,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for button in (self.ButtonReconnect, self.ButtonSend, self.ButtonEchoTest, self.ButtonReverse):
             button.setDisabled(lock)
 
-    def set_mti_list(self, mti_list: list[str]):
+    def set_mti_values(self, mti_list: list[str]):
         for mti in mti_list:
             self.msgtype.addItem(mti)
 
-    def set_mti(self, mti: str):
+    def set_mti_value(self, mti: str):
         index = self.msgtype.findText(mti, flags=Qt.MatchContains)
 
         if index == -1:

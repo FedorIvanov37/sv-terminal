@@ -1,17 +1,22 @@
-from PyQt5.Qt import QObject, pyqtSignal
+from logging import error, warning
 from collections import deque
-from common.app.core.tools.parser import Parser
+from PyQt5.Qt import QObject, pyqtSignal, QThread
 from common.app.core.tools.epay_specification import EpaySpecification
-from common.app.data_models.config import Config
 from common.app.core.tools.fields_generator import FieldsGenerator
+from common.app.data_models.config import Config
+from common.app.core.tools.parser import Parser
+from common.app.core.tools.connector import ConnectionWorker
 from common.app.data_models.transaction import Transaction
-from common.app.core.tools.transaction_timer import TransactionTimer
+from PyQt5.QtCore import QTimer
 
 
 class TransactionQueue(QObject):
     _spec: EpaySpecification = EpaySpecification()
-    _queue: deque = deque(maxlen=1024)
-    _transaction_matched: pyqtSignal = pyqtSignal(str, float)
+    _queue: deque[Transaction] = deque(maxlen=1024)
+    _transaction_matched: pyqtSignal = pyqtSignal(Transaction, float)
+    _incoming_transaction: pyqtSignal = pyqtSignal(Transaction)
+    _outgoing_transaction: pyqtSignal = pyqtSignal(Transaction)
+    _resp_received: pyqtSignal = pyqtSignal(Transaction)
 
     @property
     def spec(self):
@@ -21,10 +26,60 @@ class TransactionQueue(QObject):
     def transaction_matched(self):
         return self._transaction_matched
 
-    def __init__(self, config: Config):
+    @property
+    def incoming_transaction(self):
+        return self._incoming_transaction
+
+    def __init__(self, config: Config, connector: ConnectionWorker):
         QObject.__init__(self)
         self.config: Config = config
+        self.connector: ConnectionWorker = connector
         self.parser: Parser = Parser(self.config)
+        self.timers: dict[str, QTimer] = {}
+        self._start_connection_thread()
+
+    def _start_connection_thread(self):
+        self._connection_thread: QThread = QThread()
+        self.connector.moveToThread(self._connection_thread)
+        self._outgoing_transaction.connect(self.connector.send_transaction)
+        self._connection_thread.started.connect(self.connector.run)
+        self.connector.ready_read.connect(self.read_from_socket)
+        self.connector.transaction_sent.connect(self.start_transaction_timer)
+        self._resp_received.connect(self.stop_transaction_timer)
+        self._connection_thread.start()
+
+    def start_transaction_timer(self, transaction: Transaction, timeout=60):
+        if not (timer := self.timers.get(transaction.trans_id)):
+            timer: QTimer = QTimer()
+
+        self.timers[transaction.trans_id] = timer
+        timer.timeout.connect(lambda: self.process_timeout(transaction))
+        timer.start(timeout * 1000)
+
+    def stop_transaction_timer(self, transaction):
+        timer: QTimer
+
+        if not (timer := self.timers.get(transaction.trans_id)):
+            return
+
+        if not timer.isActive():
+            return
+
+        time_spend = (timer.interval() - timer.remainingTime()) / 1000
+        self.transaction_matched.emit(transaction, time_spend)
+        timer.stop()
+
+    def read_from_socket(self):
+        data = self.connector.read_from_socket().data()
+
+        try:
+            transaction: Transaction = self.parser.parse_dump(data=data)
+        except Exception as parsing_error:
+            error("Incoming transaction parsing error: %s", parsing_error)
+            return
+
+        self.put_transaction(transaction)
+        self.incoming_transaction.emit(transaction)
 
     def get_reversible_transactions(self) -> list[Transaction]:
         transactions: list[Transaction] = []
@@ -87,21 +142,39 @@ class TransactionQueue(QObject):
         matched_request.match_id = response.trans_id
         return True
 
+    def process_timeout(self, transaction):
+        timer: QTimer
+
+        if not (timer := self.timers.get(transaction.trans_id)):
+            return
+
+        timeout_secs = int(timer.interval() / 1000)
+        error(f"Transaction [{transaction.trans_id}] got SV timeout after {timeout_secs} seconds of waiting")
+        timer.stop()
+
     def put_transaction(self, transaction: Transaction) -> None:
+        timer: QTimer
+
         if self.is_request(transaction):
+            self._outgoing_transaction.emit(transaction)
             self._queue.append(transaction)
+            timer = QTimer()
+            self.timers[transaction.trans_id] = timer
             return
 
         if not transaction.trans_id:
             transaction.trans_id = FieldsGenerator.trans_id()
 
+        self._queue.append(transaction)
+
         if not self.match_transaction(transaction):
+            warning(f"Received unmatched response [{transaction.trans_id}]")
             return
 
-        self.transaction_matched.emit(transaction.match_id, 0.568)
+        self._resp_received.emit(self.get_transaction(transaction.match_id))
 
     def is_request(self, transaction: Transaction) -> bool:
-        if not transaction.message_type in self.spec.get_mti_codes():
+        if transaction.message_type not in self.spec.get_mti_codes():
             raise ValueError(f"Incorrect MTI {transaction.message_type}")
 
         for mti in self.spec.mti:

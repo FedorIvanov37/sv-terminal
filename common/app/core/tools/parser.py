@@ -184,10 +184,10 @@ class Parser(object):
         message_type = message_type[:self.spec.MessageLength.message_type_length]
 
         transaction = Transaction(
-            generate_fields=form.get_fields_to_generate(),
             message_type=message_type,
+            data_fields=data_fields,
+            generate_fields=form.get_fields_to_generate(),
             max_amount=self.config.fields.max_amount,
-            data_fields=data_fields
         )
 
         return transaction
