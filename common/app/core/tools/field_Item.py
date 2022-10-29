@@ -1,6 +1,6 @@
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import QTreeWidgetItem
 from PyQt5.QtCore import Qt, QVariant, pyqtSignal
-from PyQt5 import QtGui
 from common.app.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.app.data_models.epay_specification import IsoField
 from common.app.core.tools.abstract_item import AbstractItem
@@ -54,7 +54,22 @@ class Item(AbstractItem):
         field_path = self.get_field_path()
         self.spec: IsoField = self.epay_spec.get_field_spec(field_path)
 
+    def is_duplicated(self):
+        root = self.treeWidget().root
+        path = self.get_field_path()
+
+        for field in path:
+            if [item.field_number for item in root.get_children()].count(field) > 1:
+                return True
+
+            root = [item for item in root.get_children() if item.field_number == field][0]
+
+        return False
+
     def validate(self):
+        if self.is_duplicated():
+            raise ValueError(f"Duplicated field {self.get_field_path(string=True)}")
+
         validator = Validator()
         validator.validate_field(self.get_field_path(), self.field_data)
 
@@ -66,7 +81,10 @@ class Item(AbstractItem):
     def set_spec(self):
         self.spec: IsoField = self.epay_spec.get_field_spec(self.get_field_path())
 
-    def set_checkbox(self, checked=True):
+    def generate_checkbox_checked(self):
+        return bool(self.checkState(Spec.columns_order.get(Spec.PROPERTY)))
+
+    def set_checkbox(self, checked):
         column_number = Spec.columns_order.get(Spec.PROPERTY)
 
         if self.field_number not in Spec.generated_fields:
@@ -100,17 +118,19 @@ class Item(AbstractItem):
 
         try:
             self.validate()
+
         except (TypeError, ValueError) as validation_error:
             warning(validation_error)
             text_color_red = True
 
-        self.set_item_color(red=text_color_red)
         self.process_change_item()
+        self.set_item_color(red=text_color_red)
 
     def process_change_item(self):
         self.set_spec()
         self.set_length()
         self.set_description()
+        self.set_checkbox(bool(self.checkState(Spec.columns_order.get(Spec.PROPERTY))))
 
     def set_length(self) -> None:
         column = Spec.columns_order.get(Spec.LENGTH)

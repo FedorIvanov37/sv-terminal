@@ -181,6 +181,8 @@ class Parser(object):
         if not (message_type := form.get_mti()):
             raise ValueError("Invalid MTI")
 
+        message_type = message_type[:self.spec.MessageLength.message_type_length]
+
         transaction = Transaction(
             generate_fields=form.get_fields_to_generate(),
             message_type=message_type,
@@ -227,9 +229,9 @@ class Parser(object):
             field_spec = spec.fields.get(tag_number)
 
             try:
-                variable_length = spec.tag_length
+                var_length = spec.tag_length
 
-                if not variable_length:
+                if not var_length:
                     raise ValueError
 
             except(AttributeError, ValueError):
@@ -237,10 +239,10 @@ class Parser(object):
                 error("The field and corresponding sub fields were absent")
                 return {}
 
-            variable_length = spec.tag_length
-            val_length = field_data[:variable_length]
+            var_length = spec.tag_length
+            val_length = field_data[:var_length]
             val_length = int(val_length)
-            field_data = field_data[variable_length:]
+            field_data = field_data[var_length:]
             value_data = field_data[:val_length]
             field_data = field_data[val_length:]
 

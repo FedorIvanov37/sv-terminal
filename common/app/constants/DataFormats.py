@@ -9,7 +9,7 @@ class DataFormats(object):
     SPEC: str = "SPEC"
     TXT: str = "TXT"
     OTHER: str = "OTHER"
-    SV_TERMINAL: str = "TERMINAL"
+    TERM: str = "TERMINAL"
 
     @staticmethod
     def get_print_data_formats():
@@ -18,7 +18,7 @@ class DataFormats(object):
             DataFormats.INI,
             DataFormats.DUMP,
             DataFormats.SPEC,
-            DataFormats.SV_TERMINAL
+            DataFormats.TERM
         )
 
     @staticmethod

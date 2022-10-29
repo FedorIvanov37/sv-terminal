@@ -1,10 +1,12 @@
 from json import dumps
 from logging import error, info
+from pydantic import ValidationError
+from PyQt5 import QtWidgets
 from PyQt5.Qt import QApplication
 from PyQt5.QtCore import QThread, pyqtSignal, QObject
 from PyQt5.QtNetwork import QTcpSocket
-from PyQt5 import QtWidgets
-from pydantic import ValidationError
+from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtGui import QIcon
 from common.app.core.windows.main_window import MainWindow
 from common.app.core.windows.reversal_window import ReversalWindow
 from common.app.core.windows.settings_window import SettingsWindow
@@ -21,6 +23,7 @@ from common.app.constants.DataFormats import DataFormats
 from common.app.constants.FilePath import FilePath
 from common.app.data_models.config import Config
 from common.app.data_models.transaction import Transaction
+from common.app.constants.ButtonActions import ButtonAction
 
 
 class SvTerminal(QObject):
@@ -58,21 +61,34 @@ class SvTerminal(QObject):
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator(self.config)
         self.connector: ConnectionWorker = ConnectionWorker(self.config)
-        self.window: MainWindow = MainWindow(self.config, self)
+        self.window: MainWindow = MainWindow()
         self.logger: Logger = Logger(self.window.log_browser, self.config)
         self.trans_queue: TransactionQueue = TransactionQueue(self.config)
         self.trans_queue.transaction_matched.connect(self.transaction_matched)
-        self._connection_thread: QThread = QThread()
+        self.setup()
+
+    def run(self):
+        status = self._pyqt_application.exec_()
+        exit(status)
+
+    def setup(self):
         self.start_connection_thread()
+        self.connect_widgets()
+        self.window.set_mti_list(self.spec.get_mti_list())
+        self.window.set_log_data(TextConstants.HELLO_MESSAGE)
+        self.window.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
+        self.window.set_connection_status(QTcpSocket.UnconnectedState)
 
         if self.config.terminal.connect_on_startup:
             self.reconnect()
 
-    def run(self):
+        if self.config.terminal.process_default_dump:
+            self.set_default_values()
+
         self.window.show()
-        exit(self._pyqt_application.exec_())
 
     def start_connection_thread(self):
+        self._connection_thread: QThread = QThread()
         self.connector.moveToThread(self._connection_thread)
         self._need_reconnect.connect(self.connector.connect_sv)
         self._send_transaction.connect(self.connector.send_transaction)
@@ -85,15 +101,41 @@ class SvTerminal(QObject):
         self.connector.ready_read.connect(self.read_from_socket)
         self._connection_thread.start()
 
-    def socket_error(self):
-        if self.connector.error() == -1:  # TODO
-            return
-        
-        error("Received socket error: %s", self.connector.error_string())
+    def connect_widgets(self):
+        window = self.window
 
-    def send(self, transaction: Transaction):
+        buttons_connection_map = {
+            window.button_clear_log: self.window.clear_log,
+            window.button_send: self.send,
+            window.button_reset: self.set_default_values,
+            window.button_settings: self.settings,
+            window.button_specification: self.specification,
+            window.button_echo_test: self.echo_test,
+            window.button_clear: self.clear_message,
+            window.button_copy_log: self.copy_log,
+            window.button_copy_bitmap: self.copy_bitmap,
+            window.button_reconnect: self.reconnect,
+            window.button_parse_file: self.parse_file
+        }
+
+        for button, slot in buttons_connection_map.items():
+            button.clicked.connect(slot)
+
+        window.window_close.connect(self.disconnect)
+        window.menu_button_clicked.connect(self.proces_button_menu)
+        window.field_changed.connect(self.set_bitmap)
+
+    def send(self, transaction: Transaction | None = None):
         if self.config.debug.clear_log:
             self.window.clear_log()
+
+        if not transaction:
+            try:
+                transaction: Transaction = self.parser.parse_form(self.window)
+            except Exception as building_error:
+                error(f"Transaction building error")
+                [error(err.strip()) for err in str(building_error).splitlines()]
+                return
 
         if transaction.generate_fields:
             transaction: Transaction = self.generator.set_generated_fields(transaction)
@@ -105,7 +147,7 @@ class SvTerminal(QObject):
             transaction: Transaction = self.generator.set_trans_id_to_47_072(transaction)
 
         if self.sender() is self.window.button_send:
-            self.window.set_generated_fields(transaction)
+            self.set_generated_fields(transaction)
 
         if self.config.fields.validation:
             try:
@@ -128,7 +170,24 @@ class SvTerminal(QObject):
         spec_window.spec_accepted.connect(lambda: info("Specification accepted"))
         spec_window.exec_()
 
-    def save_transaction_to_file(self, transaction: Transaction, filename: str, file_format: str) -> None:
+    @staticmethod
+    def get_output_filename():
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.AnyFile)
+        filename = file_dialog.getSaveFileName()[0]
+        return filename
+
+    def save_transaction_to_file(self, file_format: str) -> None:
+        if not (filename := self.get_output_filename()):
+            error("No output filename recognized")
+            return
+
+        try:
+            transaction = self.parser.parse_form(self.window)
+        except Exception as file_saving_error:
+            error("File saving error: %s", file_saving_error)
+            return
+
         data_processing_map = {
             DataFormats.JSON: lambda _trans: dumps(_trans.dict(), indent=4),
             DataFormats.INI: lambda _trans: self.parser.transaction_to_ini_string(_trans),
@@ -148,11 +207,12 @@ class SvTerminal(QObject):
 
         info(f"The transaction was saved successfully to {filename}")
 
+    @staticmethod
+    def transaction_matched(trans_id, resp_time_seconds):
+        info(f"Transaction ID [{trans_id}] matched. Response time seconds: {resp_time_seconds}")
+
     def disconnect(self):
         self.connector.disconnect_sv()
-
-    def transaction_matched(self, trans_id, resp_time_seconds):
-        info(f"Transaction ID [{trans_id}] matched. Response time seconds: {resp_time_seconds}")
 
     def reconnect(self):
         info("[Re]connecting...")
@@ -180,7 +240,7 @@ class SvTerminal(QObject):
             DataFormats.JSON: lambda: dumps(self.parser.parse_form(self.window).dict(), indent=4),
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parser.parse_form(self.window)),
             DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parser.parse_form(self.window)),
-            DataFormats.SV_TERMINAL: lambda: TextConstants.HELLO_MESSAGE,
+            DataFormats.TERM: lambda: TextConstants.HELLO_MESSAGE,
             DataFormats.SPEC: lambda: dumps(self.spec.spec.dict(), indent=4)
         }
 
@@ -189,34 +249,46 @@ class SvTerminal(QObject):
             return
 
         try:
-            self.window.log_browser.setText(function())
-        except ValidationError as validation_error:
+            self.window.set_log_data(function())
+        except (ValidationError, ValueError) as validation_error:
             error(f"{validation_error}")
 
+    def copy_log(self):
+        self.set_clipboard_text(self.window.get_log_data())
+
+    def copy_bitmap(self):
+        self.set_clipboard_text(self.window.get_bitmap_data())
+
     @staticmethod
-    def set_clipboard_text(data: str) -> None:
+    def set_clipboard_text(data: str = str()) -> None:
         QApplication.clipboard().setText(data)
-
-    def get_last_reversible_transaction_id(self):
-        if not (transaction_id := self.trans_queue.get_last_reversible_transaction_id()):
-            error("Transaction Queue has no reversible transactions")
-
-        return transaction_id
 
     def show_reversal_window(self):
         reversible_transactions_list: list[Transaction] = self.trans_queue.get_reversible_transactions()
         reversal_window = ReversalWindow(reversible_transactions_list)
 
         if reversal_window.exec_():
-            if not reversal_window.reversal_id:
-                error("No transaction ID recognized. The Reversal wasn't sent")
-
             return reversal_window.reversal_id
 
         info("Reversal sending is cancelled by user")
 
-    def reverse_transaction(self, original_transaction_id: str):
-        original: Transaction = self.trans_queue.get_transaction(original_transaction_id)
+    def reverse_transaction(self, last_or_other: str):
+        match last_or_other:
+            case ButtonAction.LAST:
+                if not (original_id := self.trans_queue.get_last_reversible_transaction_id()):
+                    error("Transaction Queue has no reversible transactions")
+                    return
+
+            case ButtonAction.OTHER:
+                if not (original_id := self.show_reversal_window()):
+                    error("No transaction ID recognized. The Reversal wasn't sent")
+                    return
+
+            case _:
+                error("Wrong action during reverse the transaction")
+                return
+
+        original: Transaction = self.trans_queue.get_transaction(original_id)
         reversal: Transaction = self.build_reversal(original)
 
         if not reversal:
@@ -256,3 +328,83 @@ class SvTerminal(QObject):
         )
 
         return reversal
+
+    def set_default_values(self):
+        try:
+            self.parse_file(FilePath.DEFAULT_FILE)
+            info("Default file parsed")
+
+        except Exception as parsing_error:
+            error("Default file parsing error! Exception: %s" % parsing_error)
+
+    def parse_file(self, filename: str | None = None) -> None:
+        if not filename and not (filename := QFileDialog.getOpenFileName()[0]):
+            info("No input filename recognized")
+            return
+
+        try:
+            transaction: Transaction = self.parser.parse_file(filename)
+        except (TypeError, ValueError, Exception) as parsing_error:
+            error(f"File parsing error: {parsing_error}")
+            return
+
+        self.window.set_mti(transaction.message_type)
+        self.window.set_fields(transaction)
+        self.set_bitmap()
+
+        if self.sender() is self.window.button_parse_file:
+            info(f"File parsed: {filename}")
+
+    def set_generated_fields(self, transaction: Transaction):
+        for field in transaction.generate_fields:
+            if not (field_data := transaction.data_fields.get(field)):
+                error("Lost field data for field %s")
+
+            if not self.spec.can_be_generated([field]):
+                error(f"Field {field} cannot be generated")
+                return
+
+            self.window.set_field_value(field, field_data)
+
+    def echo_test(self):
+        transaction: Transaction = self.parser.parse_file(FilePath.ECHO_TEST)
+        self.send(transaction)
+
+    def clear_message(self):
+        self.window.clear_message()
+        self.set_bitmap()
+
+    def set_bitmap(self):
+        bitmap: set[str] = set()
+
+        for bit in self.window.get_top_level_field_numbers():
+            if not bit.isdigit():
+                continue
+
+            if int(bit) not in range(1, self.spec.MessageLength.second_bitmap_capacity + 1):
+                continue
+
+            if int(bit) >= self.spec.MessageLength.first_bitmap_capacity:
+                bitmap.add(self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY)
+
+            bitmap.add(bit)
+
+        self.window.set_bitmap(", ".join(sorted(bitmap, key=int)))
+
+    def socket_error(self):
+        if self.connector.error() == -1:  # TODO
+            return
+
+        error("Received socket error: %s", self.connector.error_string())
+
+    def proces_button_menu(self, button, action: str):
+        data_processing_map = {
+            self.window.button_save: lambda _action: self.save_transaction_to_file(_action),
+            self.window.button_reverse: lambda _action: self.reverse_transaction(_action),
+            self.window.button_print: lambda _action: self.print_data(_action)
+        }
+
+        if not (function := data_processing_map.get(button)):
+            return
+
+        function(action)

@@ -46,6 +46,12 @@ class EpaySpecification(EpaySpecificationData):
             if mti.request == original_mti:
                 return mti.reversal_mti
 
+    def can_be_generated(self, field_path: list[str]):
+        if not (field_spec := self.get_field_spec(field_path)):
+            return False
+
+        return field_spec.generate
+
     def get_mti_codes(self) -> list[str]:
         message_type_identifiers: set[str] = set()
 

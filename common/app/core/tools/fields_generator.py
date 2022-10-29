@@ -42,6 +42,9 @@ class FieldsGenerator(object):
 
     def set_generated_fields(self, transaction: Transaction) -> Transaction:
         for field in transaction.generate_fields:
+            if not self.spec.can_be_generated([field]):
+                continue
+
             transaction.data_fields[field] = self.generate_field(field)
 
         transaction.data_fields = {

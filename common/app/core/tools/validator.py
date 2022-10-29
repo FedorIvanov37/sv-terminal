@@ -3,6 +3,7 @@ from string import digits, ascii_letters, punctuation
 from common.app.data_models.config import Config
 from common.app.decorators.singleton import singleton
 from common.app.data_models.transaction import Transaction, TypeFields
+# from common.app.core.tools.field_Item import Item
 
 
 @singleton
@@ -47,11 +48,26 @@ class Validator(object):
 
         return fields
 
+    @staticmethod
+    def validate_field_item(item):
+        if not item.field_number:
+            raise ValueError(f"Lost field number. The field will not be sent")
+
+        if not item.field_number.isdigit():
+            raise ValueError(f"Error: non-numeric field number found: {item.get_field_path(string=True)}")
+
+        if item.is_duplicated():
+            raise ValueError(f"Error: duplicated field number {item.get_field_path(string=True)} found")
+
+        if not item.field_data and item.generate_checkbox_checked and not item.get_children():
+            raise ValueError(f"No value for field {item.get_field_path(string=True)}. The field will not be sent")
+
     def validate_field(self, field_path: list[str], value: TypeFields | str):
         alphabetic = ascii_letters
         numeric = digits
         specials = punctuation + " "
         valid_values = alphabetic + numeric + specials
+        path = ".".join(field_path)
 
         if not self._config.fields.validation:
             return
@@ -60,19 +76,15 @@ class Validator(object):
             return
 
         for field in field_path:
-            if field.isdigit():
-                continue
+            if not field.isdigit():
+                raise ValueError(f"Field numbers can be digits only. {field} is wrong value")
 
-            raise ValueError(f"Field numbers can be digits only. {field} is wrong value")
+        if not (field_spec := self.spec.get_field_spec(list(field_path))):
+            raise ValueError(f"Lost spec for field {path}")
 
         if isinstance(value, dict):
             self.validate_fields(value, field_path)
             return
-
-        path = ".".join(field_path)
-
-        if not (field_spec := self.spec.get_field_spec(list(field_path))):
-            raise ValueError(f"Lost spec for field {path}")
 
         for letter in value:
             if letter not in valid_values:
