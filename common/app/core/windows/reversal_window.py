@@ -41,12 +41,7 @@ class ReversalWindow(Ui_ReversalWindow, QDialog):
         self.ComboBoxId.addItem("> Transaction queue")
 
         for transaction in transactions:
-            item = "ID: %s | MTI: %s | UTRNNO: %s" % (
-                transaction.trans_id,
-                transaction.message_type,
-                transaction.utrnno
-            )
-
+            item = f"ID: {transaction.trans_id} | UTRNNO: {transaction.utrnno}"
             self.ComboBoxId.addItem(item)
 
     def id_item_changed(self):

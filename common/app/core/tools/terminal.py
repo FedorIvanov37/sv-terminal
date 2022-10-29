@@ -263,11 +263,8 @@ class SvTerminal(QObject):
     def show_reversal_window(self):
         reversible_transactions_list: list[Transaction] = self.trans_queue.get_reversible_transactions()
         reversal_window = ReversalWindow(reversible_transactions_list)
-
-        if reversal_window.exec_():
-            return reversal_window.reversal_id
-
-        info("Reversal sending is cancelled by user")
+        reversal_window.exec_()
+        return reversal_window.reversal_id
 
     def reverse_transaction(self, id_source: str):
         id_source_map = {
@@ -280,7 +277,7 @@ class SvTerminal(QObject):
             return
 
         if not(original_id := original_id_function()):
-            error("No transaction ID recognized. The Reversal wasn't sent")
+            warning("No transaction ID recognized. The Reversal wasn't sent")
             return
 
         if not (original := self.trans_queue.get_transaction(original_id)):
