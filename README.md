@@ -58,7 +58,9 @@ pip install -r requirements.txt
 ## What's new in this version
 
 
-* Field validation added to the Terminal. The validation can be turned off through settings window
+* Fields validation added to the Terminal. The validation can be turned off through settings window
 * Added internal config to ini files for storing max amount and generated fields
-
+* Added transaction timeouts - after 60 seconds after sending transaction will be deleted from the Queue
+* JSON format simplified, backward compatibility exists
+* 
 
