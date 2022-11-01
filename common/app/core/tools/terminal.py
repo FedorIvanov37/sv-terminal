@@ -98,7 +98,6 @@ class SvTerminal(QObject):
         self.window.window_close.connect(self.disconnect)
         self.window.menu_button_clicked.connect(self.proces_button_menu)
         self.window.field_changed.connect(self.set_bitmap)
-        self.trans_queue.incoming_transaction.connect(self.transaction_received)
         self.connector.connected.connect(lambda: self.window.set_connection_status(QTcpSocket.ConnectedState))
         self.connector.connected.connect(lambda: info("SmartVista host connection ESTABLISHED"))
         self.connector.disconnected.connect(lambda: self.window.set_connection_status(QTcpSocket.UnconnectedState))
@@ -106,6 +105,7 @@ class SvTerminal(QObject):
         self.connector.connection_started.connect(self.window.lock_connection_buttons)
         self.connector.connection_finished.connect(lambda: self.window.lock_connection_buttons(lock=False))
         self._need_reconnect.connect(self.connector.connect_sv)
+        self.trans_queue.incoming_transaction.connect(self.transaction_received)
         self.trans_queue.outgoing_transaction.connect(self.transaction_sent)
         self.trans_queue.transaction_timeout.connect(self.got_timeout)
 

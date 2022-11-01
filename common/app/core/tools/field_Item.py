@@ -4,8 +4,6 @@ from PyQt5.QtCore import Qt, QVariant, pyqtSignal
 from common.app.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.app.data_models.epay_specification import IsoField
 from common.app.core.tools.abstract_item import AbstractItem
-from common.app.core.tools.validator import Validator
-from logging import warning
 
 
 class Item(AbstractItem):
@@ -14,7 +12,6 @@ class Item(AbstractItem):
     _field_data: str = str()
     _field_number: str = str()
     _is_field_complex: bool = False
-    _validator: Validator = None
     _data_was_set: pyqtSignal = pyqtSignal()
 
     @property
@@ -66,13 +63,6 @@ class Item(AbstractItem):
 
         return False
 
-    def validate(self):
-        if self.is_duplicated():
-            raise ValueError(f"Duplicated field {self.get_field_path(string=True)}")
-
-        validator = Validator()
-        validator.validate_field_data(self.get_field_path(), self.field_data)
-
     def addChild(self, item):
         item.spec = self.epay_spec.get_field_spec(item.get_field_path())
         QTreeWidgetItem.addChild(self, item)
@@ -114,17 +104,8 @@ class Item(AbstractItem):
         if role == Qt.ForegroundRole:
             return
 
-        text_color_red = False
-
-        try:
-            self.validate()
-
-        except (TypeError, ValueError, Exception) as validation_error:
-            warning(validation_error)
-            text_color_red = True
-
+        self.treeWidget().validate(self)
         self.process_change_item()
-        self.set_item_color(red=text_color_red)
 
     def process_change_item(self):
         self.set_spec()

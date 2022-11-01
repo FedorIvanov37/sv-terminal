@@ -57,8 +57,8 @@ class Validator(object):
         if not item.field_number.isdigit():
             raise ValueError(f"Non-numeric field number found: {item.get_field_path(string=True)}")
 
-        if item.is_duplicated():
-            raise ValueError(f"Duplicated field number {item.get_field_path(string=True)} found")
+        # if item.is_duplicated():
+        #     raise ValueError(f"Duplicated field number {item.get_field_path(string=True)} found")
 
         if not (item.field_data or item.generate_checkbox_checked() or item.get_children()):
             raise ValueError(f"No value for field {item.get_field_path(string=True)}. The field cannot be sent")

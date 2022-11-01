@@ -1,3 +1,4 @@
+from logging import error
 from collections import OrderedDict
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QTreeWidgetItem, QTreeWidget
@@ -23,12 +24,13 @@ class JsonView(QTreeWidget):
 
     def __init__(self):
         super(JsonView, self).__init__()
-        self.setup()
+        self._setup()
 
-    def setup(self):
+    def _setup(self):
         for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
             action.connect(self.resize_all)
 
+        self.validator = Validator()
         self.itemDoubleClicked.connect(self.edit_item)
         self.setFont(QFont("Calibri", 12))
         self.setAllColumnsShowFocus(True)
@@ -37,6 +39,38 @@ class JsonView(QTreeWidget):
         self.setEditTriggers(self.NoEditTriggers)
         self.addTopLevelItem(self.root)
         self.make_order()
+
+    def field_number_duplicated(self, item: Item):
+        root = self.root
+        path = item.get_field_path()
+
+        for field in path:
+            if [item.field_number for item in root.get_children()].count(field) > 1:
+                return True
+
+            root = [item for item in root.get_children() if item.field_number == field][0]
+
+        return False
+
+    def validate(self, item: Item):
+        if item is self.root:
+            return
+
+        if self.field_number_duplicated(item):
+            error(f"Duplicated field number {item.get_field_path(string=True)} found")
+            item.set_item_color()
+            return
+
+        validator = Validator()
+
+        try:
+            validator.validate_field_data(item.get_field_path(), item.field_data)
+        except ValueError as validation_error:
+            error(validation_error)
+            item.set_item_color()
+            return
+
+        item.set_item_color(red=False)
 
     def plus(self):
         item = Item([])

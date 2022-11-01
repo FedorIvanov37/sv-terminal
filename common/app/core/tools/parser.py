@@ -6,7 +6,7 @@ from configparser import ConfigParser, NoSectionError, NoOptionError
 from common.app.exceptions.exceptions import DumpFileParsingError
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.core.tools.bitmap import Bitmap
-from common.app.core.tools.fields_generator import FieldsGenerator
+from common.app.core.tools.trans_id import trans_id
 from common.app.constants.DumpDefinition import DumpDefinition
 from common.app.constants.IniMessageDefinition import IniMessageDefinition
 from common.app.constants.DataFormats import DataFormats
@@ -24,7 +24,6 @@ class Parser(object):
 
     def __init__(self, config: Config):
         self.config: Config = config
-        self.generator = FieldsGenerator()
 
     def create_dump(self, transaction: Transaction, body: bool = False) -> bytes | str:
         msg_type: bytes = transaction.message_type.encode()
@@ -169,7 +168,7 @@ class Parser(object):
                 fields[field]: RawFieldSet = self.split_complex_field(field, fields[field])
 
         transaction: Transaction = Transaction(
-            trans_id=FieldsGenerator.trans_id(),
+            trans_id=trans_id(),
             message_type=message_type_indicator,
             data_fields=fields
         )
@@ -190,7 +189,7 @@ class Parser(object):
         max_amount = self.config.fields.max_amount
 
         transaction = Transaction(
-            trans_id=FieldsGenerator.trans_id(),
+            trans_id=trans_id(),
             message_type=message_type,
             max_amount=max_amount,
             generate_fields=generate_fields,
@@ -290,7 +289,7 @@ class Parser(object):
     @staticmethod
     def _parse_json_file(filename: str) -> Transaction:
         transaction: Transaction = Transaction.parse_file(filename)
-        transaction.trans_id = FieldsGenerator.trans_id()
+        transaction.trans_id = trans_id()
         return transaction
 
     @staticmethod

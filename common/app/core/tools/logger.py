@@ -5,7 +5,6 @@ from common.app.constants.LogDefinition import LogDefinition
 from common.app.core.tools.epay_specification import EpaySpecification
 from common.app.core.tools.wireless_log_handler import WirelessHandler
 from common.app.core.tools.parser import Parser
-from common.app.core.tools.bitmap import Bitmap
 from common.app.data_models.config import Config
 from common.app.constants.FilePath import FilePath
 from common.app.data_models.transaction import Transaction
@@ -79,7 +78,10 @@ class Logger:
 
         level("")
 
-        bitmap: str = Bitmap(transaction.data_fields).get_bitmap(str)
+        # bitmap: str = Bitmap(transaction.data_fields).get_bitmap(str)
+
+        bitmap = ", ".join(transaction.data_fields.keys())
+
         trans_id = transaction.trans_id
 
         if transaction.matched and not transaction.is_request:

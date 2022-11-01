@@ -51,9 +51,6 @@ class Connector(QTcpSocket):
         self.connectToHost(host, port)
         self.waitForConnected(msecs=10000)
 
-        if not self.state() == self.ConnectedState:
-            error(f"Cannot open the connection to SVFE: {self.errorString()}")
-
     def disconnect_sv(self):
         self.disconnectFromHost()
         self.waitForDisconnected(msecs=10000)
@@ -103,6 +100,10 @@ class ConnectionWorker(QObject):
     @property
     def transaction_received(self):
         return self._transaction_received
+
+    @property
+    def error_string(self):
+        return self.connector.errorString()
 
     @property
     def transaction_sent(self):
@@ -159,9 +160,6 @@ class ConnectionWorker(QObject):
             QApplication.processEvents()
             QThread.msleep(10)
 
-    def error_string(self):
-        return self.connector.errorString()
-
     def error(self):
         return self.connector.error()
 
@@ -180,7 +178,7 @@ class ConnectionWorker(QObject):
             self.connect_sv()
 
         if self.connector.state() != self.connector.ConnectedState:
-            error("Cannot establish the connection to SmartVista")
+            error(f"Cannot establish the connection to SmartVista: {self.connector.errorString()}")
             return
 
         if self.connector.send_transaction(transaction):
