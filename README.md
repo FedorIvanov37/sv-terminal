@@ -62,5 +62,5 @@ pip install -r requirements.txt
 * Added internal config to ini files for storing max amount and generated fields
 * Added transaction timeouts - after 60 seconds after sending transaction will be deleted from the Queue
 * JSON format simplified, backward compatibility exists
-* 
+
 
