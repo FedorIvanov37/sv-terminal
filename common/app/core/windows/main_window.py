@@ -8,8 +8,8 @@ from common.app.constants.DataFormats import DataFormats
 from common.app.constants.ConnectionStatus import ConnectionStatus
 from common.app.core.tools.json_view import JsonView
 from common.app.core.tools.action_button import ActionButton
-from common.app.data_models.transaction import TypeFields, Transaction
 from common.app.core.tools.field_Item import Item
+from common.lib.data_models.Transaction import TypeFields, Transaction
 
 
 class MainWindow(Ui_MainWindow, QMainWindow):

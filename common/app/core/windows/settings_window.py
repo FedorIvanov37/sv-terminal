@@ -9,7 +9,7 @@ from common.app.constants.TextConstants import TextConstants
 from common.app.constants.LogDefinition import LogDefinition
 from logging import info, warning, getLogger, getLevelName
 from common.app.core.windows.about_window import AboutWindow
-from common.app.data_models.config import Config
+from common.lib.data_models.Config import Config
 
 
 class SettingsWindow(Ui_SettingsWindow, QDialog):

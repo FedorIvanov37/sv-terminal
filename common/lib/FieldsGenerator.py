@@ -1,8 +1,8 @@
 from datetime import datetime
 from random import randint, choice
-from common.app.exceptions.exceptions import ParsingError
-from common.app.data_models.transaction import Transaction
-from common.app.core.tools.epay_specification import EpaySpecification
+from .exceptions.exceptions import ParsingError
+from .data_models.Transaction import Transaction
+from .EpaySpecification import EpaySpecification
 
 
 class FieldsGenerator(object):
@@ -74,7 +74,7 @@ class FieldsGenerator(object):
         if transaction.is_request:
             return transaction
 
-        try:
+        try:  # TODO
             transaction.utrnno = transaction.data_fields["47"]["064"]
         except KeyError:
             transaction.utrnno = ""

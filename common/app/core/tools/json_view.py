@@ -2,12 +2,11 @@ from logging import error
 from collections import OrderedDict
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QTreeWidgetItem, QTreeWidget
-from common.app.core.tools.epay_specification import EpaySpecification
+from common.lib.EpaySpecification import EpaySpecification
 from common.app.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.app.core.tools.field_Item import Item
-from common.app.data_models.message import TypeFields
-from common.app.data_models.transaction import Transaction
-from common.app.core.tools.validator import Validator
+from common.lib.data_models.Transaction import Transaction, TypeFields
+from common.lib.Validator import Validator
 
 
 class JsonView(QTreeWidget):

@@ -3,16 +3,16 @@ from os.path import splitext
 from logging import error, warning, info
 from binascii import hexlify, unhexlify
 from configparser import ConfigParser, NoSectionError, NoOptionError
-from common.app.exceptions.exceptions import DumpFileParsingError
-from common.app.core.tools.epay_specification import EpaySpecification
-from common.app.core.tools.bitmap import Bitmap
-from common.app.core.tools.trans_id import trans_id
-from common.app.constants.DumpDefinition import DumpDefinition
-from common.app.constants.IniMessageDefinition import IniMessageDefinition
-from common.app.constants.DataFormats import DataFormats
-from common.app.data_models.config import Config
-from common.app.data_models.epay_specification import IsoField, FieldSet, RawFieldSet
-from common.app.data_models.transaction import TypeFields, Transaction
+from .exceptions.exceptions import DumpFileParsingError
+from .EpaySpecification import EpaySpecification
+from .Bitmap import Bitmap
+from .tools.trans_id import trans_id
+from .constants.DumpDefinition import DumpDefinition
+from .constants.IniMessageDefinition import IniMessageDefinition
+from .constants.DataFormats import DataFormats
+from .data_models.Config import Config
+from .data_models.EpaySpecificationModel import IsoField, FieldSet, RawFieldSet
+from .data_models.Transaction import TypeFields, Transaction
 
 
 class Parser(object):

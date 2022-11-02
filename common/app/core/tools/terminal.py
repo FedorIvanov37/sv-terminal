@@ -11,26 +11,26 @@ from common.app.core.windows.main_window import MainWindow
 from common.app.core.windows.reversal_window import ReversalWindow
 from common.app.core.windows.settings_window import SettingsWindow
 from common.app.core.windows.spec_window import SpecWindow
-from common.app.core.tools.parser import Parser
+from common.lib.Parser import Parser
 from common.app.core.tools.logger import Logger
-from common.app.core.tools.transaction_queue import TransactionQueue
-from common.app.core.tools.epay_specification import EpaySpecification
-from common.app.core.tools.fields_generator import FieldsGenerator
-from common.app.core.tools.validator import Validator
+from common.lib.TransactionQueue import TransactionQueue
+from common.lib.EpaySpecification import EpaySpecification
+from common.lib.FieldsGenerator import FieldsGenerator
+from common.lib.Validator import Validator
 from common.app.constants.TextConstants import TextConstants
 from common.app.constants.DataFormats import DataFormats
 from common.app.constants.FilePath import FilePath
-from common.app.data_models.config import Config
-from common.app.data_models.transaction import Transaction
+from common.lib.data_models.Config import Config
+from common.lib.data_models.Transaction import Transaction
 from common.app.constants.ButtonActions import ButtonAction
-from common.app.core.tools.connector import ConnectionWorker
+from common.app.core.tools.connection_worker import ConnectionWorker
 
 
 class SvTerminal(QObject):
     _config: Config = Config.parse_file(FilePath.CONFIG)
     _pyqt_application = QtWidgets.QApplication([])
     _validator = Validator(_config)
-    _spec: EpaySpecification = EpaySpecification()
+    _spec: EpaySpecification = EpaySpecification(FilePath.CONFIG)
     _need_reconnect: pyqtSignal = pyqtSignal()
 
     @property

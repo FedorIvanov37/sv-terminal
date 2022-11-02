@@ -158,7 +158,7 @@ class FieldDateFormat(object):
     FIELD_015_SETTELMENT_DATE_YYMMDD = "%y%m%d"
 
 
-@dataclass(frozen=True)
+@dataclass
 class EpaySpecificationData(object):
     FIELD_SET: FieldSet = FieldSet()
     DATA_TYPES: DataTypes = DataTypes()

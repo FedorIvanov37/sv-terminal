@@ -5,11 +5,11 @@ from common.app.forms.spec import Ui_SpecificationWindow
 from common.app.constants.FilePath import FilePath
 from common.app.core.tools.action_button import ActionButton
 from common.app.core.tools.spec_view import SpecView
-from common.app.core.tools.epay_specification import EpaySpecification
+from common.lib.EpaySpecification import EpaySpecification
 from datetime import datetime
 from typing import Optional
 from PyQt5.QtWidgets import QFileDialog, QMenu, QDialog
-from common.app.data_models.epay_specification import EpaySpecModel
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from pydantic import ValidationError
 from common.app.core.windows.spec_unsaved import SpecUnsaved
 from common.app.core.windows.mti_spec_window import MtiSpecWindow

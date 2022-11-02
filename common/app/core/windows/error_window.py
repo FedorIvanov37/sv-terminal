@@ -1,7 +1,7 @@
-from common.app.forms.error import Ui_Error
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
+from common.app.forms.error import Ui_Error
 from common.app.constants.FilePath import FilePath
 
 

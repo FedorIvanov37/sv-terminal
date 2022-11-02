@@ -1,22 +1,22 @@
 from json import dumps
-from logging import error
-from pydantic import ValidationError
 from dataclasses import asdict
-from common.app.constants.MessageLength import MessageLength
-from common.app.decorators.singleton import singleton
-from common.app.constants.FilePath import FilePath
-from common.app.data_models.epay_specification import EpaySpecModel, Mti, IsoField
-from common.app.constants.EpaySpecificationData import EpaySpecificationData
+from .decorators.singleton import singleton
+from .constants.MessageLength import MessageLength
+from .constants.EpaySpecificationData import EpaySpecificationData
+from .data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField
 
 
 @singleton
 class EpaySpecification(EpaySpecificationData):
     _MessageLength: MessageLength = MessageLength()
+    _specification_model: EpaySpecModel = None
 
-    try:
-        _specification_model: EpaySpecModel = EpaySpecModel.parse_file(FilePath.SPECIFICATION)
-    except ValidationError as JsonParsingError:
-        error(f"Critical error! Cannot parse Specification: {JsonParsingError.json()}")
+    def __init__(self, filename: str | None = None):
+        # if filename is None and not self._specification_model:
+        #     raise AttributeError("Lost specification filename")
+
+        self.filename = "common/settings/specification.json"  # filename
+        self._specification_model: EpaySpecModel = EpaySpecModel.parse_file(self.filename)
 
     @property
     def spec(self) -> EpaySpecModel:
@@ -94,7 +94,7 @@ class EpaySpecification(EpaySpecificationData):
         if not commit:
             return
 
-        with open(FilePath.SPECIFICATION, "w") as spec_file:
+        with open(self.filename, "w") as spec_file:
             spec_file.write(dumps(self.spec.dict(), indent=4))
 
     def get_reversal_fields(self):
