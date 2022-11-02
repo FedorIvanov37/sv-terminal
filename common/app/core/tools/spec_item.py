@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt
-from common.app.data_models.epay_specification import IsoField
+from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.app.constants.SpecFieldDef import SpecFieldDef
 from common.app.core.tools.abstract_item import AbstractItem
 

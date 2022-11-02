@@ -5,7 +5,7 @@ from re import search
 from typing import Optional
 from common.app.forms.reversal import Ui_ReversalWindow
 from common.app.constants.FilePath import FilePath
-from common.app.data_models.transaction import Transaction
+from common.lib.data_models.Transaction import Transaction
 
 
 class ReversalWindow(Ui_ReversalWindow, QDialog):

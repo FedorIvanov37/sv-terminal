@@ -1,10 +1,9 @@
 from collections import deque
 from PyQt5.Qt import QObject, pyqtSignal, QThread
 from PyQt5.QtCore import QTimer
-from common.app.core.tools.epay_specification import EpaySpecification
-from common.app.core.tools.fields_generator import FieldsGenerator
-from common.app.core.tools.connector import ConnectionWorker
-from common.app.data_models.transaction import Transaction
+from .EpaySpecification import EpaySpecification
+from .FieldsGenerator import FieldsGenerator
+from .data_models.Transaction import Transaction
 
 
 class TransactionQueue(QObject):
@@ -31,9 +30,9 @@ class TransactionQueue(QObject):
     def transaction_timeout(self):
         return self._transaction_timeout
 
-    def __init__(self, connector: ConnectionWorker):
+    def __init__(self, connector): # : ConnectionWorker
         QObject.__init__(self)
-        self.connector: ConnectionWorker = connector
+        self.connector = connector # : ConnectionWorker
         self.generator: FieldsGenerator = FieldsGenerator()
         self.timers: dict[str, QTimer] = {}
         self._start_connection_thread()

@@ -2,12 +2,12 @@ from logging import info, debug, getLevelName, getLogger, Formatter
 from logging.handlers import RotatingFileHandler
 from json import dumps
 from common.app.constants.LogDefinition import LogDefinition
-from common.app.core.tools.epay_specification import EpaySpecification
+from common.lib.EpaySpecification import EpaySpecification
 from common.app.core.tools.wireless_log_handler import WirelessHandler
-from common.app.core.tools.parser import Parser
-from common.app.data_models.config import Config
+from common.lib.Parser import Parser
+from common.lib.data_models.Config import Config
+from common.lib.data_models.Transaction import Transaction
 from common.app.constants.FilePath import FilePath
-from common.app.data_models.transaction import Transaction
 
 
 class Logger:

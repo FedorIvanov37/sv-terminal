@@ -1,4 +1,4 @@
-from common.app.core.tools.epay_specification import EpaySpecification
+from common.lib.EpaySpecification import EpaySpecification
 
 
 class MainFieldSpec(object):

@@ -2,7 +2,7 @@ from PyQt5 import QtGui
 from PyQt5.QtWidgets import QTreeWidgetItem
 from PyQt5.QtCore import Qt, QVariant, pyqtSignal
 from common.app.constants.MainFieldSpec import MainFieldSpec as Spec
-from common.app.data_models.epay_specification import IsoField
+from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.app.core.tools.abstract_item import AbstractItem
 
 

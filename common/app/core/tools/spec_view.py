@@ -1,10 +1,10 @@
 from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem
-from common.app.core.tools.epay_specification import EpaySpecification
-from common.app.data_models.epay_specification import EpaySpecModel
+from common.lib.EpaySpecification import EpaySpecification
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.app.constants.SpecFieldDef import SpecFieldDef
 from common.app.core.tools.spec_item import SpecItem
-from common.app.data_models.epay_specification import IsoField, FieldSet
+from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
 
 
 class SpecView(QObject):
