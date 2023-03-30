@@ -3,16 +3,16 @@ from logging import error, info, warning
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject
 from common.lib.Parser import Parser
-from common.app.core.tools.logger import Logger
+from common.gui.core.logger import Logger
 from common.lib.TransactionQueue import TransactionQueue
 from common.lib.EpaySpecification import EpaySpecification
 from common.lib.FieldsGenerator import FieldsGenerator
 from common.lib.Validator import Validator
-from common.app.constants.DataFormats import DataFormats
-from common.app.constants.FilePath import FilePath
+from common.gui.constants.DataFormats import DataFormats
+from common.gui.constants.FilePath import FilePath
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
-from common.app.core.tools.connection_worker import ConnectionWorker
+from common.gui.core.connection_worker import ConnectionWorker
 
 
 class SvTerminal(QObject):
@@ -26,6 +26,10 @@ class SvTerminal(QObject):
     def config(self):
         return self._config
 
+    @config.setter
+    def config(self, config):
+        self._config = config
+
     @property
     def validator(self):
         return self._validator
@@ -36,7 +40,7 @@ class SvTerminal(QObject):
 
     def __init__(self, config: Config):
         super(SvTerminal, self).__init__()
-        self._config = config
+        self.config = config
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator()
         self.logger: Logger = Logger(self.config)

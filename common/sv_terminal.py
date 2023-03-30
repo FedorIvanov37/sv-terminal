@@ -1,9 +1,6 @@
-from common.app.core.windows.error_window import ErrorWindow
-from common.app.core.tools.terminal import SvTerminalGui
-from common.app.constants.FilePath import FilePath
+from common.gui.core.terminal import SvTerminalGui
+from common.gui.constants.FilePath import FilePath
 from common.lib.data_models.Config import Config
-from common.lib.Terminal import SvTerminal
-
 
 DEBUG_MODE = True
 
