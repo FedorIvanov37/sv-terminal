@@ -1,5 +1,5 @@
-from PyQt5.QtCore import Qt
-from common.app.data_models.epay_specification import IsoField
+from PyQt6.QtCore import Qt
+from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.app.constants.SpecFieldDef import SpecFieldDef
 from common.app.core.tools.abstract_item import AbstractItem
 
@@ -85,9 +85,9 @@ class SpecItem(AbstractItem):
     def bytes(self):
         return bool(self.checkState(SpecFieldDef.get_column_position(SpecFieldDef.BYTES)))
 
-    @property
-    def protected(self):
-        return self._protected
+    # @property
+    # def protected(self):
+    #     return self._protected
 
     @property
     def spec(self):

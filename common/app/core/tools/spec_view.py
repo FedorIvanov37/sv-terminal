@@ -1,10 +1,10 @@
-from PyQt5.QtCore import pyqtSignal, QObject
-from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem
-from common.app.core.tools.epay_specification import EpaySpecification
-from common.app.data_models.epay_specification import EpaySpecModel
+from PyQt6.QtCore import pyqtSignal, QObject
+from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem
+from common.lib.EpaySpecification import EpaySpecification
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.app.constants.SpecFieldDef import SpecFieldDef
 from common.app.core.tools.spec_item import SpecItem
-from common.app.data_models.epay_specification import IsoField, FieldSet
+from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
 
 
 class SpecView(QObject):
@@ -27,8 +27,8 @@ class SpecView(QObject):
         self.tree.setHeaderLabels(SpecFieldDef.COLUMNS)
         self.tree.addTopLevelItem(self.root)
         self.tree.itemDoubleClicked.connect(self.edit)
-        self.tree.itemChanged.connect(lambda item, column: self.item_was_changed(item, column))
-        self.tree.itemPressed.connect(lambda item, column: self.set_field_path(item, column))
+        self.tree.itemChanged.connect(self.item_was_changed)
+        self.tree.itemPressed.connect(self.set_field_path)
         self.tree.setSortingEnabled(False)
         self.parse_spec()
         self.make_order()
@@ -195,7 +195,8 @@ class SpecView(QObject):
                     special=row.special,
                     bytes=row.bytes,
                     reserved_for_future=row.reserved_for_future,
-                    description=row.description
+                    description=row.description,
+                    fields=None
                 )
 
                 fields[row.field_number] = field

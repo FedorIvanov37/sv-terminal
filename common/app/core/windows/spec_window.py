@@ -1,15 +1,15 @@
 from json import dumps
-from PyQt5.QtGui import QIcon, QCloseEvent, QKeyEvent
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QIcon, QCloseEvent, QKeyEvent
+from PyQt6.QtCore import Qt, pyqtSignal
 from common.app.forms.spec import Ui_SpecificationWindow
 from common.app.constants.FilePath import FilePath
 from common.app.core.tools.action_button import ActionButton
 from common.app.core.tools.spec_view import SpecView
-from common.app.core.tools.epay_specification import EpaySpecification
+from common.lib.EpaySpecification import EpaySpecification
 from datetime import datetime
 from typing import Optional
-from PyQt5.QtWidgets import QFileDialog, QMenu, QDialog
-from common.app.data_models.epay_specification import EpaySpecModel
+from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from pydantic import ValidationError
 from common.app.core.windows.spec_unsaved import SpecUnsaved
 from common.app.core.windows.mti_spec_window import MtiSpecWindow
@@ -63,7 +63,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def setup(self):
         self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
-        self.setWindowFlags(Qt.WindowCloseButtonHint)
+        self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
         self.PlusButton = ActionButton("+")
         self.MinusButton = ActionButton("-")
         self.NextLevelButton = ActionButton("↵")
@@ -94,7 +94,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.ButtonApply.setMenu(apply_menu)
 
         for box in (self.CheckBoxHideReverved, self.CheckBoxReadOnly):
-            box.setChecked(Qt.Checked)
+            box.setChecked(bool(Qt.CheckState.Checked))
 
         self.set_status(">")
 
@@ -107,7 +107,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         mti_window.need_to_set_mti.connect(self.set_tmi_list)
         mti_window.changed.connect(self.set_mti_changed)
         mti_window.rejected.connect(lambda: self.set_mti_changed(changed=False))
-        mti_window.exec_()
+        mti_window.exec()
 
     def set_mti_changed(self, changed=True):
         self._mti_changed = changed
@@ -148,8 +148,8 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def backup(self):
         spec = self.SpecView.generate_spec()
-        data_format = "%Y%m%d_%H%M%S"  # TODO Hardcode
-        filename = "spec_backup_" + datetime.strftime(datetime.now(), data_format) + ".json"  # TODO Hardcode
+        date_format = "%Y%m%d_%H%M%S"
+        filename = f"spec_backup_{datetime.now():{date_format}}.json"
 
         with open(f'{FilePath.SPEC_BACKUP_DIR}/{filename}', "w") as file:
             file.write(dumps(spec.dict(), indent=4))
@@ -186,7 +186,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def reload(self):
         self.SpecView.reload()
         self.set_status(str())
-        self.CheckBoxHideReverved.setCheckState(Qt.Checked)
+        self.CheckBoxHideReverved.setCheckState(Qt.CheckState.Checked)
         self.SpecView.hide_reserved()
 
     def process_close(self) -> bool:
@@ -196,7 +196,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             window = SpecUnsaved()
             window.save.connect(self.apply)
             window.return_to_spec.connect(self.set_need_to_close)
-            window.exec_()
+            window.exec()
 
         return self.need_to_close
 
@@ -218,5 +218,5 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.StatusLabel.setText("\n".join(text_message))
 
     def keyPressEvent(self, a0: QKeyEvent) -> None:
-        if a0.key() == Qt.Key_Escape:
+        if a0.key() == Qt.Key.Key_Escape:
             self.close()

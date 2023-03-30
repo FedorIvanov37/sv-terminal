@@ -2,23 +2,23 @@ from logging import info, debug, getLevelName, getLogger, Formatter
 from logging.handlers import RotatingFileHandler
 from json import dumps
 from common.app.constants.LogDefinition import LogDefinition
-from common.app.core.tools.epay_specification import EpaySpecification
+from common.lib.EpaySpecification import EpaySpecification
 from common.app.core.tools.wireless_log_handler import WirelessHandler
-from common.app.core.tools.parser import Parser
-from common.app.data_models.message import Message
-from common.app.core.tools.bitmap import Bitmap
-from common.app.data_models.config import Config
+from common.lib.Parser import Parser
+from common.lib.data_models.Config import Config
+from common.lib.data_models.Transaction import Transaction
 from common.app.constants.FilePath import FilePath
 
 
+class LogStream:
+    def __init__(self, log_browser):
+        self.log_browser = log_browser
+
+    def write(self, data):
+        self.log_browser.append(data)
+
+
 class Logger:
-    class LogStream:
-        def __init__(self, log_browser):
-            self.log_browser = log_browser
-
-        def write(self, data):
-            self.log_browser.append(data)
-
     _spec = EpaySpecification()
     _default_level = info
     _stream = None
@@ -35,8 +35,7 @@ class Logger:
     def stream(self, stream):
         self._stream = stream
 
-    def __init__(self, stream, config: Config):
-        self.output = stream
+    def __init__(self, config: Config):
         self.config: Config = config
         self.parser: Parser = Parser(self.config)
         self.setup()
@@ -46,23 +45,19 @@ class Logger:
         logger.handlers.clear()
         logger.setLevel(getLevelName(self.config.debug.level))
         formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DATE_FORMAT, LogDefinition.MARK_STYLE)
-        wireless_handler = WirelessHandler()
-        stream = Logger.LogStream(self.output)
-        wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
         file_handler = RotatingFileHandler(
             filename=FilePath.LOG_FILE_NAME,
             maxBytes=LogDefinition.LOG_MAX_SIZE_MEGABYTES * 1024000,
             backupCount=LogDefinition.BACKUP_COUNT
         )
 
-        for handler in (wireless_handler, file_handler):
-            handler.setFormatter(formatter)
-            logger.addHandler(handler)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
 
         debug("Logger started")
 
-    def print_dump(self, message):
-        for string in self.parser.create_sv_dump(message).split("\n"):
+    def print_dump(self, transaction: Transaction):
+        for string in self.parser.create_sv_dump(transaction).split("\n"):
             debug(string)
 
     def print_config(self, config=None, level=_default_level):
@@ -73,34 +68,41 @@ class Logger:
 
         level(dumps(config.dict(), indent=4))
 
-    def print_message(self, message: Message, level=_default_level) -> None:
-        def put(string, size=0):
-            return (f" [%{size}s]" % string).strip()
-
-        bitmap = Bitmap(message.transaction.fields)
+    def print_transaction(self, transaction: Transaction, level=_default_level) -> None:
+        def put(string: str, size=0):
+            return f"[{string.zfill(size)}]"
 
         level("")
 
-        if message.transaction.id:
-            level("[TRANS_ID][%s]", message.transaction.id)
+        # bitmap: str = Bitmap(transaction.data_fields).get_bitmap(str)
 
-        if message.transaction.utrnno:
-            level("[UTRNNO  ][%s]", message.transaction.utrnno)
+        bitmap = ", ".join(transaction.data_fields.keys())
 
-        level("[MSG_TYPE][%s]", message.transaction.message_type)
-        level("[BITMAP  ][%s]", bitmap.get_bitmap(str))
+        trans_id = transaction.trans_id
 
-        for field, field_data in message.transaction.fields.items():
+        if transaction.matched and not transaction.is_request:
+            trans_id = transaction.match_id
+
+        level(f"[TRANS_ID][{trans_id}]")
+
+        if transaction.utrnno:
+            level(f"[UTRNNO  ][{transaction.utrnno}]")
+
+        level(f"[MSG_TYPE][{transaction.message_type}]")
+        level(f"[BITMAP  ][{bitmap}]")
+
+        for field, field_data in transaction.data_fields.items():
             if field == self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
                 continue
 
             log_set = str()
-            log_set += put(str(field).zfill(3))
+            log_set += put(field, size=3)
 
             if isinstance(field_data, dict):
                 field_data = self.parser.join_complex_field(field, field_data)
 
-            log_set += put(str(len(field_data)).zfill(3))
+            length = str(len(field_data))
+            log_set += put(length, size=3)
             log_set += put(field_data)
             log_set = log_set.strip()
 

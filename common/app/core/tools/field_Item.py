@@ -1,11 +1,9 @@
-from PyQt5.QtWidgets import QTreeWidgetItem
-from PyQt5.QtCore import Qt, QVariant, pyqtSignal
-from PyQt5 import QtGui
+from PyQt6 import QtGui
+from PyQt6.QtWidgets import QTreeWidgetItem
+from PyQt6.QtCore import Qt, QVariant, pyqtSignal
 from common.app.constants.MainFieldSpec import MainFieldSpec as Spec
-from common.app.data_models.epay_specification import IsoField
+from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.app.core.tools.abstract_item import AbstractItem
-from common.app.core.tools.validator import Validator
-from logging import warning
 
 
 class Item(AbstractItem):
@@ -14,7 +12,6 @@ class Item(AbstractItem):
     _field_data: str = str()
     _field_number: str = str()
     _is_field_complex: bool = False
-    _validator: Validator = None
     _data_was_set: pyqtSignal = pyqtSignal()
 
     @property
@@ -54,9 +51,17 @@ class Item(AbstractItem):
         field_path = self.get_field_path()
         self.spec: IsoField = self.epay_spec.get_field_spec(field_path)
 
-    def validate(self):
-        validator = Validator()
-        validator.validate_field(self.get_field_path(), self.field_data)
+    def is_duplicated(self):
+        root = self.treeWidget().root
+        path = self.get_field_path()
+
+        for field in path:
+            if [item.field_number for item in root.get_children()].count(field) > 1:
+                return True
+
+            root = [item for item in root.get_children() if item.field_number == field][0]
+
+        return False
 
     def addChild(self, item):
         item.spec = self.epay_spec.get_field_spec(item.get_field_path())
@@ -66,7 +71,10 @@ class Item(AbstractItem):
     def set_spec(self):
         self.spec: IsoField = self.epay_spec.get_field_spec(self.get_field_path())
 
-    def set_checkbox(self, checked=True):
+    def generate_checkbox_checked(self):
+        return bool(self.checkState(Spec.columns_order.get(Spec.PROPERTY)).value)
+
+    def set_checkbox(self, checked):
         column_number = Spec.columns_order.get(Spec.PROPERTY)
 
         if self.field_number not in Spec.generated_fields:
@@ -77,8 +85,7 @@ class Item(AbstractItem):
         if self.get_field_depth() != 1:
             return
 
-        state = Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked
-        self.setCheckState(column_number, state)
+        self.setCheckState(column_number, Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked)
         self.setText(column_number, Spec.GENERATE)
 
     def set_description(self):
@@ -93,28 +100,23 @@ class Item(AbstractItem):
         if column not in (Spec.columns_order.get(Spec.FIELD), Spec.columns_order.get(Spec.VALUE)):
             return
 
-        if role == Qt.ForegroundRole:
+        if role == Qt.ItemDataRole.ForegroundRole:
             return
 
-        text_color_red = False
+        self.treeWidget().validate(self)
+        self.process_change_item(column)
 
-        try:
-            self.validate()
-        except (TypeError, ValueError) as validation_error:
-            warning(validation_error)
-            text_color_red = True
-
-        self.set_item_color(red=text_color_red)
-        self.process_change_item()
-
-    def process_change_item(self):
+    def process_change_item(self, column: int | None = None):
         self.set_spec()
         self.set_length()
         self.set_description()
 
+        if column == Spec.columns_order.get(Spec.FIELD):
+            self.set_checkbox(self.field_number in Spec.generated_fields)
+
     def set_length(self) -> None:
         column = Spec.columns_order.get(Spec.LENGTH)
-        length = str(self.length).zfill(3)
+        length = f"{self.length:03}"
         self.setText(column, length)
 
         if self.parent() is not None:

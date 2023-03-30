@@ -1,7 +1,7 @@
 from common.app.forms.spec_unsaved import Ui_SpecUnsaved
-from PyQt5.QtWidgets import QDialog, QMenu
-from PyQt5.QtGui import QIcon, QCloseEvent, QKeyEvent, QPixmap
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QDialog, QMenu
+from PyQt6.QtGui import QIcon, QCloseEvent, QKeyEvent, QPixmap
+from PyQt6.QtCore import Qt, pyqtSignal
 from common.app.constants.FilePath import FilePath
 
 
@@ -22,7 +22,7 @@ class SpecUnsaved(Ui_SpecUnsaved, QDialog):
         self.setupUi(self)
         self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
         self.LogoLabel.setPixmap(QPixmap(FilePath.MAIN_LOGO))
-        self.setWindowFlags(Qt.WindowCloseButtonHint)
+        self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
         self.setup()
 
     def setup(self):
@@ -44,5 +44,5 @@ class SpecUnsaved(Ui_SpecUnsaved, QDialog):
         a0.accept()
 
     def keyPressEvent(self, a0: QKeyEvent) -> None:
-        if a0.key() == Qt.Key_Escape:
+        if a0.key() == Qt.Key.Key_Escape:
             self.close()

@@ -2,3 +2,4 @@
 .idea
 venv
 /common/log/sv_terminal.log
+/.github/

@@ -1,16 +1,16 @@
-from common.app.core.tools.epay_specification import EpaySpecification
 from binascii import b2a_hex, a2b_hex
 from collections import OrderedDict
+from .EpaySpecification import EpaySpecification
 
 
-class Bitmap(object):
+class Bitmap:
     _supported_types: tuple = (hex, bin, dict, bytes)
     _spec: EpaySpecification = EpaySpecification()
 
     @property
     def spec(self):
         return self._spec
-    
+
     def __init__(self, bitmap, bitmap_type=dict):
         self.bitmap: OrderedDict = self._parse_bitmap(bitmap, bitmap_type)
         sorted_bitmap = OrderedDict()

@@ -1,6 +1,6 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QMovie, QIcon, QKeyEvent
-from PyQt5.QtWidgets import QDialog
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QMovie, QIcon, QKeyEvent
+from PyQt6.QtWidgets import QDialog
 from common.app.forms.help import Ui_HelpWindow
 from common.app.constants.FilePath import FilePath
 
@@ -21,14 +21,15 @@ class Croak(Ui_HelpWindow, QDialog):
             self.setupUi(self)
             self.movie = QMovie(r"common\app\forms\help.pyc")
             self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
-            self.setWindowFlags(Qt.WindowCloseButtonHint)
+            self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
             self.Toad.setMovie(self.movie)
             self.movie.start()
-            self.exec_()
+            self.show()
+            self.exec()
 
-        except:
+        except Exception:
             ...
 
     def keyPressEvent(self, a0: QKeyEvent) -> None:  # TODO does not work :(
-        if a0.key() == Qt.Key_Escape:
+        if a0.key() == Qt.Key.Key_Escape:
             self.close()  # WTF

@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QTreeWidgetItem
-from common.app.core.tools.epay_specification import EpaySpecification
-from PyQt5.QtCore import Qt
+from PyQt6.QtWidgets import QTreeWidgetItem
+from PyQt6.QtCore import Qt
+from common.lib.EpaySpecification import EpaySpecification
 
 
 class AbstractItem(QTreeWidgetItem):
@@ -17,7 +17,7 @@ class AbstractItem(QTreeWidgetItem):
 
     def __init__(self, item_data: list[str]):
         super(AbstractItem, self).__init__(item_data)
-        self.setFlags(Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsUserCheckable)
+        self.setFlags(Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsUserCheckable)
 
     def get_field_depth(self):
         return len(self.get_field_path())

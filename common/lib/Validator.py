@@ -1,10 +1,8 @@
-from common.app.core.tools.epay_specification import EpaySpecification
 from string import digits, ascii_letters, punctuation
-from common.app.data_models.config import Config
-from common.app.decorators.singleton import singleton
-
-
-TypeFields = dict[str, str | dict]
+from .EpaySpecification import EpaySpecification
+from .data_models.Config import Config
+from .decorators.singleton import singleton
+from .data_models.Transaction import Transaction, TypeFields
 
 
 @singleton
@@ -20,18 +18,18 @@ class Validator(object):
         if config is not None:
             self._config = config
 
-    def validate_message(self, message):
-        if not message:
-            raise ValueError("Validation error: empty transaction message")
-
-        self.validate_mti(message.transaction.message_type)
-        self.validate_fields(message.transaction.fields)
+    def validate_transaction(self, transaction: Transaction):
+        self.validate_mti(transaction.message_type)
+        self.validate_fields(transaction.data_fields)
 
     def validate_mti(self, mti):
         if mti not in self.spec.get_mti_codes():
-            raise ValueError(f"unknown MTI: {mti}")
+            raise ValueError(f"Unknown MTI: {mti}")
 
     def validate_fields(self, fields: TypeFields, field_path: list[str] | None = None):
+        if self._config is None:
+            return
+
         if not self._config.fields.validation:
             return fields
 
@@ -46,17 +44,36 @@ class Validator(object):
                 field_path.pop()
                 continue
 
-            self.validate_field(field_path, value)
+            self.validate_field_data(field_path, value)
 
             field_path.pop()
 
         return fields
 
-    def validate_field(self, field_path: list[str], value: TypeFields | str):
+    def validate_field_item(self, item):
+        if not item.field_number:
+            raise ValueError(f"Lost field number. The field will not be sent")
+
+        if not item.field_number.isdigit():
+            raise ValueError(f"Non-numeric field number found: {item.get_field_path(string=True)}")
+
+        # if item.is_duplicated():
+        #     raise ValueError(f"Duplicated field number {item.get_field_path(string=True)} found")
+
+        if not (item.field_data or item.generate_checkbox_checked() or item.get_children()):
+            raise ValueError(f"No value for field {item.get_field_path(string=True)}. The field cannot be sent")
+
+        self.validate_field_data(item.get_field_path(), item.field_data)
+
+    def validate_field_data(self, field_path: list[str], value: TypeFields | str):
         alphabetic = ascii_letters
         numeric = digits
         specials = punctuation + " "
         valid_values = alphabetic + numeric + specials
+        path = ".".join(field_path)
+
+        if self._config is None:
+            return
 
         if not self._config.fields.validation:
             return
@@ -65,19 +82,15 @@ class Validator(object):
             return
 
         for field in field_path:
-            if field.isdigit():
-                continue
+            if not field.isdigit():
+                raise ValueError(f"Field numbers can be digits only. {field} is wrong value")
 
-            raise ValueError(f"Field numbers can be digits only. {field} is wrong value")
+        if not (field_spec := self.spec.get_field_spec(list(field_path))):
+            raise ValueError(f"Lost spec for field {path}")
 
         if isinstance(value, dict):
             self.validate_fields(value, field_path)
             return
-
-        path = ".".join(field_path)
-
-        if not (field_spec := self.spec.get_field_spec(list(field_path))):
-            raise ValueError(f"Lost spec for field {path}")
 
         for letter in value:
             if letter not in valid_values:

@@ -2,14 +2,14 @@ from json import dumps
 from common.app.forms.settings import Ui_SettingsWindow
 from common.app.constants.FilePath import FilePath
 from common.app.forms.help_window import Croak
-from PyQt5.QtWidgets import QDialog
-from PyQt5.QtGui import QIntValidator, QRegExpValidator, QIcon, QPixmap
-from PyQt5.QtCore import Qt, QRegExp
+from PyQt6.QtWidgets import QDialog
+from PyQt6.QtGui import QIntValidator, QRegularExpressionValidator, QIcon, QPixmap
+from PyQt6.QtCore import Qt, QRegularExpression
 from common.app.constants.TextConstants import TextConstants
 from common.app.constants.LogDefinition import LogDefinition
 from logging import info, warning, getLogger, getLevelName
 from common.app.core.windows.about_window import AboutWindow
-from common.app.data_models.config import Config
+from common.lib.data_models.Config import Config
 
 
 class SettingsWindow(Ui_SettingsWindow, QDialog):
@@ -21,11 +21,11 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
     def setup(self):
         self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
-        self.setWindowFlags(Qt.WindowCloseButtonHint)
+        self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
         self.ButtonAbout.setIcon(QIcon(QPixmap(FilePath.MAIN_LOGO)))
         self.SvPort.setValidator(QIntValidator(1, 65535))
-        self.SvAddress.setValidator(QRegExpValidator(QRegExp(r"(\d+\.){3}\d+")))
-        self.MaxAmount.setValidator(QRegExpValidator(QRegExp(r"\d{1,12}|" + self.easter)))
+        self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){3}\d+")))
+        self.MaxAmount.setValidator(QRegularExpressionValidator(QRegularExpression(r"\d{1,12}|" + self.easter)))
         self.DebugLevel.addItems(LogDefinition.LOG_LEVEL)
         self.ParseSubfields.setHidden(True)  # TODO
         self.buttonBox.accepted.connect(self.ok)
@@ -36,7 +36,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
     @staticmethod
     def about():
-        AboutWindow().exec_()
+        AboutWindow().exec()
 
     def process_config(self):
         self.DebugLevel.setCurrentText(self.config.debug.level)

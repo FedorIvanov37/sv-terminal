@@ -3,16 +3,16 @@ from os.path import splitext
 from logging import error, warning, info
 from binascii import hexlify, unhexlify
 from configparser import ConfigParser, NoSectionError, NoOptionError
-from common.app.exceptions.exceptions import DumpFileParsingError
-from common.app.core.tools.epay_specification import EpaySpecification
-from common.app.core.tools.bitmap import Bitmap
-from common.app.core.tools.fields_generator import FieldsGenerator
-from common.app.constants.DumpDefinition import DumpDefinition
-from common.app.constants.IniMessageDefinition import IniMessageDefinition
-from common.app.constants.DataFormats import DataFormats
-from common.app.data_models.message import Message, TransactionModel, MessageConfig
-from common.app.data_models.config import Config
-from common.app.data_models.epay_specification import IsoField, FieldSet, RawFieldSet
+from .exceptions.exceptions import DumpFileParsingError
+from .EpaySpecification import EpaySpecification
+from .Bitmap import Bitmap
+from .tools.trans_id import trans_id
+from .constants.DumpDefinition import DumpDefinition
+from .constants.IniMessageDefinition import IniMessageDefinition
+from .constants.DataFormats import DataFormats
+from .data_models.Config import Config
+from .data_models.EpaySpecificationModel import IsoField, FieldSet, RawFieldSet
+from .data_models.Transaction import TypeFields, Transaction
 
 
 class Parser(object):
@@ -24,19 +24,16 @@ class Parser(object):
 
     def __init__(self, config: Config):
         self.config: Config = config
-        self.generator = FieldsGenerator(self.config)
 
-    def create_dump(self, message: Message, body: bool = False) -> bytes | str:
-        msg_type: bytes = message.transaction.message_type.encode()
-        bitmap: Bitmap = Bitmap(message.transaction.fields)
+    def create_dump(self, transaction: Transaction, body: bool = False) -> bytes | str:
+        msg_type: bytes = transaction.message_type.encode()
+        bitmap: Bitmap = Bitmap(transaction.data_fields)
         bitmap: bytes = bitmap.get_bitmap(bytes)
 
         msg_body: bytes = bytes()
 
-        for field in sorted(message.transaction.fields.keys(), key=int):
-            text = message.transaction.fields.get(field)
-
-            if not text:
+        for field in sorted(transaction.data_fields.keys(), key=int):
+            if not (text := transaction.data_fields.get(field)):
                 warning("No value for field %s. IsoField was ignored" % field)
                 continue
 
@@ -46,7 +43,7 @@ class Parser(object):
             field_length_var = self.spec.get_field_length_var(field)
 
             if field_length_var:
-                text: str = str(len(text)).zfill(field_length_var) + text
+                text: str = f"{len(text):0{field_length_var}}{text}"
 
             if text is not None:
                 msg_body: bytes = msg_body + text.encode()
@@ -56,13 +53,13 @@ class Parser(object):
 
         return msg_type + bitmap + msg_body
 
-    def create_sv_dump(self, message: Message) -> str | None:
-        mti: str = message.transaction.message_type
-        bitmap: hex = Bitmap(message.transaction.fields)
+    def create_sv_dump(self, transaction: Transaction) -> str | None:
+        mti: str = transaction.message_type
+        bitmap: hex = Bitmap(transaction.data_fields)
         bitmap: hex = bitmap.get_bitmap(hex)
 
         try:
-            body: str = self.create_dump(message, body=True)
+            body: str = self.create_dump(transaction, body=True)
         except Exception as exc:
             error("Dump generating error: %s", exc)
             return
@@ -107,7 +104,7 @@ class Parser(object):
                 length = str()
 
                 if field_spec:
-                    length = str(len(subfield_data)).zfill(field_spec.tag_length)
+                    length = f"{len(subfield_data)}:0{field_spec.tag_length}"
 
                 result += f"{subfield}{length}{subfield_data}"
                 path.pop()
@@ -124,11 +121,11 @@ class Parser(object):
 
         if len(path) > 1:
             field_spec: IsoField = self.spec.get_field_spec(path)
-            result = f"{field}{str(len(result)).zfill(field_spec.var_length)}{result}"
+            result = f"{field}{len(result):0{field_spec.var_length}}{result}"
 
         return result
 
-    def parse_dump(self, data):
+    def parse_dump(self, data) -> Transaction:
         fields: RawFieldSet = {}
         position = int()
         message_type_indicator = data[position:self.spec.MessageLength.message_type_length].decode()
@@ -170,60 +167,61 @@ class Parser(object):
             if self.spec.is_field_complex(field):
                 fields[field]: RawFieldSet = self.split_complex_field(field, fields[field])
 
-        message: Message = Message(
-            transaction=TransactionModel(
-                message_type=message_type_indicator,
-                fields=fields
-            )
+        transaction: Transaction = Transaction(
+            trans_id=trans_id(),
+            message_type=message_type_indicator,
+            data_fields=fields
         )
 
-        return message
+        return transaction
 
-    def parse_form(self, form) -> Message | None:
-        fields = form.get_fields()
+    def parse_form(self, form) -> Transaction:
+        data_fields: TypeFields = form.get_fields()
 
-        if not fields:
+        if not data_fields:
             raise ValueError("No data to send")
 
-        if not (mti := form.get_mti()):
+        if not (message_type := form.get_mti()):
             raise ValueError("Invalid MTI")
 
-        config = MessageConfig(
-            generate_fields=form.get_fields_to_generate(),
-            max_amount=self.config.fields.max_amount
+        message_type = message_type[:self.spec.MessageLength.message_type_length]
+        generate_fields = form.get_fields_to_generate()
+        max_amount = self.config.fields.max_amount
+
+        transaction = Transaction(
+            trans_id=trans_id(),
+            message_type=message_type,
+            max_amount=max_amount,
+            generate_fields=generate_fields,
+            data_fields=data_fields
         )
 
-        transaction = TransactionModel(
-            message_type=mti,
-            fields=fields
-        )
+        return transaction
 
-        message = Message(
-            config=config,
-            transaction=transaction
-        )
-
-        return message
-
-    def message_to_ini_string(self, message: Message):
-        generate_fields: list[str] = sorted(message.config.generate_fields, key=int)
+    def transaction_to_ini_string(self, transaction: Transaction):
+        generate_fields: list[str] = sorted(transaction.generate_fields, key=int)
         generate_fields: str = ", ".join(generate_fields)
 
         ini_data: list[str] | str = [
             f"[{IniMessageDefinition.CONFIG}]",
-            f"{IniMessageDefinition.MAX_AMOUNT} = [{message.config.max_amount}]",
+            f"{IniMessageDefinition.MAX_AMOUNT} = [{transaction.max_amount}]",
             f"{IniMessageDefinition.GENERATE_FIELDS} = [{generate_fields}]",
             f"[{IniMessageDefinition.MTI}]",
-            f"{IniMessageDefinition.MTI} = [{message.transaction.message_type}]",
+            f"{IniMessageDefinition.MTI} = [{transaction.message_type}]",
             f"[{IniMessageDefinition.MESSAGE}]"
         ]
 
-        for field_number, field_data in message.transaction.fields.items():
+        for field_number, field_data in transaction.data_fields.items():
             if isinstance(field_data, dict):
                 field_data = self.join_complex_field(field_number, field_data)
 
             field_data = field_data.replace("%", "%%")
-            field_number = "F" + str(field_number).zfill(3)
+
+            try:
+                field_number = f"F{int(field_number):03}"
+            except ValueError:
+                error(f"Wrong field number {field_number}")
+
             ini_data.append(f"{field_number} = [{field_data}]")
 
         ini_data = "\n".join(ini_data)
@@ -242,9 +240,9 @@ class Parser(object):
             field_spec = spec.fields.get(tag_number)
 
             try:
-                variable_length = spec.tag_length
+                var_length = spec.tag_length
 
-                if not variable_length:
+                if not var_length:
                     raise ValueError
 
             except(AttributeError, ValueError):
@@ -252,10 +250,10 @@ class Parser(object):
                 error("The field and corresponding sub fields were absent")
                 return {}
 
-            variable_length = spec.tag_length
-            val_length = field_data[:variable_length]
+            var_length = spec.tag_length
+            val_length = field_data[:var_length]
             val_length = int(val_length)
-            field_data = field_data[variable_length:]
+            field_data = field_data[var_length:]
             value_data = field_data[:val_length]
             field_data = field_data[val_length:]
 
@@ -266,7 +264,7 @@ class Parser(object):
 
         return complex_field_data
 
-    def parse_file(self, filename: str) -> Message:
+    def parse_file(self, filename: str) -> Transaction:
         file_extension = splitext(filename)[-1].upper().replace(".", "")
 
         data_processing_map = {
@@ -294,18 +292,19 @@ class Parser(object):
         raise TypeError("Can't parse incoming file using known formats")
 
     @staticmethod
-    def _parse_json_file(filename: str) -> Message:
-        message: Message = Message.parse_file(filename)
-        return message
+    def _parse_json_file(filename: str) -> Transaction:
+        transaction: Transaction = Transaction.parse_file(filename)
+        transaction.trans_id = trans_id()
+        return transaction
 
     @staticmethod
     def unpack_ini_field(data: str) -> str:
         return data.removeprefix('[').removesuffix(']')
 
-    def _parse_ini_file(self, filename) -> Message:
+    def _parse_ini_file(self, filename) -> Transaction:
         ini = ConfigParser()
         ini.read(filename)
-        fields = self._parse_ini_fields(ini)
+        fields: TypeFields = self._parse_ini_fields(ini)
 
         ini_def = IniMessageDefinition
 
@@ -322,22 +321,14 @@ class Parser(object):
 
         mti = self.unpack_ini_field(ini.get(ini_def.MTI, ini_def.MTI))
 
-        message_config = MessageConfig(
-            generate_fields=generate_fields,
-            max_amount=max_amount
-        )
-
-        transaction = TransactionModel(
+        transaction = Transaction(
             message_type=mti,
-            fields=fields
+            generate_fields=generate_fields,
+            max_amount=max_amount,
+            data_fields=fields
         )
 
-        message = Message(
-            config=message_config,
-            transaction=transaction
-        )
-
-        return message
+        return transaction
 
     def _parse_ini_fields(self, ini: ConfigParser):
         fields: RawFieldSet = dict()
@@ -356,7 +347,7 @@ class Parser(object):
 
         return fields
 
-    def _parse_dump_file(self, filename: str) -> Message:
+    def _parse_dump_file(self, filename: str) -> Transaction:
         string = str()
 
         with open(filename) as file:
@@ -378,5 +369,5 @@ class Parser(object):
         string = string[len(bitmap):]
         bitmap = Bitmap(bitmap, hex).get_bitmap(bytes)
         pre_message = unhexlify(mti) + bitmap + unhexlify(string)
-        message: Message = self.parse_dump(pre_message)
-        return message
+        transaction: Transaction = self.parse_dump(pre_message)
+        return transaction
