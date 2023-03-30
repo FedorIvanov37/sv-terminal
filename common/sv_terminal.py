@@ -1,5 +1,5 @@
 from common.app.core.windows.error_window import ErrorWindow
-from common.app.core.tools.terminal import SvTerminalWindow
+from common.app.core.tools.terminal import SvTerminalGui
 from common.app.constants.FilePath import FilePath
 from common.lib.data_models.Config import Config
 from common.lib.Terminal import SvTerminal
@@ -12,8 +12,8 @@ config: Config = Config.parse_file(FilePath.CONFIG)
 
 
 if DEBUG_MODE:
-    sv_terminal: SvTerminalWindow = SvTerminalWindow(config)
-    sv_terminal.run()
+    sv_terminal_gui: SvTerminalGui = SvTerminalGui(config)
+    sv_terminal_gui.run()
     exit()
 
 # try:

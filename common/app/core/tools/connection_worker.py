@@ -67,6 +67,10 @@ class ConnectionWorker(QObject):
     def stop(self, stop):
         self._stop = stop
 
+    @property
+    def state(self):
+        return self.connector.state()
+
     def __init__(self, config):
         QObject.__init__(self)
         self.connector = Connector(config)

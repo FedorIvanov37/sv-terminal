@@ -9,7 +9,7 @@ from common.app.core.windows.main_window import MainWindow
 from common.app.core.windows.reversal_window import ReversalWindow
 from common.app.core.windows.settings_window import SettingsWindow
 from common.app.core.windows.spec_window import SpecWindow
-from common.app.core.tools.logger import LogStream, getLogger, Formatter, Logger
+from common.app.core.tools.logger import LogStream, getLogger, Formatter
 from common.app.constants.TextConstants import TextConstants
 from common.app.constants.DataFormats import DataFormats
 from common.app.constants.FilePath import FilePath
@@ -21,10 +21,10 @@ from common.app.core.tools.logger import WirelessHandler
 from common.app.constants.LogDefinition import LogDefinition
 
 
-class SvTerminalWindow(SvTerminal):
+class SvTerminalGui(SvTerminal):
 
     def __init__(self, config: Config):
-        super(SvTerminalWindow, self).__init__(config)
+        super(SvTerminalGui, self).__init__(config)
         self.window: MainWindow = MainWindow()
         self.setup()
 
@@ -66,11 +66,14 @@ class SvTerminalWindow(SvTerminal):
         self.window.window_close.connect(self.disconnect)
         self.window.menu_button_clicked.connect(self.proces_button_menu)
         self.window.field_changed.connect(self.set_bitmap)
-        self.connector.connection_finished.connect(lambda: self.window.set_connection_status(QTcpSocket.SocketState.ConnectedState))
-        self.connector.connected.connect(lambda: self.window.set_connection_status(QTcpSocket.SocketState.ConnectedState))
-        self.connector.disconnected.connect(lambda: self.window.set_connection_status(QTcpSocket.SocketState.ConnectedState.UnconnectedState))
+        self.connector.connection_finished.connect(self.set_connection_status)
+        self.connector.connected.connect(self.set_connection_status)
+        self.connector.disconnected.connect(self.set_connection_status)
         self.connector.connection_started.connect(self.window.lock_connection_buttons)
         self.connector.connection_finished.connect(lambda: self.window.lock_connection_buttons(lock=False))
+
+    def set_connection_status(self):
+        self.window.set_connection_status(self.connector.state)
 
     def create_window_logger(self):
         formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DATE_FORMAT, LogDefinition.MARK_STYLE)
@@ -179,7 +182,7 @@ class SvTerminalWindow(SvTerminal):
 
     def set_default_values(self):
         try:
-            self.parse_file(FilePath.DEFAULT_FILE)
+            self.parse_file(str(FilePath.DEFAULT_FILE))
             info("Default file parsed")
 
         except Exception as parsing_error:
