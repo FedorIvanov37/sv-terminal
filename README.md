@@ -9,7 +9,6 @@
  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#
   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ##########
   
-  ⚝⚝⚝⚝⚝
 ```
 
 
@@ -49,7 +48,7 @@ Designed and developed by Fedor Ivanov
 ## Requirements and installation
 
 * Python 3.10+
-* PyQt6
+* PyQt6 ⚠️ Since v0.15 PyQt5 don't supported anymore
 * pydantic
 
 
@@ -65,6 +64,6 @@ pip install -r requirements.txt
 * Fields validation added to the Terminal. The validation can be turned off through settings window
 * Added internal config to ini files for storing max amount and generated fields
 * Added transaction timeouts - after 60 seconds after sending transaction will be deleted from the Queue
-* JSON format simplified, backward compatibility exists
+* JSON format simplified, backward compatibility support
 
 
