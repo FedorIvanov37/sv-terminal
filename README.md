@@ -83,4 +83,4 @@ pip install -r requirements.txt
 
 ## Author
 
-Designed and developed by [Fedor Ivanov](mailto:f.ivanov@unlimint.com) | Released in Apr 2023 | Under construction
+Designed and developed by [Fedor Ivanov](mailto:f.ivanov@unlimint.com)
