@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file '.\common\app\forms\mti_spec.ui'
+# Form implementation generated from reading ui file '.\common\gui\forms\mti_spec.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #

@@ -4,7 +4,7 @@ from PyQt6.QtCore import QTimer
 from .EpaySpecification import EpaySpecification
 from .FieldsGenerator import FieldsGenerator
 from .data_models.Transaction import Transaction
-from common.app.core.tools.connection_worker import ConnectionWorker
+from common.gui.core.connection_worker import ConnectionWorker
 from common.lib.data_models.Config import Config
 
 

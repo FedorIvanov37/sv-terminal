@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file '.\common\app\forms\spec_unsaved.ui'
+# Form implementation generated from reading ui file '.\common\gui\forms\spec_unsaved.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -36,7 +36,7 @@ class Ui_SpecUnsaved(object):
         self.LogoLabel.setSizePolicy(sizePolicy)
         self.LogoLabel.setMaximumSize(QtCore.QSize(30, 30))
         self.LogoLabel.setText("")
-        self.LogoLabel.setPixmap(QtGui.QPixmap(".\\common\\app\\forms\\../style/logo_triangle.png"))
+        self.LogoLabel.setPixmap(QtGui.QPixmap(".\\common\\gui\\forms\\../style/logo_triangle.png"))
         self.LogoLabel.setScaledContents(True)
         self.LogoLabel.setObjectName("LogoLabel")
         self.horizontalLayout_3.addWidget(self.LogoLabel)

@@ -1,8 +1,8 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
-from common.app.forms.error import Ui_Error
-from common.app.constants.FilePath import FilePath
+from common.gui.forms.error import Ui_Error
+from common.gui.constants.FilePath import FilePath
 
 
 class ErrorWindow(Ui_Error, QDialog):

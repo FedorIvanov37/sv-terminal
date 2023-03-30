@@ -1,8 +1,8 @@
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QCheckBox, QHBoxLayout, QWidget, QHeaderView
-from common.app.constants.FilePath import FilePath
-from common.app.forms.mti_spec import Ui_MtiSpecWindow
+from common.gui.constants.FilePath import FilePath
+from common.gui.forms.mti_spec import Ui_MtiSpecWindow
 from common.lib.EpaySpecification import EpaySpecification, Mti
 
 

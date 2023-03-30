@@ -2,8 +2,8 @@ from PyQt6.QtCore import pyqtSignal, QObject
 from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem
 from common.lib.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
-from common.app.constants.SpecFieldDef import SpecFieldDef
-from common.app.core.tools.spec_item import SpecItem
+from common.gui.constants.SpecFieldDef import SpecFieldDef
+from common.gui.core.spec_item import SpecItem
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
 
 

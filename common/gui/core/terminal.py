@@ -5,20 +5,20 @@ from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QFileDialog
 from PyQt6.QtGui import QIcon
-from common.app.core.windows.main_window import MainWindow
-from common.app.core.windows.reversal_window import ReversalWindow
-from common.app.core.windows.settings_window import SettingsWindow
-from common.app.core.windows.spec_window import SpecWindow
-from common.app.core.tools.logger import LogStream, getLogger, Formatter
-from common.app.constants.TextConstants import TextConstants
-from common.app.constants.DataFormats import DataFormats
-from common.app.constants.FilePath import FilePath
+from common.gui.windows.main_window import MainWindow
+from common.gui.windows.reversal_window import ReversalWindow
+from common.gui.windows.settings_window import SettingsWindow
+from common.gui.windows.spec_window import SpecWindow
+from common.gui.core.logger import LogStream, getLogger, Formatter
+from common.gui.constants.TextConstants import TextConstants
+from common.gui.constants.DataFormats import DataFormats
+from common.gui.constants.FilePath import FilePath
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
-from common.app.constants.ButtonActions import ButtonAction
+from common.gui.constants.ButtonActions import ButtonAction
 from common.lib.Terminal import SvTerminal
-from common.app.core.tools.logger import WirelessHandler
-from common.app.constants.LogDefinition import LogDefinition
+from common.gui.core.wireless_log_handler import WirelessHandler
+from common.gui.constants.LogDefinition import LogDefinition
 
 
 class SvTerminalGui(SvTerminal):

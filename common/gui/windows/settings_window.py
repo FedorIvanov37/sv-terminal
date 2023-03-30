@@ -1,14 +1,14 @@
 from json import dumps
-from common.app.forms.settings import Ui_SettingsWindow
-from common.app.constants.FilePath import FilePath
-from common.app.forms.help_window import Croak
+from common.gui.forms.settings import Ui_SettingsWindow
+from common.gui.constants.FilePath import FilePath
+from common.gui.forms.help_window import Croak
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QIntValidator, QRegularExpressionValidator, QIcon, QPixmap
 from PyQt6.QtCore import Qt, QRegularExpression
-from common.app.constants.TextConstants import TextConstants
-from common.app.constants.LogDefinition import LogDefinition
+from common.gui.constants.TextConstants import TextConstants
+from common.gui.constants.LogDefinition import LogDefinition
 from logging import info, warning, getLogger, getLevelName
-from common.app.core.windows.about_window import AboutWindow
+from common.gui.windows.about_window import AboutWindow
 from common.lib.data_models.Config import Config
 
 

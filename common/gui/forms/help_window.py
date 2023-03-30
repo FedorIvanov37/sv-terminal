@@ -1,8 +1,8 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QMovie, QIcon, QKeyEvent
 from PyQt6.QtWidgets import QDialog
-from common.app.forms.help import Ui_HelpWindow
-from common.app.constants.FilePath import FilePath
+from common.gui.forms.help import Ui_HelpWindow
+from common.gui.constants.FilePath import FilePath
 
 
 # All glory to the Hypnotoad!
