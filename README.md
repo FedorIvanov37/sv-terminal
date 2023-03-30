@@ -29,14 +29,14 @@ SV-Terminal is not an emulator of PSP or SmartVista. It doesn't try to be simila
 Written on Python 3.10 with using of PyQt6 and pydantic packages
 
 
-In case of any questions about the Terminal contact Fedor Ivanov. Your feedback and suggestions are general drivers of SvTerminal evolution.
+In case of any questions about the Terminal contact [Fedor Ivanov](mailto:f.ivanov@unlimint.com) . Your feedback and suggestions are general drivers of SvTerminal evolution.
 
 ## User interface
 
 ![image](https://user-images.githubusercontent.com/116465333/197392351-dee7f5a0-1e27-4bf0-9356-3f412ebc3f29.png)
 
 
-## Modules
+## Modules package
 ![image](https://camo.githubusercontent.com/dccafcb932d549e921b2adb6d56d1bc521c51e2bc8e0f4be5fbaade5c7fef22f/68747470733a2f2f692e696d6775722e636f6d2f75444a334b78352e706e67)
 
 
@@ -79,7 +79,7 @@ pip install -r requirements.txt
 * At the moment SvTerminal doesn't support byte-fields
 * Logfile rotation included in the build. SvTerminal stores 10 logfiles by 10M each
 * SvTerminal is always free of charge, no way to sell it
-* Comments, advice, and review of the code are highly appreciated 
+* Any feedback will be highly appreciated. The author is always open to comments, advice, code review, suggestions, etc. Feel free to ask any questions directly 
 
 ## Author
 
