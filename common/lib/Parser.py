@@ -216,7 +216,12 @@ class Parser(object):
                 field_data = self.join_complex_field(field_number, field_data)
 
             field_data = field_data.replace("%", "%%")
-            field_number = f"F{field_number:03}"
+
+            try:
+                field_number = f"F{int(field_number):03}"
+            except ValueError:
+                error(f"Wrong field number {field_number}")
+
             ini_data.append(f"{field_number} = [{field_data}]")
 
         ini_data = "\n".join(ini_data)

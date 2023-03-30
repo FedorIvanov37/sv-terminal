@@ -10,14 +10,15 @@ from common.lib.data_models.Transaction import Transaction
 from common.app.constants.FilePath import FilePath
 
 
+class LogStream:
+    def __init__(self, log_browser):
+        self.log_browser = log_browser
+
+    def write(self, data):
+        self.log_browser.append(data)
+
+
 class Logger:
-    class LogStream:
-        def __init__(self, log_browser):
-            self.log_browser = log_browser
-
-        def write(self, data):
-            self.log_browser.append(data)
-
     _spec = EpaySpecification()
     _default_level = info
     _stream = None
@@ -34,8 +35,7 @@ class Logger:
     def stream(self, stream):
         self._stream = stream
 
-    def __init__(self, stream, config: Config):
-        self.output = stream
+    def __init__(self, config: Config):
         self.config: Config = config
         self.parser: Parser = Parser(self.config)
         self.setup()
@@ -45,18 +45,14 @@ class Logger:
         logger.handlers.clear()
         logger.setLevel(getLevelName(self.config.debug.level))
         formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DATE_FORMAT, LogDefinition.MARK_STYLE)
-        wireless_handler = WirelessHandler()
-        stream = Logger.LogStream(self.output)
-        wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
         file_handler = RotatingFileHandler(
             filename=FilePath.LOG_FILE_NAME,
             maxBytes=LogDefinition.LOG_MAX_SIZE_MEGABYTES * 1024000,
             backupCount=LogDefinition.BACKUP_COUNT
         )
 
-        for handler in (wireless_handler, file_handler):
-            handler.setFormatter(formatter)
-            logger.addHandler(handler)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
 
         debug("Logger started")
 

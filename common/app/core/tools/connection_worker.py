@@ -1,10 +1,12 @@
-from logging import error, warning
+from logging import error, warning, info
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QObject, pyqtSignal, QThread
 from common.lib.data_models.Transaction import Transaction
 from common.lib.Connector import Connector
+from common.lib.decorators.singleton import singleton
 
 
+@singleton
 class ConnectionWorker(QObject):
     _connector: Connector
     _need_reconnect: bool = False
@@ -65,8 +67,12 @@ class ConnectionWorker(QObject):
     def stop(self, stop):
         self._stop = stop
 
+    @property
+    def state(self):
+        return self.connector.state()
+
     def __init__(self, config):
-        super(ConnectionWorker, self).__init__()
+        QObject.__init__(self)
         self.connector = Connector(config)
         self.connector.connected.connect(self.connected.emit)
         self.connector.disconnected.connect(self.disconnected.emit)
