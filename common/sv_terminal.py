@@ -1,11 +1,11 @@
 from common.gui.core.terminal import SvTerminalGui
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
 
 DEBUG_MODE = True
 
 
-config: Config = Config.parse_file(FilePath.CONFIG)
+config: Config = Config.parse_file(TermFilesPath.CONFIG)
 
 
 if DEBUG_MODE:

@@ -2,7 +2,7 @@ from json import dumps
 from PyQt6.QtGui import QIcon, QCloseEvent, QKeyEvent
 from PyQt6.QtCore import Qt, pyqtSignal
 from common.gui.forms.spec import Ui_SpecificationWindow
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.core.action_button import ActionButton
 from common.gui.core.spec_view import SpecView
 from common.lib.EpaySpecification import EpaySpecification
@@ -62,7 +62,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.setup()
 
     def setup(self):
-        self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
+        self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
         self.PlusButton = ActionButton("+")
         self.MinusButton = ActionButton("-")
@@ -151,7 +151,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         date_format = "%Y%m%d_%H%M%S"
         filename = f"spec_backup_{datetime.now():{date_format}}.json"
 
-        with open(f'{FilePath.SPEC_BACKUP_DIR}/{filename}', "w") as file:
+        with open(f'{TermFilesPath.SPEC_BACKUP_DIR}/{filename}', "w") as file:
             file.write(dumps(spec.dict(), indent=4))
 
         self.set_status("Backup done! Filename: %s" % filename)

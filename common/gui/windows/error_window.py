@@ -2,14 +2,14 @@ from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
 from common.gui.forms.error import Ui_Error
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 
 
 class ErrorWindow(Ui_Error, QDialog):
     def __init__(self, exception: Exception = None, error_text: str = ""):
         super().__init__()
         self.setupUi(self)
-        self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
+        self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
         self.accepted.connect(self.exit)
         self.rejected.connect(self.exit)

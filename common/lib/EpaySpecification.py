@@ -5,7 +5,7 @@ from .decorators.singleton import singleton
 from .constants.MessageLength import MessageLength
 from .constants.EpaySpecificationData import EpaySpecificationData
 from .data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField
-from common.gui.constants.FilePath import FilePath as TermFilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 
 
 @singleton
@@ -15,7 +15,7 @@ class EpaySpecification(EpaySpecificationData):
 
     def __init__(self, filename: FilePath | None = None):
         if filename is None:
-            filename: FilePath = TermFilePath.SPECIFICATION
+            filename: FilePath = TermFilesPath.SPECIFICATION
 
         self.filename: FilePath = filename
         self._specification_model: EpaySpecModel = EpaySpecModel.parse_file(self.filename)

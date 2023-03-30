@@ -3,7 +3,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtMultimedia import QMediaPlayer
 from common.gui.forms.about import Ui_AboutWindow
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.constants.ReleaseDefinitoin import ReleaseDefinition
 
 
@@ -17,8 +17,8 @@ class AboutWindow(Ui_AboutWindow, QDialog):
 
     def setup(self):
         self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
-        self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
-        self.logoLabel.setPixmap(QPixmap(FilePath.MAIN_LOGO))
+        self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
+        self.logoLabel.setPixmap(QPixmap(TermFilesPath.MAIN_LOGO))
 
         data_bind = {
             self.VersionLabel: ReleaseDefinition.VERSION,

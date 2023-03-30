@@ -1,6 +1,6 @@
 from json import dumps
 from common.gui.forms.settings import Ui_SettingsWindow
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.forms.help_window import Croak
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QIntValidator, QRegularExpressionValidator, QIcon, QPixmap
@@ -20,9 +20,9 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.setup()
 
     def setup(self):
-        self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
+        self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
-        self.ButtonAbout.setIcon(QIcon(QPixmap(FilePath.MAIN_LOGO)))
+        self.ButtonAbout.setIcon(QIcon(QPixmap(TermFilesPath.MAIN_LOGO)))
         self.SvPort.setValidator(QIntValidator(1, 65535))
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){3}\d+")))
         self.MaxAmount.setValidator(QRegularExpressionValidator(QRegularExpression(r"\d{1,12}|" + self.easter)))
@@ -82,7 +82,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.config.fields.send_internal_id = self.SendInternalId.isChecked()
         self.config.fields.validation = self.ValidationEnabled.isChecked()
 
-        with open(FilePath.CONFIG, "w") as file:
+        with open(TermFilesPath.CONFIG, "w") as file:
             file.write(dumps(self.config.dict(), indent=4))
 
         info("Settings applied")
