@@ -72,6 +72,9 @@ class Validator(object):
         valid_values = alphabetic + numeric + specials
         path = ".".join(field_path)
 
+        if self._config is None:
+            return
+
         if not self._config.fields.validation:
             return
 
