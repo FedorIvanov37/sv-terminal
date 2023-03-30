@@ -38,7 +38,7 @@ In case of any questions about the Terminal contact Fedor Ivanov. Your feedback 
 
 
 ## Modules map
-![image](C:/fedor/card_orders_loder/cards_order_loader/excel_to_oracle_loader/common/resouces/SvTerminalModules.png)
+![image](https://camo.githubusercontent.com/dccafcb932d549e921b2adb6d56d1bc521c51e2bc8e0f4be5fbaade5c7fef22f/68747470733a2f2f692e696d6775722e636f6d2f75444a334b78352e706e67)
 
 
 ## Author
