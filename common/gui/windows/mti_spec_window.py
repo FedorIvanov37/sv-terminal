@@ -1,7 +1,7 @@
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QCheckBox, QHBoxLayout, QWidget, QHeaderView
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.forms.mti_spec import Ui_MtiSpecWindow
 from common.lib.EpaySpecification import EpaySpecification, Mti
 
@@ -30,7 +30,7 @@ class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):
 
     def setup(self):
         self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
-        self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
+        self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.ButtonPlus.clicked.connect(self.plus)
         self.ButtonMinus.clicked.connect(self.minus)
         self.ButtonSave.clicked.connect(self.ok)

@@ -12,7 +12,7 @@ from common.gui.windows.spec_window import SpecWindow
 from common.gui.core.logger import LogStream, getLogger, Formatter
 from common.gui.constants.TextConstants import TextConstants
 from common.gui.constants.DataFormats import DataFormats
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.gui.constants.ButtonActions import ButtonAction
@@ -32,7 +32,7 @@ class SvTerminalGui(SvTerminal):
         self.create_window_logger()
         self.window.set_mti_values(self.spec.get_mti_list())
         self.window.set_log_data(TextConstants.HELLO_MESSAGE)
-        self.window.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
+        self.window.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
 
         if self.config.terminal.process_default_dump:
@@ -194,7 +194,7 @@ class SvTerminalGui(SvTerminal):
 
     def set_default_values(self):
         try:
-            self.parse_file(str(FilePath.DEFAULT_FILE))
+            self.parse_file(str(TermFilesPath.DEFAULT_FILE))
             info("Default file parsed")
 
         except Exception as parsing_error:

@@ -6,7 +6,7 @@ from common.lib.EpaySpecification import EpaySpecification
 from common.lib.Parser import Parser
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 
 
 class LogStream:
@@ -45,7 +45,7 @@ class Logger:
         logger.setLevel(getLevelName(self.config.debug.level))
         formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DATE_FORMAT, LogDefinition.MARK_STYLE)
         file_handler = RotatingFileHandler(
-            filename=FilePath.LOG_FILE_NAME,
+            filename=TermFilesPath.LOG_FILE_NAME,
             maxBytes=LogDefinition.LOG_MAX_SIZE_MEGABYTES * 1024000,
             backupCount=LogDefinition.BACKUP_COUNT
         )

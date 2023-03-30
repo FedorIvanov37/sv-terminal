@@ -2,7 +2,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QMovie, QIcon, QKeyEvent
 from PyQt6.QtWidgets import QDialog
 from common.gui.forms.help import Ui_HelpWindow
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 
 
 # All glory to the Hypnotoad!
@@ -20,7 +20,7 @@ class Croak(Ui_HelpWindow, QDialog):
             super().__init__()
             self.setupUi(self)
             self.movie = QMovie(r"common\app\forms\help.pyc")
-            self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
+            self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
             self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
             self.Toad.setMovie(self.movie)
             self.movie.start()
