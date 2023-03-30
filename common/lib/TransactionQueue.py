@@ -4,6 +4,8 @@ from PyQt6.QtCore import QTimer
 from .EpaySpecification import EpaySpecification
 from .FieldsGenerator import FieldsGenerator
 from .data_models.Transaction import Transaction
+from common.app.core.tools.connection_worker import ConnectionWorker
+from common.lib.data_models.Config import Config
 
 
 class TransactionQueue(QObject):
@@ -30,9 +32,14 @@ class TransactionQueue(QObject):
     def transaction_timeout(self):
         return self._transaction_timeout
 
-    def __init__(self, connector): # : ConnectionWorker
+    @property
+    def connector(self):
+        return self._connector
+
+    def __init__(self, config: Config):
         QObject.__init__(self)
-        self.connector = connector # : ConnectionWorker
+        self.config = config
+        self._connector = ConnectionWorker(self.config)
         self.generator: FieldsGenerator = FieldsGenerator()
         self.timers: dict[str, QTimer] = {}
         self._start_connection_thread()

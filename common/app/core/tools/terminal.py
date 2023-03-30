@@ -21,9 +21,10 @@ from common.app.core.tools.logger import WirelessHandler
 from common.app.constants.LogDefinition import LogDefinition
 
 
-class SvTerminalForm(SvTerminal):
+class SvTerminalWindow(SvTerminal):
+
     def __init__(self, config: Config):
-        super(SvTerminalForm, self).__init__(config)
+        super(SvTerminalWindow, self).__init__(config)
         self.window: MainWindow = MainWindow()
         self.setup()
 

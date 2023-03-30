@@ -40,26 +40,33 @@ class SvTerminal(QObject):
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator()
         self.logger: Logger = Logger(self.config)
+        self.trans_queue: TransactionQueue = TransactionQueue(self.config)
         self.connector: ConnectionWorker = ConnectionWorker(self.config)
-        self.trans_queue: TransactionQueue = TransactionQueue(self.connector)
         self.connector.socker_error.connect(self.socket_error)
         self.connect_interfaces()
 
     def run(self):
+        if self.config.terminal.connect_on_startup:
+            self.reconnect()
+
         status = self._pyqt_application.exec()
         exit(status)
 
-    # def setup(self):
-    #     if self.config.terminal.connect_on_startup:
-    #         self.reconnect()
-
     def connect_interfaces(self):
-        self.connector.connected.connect(lambda: info("SmartVista host connection ESTABLISHED"))
-        self.connector.disconnected.connect(lambda: info("SmartVista host DISCONNECTED"))
         self._need_reconnect.connect(self.connector.connect_sv)
+        self.connector.connected.connect(self.sv_connected)
+        self.connector.disconnected.connect(self.sv_disconnected)
         self.trans_queue.incoming_transaction.connect(self.transaction_received)
         self.trans_queue.outgoing_transaction.connect(self.transaction_sent)
         self.trans_queue.transaction_timeout.connect(self.got_timeout)
+
+    @staticmethod
+    def sv_connected():
+        info("SmartVista host connection ESTABLISHED")
+
+    @staticmethod
+    def sv_disconnected():
+        info("SmartVista host connection DISCONNECTED")
 
     @staticmethod
     def got_timeout(transaction, timeout_secs):
