@@ -1,8 +1,8 @@
-from logging import error, warning, info
+from logging import error, warning
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QObject, pyqtSignal, QThread
 from common.lib.data_models.Transaction import Transaction
-from common.lib.Connector import Connector
+from common.lib.core.Connector import Connector
 from common.lib.decorators.singleton import singleton
 
 

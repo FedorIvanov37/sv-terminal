@@ -1,13 +1,12 @@
 from logging import error
 from collections import OrderedDict
 from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget
-from common.lib.EpaySpecification import EpaySpecification
+from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.gui.core.field_Item import Item
 from common.lib.data_models.Transaction import Transaction, TypeFields
-from common.lib.Validator import Validator
+from common.lib.core.Validator import Validator
 from common.lib.data_models.Config import Config
 
 

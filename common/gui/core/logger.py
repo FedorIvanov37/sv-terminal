@@ -2,8 +2,8 @@ from logging import info, debug, getLevelName, getLogger, Formatter
 from logging.handlers import RotatingFileHandler
 from json import dumps
 from common.gui.constants.LogDefinition import LogDefinition
-from common.lib.EpaySpecification import EpaySpecification
-from common.lib.Parser import Parser
+from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.core.Parser import Parser
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.gui.constants.TermFilesPath import TermFilesPath

@@ -3,7 +3,7 @@ from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QCheckBox, QHBoxLayout, QWidget, QHeaderView
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.forms.mti_spec import Ui_MtiSpecWindow
-from common.lib.EpaySpecification import EpaySpecification, Mti
+from common.lib.core.EpaySpecification import EpaySpecification, Mti
 
 
 class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):

@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QTreeWidgetItem
 from PyQt6.QtCore import Qt
-from common.lib.EpaySpecification import EpaySpecification
+from common.lib.core.EpaySpecification import EpaySpecification
 
 
 class AbstractItem(QTreeWidgetItem):
