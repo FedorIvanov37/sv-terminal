@@ -3,8 +3,8 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog
 from re import search
 from typing import Optional
-from common.app.forms.reversal import Ui_ReversalWindow
-from common.app.constants.FilePath import FilePath
+from common.gui.forms.reversal import Ui_ReversalWindow
+from common.gui.constants.FilePath import FilePath
 from common.lib.data_models.Transaction import Transaction
 
 

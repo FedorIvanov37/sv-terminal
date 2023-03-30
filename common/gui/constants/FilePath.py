@@ -9,5 +9,5 @@ class FilePath(object):
     DEFAULT_FILE: FilePath = "common/settings/default.json"
     SPECIFICATION: FilePath = "common/settings/specification.json"
     LOG_FILE_NAME: FilePath = "common/log/sv_terminal.log"
-    MAIN_LOGO: FilePath = "common/app/style/logo_triangle.png"
+    MAIN_LOGO: FilePath = "common/gui/style/logo_triangle.png"
     SPEC_BACKUP_DIR: DirectoryPath = "common/backup"

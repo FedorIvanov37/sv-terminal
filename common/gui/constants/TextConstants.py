@@ -1,4 +1,4 @@
-from common.app.constants.ReleaseDefinitoin import ReleaseDefinition
+from common.gui.constants.ReleaseDefinitoin import ReleaseDefinition
 from dataclasses import dataclass
 
 

@@ -2,9 +2,9 @@ from PyQt6.QtGui import QPixmap, QIcon
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtMultimedia import QMediaPlayer
-from common.app.forms.about import Ui_AboutWindow
-from common.app.constants.FilePath import FilePath
-from common.app.constants.ReleaseDefinitoin import ReleaseDefinition
+from common.gui.forms.about import Ui_AboutWindow
+from common.gui.constants.FilePath import FilePath
+from common.gui.constants.ReleaseDefinitoin import ReleaseDefinition
 
 
 class AboutWindow(Ui_AboutWindow, QDialog):

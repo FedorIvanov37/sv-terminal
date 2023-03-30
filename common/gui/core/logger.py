@@ -1,13 +1,12 @@
 from logging import info, debug, getLevelName, getLogger, Formatter
 from logging.handlers import RotatingFileHandler
 from json import dumps
-from common.app.constants.LogDefinition import LogDefinition
+from common.gui.constants.LogDefinition import LogDefinition
 from common.lib.EpaySpecification import EpaySpecification
-from common.app.core.tools.wireless_log_handler import WirelessHandler
 from common.lib.Parser import Parser
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
-from common.app.constants.FilePath import FilePath
+from common.gui.constants.FilePath import FilePath
 
 
 class LogStream:

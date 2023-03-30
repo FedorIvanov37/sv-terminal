@@ -2,13 +2,13 @@ from ctypes import windll
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QPalette, QColor, QCloseEvent
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
-from common.app.forms.mainwindow import Ui_MainWindow
-from common.app.constants.ButtonActions import ButtonAction
-from common.app.constants.DataFormats import DataFormats
-from common.app.constants.ConnectionStatus import ConnectionStatus
-from common.app.core.tools.json_view import JsonView
-from common.app.core.tools.action_button import ActionButton
-from common.app.core.tools.field_Item import Item
+from common.gui.forms.mainwindow import Ui_MainWindow
+from common.gui.constants.ButtonActions import ButtonAction
+from common.gui.constants.DataFormats import DataFormats
+from common.gui.constants.ConnectionStatus import ConnectionStatus
+from common.gui.core.json_view import JsonView
+from common.gui.core.action_button import ActionButton
+from common.gui.core.field_Item import Item
 from common.lib.data_models.Transaction import TypeFields, Transaction
 
 

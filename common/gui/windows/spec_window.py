@@ -1,18 +1,18 @@
 from json import dumps
 from PyQt6.QtGui import QIcon, QCloseEvent, QKeyEvent
 from PyQt6.QtCore import Qt, pyqtSignal
-from common.app.forms.spec import Ui_SpecificationWindow
-from common.app.constants.FilePath import FilePath
-from common.app.core.tools.action_button import ActionButton
-from common.app.core.tools.spec_view import SpecView
+from common.gui.forms.spec import Ui_SpecificationWindow
+from common.gui.constants.FilePath import FilePath
+from common.gui.core.action_button import ActionButton
+from common.gui.core.spec_view import SpecView
 from common.lib.EpaySpecification import EpaySpecification
 from datetime import datetime
 from typing import Optional
 from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from pydantic import ValidationError
-from common.app.core.windows.spec_unsaved import SpecUnsaved
-from common.app.core.windows.mti_spec_window import MtiSpecWindow
+from common.gui.windows.spec_unsaved import SpecUnsaved
+from common.gui.windows.mti_spec_window import MtiSpecWindow
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):

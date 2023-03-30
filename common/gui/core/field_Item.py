@@ -1,9 +1,9 @@
 from PyQt6 import QtGui
 from PyQt6.QtWidgets import QTreeWidgetItem
 from PyQt6.QtCore import Qt, QVariant, pyqtSignal
-from common.app.constants.MainFieldSpec import MainFieldSpec as Spec
+from common.gui.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.lib.data_models.EpaySpecificationModel import IsoField
-from common.app.core.tools.abstract_item import AbstractItem
+from common.gui.core.abstract_item import AbstractItem
 
 
 class Item(AbstractItem):

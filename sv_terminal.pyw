@@ -25,11 +25,3 @@
 #
 
 import common.sv_terminal
-#
-# from PyQt6 import QtWidgets
-# from common.app.core.windows.main_window import MainWindow
-#
-# pyqt_application = QtWidgets.QApplication([])
-# mw = MainWindow()
-# mw.show()
-# pyqt_application.exec()
