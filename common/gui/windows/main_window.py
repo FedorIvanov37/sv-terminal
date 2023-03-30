@@ -10,6 +10,7 @@ from common.gui.core.json_view import JsonView
 from common.gui.core.action_button import ActionButton
 from common.gui.core.field_Item import Item
 from common.lib.data_models.Transaction import TypeFields, Transaction
+from common.lib.data_models.Config import Config
 
 
 class MainWindow(Ui_MainWindow, QMainWindow):
@@ -90,13 +91,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def field_changed(self):
         return self._field_changed
 
-    def __init__(self):
+    def __init__(self, config: Config):
         super().__init__()
+        self.config = config
         self._setup()
 
     def _setup(self):
         self.setupUi(self)
-        self._json_view: JsonView = JsonView()
+        self._json_view: JsonView = JsonView(self.config)
         self._json_view.itemChanged.connect(self.field_changed.emit)
         self.FieldsTreeLayout.addWidget(self._json_view)
         self.PlusButton = ActionButton("+")

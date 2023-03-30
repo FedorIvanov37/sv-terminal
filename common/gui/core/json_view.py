@@ -1,12 +1,14 @@
 from logging import error
 from collections import OrderedDict
 from PyQt6.QtGui import QFont
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget
 from common.lib.EpaySpecification import EpaySpecification
 from common.gui.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.gui.core.field_Item import Item
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.Validator import Validator
+from common.lib.data_models.Config import Config
 
 
 class JsonView(QTreeWidget):
@@ -21,8 +23,9 @@ class JsonView(QTreeWidget):
     def root(self):
         return self._root
 
-    def __init__(self):
+    def __init__(self, config: Config):
         super(JsonView, self).__init__()
+        self.config = config
         self._setup()
 
     def _setup(self):
@@ -31,6 +34,7 @@ class JsonView(QTreeWidget):
 
         self.validator = Validator()
         self.itemDoubleClicked.connect(self.edit_item)
+        self.itemClicked.connect(self.process_checkbox_change)
         self.setFont(QFont("Calibri", 12))
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
@@ -38,6 +42,16 @@ class JsonView(QTreeWidget):
         self.setEditTriggers(self.EditTrigger.NoEditTriggers)
         self.addTopLevelItem(self.root)
         self.make_order()
+
+    def process_checkbox_change(self, item, column):
+        if column != Spec.columns_order.get(Spec.PROPERTY):
+            return
+
+        if item.generate_checkbox_checked():
+            item.set_item_color(red=False)
+
+        else:
+            self.validate(item)
 
     def field_number_duplicated(self, item: Item):
         root = self.root
@@ -53,6 +67,14 @@ class JsonView(QTreeWidget):
 
     def validate(self, item: Item):
         if item is self.root:
+            return
+
+        if not self.config.fields.validation:
+            item.set_item_color(red=False)
+            return
+
+        if item.generate_checkbox_checked():
+            item.set_item_color(red=False)
             return
 
         if self.field_number_duplicated(item):
@@ -199,7 +221,9 @@ class JsonView(QTreeWidget):
             parent = self.root
 
         for row in parent.get_children():
-            validator.validate_field_item(row)
+            if self.config.fields.validation:
+                validator.validate_field_item(row)
+
             result[row.field_number] = self.generate_fields(row) if row.childCount() else row.field_data
 
         if parent is self.root:

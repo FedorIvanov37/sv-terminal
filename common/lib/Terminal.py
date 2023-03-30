@@ -26,6 +26,10 @@ class SvTerminal(QObject):
     def config(self):
         return self._config
 
+    @config.setter
+    def config(self, config):
+        self._config = config
+
     @property
     def validator(self):
         return self._validator
@@ -36,7 +40,7 @@ class SvTerminal(QObject):
 
     def __init__(self, config: Config):
         super(SvTerminal, self).__init__()
-        self._config = config
+        self.config = config
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator()
         self.logger: Logger = Logger(self.config)

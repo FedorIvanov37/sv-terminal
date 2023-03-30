@@ -54,6 +54,9 @@ class Connector(QTcpSocket):
             error("Cannot connect SV: SmartVista Host Connection Timeout")
 
     def disconnect_sv(self):
+        if self.state() == QTcpSocket.SocketState.UnconnectedState:
+            return
+
         self.disconnectFromHost()
         self.waitForDisconnected(msecs=10000)
 
