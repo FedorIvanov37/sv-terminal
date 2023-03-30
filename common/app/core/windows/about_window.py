@@ -1,7 +1,7 @@
-from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog
-from PyQt5.QtMultimedia import QMediaPlayer
+from PyQt6.QtGui import QPixmap, QIcon
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QDialog
+from PyQt6.QtMultimedia import QMediaPlayer
 from common.app.forms.about import Ui_AboutWindow
 from common.app.constants.FilePath import FilePath
 from common.app.constants.ReleaseDefinitoin import ReleaseDefinition
@@ -16,7 +16,7 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         self.setup()
 
     def setup(self):
-        self.setWindowFlags(Qt.WindowCloseButtonHint)
+        self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
         self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
         self.logoLabel.setPixmap(QPixmap(FilePath.MAIN_LOGO))
 

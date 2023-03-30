@@ -1,12 +1,12 @@
 from json import dumps
 from logging import error, info, warning
 from pydantic import ValidationError
-from PyQt5 import QtWidgets
-from PyQt5.Qt import QApplication
-from PyQt5.QtCore import pyqtSignal, QObject
-from PyQt5.QtNetwork import QTcpSocket
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtGui import QIcon
+from PyQt6 import QtWidgets
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import pyqtSignal, QObject
+from PyQt6.QtNetwork import QTcpSocket
+from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtGui import QIcon
 from common.app.core.windows.main_window import MainWindow
 from common.app.core.windows.reversal_window import ReversalWindow
 from common.app.core.windows.settings_window import SettingsWindow
@@ -57,7 +57,7 @@ class SvTerminal(QObject):
         self.setup()
 
     def run(self):
-        status = self._pyqt_application.exec_()
+        status = self._pyqt_application.exec()
         exit(status)
 
     def setup(self):
@@ -65,7 +65,7 @@ class SvTerminal(QObject):
         self.window.set_mti_values(self.spec.get_mti_list())
         self.window.set_log_data(TextConstants.HELLO_MESSAGE)
         self.window.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
-        self.window.set_connection_status(QTcpSocket.UnconnectedState)
+        self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
 
         if self.config.terminal.connect_on_startup:
             self.reconnect()
@@ -98,9 +98,9 @@ class SvTerminal(QObject):
         self.window.window_close.connect(self.disconnect)
         self.window.menu_button_clicked.connect(self.proces_button_menu)
         self.window.field_changed.connect(self.set_bitmap)
-        self.connector.connected.connect(lambda: self.window.set_connection_status(QTcpSocket.ConnectedState))
+        self.connector.connected.connect(lambda: self.window.set_connection_status(QTcpSocket.SocketState.ConnectedState))
         self.connector.connected.connect(lambda: info("SmartVista host connection ESTABLISHED"))
-        self.connector.disconnected.connect(lambda: self.window.set_connection_status(QTcpSocket.UnconnectedState))
+        self.connector.disconnected.connect(lambda: self.window.set_connection_status(QTcpSocket.SocketState.ConnectedState.UnconnectedState))
         self.connector.disconnected.connect(lambda: info("SmartVista host DISCONNECTED"))
         self.connector.connection_started.connect(self.window.lock_connection_buttons)
         self.connector.connection_finished.connect(lambda: self.window.lock_connection_buttons(lock=False))
@@ -117,7 +117,7 @@ class SvTerminal(QObject):
         if self.connector.error() == -1:  # TODO
             return
 
-        error(f"Received a socket error from SmartVista host: {self.connector.error_string()}")
+        error(f"Received a socket error from SmartVista host: {self.connector.error_string}")
 
     def disconnect(self):
         self.connector.disconnect_sv()
@@ -184,17 +184,17 @@ class SvTerminal(QObject):
         info(f"Transaction [{request.trans_id}] was sent ")
 
     def settings(self):
-        SettingsWindow(self.config).exec_()
+        SettingsWindow(self.config).exec()
 
     def specification(self):
         spec_window: SpecWindow = SpecWindow(self.window)
         spec_window.spec_accepted.connect(lambda: info("Specification accepted"))
-        spec_window.exec_()
+        spec_window.exec()
 
     @staticmethod
     def get_output_filename():
         file_dialog = QFileDialog()
-        file_dialog.setFileMode(QFileDialog.AnyFile)
+        file_dialog.setFileMode(QFileDialog.FileMode.AnyFile)
         filename = file_dialog.getSaveFileName()[0]
         return filename
 
@@ -263,7 +263,7 @@ class SvTerminal(QObject):
     def show_reversal_window(self):
         reversible_transactions_list: list[Transaction] = self.trans_queue.get_reversible_transactions()
         reversal_window = ReversalWindow(reversible_transactions_list)
-        reversal_window.exec_()
+        reversal_window.exec()
         return reversal_window.reversal_id
 
     def reverse_transaction(self, id_source: str):
@@ -345,9 +345,14 @@ class SvTerminal(QObject):
             error(f"File parsing error: {parsing_error}")
             return
 
-        self.window.set_mti_value(transaction.message_type)
-        self.window.set_fields(transaction)
-        self.set_bitmap()
+        try:
+            self.window.set_mti_value(transaction.message_type)
+            self.window.set_fields(transaction)
+            self.set_bitmap()
+
+        except ValueError as fields_settings_error:
+            error(fields_settings_error)
+            return
 
         if self.sender() is self.window.button_parse_file:
             info(f"File parsed: {filename}")
@@ -379,6 +384,9 @@ class SvTerminal(QObject):
                 continue
 
             if int(bit) not in range(1, self.spec.MessageLength.second_bitmap_capacity + 1):
+                continue
+
+            if not (self.window.get_field_data(bit) or bit in self.window.get_fields_to_generate()):
                 continue
 
             if int(bit) >= self.spec.MessageLength.first_bitmap_capacity:

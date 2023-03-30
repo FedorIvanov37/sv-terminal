@@ -1,7 +1,8 @@
 from logging import error
 from collections import OrderedDict
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QTreeWidgetItem, QTreeWidget
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget
+from PyQt6.QtCore import Qt
 from common.lib.EpaySpecification import EpaySpecification
 from common.app.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.app.core.tools.field_Item import Item
@@ -35,7 +36,7 @@ class JsonView(QTreeWidget):
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
         self.setHeaderLabels(Spec.columns)
-        self.setEditTriggers(self.NoEditTriggers)
+        self.setEditTriggers(self.EditTrigger.NoEditTriggers)
         self.addTopLevelItem(self.root)
         self.make_order()
 
@@ -186,7 +187,7 @@ class JsonView(QTreeWidget):
         field_numbers: list[str] = list()
 
         for item in self.root.get_children():
-            if item.field_data or item.checkState(Spec.columns_order.get(Spec.PROPERTY)):
+            if item.field_data or bool(item.checkState(Spec.columns_order.get(Spec.PROPERTY))):
                 field_numbers.append(item.field_number)
 
         return field_numbers
@@ -209,9 +210,17 @@ class JsonView(QTreeWidget):
 
     def get_checkboxes(self) -> list:
         column = Spec.columns_order.get(Spec.PROPERTY)
-        return [item.field_number for item in self.root.get_children() if item.checkState(column)]
+        return [item.field_number for item in self.root.get_children() if bool(item.checkState(column).value)]
 
     def get_field_set(self):
         field_set = [field.field_number for field in self.root.get_children() if field.field_data]
         field_set = field_set + self.get_checkboxes()
         return field_set
+
+    def get_field_data(self, field_number):
+        for item in self.root.get_children():
+
+            if item.field_number != field_number:
+                continue
+
+            return item.field_data

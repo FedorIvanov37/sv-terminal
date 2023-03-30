@@ -1,6 +1,6 @@
 from collections import deque
-from PyQt5.Qt import QObject, pyqtSignal, QThread
-from PyQt5.QtCore import QTimer
+from PyQt6.QtCore import QObject, pyqtSignal, QThread
+from PyQt6.QtCore import QTimer
 from .EpaySpecification import EpaySpecification
 from .FieldsGenerator import FieldsGenerator
 from .data_models.Transaction import Transaction

@@ -1,7 +1,7 @@
 from struct import pack
 from logging import error, debug
-from PyQt5.QtNetwork import QTcpSocket
-from PyQt5.QtCore import pyqtSignal
+from PyQt6.QtNetwork import QTcpSocket
+from PyQt6.QtCore import pyqtSignal
 from .Parser import Parser
 from .data_models.Config import Config
 from .data_models.Transaction import Transaction
@@ -55,10 +55,10 @@ class Connector(QTcpSocket):
         self.waitForDisconnected(msecs=10000)
 
     def reconnect_sv(self):
-        if self.state() == self.ConnectedState:
+        if self.state() == self.SocketState.ConnectedState:
             self.disconnect_sv()
 
-        if self.state() != self.UnconnectedState:
+        if self.state() != self.SocketState.UnconnectedState:
             self.abort()
             self.waitForDisconnected(msecs=10000)
 
@@ -68,7 +68,7 @@ class Connector(QTcpSocket):
         if transaction is None:
             return False
 
-        if self.state() != self.ConnectedState:
+        if self.state() != self.SocketState.ConnectedState:
             error("Connection with SmartVista is not established")
             return False
 

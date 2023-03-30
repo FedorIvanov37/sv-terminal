@@ -1,4 +1,4 @@
-from PyQt5.QtNetwork import QTcpSocket
+from PyQt6.QtNetwork import QTcpSocket
 
 
 class ConnectionStatus(object):
@@ -14,23 +14,23 @@ class ConnectionStatus(object):
     GREEN = (0, 255, 0)
 
     STATE_MAP = {
-        QTcpSocket.ConnectedState: CONNECTED,
-        QTcpSocket.UnconnectedState: DISCONNECTED,
-        QTcpSocket.ConnectingState: IN_PROGRESS,
-        QTcpSocket.HostLookupState: IN_PROGRESS,
-        QTcpSocket.BoundState: IN_PROGRESS,
-        QTcpSocket.ClosingState: IN_PROGRESS,
-        QTcpSocket.ListeningState: UNKNOWN
+        QTcpSocket.SocketState.ConnectedState: CONNECTED,
+        QTcpSocket.SocketState.UnconnectedState: DISCONNECTED,
+        QTcpSocket.SocketState.ConnectingState: IN_PROGRESS,
+        QTcpSocket.SocketState.HostLookupState: IN_PROGRESS,
+        QTcpSocket.SocketState.BoundState: IN_PROGRESS,
+        QTcpSocket.SocketState.ClosingState: IN_PROGRESS,
+        QTcpSocket.SocketState.ListeningState: UNKNOWN
     }
 
     COLOR_MAP = {
-        QTcpSocket.ConnectedState: GREEN,
-        QTcpSocket.UnconnectedState: RED,
-        QTcpSocket.ConnectingState: YELLOW,
-        QTcpSocket.HostLookupState: YELLOW,
-        QTcpSocket.BoundState: YELLOW,
-        QTcpSocket.ClosingState: YELLOW,
-        QTcpSocket.ListeningState: GREEN
+        QTcpSocket.SocketState.ConnectedState: GREEN,
+        QTcpSocket.SocketState.UnconnectedState: RED,
+        QTcpSocket.SocketState.ConnectingState: YELLOW,
+        QTcpSocket.SocketState.HostLookupState: YELLOW,
+        QTcpSocket.SocketState.BoundState: YELLOW,
+        QTcpSocket.SocketState.ClosingState: YELLOW,
+        QTcpSocket.SocketState.ListeningState: GREEN
     }
 
     @staticmethod

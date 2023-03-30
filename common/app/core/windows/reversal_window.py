@@ -1,6 +1,6 @@
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog
+from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QDialog
 from re import search
 from typing import Optional
 from common.app.forms.reversal import Ui_ReversalWindow
@@ -34,7 +34,7 @@ class ReversalWindow(Ui_ReversalWindow, QDialog):
         self.setup(transactions)
 
     def setup(self, transactions: list[Transaction]) -> None:
-        self.setWindowFlags(Qt.WindowCloseButtonHint)
+        self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
         self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
         self.ComboBoxId.currentIndexChanged.connect(lambda index: self.id_item_changed())
         self.buttonBox.accepted.connect(self.set_reversal_id)

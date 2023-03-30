@@ -26,7 +26,7 @@ Also, the Terminal builds like a kit of weakly connected modules like a Parser, 
 
 SV-Terminal is not an emulator of PSP or SmartVista. It doesn't try to be similar to these systems. It is more positioned as a simplified version card payment terminal, developed with respect for the everyday needs of the Card Processing Support Team.
 
-Written on Python 3.10 with using of PyQt5 and pydantic packages
+Written on Python 3.10 with using of PyQt6 and pydantic packages
 
 Allowed use on the test environment only
 
@@ -45,7 +45,7 @@ Designed and developed by Fedor Ivanov
 ## Requirements and installation
 
 * Python 3.10+
-* PyQt5 or PyQt6
+* PyQt6
 * pydantic
 
 

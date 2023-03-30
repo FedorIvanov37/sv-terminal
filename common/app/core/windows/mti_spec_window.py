@@ -1,6 +1,6 @@
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QDialog, QTableWidgetItem, QCheckBox, QHBoxLayout, QWidget
+from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QCheckBox, QHBoxLayout, QWidget, QHeaderView
 from common.app.constants.FilePath import FilePath
 from common.app.forms.mti_spec import Ui_MtiSpecWindow
 from common.lib.EpaySpecification import EpaySpecification, Mti
@@ -29,7 +29,7 @@ class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):
         self.setup()
 
     def setup(self):
-        self.setWindowFlags(Qt.WindowCloseButtonHint)
+        self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
         self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
         self.ButtonPlus.clicked.connect(self.plus)
         self.ButtonMinus.clicked.connect(self.minus)
@@ -66,8 +66,9 @@ class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):
                     item.set_checkbox(item_data, row_count, item_count)
 
                 self.MtiTable.setItem(row_count, item_count, item)
-
-        self.MtiTable.horizontalHeader().setSectionResizeMode(self.MtiTable.horizontalHeader().ResizeToContents)
+        header_view: QHeaderView = self.MtiTable.horizontalHeader()
+        header_view.setSectionResizeMode(header_view.ResizeMode.ResizeToContents)
+        # self.MtiTable.horizontalHeader().setSectionResizeMode(self.MtiTable.horizontalHeader().ResizeToContents)
 
     def create_mti_list(self) -> list[Mti] | None:
         result: list = list()
@@ -129,7 +130,7 @@ class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):
             self.checkbox.setText(" ")
             lay_out = QHBoxLayout(cell_widget)
             lay_out.addWidget(self.checkbox)
-            lay_out.setAlignment(Qt.AlignCenter)
+            lay_out.setAlignment(Qt.AlignmentFlag.AlignCenter)
             lay_out.setContentsMargins(0, 0, 0, 0)
             cell_widget.setLayout(lay_out)
             self.MtiTable.setCellWidget(row_number, column_number, cell_widget)

@@ -1,7 +1,7 @@
-from PyQt5.QtWinExtras import QtWin
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPalette, QColor, QCloseEvent
-from PyQt5.QtWidgets import QMainWindow, QMenu, QPushButton
+from ctypes import windll
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QPalette, QColor, QCloseEvent
+from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
 from common.app.forms.mainwindow import Ui_MainWindow
 from common.app.constants.ButtonActions import ButtonAction
 from common.app.constants.DataFormats import DataFormats
@@ -149,7 +149,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
 
-        QtWin.setCurrentProcessExplicitAppUserModelID("MainWindow.py")
+        windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow.py")
 
     def clear_log(self):
         self.LogArea.setText(str())
@@ -175,6 +175,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def get_bitmap_data(self) -> str:
         return self.Bitmap.text()
 
+    def get_field_data(self, field_number):
+        if not field_number.isdigit():
+            return
+
+        return self._json_view.get_field_data(field_number)
+
     def lock_connection_buttons(self, lock=True):
         for button in (self.ButtonReconnect, self.ButtonSend, self.ButtonEchoTest, self.ButtonReverse):
             button.setDisabled(lock)
@@ -183,8 +189,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for mti in mti_list:
             self.msgtype.addItem(mti)
 
+    def get_field_data(self, field_number: str):
+        return self._json_view.get_field_data(field_number)
+
     def set_mti_value(self, mti: str):
-        index = self.msgtype.findText(mti, flags=Qt.MatchContains)
+        index = self.msgtype.findText(mti, flags=Qt.MatchFlag.MatchContains)
 
         if index == -1:
             raise ValueError(f"Cannot set Message Type Identifier {mti}. Mti not in specification")
@@ -202,11 +211,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.msgtype.setCurrentIndex(-1)
         self._json_view.clean()
 
-    def set_connection_status(self, status: int):
+    def set_connection_status(self, status):
         self.ConnectionStatus.setText(ConnectionStatus.get_state_description(status))
         color = ConnectionStatus.get_state_color(status)
         palette = self.ConnectionScreen.palette()
-        palette.setColor(QPalette.Base, QColor(*color))
+        palette.setColor(QPalette.ColorRole.Base, QColor(*color))
         self.ConnectionScreen.setPalette(palette)
 
     def set_bitmap(self, bitmap: str = str()):

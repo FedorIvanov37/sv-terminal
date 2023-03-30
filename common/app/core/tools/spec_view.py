@@ -1,5 +1,5 @@
-from PyQt5.QtCore import pyqtSignal, QObject
-from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem
+from PyQt6.QtCore import pyqtSignal, QObject
+from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem
 from common.lib.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.app.constants.SpecFieldDef import SpecFieldDef

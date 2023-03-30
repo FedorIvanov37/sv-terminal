@@ -1,6 +1,6 @@
-from PyQt5 import QtGui
-from PyQt5.QtWidgets import QTreeWidgetItem
-from PyQt5.QtCore import Qt, QVariant, pyqtSignal
+from PyQt6 import QtGui
+from PyQt6.QtWidgets import QTreeWidgetItem
+from PyQt6.QtCore import Qt, QVariant, pyqtSignal
 from common.app.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.app.core.tools.abstract_item import AbstractItem
@@ -72,7 +72,7 @@ class Item(AbstractItem):
         self.spec: IsoField = self.epay_spec.get_field_spec(self.get_field_path())
 
     def generate_checkbox_checked(self):
-        return bool(self.checkState(Spec.columns_order.get(Spec.PROPERTY)))
+        return bool(self.checkState(Spec.columns_order.get(Spec.PROPERTY)).value)
 
     def set_checkbox(self, checked):
         column_number = Spec.columns_order.get(Spec.PROPERTY)
@@ -85,8 +85,7 @@ class Item(AbstractItem):
         if self.get_field_depth() != 1:
             return
 
-        state = Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked
-        self.setCheckState(column_number, state)
+        self.setCheckState(column_number, Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked)
         self.setText(column_number, Spec.GENERATE)
 
     def set_description(self):
@@ -101,17 +100,19 @@ class Item(AbstractItem):
         if column not in (Spec.columns_order.get(Spec.FIELD), Spec.columns_order.get(Spec.VALUE)):
             return
 
-        if role == Qt.ForegroundRole:
+        if role == Qt.ItemDataRole.ForegroundRole:
             return
 
         self.treeWidget().validate(self)
-        self.process_change_item()
+        self.process_change_item(column)
 
-    def process_change_item(self):
+    def process_change_item(self, column: int | None = None):
         self.set_spec()
         self.set_length()
         self.set_description()
-        self.set_checkbox(bool(self.checkState(Spec.columns_order.get(Spec.PROPERTY))))
+
+        if column == Spec.columns_order.get(Spec.FIELD):
+            self.set_checkbox(self.field_number in Spec.generated_fields)
 
     def set_length(self) -> None:
         column = Spec.columns_order.get(Spec.LENGTH)

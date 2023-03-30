@@ -1,6 +1,6 @@
 from logging import error, warning
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import QObject, pyqtSignal, QThread
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import QObject, pyqtSignal, QThread
 from common.lib.data_models.Transaction import Transaction
 from common.lib.Connector import Connector
 
@@ -93,11 +93,11 @@ class ConnectionWorker(QObject):
             self.connection_finished.emit()
 
     def send_transaction(self, transaction: Transaction):
-        if self.connector.state() != self.connector.ConnectedState:
+        if self.connector.state() != self.connector.SocketState.ConnectedState:
             warning("Connection is not Established, trying to connect")
             self.connect_sv()
 
-        if self.connector.state() != self.connector.ConnectedState:
+        if self.connector.state() != self.connector.SocketState.ConnectedState:
             error(f"Cannot establish the connection to SmartVista: {self.connector.errorString()}")
             return
 

@@ -1,5 +1,5 @@
-from PyQt5.QtGui import QMouseEvent
-from PyQt5.QtWidgets import QPushButton
+from PyQt6.QtGui import QMouseEvent
+from PyQt6.QtWidgets import QPushButton
 
 
 # Fix Qt bug
