@@ -84,16 +84,29 @@ class SvTerminalGui(SvTerminal):
         logger = getLogger()
         logger.addHandler(wireless_handler)
 
-    def reverse_transaction(self, id_source: str | None = None, original_id: str | None = None):
-        if id_source is None:
-            return
+    def perform_reversal(self, id_source: str):
+        lost_transaction_message = "Cannot reverse transaction, lost transaction ID or non-reversible MTI"
 
-        if id_source == ButtonAction.OTHER:
-            if not (original_id := self.show_reversal_window()):
-                error("Cannot get transaction ID")
+        match id_source:
+            case ButtonAction.LAST:
+                transaction_id = self.trans_queue.get_last_reversible_transaction_id()
+
+            case ButtonAction.OTHER:
+                transaction_id = self.show_reversal_window()
+
+            case _:
+                error(lost_transaction_message)
                 return
 
-            SvTerminal.reverse_transaction(self, id_source, original_id)
+        if not transaction_id:
+            error(lost_transaction_message)
+            return
+
+        if not (original_trans := self.trans_queue.get_transaction(transaction_id)):
+            error(lost_transaction_message)
+            return
+
+        SvTerminal.reverse_transaction(self, original_trans)
 
     def send(self, transaction: Transaction | None = None):
         if self.config.debug.clear_log:
@@ -234,7 +247,7 @@ class SvTerminalGui(SvTerminal):
     def proces_button_menu(self, button, action: str):
         data_processing_map = {
             self.window.button_save: lambda _action: self.save_transaction_to_file(_action),
-            self.window.button_reverse: lambda _action: self.reverse_transaction(_action),
+            self.window.button_reverse: lambda _action: self.perform_reversal(_action),
             self.window.button_print: lambda _action: self.print_data(_action)
         }
 

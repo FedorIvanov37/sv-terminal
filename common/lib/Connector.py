@@ -50,17 +50,23 @@ class Connector(QTcpSocket):
         self.connectToHost(host, port)
         self.waitForConnected(msecs=10000)
 
+        if not self.state() == self.SocketState.ConnectedState:
+            error("Cannot connect SV: SmartVista Host Connection Timeout")
+
     def disconnect_sv(self):
         self.disconnectFromHost()
         self.waitForDisconnected(msecs=10000)
 
     def reconnect_sv(self):
-        if self.state() == self.SocketState.ConnectedState:
+        for retry in range(3):
+            if self.state() == self.SocketState.UnconnectedState:
+                break
+
             self.disconnect_sv()
 
-        if self.state() != self.SocketState.UnconnectedState:
-            self.abort()
-            self.waitForDisconnected(msecs=10000)
+        else:
+            error("Cannot disconnect SmartVista host")
+            return
 
         self.connect_sv()
 

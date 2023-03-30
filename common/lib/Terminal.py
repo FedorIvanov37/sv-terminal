@@ -148,22 +148,19 @@ class SvTerminal(QObject):
 
         info(f"The transaction was saved successfully to {file_name}")
 
-    def reverse_transaction(self, id_source: str | None = None, original_id: str | None = None):
-        if original_id is None:
-            if not (original_id := self.trans_queue.get_last_reversible_transaction_id()):
-                return
-
-        if not (original := self.trans_queue.get_transaction(original_id)):
-            error(f"Wrong Transaction ID {original_id}, cannot generate the reversal")
+    def reverse_transaction(self, original_trans: Transaction):
+        if not self.spec.get_reversal_mti(original_trans.message_type):
+            error("Cannot reverse transaction, lost transaction ID or non-reversible MTI")
             return
 
         try:
-            reversal: Transaction = self.build_reversal(original)
+            reversal: Transaction = self.build_reversal(original_trans)
+
         except LookupError as lookup_error:
             error(lookup_error)
-            return
 
-        self.send(reversal)
+        else:
+            self.send(reversal)
 
     def build_reversal(self, original_transaction: Transaction) -> Transaction:
         if not (original_transaction.matched and original_transaction.match_id):
