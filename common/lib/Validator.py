@@ -1,8 +1,8 @@
 from string import digits, ascii_letters, punctuation
-from .EpaySpecification import EpaySpecification
-from .data_models.Config import Config
-from .decorators.singleton import singleton
-from .data_models.Transaction import Transaction, TypeFields
+from common.lib.EpaySpecification import EpaySpecification
+from common.lib.data_models.Config import Config
+from common.lib.decorators.singleton import singleton
+from common.lib.data_models.Transaction import Transaction, TypeFields
 
 
 @singleton

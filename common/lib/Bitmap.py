@@ -1,6 +1,6 @@
 from binascii import b2a_hex, a2b_hex
 from collections import OrderedDict
-from .EpaySpecification import EpaySpecification
+from common.lib.EpaySpecification import EpaySpecification
 
 
 class Bitmap:

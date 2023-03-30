@@ -1,0 +1,113 @@
+22:10:17 [INFO] Default file parsed
+22:10:19 [INFO] [Re]connecting...
+22:10:29 [ERROR] Cannot connect SV: SmartVista Host Connection Timeout
+22:10:30 [INFO] Settings applying was canceled
+22:14:00 [INFO] Default file parsed
+22:14:03 [INFO] [Re]connecting...
+22:14:13 [ERROR] Cannot connect SV: SmartVista Host Connection Timeout
+22:14:43 [INFO] [Re]connecting...
+22:14:44 [INFO] SmartVista host connection ESTABLISHED
+22:15:01 [INFO] Settings applied
+22:15:10 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:19 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:22 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:25 [INFO] Settings applied
+22:15:39 [INFO] Settings applied
+22:15:45 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:49 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:50 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:51 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:52 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:52 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:53 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:53 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:54 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:55 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:56 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:56 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:58 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:59 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:15:59 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:00 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:01 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:02 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:02 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:23 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:25 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:25 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:28 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:28 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:29 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:30 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:31 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:32 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:33 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:36 [ERROR] Transaction building error
+22:16:36 [ERROR] Field 11 less MinLength. Min length: 6 got: 4
+22:16:39 [INFO] Settings applied
+22:16:41 [INFO] Processing transaction ID [20230330_221641_591683985]
+22:16:41 [INFO] 
+22:16:41 [INFO] [TRANS_ID][20230330_221641_591683985]
+22:16:41 [INFO] [MSG_TYPE][0200]
+22:16:41 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49]
+22:16:41 [INFO] [002][016][5486736712458564]
+22:16:41 [INFO] [003][006][000000]
+22:16:41 [INFO] [004][012][000000003592]
+22:16:41 [INFO] [007][010][0330221641]
+22:16:41 [INFO] [011][004][4754]
+22:16:41 [INFO] [012][012][230330221641]
+22:16:41 [INFO] [014][004][2504]
+22:16:41 [INFO] [018][004][8999]
+22:16:41 [INFO] [022][003][810]
+22:16:41 [INFO] [037][012][907417858276]
+22:16:41 [INFO] [041][008][70000826]
+22:16:41 [INFO] [042][015][000000010000866]
+22:16:41 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+22:16:41 [INFO] [047][224][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202520230330_221641_591683985]
+22:16:41 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+22:16:41 [INFO] [049][003][978]
+22:16:41 [INFO] 
+22:16:41 [INFO] 
+22:16:41 [INFO] [TRANS_ID][20230330_221641_591683985]
+22:16:41 [INFO] [MSG_TYPE][0200]
+22:16:41 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49]
+22:16:41 [INFO] [002][016][5486736712458564]
+22:16:41 [INFO] [003][006][000000]
+22:16:41 [INFO] [004][012][000000003592]
+22:16:41 [INFO] [007][010][0330221641]
+22:16:41 [INFO] [011][004][4754]
+22:16:41 [INFO] [012][012][230330221641]
+22:16:41 [INFO] [014][004][2504]
+22:16:41 [INFO] [018][004][8999]
+22:16:41 [INFO] [022][003][810]
+22:16:41 [INFO] [037][012][907417858276]
+22:16:41 [INFO] [041][008][70000826]
+22:16:41 [INFO] [042][015][000000010000866]
+22:16:41 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+22:16:41 [INFO] [047][224][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202520230330_221641_591683985]
+22:16:41 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+22:16:41 [INFO] [049][003][978]
+22:16:41 [INFO] 
+22:16:41 [INFO] Transaction [20230330_221641_591683985] was sent 
+22:17:08 [INFO] [Re]connecting...
+22:17:08 [INFO] SmartVista host connection DISCONNECTED
+22:17:08 [ERROR] Received a socket error from SmartVista host: Unknown error
+22:17:08 [INFO] SmartVista host connection ESTABLISHED
+22:17:08 [INFO] [Re]connecting...
+22:17:08 [INFO] SmartVista host connection DISCONNECTED
+22:17:08 [ERROR] Received a socket error from SmartVista host: Unknown error
+22:17:08 [INFO] SmartVista host connection ESTABLISHED
+22:17:09 [INFO] [Re]connecting...
+22:17:09 [INFO] SmartVista host connection DISCONNECTED
+22:17:09 [ERROR] Received a socket error from SmartVista host: Unknown error
+22:17:09 [INFO] SmartVista host connection ESTABLISHED
+22:17:09 [INFO] [Re]connecting...
+22:17:09 [INFO] SmartVista host connection DISCONNECTED
+22:17:09 [ERROR] Received a socket error from SmartVista host: Unknown error
+22:17:09 [INFO] SmartVista host connection ESTABLISHED
+22:17:10 [INFO] [Re]connecting...
+22:17:10 [INFO] SmartVista host connection DISCONNECTED
+22:17:10 [ERROR] Received a socket error from SmartVista host: Unknown error
+22:17:10 [INFO] SmartVista host connection ESTABLISHED
+22:17:17 [INFO] SmartVista host connection DISCONNECTED
+22:17:17 [ERROR] Received a socket error from SmartVista host: Unknown error

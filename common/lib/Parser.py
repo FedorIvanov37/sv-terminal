@@ -4,16 +4,16 @@ from logging import error, warning, info
 from pydantic import FilePath
 from binascii import hexlify, unhexlify
 from configparser import ConfigParser, NoSectionError, NoOptionError
-from .exceptions.exceptions import DumpFileParsingError
-from .EpaySpecification import EpaySpecification
-from .Bitmap import Bitmap
-from .tools.trans_id import trans_id
-from .constants.DumpDefinition import DumpDefinition
-from .constants.IniMessageDefinition import IniMessageDefinition
-from .constants.DataFormats import DataFormats
-from .data_models.Config import Config
-from .data_models.EpaySpecificationModel import IsoField, FieldSet, RawFieldSet
-from .data_models.Transaction import TypeFields, Transaction
+from common.lib.exceptions.exceptions import DumpFileParsingError
+from common.lib.EpaySpecification import EpaySpecification
+from common.lib.Bitmap import Bitmap
+from common.lib.toolkit.trans_id import trans_id
+from common.lib.constants.DumpDefinition import DumpDefinition
+from common.lib.constants.IniMessageDefinition import IniMessageDefinition
+from common.lib.constants.DataFormats import DataFormats
+from common.lib.data_models.Config import Config
+from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet, RawFieldSet
+from common.lib.data_models.Transaction import TypeFields, Transaction
 
 
 class Parser:
