@@ -2,7 +2,7 @@ from datetime import datetime
 from random import randint, choice
 from common.lib.exceptions.exceptions import ParsingError
 from common.lib.data_models.Transaction import Transaction
-from common.lib.EpaySpecification import EpaySpecification
+from common.lib.core.EpaySpecification import EpaySpecification
 
 
 class FieldsGenerator(object):

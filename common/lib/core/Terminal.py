@@ -2,12 +2,12 @@ from json import dumps
 from logging import error, info, warning
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject
-from common.lib.Parser import Parser
+from common.lib.core.Parser import Parser
 from common.gui.core.logger import Logger
-from common.lib.TransactionQueue import TransactionQueue
-from common.lib.EpaySpecification import EpaySpecification
-from common.lib.FieldsGenerator import FieldsGenerator
-from common.lib.Validator import Validator
+from common.lib.core.TransactionQueue import TransactionQueue
+from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.core.FieldsGenerator import FieldsGenerator
+from common.lib.core.Validator import Validator
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
@@ -102,8 +102,6 @@ class SvTerminal(QObject):
             except (ValueError, TypeError) as validation_error:
                 error(f"Transaction validation error {validation_error}")
                 return
-
-        self.logger.print_transaction(transaction)
 
         self.trans_queue.put_transaction(transaction)
 

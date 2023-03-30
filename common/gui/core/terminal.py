@@ -16,7 +16,7 @@ from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.gui.constants.ButtonActions import ButtonAction
-from common.lib.Terminal import SvTerminal
+from common.lib.core.Terminal import SvTerminal
 from common.gui.core.wireless_log_handler import WirelessHandler
 from common.gui.constants.LogDefinition import LogDefinition
 

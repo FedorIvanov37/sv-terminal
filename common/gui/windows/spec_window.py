@@ -5,7 +5,7 @@ from common.gui.forms.spec import Ui_SpecificationWindow
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.core.action_button import ActionButton
 from common.gui.core.spec_view import SpecView
-from common.lib.EpaySpecification import EpaySpecification
+from common.lib.core.EpaySpecification import EpaySpecification
 from datetime import datetime
 from typing import Optional
 from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog

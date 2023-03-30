@@ -1,8 +1,8 @@
 from collections import deque
 from PyQt6.QtCore import QObject, pyqtSignal, QThread
 from PyQt6.QtCore import QTimer
-from common.lib.EpaySpecification import EpaySpecification
-from common.lib.FieldsGenerator import FieldsGenerator
+from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.data_models.Transaction import Transaction
 from common.lib.data_models.Config import Config
 from common.gui.core.connection_worker import ConnectionWorker

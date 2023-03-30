@@ -2,7 +2,7 @@ from struct import pack
 from logging import error, debug
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtCore import pyqtSignal
-from common.lib.Parser import Parser
+from common.lib.core.Parser import Parser
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 

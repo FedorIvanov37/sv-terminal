@@ -1,5 +1,5 @@
 from string import digits, ascii_letters, punctuation
-from common.lib.EpaySpecification import EpaySpecification
+from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Config import Config
 from common.lib.decorators.singleton import singleton
 from common.lib.data_models.Transaction import Transaction, TypeFields
