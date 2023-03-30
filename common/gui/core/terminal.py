@@ -12,7 +12,7 @@ from common.gui.windows.spec_window import SpecWindow
 from common.gui.core.logger import LogStream, getLogger, Formatter
 from common.gui.constants.TextConstants import TextConstants
 from common.gui.constants.DataFormats import DataFormats
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.gui.constants.ButtonActions import ButtonAction
@@ -22,10 +22,9 @@ from common.gui.constants.LogDefinition import LogDefinition
 
 
 class SvTerminalGui(SvTerminal):
-
     def __init__(self, config: Config):
         super(SvTerminalGui, self).__init__(config)
-        self.window: MainWindow = MainWindow()
+        self.window: MainWindow = MainWindow(config)
         self.setup()
 
     def setup(self):
@@ -33,7 +32,7 @@ class SvTerminalGui(SvTerminal):
         self.create_window_logger()
         self.window.set_mti_values(self.spec.get_mti_list())
         self.window.set_log_data(TextConstants.HELLO_MESSAGE)
-        self.window.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
+        self.window.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
 
         if self.config.terminal.process_default_dump:
@@ -114,7 +113,7 @@ class SvTerminalGui(SvTerminal):
 
         if not transaction:
             try:
-                transaction: Transaction = self.parser.parse_form(self.window)
+                transaction: Transaction = self.parser.parse_main_window(self.window)
             except Exception as building_error:
                 error(f"Transaction building error")
                 [error(err.strip()) for err in str(building_error).splitlines()]
@@ -148,7 +147,7 @@ class SvTerminalGui(SvTerminal):
             return
 
         try:
-            transaction = self.parser.parse_form(self.window)
+            transaction = self.parser.parse_main_window(self.window)
         except Exception as file_saving_error:
             error("File saving error: %s", file_saving_error)
             return
@@ -161,9 +160,9 @@ class SvTerminalGui(SvTerminal):
             return
 
         data_processing_map = {
-            DataFormats.JSON: lambda: dumps(self.parser.parse_form(self.window).dict(), indent=4),
-            DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parser.parse_form(self.window)),
-            DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parser.parse_form(self.window)),
+            DataFormats.JSON: lambda: dumps(self.parser.parse_main_window(self.window).dict(), indent=4),
+            DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parser.parse_main_window(self.window)),
+            DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parser.parse_main_window(self.window)),
             DataFormats.TERM: lambda: TextConstants.HELLO_MESSAGE,
             DataFormats.SPEC: lambda: dumps(self.spec.spec.dict(), indent=4)
         }
@@ -195,7 +194,7 @@ class SvTerminalGui(SvTerminal):
 
     def set_default_values(self):
         try:
-            self.parse_file(str(FilePath.DEFAULT_FILE))
+            self.parse_file(str(TermFilesPath.DEFAULT_FILE))
             info("Default file parsed")
 
         except Exception as parsing_error:

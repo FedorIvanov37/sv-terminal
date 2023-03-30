@@ -1,9 +1,11 @@
 from json import dumps
 from dataclasses import asdict
+from pydantic import FilePath
 from .decorators.singleton import singleton
 from .constants.MessageLength import MessageLength
 from .constants.EpaySpecificationData import EpaySpecificationData
 from .data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField
+from common.gui.constants.TermFilesPath import TermFilesPath
 
 
 @singleton
@@ -11,11 +13,11 @@ class EpaySpecification(EpaySpecificationData):
     _MessageLength: MessageLength = MessageLength()
     _specification_model: EpaySpecModel = None
 
-    def __init__(self, filename: str | None = None):
-        # if filename is None and not self._specification_model:
-        #     raise AttributeError("Lost specification filename")
+    def __init__(self, filename: FilePath | None = None):
+        if filename is None:
+            filename: FilePath = TermFilesPath.SPECIFICATION
 
-        self.filename = "common/settings/specification.json"  # filename
+        self.filename: FilePath = filename
         self._specification_model: EpaySpecModel = EpaySpecModel.parse_file(self.filename)
 
     @property

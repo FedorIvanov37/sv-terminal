@@ -9,22 +9,26 @@ from common.lib.EpaySpecification import EpaySpecification
 from common.lib.FieldsGenerator import FieldsGenerator
 from common.lib.Validator import Validator
 from common.gui.constants.DataFormats import DataFormats
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.gui.core.connection_worker import ConnectionWorker
 
 
 class SvTerminal(QObject):
-    _config: Config = Config.parse_file(FilePath.CONFIG)
+    _config: Config = Config.parse_file(TermFilesPath.CONFIG)
     _pyqt_application = QtWidgets.QApplication([])
     _validator = Validator(_config)
-    _spec: EpaySpecification = EpaySpecification(FilePath.CONFIG)
+    _spec: EpaySpecification = EpaySpecification(TermFilesPath.CONFIG)
     _need_reconnect: pyqtSignal = pyqtSignal()
 
     @property
     def config(self):
         return self._config
+
+    @config.setter
+    def config(self, config):
+        self._config = config
 
     @property
     def validator(self):
@@ -36,7 +40,7 @@ class SvTerminal(QObject):
 
     def __init__(self, config: Config):
         super(SvTerminal, self).__init__()
-        self._config = config
+        self.config = config
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator()
         self.logger: Logger = Logger(self.config)
@@ -197,5 +201,5 @@ class SvTerminal(QObject):
         return reversal
 
     def echo_test(self):
-        transaction: Transaction = self.parser.parse_file(FilePath.ECHO_TEST)
+        transaction: Transaction = self.parser.parse_file(TermFilesPath.ECHO_TEST)
         self.send(transaction)

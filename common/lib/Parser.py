@@ -1,6 +1,7 @@
 from json import loads
 from os.path import splitext
 from logging import error, warning, info
+from pydantic import FilePath
 from binascii import hexlify, unhexlify
 from configparser import ConfigParser, NoSectionError, NoOptionError
 from .exceptions.exceptions import DumpFileParsingError
@@ -15,7 +16,7 @@ from .data_models.EpaySpecificationModel import IsoField, FieldSet, RawFieldSet
 from .data_models.Transaction import TypeFields, Transaction
 
 
-class Parser(object):
+class Parser:
     _spec: EpaySpecification = EpaySpecification()
 
     @property
@@ -175,7 +176,7 @@ class Parser(object):
 
         return transaction
 
-    def parse_form(self, form) -> Transaction:
+    def parse_main_window(self, form) -> Transaction:
         data_fields: TypeFields = form.get_fields()
 
         if not data_fields:
@@ -264,7 +265,7 @@ class Parser(object):
 
         return complex_field_data
 
-    def parse_file(self, filename: str) -> Transaction:
+    def parse_file(self, filename: FilePath) -> Transaction:
         file_extension = splitext(filename)[-1].upper().replace(".", "")
 
         data_processing_map = {
@@ -370,4 +371,5 @@ class Parser(object):
         bitmap = Bitmap(bitmap, hex).get_bitmap(bytes)
         pre_message = unhexlify(mti) + bitmap + unhexlify(string)
         transaction: Transaction = self.parse_dump(pre_message)
+
         return transaction

@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QDialog
 from re import search
 from typing import Optional
 from common.gui.forms.reversal import Ui_ReversalWindow
-from common.gui.constants.FilePath import FilePath
+from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Transaction import Transaction
 
 
@@ -35,7 +35,7 @@ class ReversalWindow(Ui_ReversalWindow, QDialog):
 
     def setup(self, transactions: list[Transaction]) -> None:
         self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
-        self.setWindowIcon(QIcon(FilePath.MAIN_LOGO))
+        self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.ComboBoxId.currentIndexChanged.connect(lambda index: self.id_item_changed())
         self.buttonBox.accepted.connect(self.set_reversal_id)
         self.ComboBoxId.addItem("> Transaction queue")
