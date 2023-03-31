@@ -13,6 +13,7 @@ from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.gui.core.connection_worker import ConnectionWorker
+from PyQt6.QtNetwork import QTcpSocket
 
 
 class SvTerminal(QObject):
@@ -66,18 +67,18 @@ class SvTerminal(QObject):
 
     @staticmethod
     def sv_connected():
-        info("SmartVista host connection ESTABLISHED")
+        info("SmartVista host CONNECTED")
 
     @staticmethod
     def sv_disconnected():
-        info("SmartVista host connection DISCONNECTED")
+        info("SmartVista host DISCONNECTED")
 
     @staticmethod
     def got_timeout(transaction, timeout_secs):
         error(f"Transaction [{transaction.trans_id}] timeout after {int(timeout_secs)} seconds of waiting SmartVista")
 
     def socket_error(self):
-        if self.connector.error() == -1:  # TODO
+        if self.connector.error() == QTcpSocket.SocketError.UnknownSocketError:  # TODO
             return
 
         error(f"Received a socket error from SmartVista host: {self.connector.error_string}")

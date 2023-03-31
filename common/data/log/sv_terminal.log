@@ -596,3 +596,76 @@
 22:22:18 [INFO] Transaction ID [20230330_222217_095907786] matched, response time seconds: 1.779
 22:22:37 [INFO] SmartVista host connection DISCONNECTED
 22:22:37 [ERROR] Received a socket error from SmartVista host: Unknown error
+11:29:19 [INFO] Default file parsed
+11:30:05 [INFO] [Re]connecting...
+11:30:05 [INFO] SmartVista host connection ESTABLISHED
+11:30:10 [INFO] [Re]connecting...
+11:30:10 [INFO] SmartVista host connection DISCONNECTED
+11:30:10 [ERROR] Received a socket error from SmartVista host: Unknown error
+11:30:10 [INFO] SmartVista host connection ESTABLISHED
+11:30:58 [ERROR] Received a socket error from SmartVista host: The remote host closed the connection
+11:30:58 [INFO] SmartVista host connection DISCONNECTED
+11:30:58 [ERROR] Received a socket error from SmartVista host: The remote host closed the connection
+11:31:22 [INFO] [Re]connecting...
+11:31:22 [INFO] SmartVista host connection ESTABLISHED
+11:31:26 [ERROR] Received a socket error from SmartVista host: The remote host closed the connection
+11:31:26 [INFO] SmartVista host connection DISCONNECTED
+11:31:26 [ERROR] Received a socket error from SmartVista host: The remote host closed the connection
+11:31:43 [INFO] [Re]connecting...
+11:31:43 [INFO] SmartVista host connection ESTABLISHED
+11:31:46 [ERROR] Received a socket error from SmartVista host: The remote host closed the connection
+11:31:46 [INFO] SmartVista host connection DISCONNECTED
+11:31:46 [ERROR] Received a socket error from SmartVista host: The remote host closed the connection
+11:31:50 [INFO] [Re]connecting...
+11:32:00 [ERROR] Cannot connect SV: SmartVista Host Connection Timeout
+11:32:00 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+11:32:04 [INFO] [Re]connecting...
+11:32:10 [ERROR] Cannot connect SV: SmartVista Host Connection Timeout
+11:32:10 [ERROR] Received a socket error from SmartVista host: Connection refused
+11:32:13 [INFO] [Re]connecting...
+11:32:13 [INFO] SmartVista host connection ESTABLISHED
+11:33:25 [INFO] Default file parsed
+11:33:30 [INFO] [Re]connecting...
+11:33:30 [INFO] SmartVista host connection ESTABLISHED
+11:33:32 [ERROR] Received a socket error from SmartVista host: <bound PYQT_SIGNAL _socket_error of ConnectionWorker object at 0x000001D3FD28B760>
+11:33:32 [INFO] SmartVista host connection DISCONNECTED
+11:33:32 [ERROR] Received a socket error from SmartVista host: <bound PYQT_SIGNAL _socket_error of ConnectionWorker object at 0x000001D3FD28B760>
+11:34:04 [INFO] Default file parsed
+11:34:07 [INFO] [Re]connecting...
+11:34:07 [INFO] SmartVista host connection ESTABLISHED
+11:34:13 [ERROR] Received a socket error from SmartVista host: SocketError.RemoteHostClosedError
+11:34:13 [INFO] SmartVista host connection DISCONNECTED
+11:34:13 [ERROR] Received a socket error from SmartVista host: SocketError.RemoteHostClosedError
+15:34:14 [INFO] Default file parsed
+15:34:19 [INFO] [Re]connecting...
+15:34:19 [INFO] SmartVista host connection ESTABLISHED
+15:34:20 [INFO] [Re]connecting...
+15:34:20 [INFO] SmartVista host connection DISCONNECTED
+15:34:20 [ERROR] Received a socket error from SmartVista host: Unknown error
+15:34:20 [INFO] SmartVista host connection ESTABLISHED
+15:34:44 [INFO] Default file parsed
+15:34:47 [INFO] [Re]connecting...
+15:34:47 [INFO] SmartVista host connection ESTABLISHED
+15:34:49 [INFO] [Re]connecting...
+15:34:49 [INFO] SmartVista host connection DISCONNECTED
+15:34:49 [ERROR] Received a socket error from SmartVista host: Unknown error
+15:34:49 [INFO] SmartVista host connection ESTABLISHED
+15:35:14 [INFO] Default file parsed
+15:35:17 [INFO] [Re]connecting...
+15:35:17 [INFO] SmartVista host connection ESTABLISHED
+15:35:18 [INFO] [Re]connecting...
+15:35:18 [INFO] SmartVista host connection DISCONNECTED
+15:35:18 [INFO] SmartVista host connection ESTABLISHED
+15:35:56 [INFO] Default file parsed
+15:35:59 [INFO] [Re]connecting...
+15:35:59 [INFO] SmartVista host CONNECTED
+15:36:03 [INFO] [Re]connecting...
+15:36:03 [INFO] SmartVista host DISCONNECTED
+15:36:03 [INFO] SmartVista host CONNECTED
+15:36:06 [INFO] [Re]connecting...
+15:36:06 [INFO] SmartVista host DISCONNECTED
+15:36:06 [INFO] SmartVista host CONNECTED
+15:36:12 [INFO] [Re]connecting...
+15:36:12 [INFO] SmartVista host DISCONNECTED
+15:36:12 [INFO] SmartVista host CONNECTED
+15:36:14 [INFO] SmartVista host DISCONNECTED
