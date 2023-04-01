@@ -1,75 +1,60 @@
 from collections import deque
-from PyQt6.QtCore import QObject, pyqtSignal, QThread
+from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtCore import QTimer
-from common.lib.core.EpaySpecification import EpaySpecification
-from common.lib.core.FieldsGenerator import FieldsGenerator
+from common.lib.EpaySpecification import EpaySpecification
+from common.lib.FieldsGenerator import FieldsGenerator
 from common.lib.data_models.Transaction import Transaction
-from common.lib.data_models.Config import Config
-from common.gui.core.connection_worker import ConnectionWorker
+from common.lib.Connector import Connector
+from common.lib.Parser import Parser
+from logging import error
 
 
 class TransactionQueue(QObject):
-    _spec: EpaySpecification = EpaySpecification()
-    _queue: deque[Transaction] = deque(maxlen=1024)
-    _incoming_transaction: pyqtSignal = pyqtSignal(Transaction)
-    _outgoing_transaction: pyqtSignal = pyqtSignal(Transaction)
-    _transaction_timeout: pyqtSignal = pyqtSignal(Transaction, float)
-    _ready_to_send: pyqtSignal = pyqtSignal(Transaction)
+    spec: EpaySpecification = EpaySpecification()
+    queue: deque[Transaction] = deque(maxlen=1024)
+    incoming_transaction: pyqtSignal = pyqtSignal(Transaction)
+    outgoing_transaction: pyqtSignal = pyqtSignal(Transaction)
+    transaction_timeout: pyqtSignal = pyqtSignal(Transaction, float)
+    ready_to_send: pyqtSignal = pyqtSignal(str, bytes)
 
-    @property
-    def spec(self):
-        return self._spec
-
-    @property
-    def incoming_transaction(self):
-        return self._incoming_transaction
-
-    @property
-    def outgoing_transaction(self):
-        return self._outgoing_transaction
-
-    @property
-    def transaction_timeout(self):
-        return self._transaction_timeout
-
-    @property
-    def connector(self):
-        return self._connector
-
-    def __init__(self, config: Config):
+    def __init__(self, connector: Connector):
         QObject.__init__(self)
-        self.config = config
-        self._connector = ConnectionWorker(self.config)
+        self.connector = connector
         self.generator: FieldsGenerator = FieldsGenerator()
         self.timers: dict[str, QTimer] = {}
-        self._start_connection_thread()
-
-    def _start_connection_thread(self):
-        self._connection_thread: QThread = QThread()
-        self.connector.moveToThread(self._connection_thread)
-        self._ready_to_send.connect(self.connector.send_transaction)
-        self._connection_thread.started.connect(self.connector.run)
-        self.connector.transaction_received.connect(self.put_transaction)
+        self.ready_to_send.connect(self.connector.send_transaction_data)
+        self.connector.incoming_transaction_data.connect(self.receive_transaction_data)
         self.connector.transaction_sent.connect(self.request_was_sent)
-        self._connection_thread.start()
 
-    def put_transaction(self, transaction):
-        transaction.is_request = self.spec.is_request(transaction)
-        self._queue.append(transaction)
-
-        if transaction.is_request:
-            self._put_request(transaction)
-            return
-
-        self._put_response(transaction)
-
-    def _put_request(self, request: Transaction):
+    def send_transaction_data(self, request: Transaction):
         if not request.is_request:
             raise TypeError("Wrong MTI")
 
-        self._ready_to_send.emit(request)
+        transaction_dump: bytes = Parser.create_dump(request)
 
-    def _put_response(self, response: Transaction):
+        self.ready_to_send.emit(request.trans_id, transaction_dump)
+
+    def receive_transaction_data(self, transaction_data: bytes):
+        try:
+            transaction: Transaction = Parser.parse_dump(transaction_data)
+
+        except Exception as parsing_error:
+            error(f"Incoming transaction parsing error: {parsing_error}")
+
+        else:
+            self.put_transaction(transaction)
+
+    def put_transaction(self, transaction, send=True):
+        transaction.is_request = self.spec.is_request(transaction)
+        self.queue.append(transaction)
+
+        if send and transaction.is_request:
+            self.send_transaction_data(transaction)
+            return
+
+        self.put_response(transaction)
+
+    def put_response(self, response: Transaction):
         if response.is_request:
             raise TypeError("Wrong MTI")
 
@@ -112,7 +97,10 @@ class TransactionQueue(QObject):
         self.transaction_timeout.emit(transaction, timeout_secs)
         timer.stop()
 
-    def request_was_sent(self, request):
+    def request_was_sent(self, trans_id):
+        if not (request := self.get_transaction(trans_id)):
+            return
+
         self.start_transaction_timer(request)
         self.outgoing_transaction.emit(request)
 
@@ -125,7 +113,7 @@ class TransactionQueue(QObject):
 
         transaction: Transaction
 
-        for transaction in self._queue:
+        for transaction in self.queue:
             if not self.spec.get_reversal_mti(transaction.message_type):
                 continue
 
@@ -135,16 +123,16 @@ class TransactionQueue(QObject):
 
     def remove_from_queue(self, transaction):
         transactions_to_remove = [
-            trans for trans in self._queue if transaction.trans_id in (trans.trans_id, trans.match_id)
+            trans for trans in self.queue if transaction.trans_id in (trans.trans_id, trans.match_id)
         ]
 
         for transaction in transactions_to_remove:
-            self._queue.remove(transaction)
+            self.queue.remove(transaction)
 
     def get_transaction(self, trans_id: str) -> Transaction | None:
         transaction = None
 
-        for trans in self._queue:
+        for trans in self.queue:
             if trans_id == trans.trans_id:
                 transaction = trans
                 break
@@ -167,7 +155,7 @@ class TransactionQueue(QObject):
     def match_transaction(self, response: Transaction) -> bool:
         matched_request: Transaction | None = None
 
-        for request in self._queue:
+        for request in self.queue:
             if not self.is_matched(request, response):
                 continue
 

@@ -26,7 +26,9 @@ class Parser:
     def __init__(self, config: Config):
         self.config: Config = config
 
-    def create_dump(self, transaction: Transaction, body: bool = False) -> bytes | str:
+    @staticmethod
+    def create_dump(transaction: Transaction, body: bool = False) -> bytes | str:
+        spec: EpaySpecification = EpaySpecification()
         msg_type: bytes = transaction.message_type.encode()
         bitmap: Bitmap = Bitmap(transaction.data_fields)
         bitmap: bytes = bitmap.get_bitmap(bytes)
@@ -39,9 +41,9 @@ class Parser:
                 continue
 
             if isinstance(text, dict):
-                text = self.join_complex_field(field, text)
+                text = Parser.join_complex_field(field, text)
 
-            field_length_var = self.spec.get_field_length_var(field)
+            field_length_var = spec.get_field_length_var(field)
 
             if field_length_var:
                 text: str = f"{len(text):0{field_length_var}}{text}"
@@ -54,13 +56,14 @@ class Parser:
 
         return msg_type + bitmap + msg_body
 
-    def create_sv_dump(self, transaction: Transaction) -> str | None:
+    @staticmethod
+    def create_sv_dump(transaction: Transaction) -> str | None:
         mti: str = transaction.message_type
         bitmap: hex = Bitmap(transaction.data_fields)
         bitmap: hex = bitmap.get_bitmap(hex)
 
         try:
-            body: str = self.create_dump(transaction, body=True)
+            body: str = Parser.create_dump(transaction, body=True)
         except Exception as exc:
             error("Dump generating error: %s", exc)
             return
@@ -86,7 +89,10 @@ class Parser:
 
         return dump
 
-    def join_complex_field(self, field, field_data, path=None):
+    @staticmethod
+    def join_complex_field(field, field_data, path=None):
+        spec: EpaySpecification = EpaySpecification()
+
         if path is None:
             path = [field]
 
@@ -96,11 +102,11 @@ class Parser:
 
         for subfield, subfield_data in field_data.items():
             path.append(subfield)
-            subfield_spec = self.spec.get_field_spec(path)
+            subfield_spec = spec.get_field_spec(path)
 
             if subfield_spec is None:
                 warning("Lost specification for field %s! Set parameters in the Specification tool", ".".join(path))
-                field_spec: IsoField = self.spec.get_field_spec(path[:-1])
+                field_spec: IsoField = spec.get_field_spec(path[:-1])
 
                 length = str()
 
@@ -112,7 +118,7 @@ class Parser:
                 continue
 
             if subfield_spec.fields:
-                result += self.join_complex_field(subfield, subfield_data, path)
+                result += Parser.join_complex_field(subfield, subfield_data, path)
             else:
                 length = str(len(subfield_data))
                 length = length.zfill(subfield_spec.var_length)
@@ -121,17 +127,19 @@ class Parser:
             path.pop()
 
         if len(path) > 1:
-            field_spec: IsoField = self.spec.get_field_spec(path)
+            field_spec: IsoField = spec.get_field_spec(path)
             result = f"{field}{len(result):0{field_spec.var_length}}{result}"
 
         return result
 
-    def parse_dump(self, data) -> Transaction:
+    @staticmethod
+    def parse_dump(data) -> Transaction:
+        spec: EpaySpecification = EpaySpecification()
         fields: RawFieldSet = {}
         position = int()
-        message_type_indicator = data[position:self.spec.MessageLength.message_type_length].decode()
+        message_type_indicator = data[position:spec.MessageLength.message_type_length].decode()
         position += len(message_type_indicator)
-        bitmap: str = data[position: position + self.spec.MessageLength.bitmap_length]
+        bitmap: str = data[position: position + spec.MessageLength.bitmap_length]
         position += len(bitmap)
         second_bitmap_exists = Bitmap(bitmap, bytes).second_bitmap_exists()
 
@@ -149,24 +157,24 @@ class Parser:
             if not exists:
                 continue
 
-            if field == self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
+            if field == spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
                 continue
 
-            length_var = self.spec.get_field_length_var(field)
+            length_var = spec.get_field_length_var(field)
 
             if length_var > 0:
                 length = int(data[position:position + length_var])
                 position += length_var
                 fields[field] = data[position:position + length]
             else:
-                length = self.spec.get_field_length(field)
+                length = spec.get_field_length(field)
                 fields[field] = data[position:position + length]
 
             position += length
 
         for field in fields:
-            if self.spec.is_field_complex(field):
-                fields[field]: RawFieldSet = self.split_complex_field(field, fields[field])
+            if spec.is_field_complex(field):
+                fields[field]: RawFieldSet = Parser.split_complex_field(field, fields[field])
 
         transaction: Transaction = Transaction(
             trans_id=trans_id(),
@@ -175,6 +183,44 @@ class Parser:
         )
 
         return transaction
+
+    @staticmethod
+    def split_complex_field(field: str, field_data: str, spec: dict | None = None) -> RawFieldSet | None:
+        complex_field_data: RawFieldSet = dict()
+
+        if spec is None:  # First entry
+            spec: EpaySpecification = EpaySpecification()
+            spec: IsoField = spec.get_field_spec([field])
+
+        while field_data:
+            tag_number = field_data[:spec.tag_length]
+            field_data = field_data[spec.tag_length:]
+            field_spec = spec.fields.get(tag_number)
+
+            try:
+                var_length = spec.tag_length
+
+                if not var_length:
+                    raise ValueError
+
+            except(AttributeError, ValueError):
+                error("Lost specification for field %s ", field)
+                error("The field and corresponding sub fields were absent")
+                return {}
+
+            var_length = spec.tag_length
+            val_length = field_data[:var_length]
+            val_length = int(val_length)
+            field_data = field_data[var_length:]
+            value_data = field_data[:val_length]
+            field_data = field_data[val_length:]
+
+            if field_spec and field_spec.fields:
+                value_data = Parser.split_complex_field(tag_number, value_data, field_spec)
+
+            complex_field_data[tag_number] = value_data
+
+        return complex_field_data
 
     def parse_main_window(self, form) -> Transaction:
         data_fields: TypeFields = form.get_fields()
@@ -228,42 +274,6 @@ class Parser:
         ini_data = "\n".join(ini_data)
 
         return ini_data
-
-    def split_complex_field(self, field: str, field_data: str, spec: dict | None = None) -> RawFieldSet | None:
-        complex_field_data: RawFieldSet = dict()
-
-        if spec is None:  # First entry
-            spec = self.spec.get_field_spec([field])
-
-        while field_data:
-            tag_number = field_data[:spec.tag_length]
-            field_data = field_data[spec.tag_length:]
-            field_spec = spec.fields.get(tag_number)
-
-            try:
-                var_length = spec.tag_length
-
-                if not var_length:
-                    raise ValueError
-
-            except(AttributeError, ValueError):
-                error("Lost specification for field %s ", field)
-                error("The field and corresponding sub fields were absent")
-                return {}
-
-            var_length = spec.tag_length
-            val_length = field_data[:var_length]
-            val_length = int(val_length)
-            field_data = field_data[var_length:]
-            value_data = field_data[:val_length]
-            field_data = field_data[val_length:]
-
-            if field_spec and field_spec.fields:
-                value_data = self.split_complex_field(tag_number, value_data, field_spec)
-
-            complex_field_data[tag_number] = value_data
-
-        return complex_field_data
 
     def parse_file(self, filename: FilePath) -> Transaction:
         file_extension = splitext(filename)[-1].upper().replace(".", "")

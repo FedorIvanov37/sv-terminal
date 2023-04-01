@@ -2,18 +2,19 @@ from json import dumps
 from logging import error, info, warning
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject
-from common.lib.core.Parser import Parser
+from common.lib.Parser import Parser
 from common.gui.core.logger import Logger
-from common.lib.core.TransactionQueue import TransactionQueue
-from common.lib.core.EpaySpecification import EpaySpecification
-from common.lib.core.FieldsGenerator import FieldsGenerator
-from common.lib.core.Validator import Validator
+from common.lib.TransactionQueue import TransactionQueue
+from common.lib.EpaySpecification import EpaySpecification
+from common.lib.FieldsGenerator import FieldsGenerator
+from common.lib.Validator import Validator
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
-from common.gui.core.connection_worker import ConnectionWorker
+from common.lib.Connector import Connector
 from PyQt6.QtNetwork import QTcpSocket
+from common.gui.core.connection_thread import ConnectionThread
 
 
 class SvTerminal(QObject):
@@ -21,7 +22,7 @@ class SvTerminal(QObject):
     _pyqt_application = QtWidgets.QApplication([])
     _validator = Validator(_config)
     _spec: EpaySpecification = EpaySpecification(TermFilesPath.CONFIG)
-    _need_reconnect: pyqtSignal = pyqtSignal()
+    need_reconnect: pyqtSignal = pyqtSignal()
 
     @property
     def config(self):
@@ -39,15 +40,18 @@ class SvTerminal(QObject):
     def spec(self):
         return self._spec
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, connector: Connector | ConnectionThread | None = None):
         super(SvTerminal, self).__init__()
         self.config = config
+
+        if connector is None:
+            connector: Connector = Connector(self.config)
+
+        self.connector: Connector = connector
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator()
         self.logger: Logger = Logger(self.config)
-        self.trans_queue: TransactionQueue = TransactionQueue(self.config)
-        self.connector: ConnectionWorker = ConnectionWorker(self.config)
-        self.connector.socker_error.connect(self.socket_error)
+        self.trans_queue: TransactionQueue = TransactionQueue(self.connector)
         self.connect_interfaces()
 
     def run(self):
@@ -55,23 +59,28 @@ class SvTerminal(QObject):
             self.reconnect()
 
         status = self._pyqt_application.exec()
-        exit(status)
+
+        return status
 
     def connect_interfaces(self):
-        self._need_reconnect.connect(self.connector.connect_sv)
+        self.connector.errorOccurred.connect(self.socket_error)
+        self.need_reconnect.connect(self.connector.reconnect_sv)
         self.connector.connected.connect(self.sv_connected)
         self.connector.disconnected.connect(self.sv_disconnected)
         self.trans_queue.incoming_transaction.connect(self.transaction_received)
         self.trans_queue.outgoing_transaction.connect(self.transaction_sent)
         self.trans_queue.transaction_timeout.connect(self.got_timeout)
 
+    def get_transaction(self, trans_id: str):
+        return self.trans_queue.get_transaction(trans_id)
+
     @staticmethod
     def sv_connected():
-        info("SmartVista host CONNECTED")
+        info("SmartVista host connection ESTABLISHED")
 
     @staticmethod
     def sv_disconnected():
-        info("SmartVista host DISCONNECTED")
+        info("SmartVista host connection DISCONNECTED")
 
     @staticmethod
     def got_timeout(transaction, timeout_secs):
@@ -81,14 +90,14 @@ class SvTerminal(QObject):
         if self.connector.error() == QTcpSocket.SocketError.UnknownSocketError:  # TODO
             return
 
-        error(f"Received a socket error from SmartVista host: {self.connector.error_string}")
+        error(f"Received a socket error from SmartVista host: {self.connector.errorString()}")
 
     def disconnect(self):
         self.connector.disconnect_sv()
 
     def reconnect(self):
         info("[Re]connecting...")
-        self._need_reconnect.emit()
+        self.need_reconnect.emit()
 
     def send(self, transaction: Transaction | None = None):
         if transaction.generate_fields:

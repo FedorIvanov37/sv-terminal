@@ -14,14 +14,13 @@ from common.lib.data_models.Config import Config
 
 class SettingsWindow(Ui_SettingsWindow, QDialog):
     def __init__(self, config: Config):
-        super().__init__()
+        super(SettingsWindow, self).__init__()
         self.setupUi(self)
         self.config: Config = config
         self.setup()
 
     def setup(self):
         self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
-        self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
         self.ButtonAbout.setIcon(QIcon(QPixmap(TermFilesPath.MAIN_LOGO)))
         self.SvPort.setValidator(QIntValidator(1, 65535))
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){3}\d+")))
@@ -36,7 +35,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
     @staticmethod
     def about():
-        AboutWindow().exec()
+        AboutWindow()
 
     def process_config(self):
         self.DebugLevel.setCurrentText(self.config.debug.level)
@@ -98,9 +97,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.close()
 
     def croak(self):
-        if self.MaxAmount.text() != self.easter:
-            return
-
-        self.MaxAmount.setText(Croak().max_amount)
+        if self.MaxAmount.text() == self.easter:
+            self.MaxAmount.setText(self.config.fields.max_amount)
+            Croak()
 
     easter = "".join(map(chr, TextConstants.EASTER))
