@@ -190,4 +190,4 @@ if transaction.success:
 
 ## Author
 
-Designed and developed by [Fedor Ivanov](mailto:f.ivanov@unlimint.com)
+Designed and developed by [Fedor Ivanov](mailto:f.ivanov@unlimint.com?subject=hello&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SvTerminal%20version%20is%20v0.15%20%7C%20Released%20in%20Apr%202023%0A)
