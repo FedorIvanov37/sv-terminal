@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>HelpWindow</class>
  <widget class="QDialog" name="HelpWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="enabled">
    <bool>true</bool>
   </property>
@@ -41,7 +44,7 @@
    <enum>Qt::NoContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string>All glory to the Hypnotoad!</string>
+   <string/>
   </property>
   <property name="modal">
    <bool>true</bool>

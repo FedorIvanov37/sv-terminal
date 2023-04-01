@@ -12,6 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_HelpWindow(object):
     def setupUi(self, HelpWindow):
         HelpWindow.setObjectName("HelpWindow")
+        HelpWindow.setWindowModality(QtCore.Qt.WindowModality.NonModal)
         HelpWindow.setEnabled(True)
         HelpWindow.resize(500, 500)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
@@ -24,6 +25,7 @@ class Ui_HelpWindow(object):
         HelpWindow.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.BlankCursor))
         HelpWindow.setMouseTracking(False)
         HelpWindow.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.NoContextMenu)
+        HelpWindow.setWindowTitle("")
         HelpWindow.setModal(True)
         self.gridLayout = QtWidgets.QGridLayout(HelpWindow)
         self.gridLayout.setObjectName("gridLayout")
@@ -44,7 +46,6 @@ class Ui_HelpWindow(object):
 
     def retranslateUi(self, HelpWindow):
         _translate = QtCore.QCoreApplication.translate
-        HelpWindow.setWindowTitle(_translate("HelpWindow", "All glory to the Hypnotoad!"))
         self.Toad.setText(_translate("HelpWindow", "toad"))
 
 

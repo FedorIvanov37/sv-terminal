@@ -1,4 +1,4 @@
-from common.lib.Connector import Connector
+from common.lib.core.Connector import Connector
 from common.lib.data_models.Config import Config
 from PyQt6.QtCore import QObject, QThread, QCoreApplication
 

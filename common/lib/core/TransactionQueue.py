@@ -1,11 +1,11 @@
 from collections import deque
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtCore import QTimer
-from common.lib.EpaySpecification import EpaySpecification
-from common.lib.FieldsGenerator import FieldsGenerator
+from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.data_models.Transaction import Transaction
-from common.lib.Connector import Connector
-from common.lib.Parser import Parser
+from common.lib.core.Connector import Connector
+from common.lib.core.Parser import Parser
 from logging import error
 
 
