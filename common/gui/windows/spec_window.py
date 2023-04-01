@@ -1,17 +1,16 @@
 from json import dumps
+from typing import Optional
+from datetime import datetime
+from pydantic import ValidationError
 from PyQt6.QtGui import QIcon, QCloseEvent, QKeyEvent
 from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog, QPushButton
+from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
+from common.gui.windows.spec_unsaved import SpecUnsaved
 from common.gui.forms.spec import Ui_SpecificationWindow
 from common.gui.constants.TermFilesPath import TermFilesPath
-from common.gui.core.action_button import ActionButton
 from common.gui.core.spec_view import SpecView
-from common.lib.core.EpaySpecification import EpaySpecification
-from datetime import datetime
-from typing import Optional
-from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog
-from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
-from pydantic import ValidationError
-from common.gui.windows.spec_unsaved import SpecUnsaved
 from common.gui.windows.mti_spec_window import MtiSpecWindow
 
 
@@ -64,9 +63,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def setup(self):
         self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
-        self.PlusButton = ActionButton("+")
-        self.MinusButton = ActionButton("-")
-        self.NextLevelButton = ActionButton("↵")
+        self.PlusButton = QPushButton("+")
+        self.MinusButton = QPushButton("-")
+        self.NextLevelButton = QPushButton("↵")
         self.PlusLayout.addWidget(self.PlusButton)
         self.MinusLayout.addWidget(self.MinusButton)
         self.NextLevelLayout.addWidget(self.NextLevelButton)

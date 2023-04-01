@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QTreeWidgetItem
 from PyQt6.QtCore import Qt, QVariant, pyqtSignal
 from common.gui.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.lib.data_models.EpaySpecificationModel import IsoField
-from common.gui.core.abstract_item import AbstractItem
+from common.gui.core.AbstractItem import AbstractItem
 
 
 class Item(AbstractItem):

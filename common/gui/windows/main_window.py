@@ -6,9 +6,8 @@ from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.ConnectionStatus import ConnectionStatus
-from common.gui.core.json_view import JsonView
-from common.gui.core.action_button import ActionButton
-from common.gui.core.field_Item import Item
+from common.gui.core.JsonView import JsonView
+from common.gui.core.FIeldItem import Item
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Config import Config
 
@@ -101,9 +100,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self._json_view: JsonView = JsonView(self.config)
         self._json_view.itemChanged.connect(self.field_changed.emit)
         self.FieldsTreeLayout.addWidget(self._json_view)
-        self.PlusButton = ActionButton("+")
-        self.MinusButton = ActionButton("-")
-        self.NextLevelButton = ActionButton("↵")
+        self.PlusButton = QPushButton("+")
+        self.MinusButton = QPushButton("-")
+        self.NextLevelButton = QPushButton("↵")
 
         buttons_layouts_map = {
             self.PlusLayout: self.PlusButton,

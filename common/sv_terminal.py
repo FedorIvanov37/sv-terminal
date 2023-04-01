@@ -1,4 +1,4 @@
-from common.gui.core.terminal import SvTerminalGui
+from common.gui.core.SvTerminalGui import SvTerminalGui
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
 

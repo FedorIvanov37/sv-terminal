@@ -3,7 +3,7 @@ from logging import error, info, warning
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject
 from common.lib.core.Parser import Parser
-from common.gui.core.logger import Logger
+from common.gui.core.Logger import Logger
 from common.lib.core.TransactionQueue import TransactionQueue
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.FieldsGenerator import FieldsGenerator

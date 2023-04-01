@@ -63,7 +63,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QobjecAbcMeta):
             self.errorOccurred.emit(QTcpSocket.SocketError.SocketTimeoutError)
 
     def disconnect_sv(self):
-        if self.state() == QTcpSocket.SocketState.UnconnectedState:
+        if not self.state() == QTcpSocket.SocketState.ConnectedState:
             return
 
         self.disconnectFromHost()

@@ -9,7 +9,7 @@ from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.spec_window import SpecWindow
-from common.gui.core.logger import LogStream, getLogger, Formatter
+from common.gui.core.Logger import LogStream, getLogger, Formatter
 from common.gui.constants.TextConstants import TextConstants
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.TermFilesPath import TermFilesPath
@@ -17,12 +17,14 @@ from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.gui.constants.ButtonActions import ButtonAction
 from common.lib.core.Terminal import SvTerminal
-from common.gui.core.wireless_log_handler import WirelessHandler
+from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.constants.LogDefinition import LogDefinition
-from common.gui.core.connection_thread import ConnectionThread
+from common.gui.core.ConnectionThread import ConnectionThread
 
 
 class SvTerminalGui(SvTerminal):
+    connector: ConnectionThread
+
     def __init__(self, config: Config):
         super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
         self.window: MainWindow = MainWindow(self.config)
@@ -69,7 +71,6 @@ class SvTerminalGui(SvTerminal):
         self.connector.stateChanged.connect(self.set_connection_status)
 
     def stop_sv_terminal(self):
-        self.connector.disconnect_sv()
         self.connector.stop_thread()
 
     def reconnect(self):

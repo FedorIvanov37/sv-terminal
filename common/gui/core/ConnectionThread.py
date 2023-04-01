@@ -75,7 +75,8 @@ class ConnectionThread(ConnectionInterface, QObject, metaclass=QobjecAbcMeta):
             QCoreApplication.processEvents()
             QThread.msleep(10)
 
-        self.thread.exit()
+        self.disconnect_sv()
+        self.thread.terminate()
 
     def stop_thread(self):
         self.stop = True
