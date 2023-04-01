@@ -157,7 +157,8 @@ class SpecView(QObject):
                 SpecFieldDef.get_column_position(SpecFieldDef.ALPHA): field_data.alpha,
                 SpecFieldDef.get_column_position(SpecFieldDef.NUMERIC): field_data.numeric,
                 SpecFieldDef.get_column_position(SpecFieldDef.SPECIAL): field_data.special,
-                SpecFieldDef.get_column_position(SpecFieldDef.BYTES): field_data.bytes
+                SpecFieldDef.get_column_position(SpecFieldDef.BYTES): field_data.bytes,
+                # SpecFieldDef.get_column_position(SpecFieldDef.IS_SECRET): field_data.is_secret,
             }
 
             item: SpecItem = SpecItem(field_data_for_item, checkboxes=checkboxes)
@@ -196,6 +197,7 @@ class SpecView(QObject):
                     bytes=row.bytes,
                     reserved_for_future=row.reserved_for_future,
                     description=row.description,
+                    # is_secret=row.is_secret,
                     fields=None
                 )
 

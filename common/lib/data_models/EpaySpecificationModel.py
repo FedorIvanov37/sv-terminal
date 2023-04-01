@@ -28,6 +28,7 @@ class IsoField(BaseModel):
     bytes: bool = False
     reserved_for_future: bool = False
     description: str = str()
+    is_secret: bool = False
     fields: FieldSet | None
 
 

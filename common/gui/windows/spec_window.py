@@ -10,7 +10,7 @@ from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.gui.windows.spec_unsaved import SpecUnsaved
 from common.gui.forms.spec import Ui_SpecificationWindow
 from common.gui.constants.TermFilesPath import TermFilesPath
-from common.gui.core.spec_view import SpecView
+from common.gui.core.SpecView import SpecView
 from common.gui.windows.mti_spec_window import MtiSpecWindow
 
 
