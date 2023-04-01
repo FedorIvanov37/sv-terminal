@@ -169,15 +169,11 @@ if transaction.success:
 * NEW: ISO8583 Message Type Indicators (MTI) setting window. Opens by the button "Set MTI" in the Specification window
 * NEW: Small warning window in case when Specification was changed but not saved 
 * NEW: Background music, play control button, and interactive contact link to the About window
-  
-
 * UPD: Framework changed to PyQt6, SvTerminal does not support PyQt5 since v0.15
 * UPD: Since v0.15 Specification settings are required for any fields
 * UPD: SvTerminal library is separated, and the GUI runs as a specific implementation of the library
 * UPD: Incoming JSON-files format simplified with backward compatibility respect
 * UPD: New section [CONFIG] added in INI incoming files. Two options are available - MAX_AMOUNT and GENERATE_FIELDS
-  
-
 * FIX: No freeze GUI while opening the connection. The Connector moved to its own thread, separated from the event loop
 * FIX: Incorrect field names in INI files
 * FIX: Terminal fall down when empty field number set in Specification
