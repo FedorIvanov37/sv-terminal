@@ -194,4 +194,4 @@ if transaction.success:
 
 ## Author
 
-Designed and developed by [Fedor Ivanov](mailto:f.ivanov@unlimint.com?subject=SvTerminal's user request&body=%0D%0A%0D%0ASvTerminal v0.15%20%7C%20Released in Apr 2023)
+Designed and developed by [Fedor Ivanov](mailto:f.ivanov@unlimint.com)
