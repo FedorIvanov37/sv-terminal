@@ -12,14 +12,14 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
         SettingsWindow.setObjectName("SettingsWindow")
-        SettingsWindow.resize(300, 420)
+        SettingsWindow.resize(300, 460)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(SettingsWindow.sizePolicy().hasHeightForWidth())
         SettingsWindow.setSizePolicy(sizePolicy)
-        SettingsWindow.setMinimumSize(QtCore.QSize(300, 420))
-        SettingsWindow.setMaximumSize(QtCore.QSize(300, 420))
+        SettingsWindow.setMinimumSize(QtCore.QSize(300, 460))
+        SettingsWindow.setMaximumSize(QtCore.QSize(300, 460))
         SettingsWindow.setWhatsThis("")
         self.gridLayout_2 = QtWidgets.QGridLayout(SettingsWindow)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -158,7 +158,7 @@ class Ui_SettingsWindow(object):
         self.groupBox_4.setTitle(_translate("SettingsWindow", "Fields"))
         self.label.setText(_translate("SettingsWindow", "Max amount"))
         self.MaxAmount.setPlaceholderText(_translate("SettingsWindow", "Amount"))
-        self.BuildFld90.setText(_translate("SettingsWindow", "Build Original Data Elements (Field 90) in Reversal"))
+        self.BuildFld90.setText(_translate("SettingsWindow", "Build Field 90 in reversal"))
         self.SendInternalId.setText(_translate("SettingsWindow", "Send internal transaction ID to SV"))
         self.ValidationEnabled.setText(_translate("SettingsWindow", "Fields validation enabled"))
 

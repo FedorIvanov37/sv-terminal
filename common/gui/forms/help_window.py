@@ -19,7 +19,7 @@ class Croak(Ui_HelpWindow, QDialog):
         try:
             super().__init__()
             self.setupUi(self)
-            self.movie = QMovie(r"common\app\forms\help.pyc")
+            self.movie = QMovie(r"common\gui\forms\help.pyc")
             self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
             self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
             self.Toad.setMovie(self.movie)

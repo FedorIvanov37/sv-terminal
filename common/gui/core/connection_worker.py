@@ -3,83 +3,84 @@ from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QObject, pyqtSignal, QThread
 from common.lib.data_models.Transaction import Transaction
 from common.lib.Connector import Connector
-from common.lib.decorators.singleton import singleton
+from PyQt6.QtNetwork import QTcpSocket
 
 
-@singleton
 class ConnectionWorker(QObject):
-    _connector: Connector
-    _need_reconnect: bool = False
-    _connected: pyqtSignal = pyqtSignal()
-    _disconnected: pyqtSignal = pyqtSignal()
-    _socket_error: pyqtSignal = pyqtSignal(int)
-    _connection_started: pyqtSignal = pyqtSignal()
-    _connection_finished: pyqtSignal = pyqtSignal()
-    _transaction_sent: pyqtSignal = pyqtSignal(Transaction)
-    _transaction_received: pyqtSignal = pyqtSignal(Transaction)
-    _stop: bool = False
+    # _connector: Connector
+    # _need_reconnect: bool = False
+    # _connected: pyqtSignal = pyqtSignal()
+    # _disconnected: pyqtSignal = pyqtSignal()
+    # _socket_error: pyqtSignal = pyqtSignal(int)
+    # _errorOccurred: pyqtSignal(QTcpSocket.SocketError)
+    # _connection_started: pyqtSignal = pyqtSignal()
+    # _connection_finished: pyqtSignal = pyqtSignal()
+    # _transaction_sent: pyqtSignal = pyqtSignal(Transaction)
+    # _transaction_received: pyqtSignal = pyqtSignal(Transaction)
+    # _stop: bool = False
 
-    @property
-    def transaction_received(self):
-        return self._transaction_received
+    # @property
+    # def transaction_received(self):
+    #     return self._transaction_received
+    #
+    # @property
+    # def error_string(self):
+    #     return self.connector.errorString()
+    #
+    # @property
+    # def transaction_sent(self):
+    #     return self._transaction_sent
+    #
+    # @property
+    # def connection_started(self):
+    #     return self._connection_started
+    #
+    # @property
+    # def connection_finished(self):
+    #     return self._connection_finished
 
-    @property
-    def error_string(self):
-        return self.connector.errorString()
-
-    @property
-    def transaction_sent(self):
-        return self._transaction_sent
-
-    @property
-    def connection_started(self):
-        return self._connection_started
-
-    @property
-    def connection_finished(self):
-        return self._connection_finished
-
-    @property
-    def socker_error(self):
-        return self._socket_error
-
-    @property
-    def connected(self):
-        return self._connected
-
-    @property
-    def disconnected(self):
-        return self._disconnected
-
-    @property
-    def connector(self):
-        return self._connector
-
-    @connector.setter
-    def connector(self, connector):
-        self._connector = connector
-
-    @property
-    def stop(self):
-        return self._stop
-
-    @stop.setter
-    def stop(self, stop):
-        self._stop = stop
-
-    @property
-    def state(self):
-        return self.connector.state()
+    # @property
+    # def errorOccurred(self):
+    #     return self._errorOccurred
+    #
+    # @property
+    # def connected(self):
+    #     return self.connector.connected
+    #
+    # @property
+    # def disconnected(self):
+    #     return self.connector.disconnected
+    #
+    # @property
+    # def connector(self):
+    #     return self._connector
+    #
+    # @connector.setter
+    # def connector(self, connector):
+    #     self._connector = connector
+    #
+    # @property
+    # def stop(self):
+    #     return self._stop
+    #
+    # @stop.setter
+    # def stop(self, stop):
+    #     self._stop = stop
+    #
+    # @property
+    # def state(self):
+    #     return self.connector.state()
 
     def __init__(self, config):
-        QObject.__init__(self)
+        # QObject.__init__(self)
+        super(ConnectionWorker, self).__init__()
+
         self.connector = Connector(config)
         self.connector.connected.connect(self.connected.emit)
         self.connector.disconnected.connect(self.disconnected.emit)
         self.connector.readyRead.connect(self.connector.read_transaction_data)
         self.connector.incoming_message.connect(self.transaction_received)
-        self.connector.disconnected.connect(lambda: self.socker_error.emit(self.connector.error()))
-        self.connector.errorOccurred.connect(lambda sock_err: self.socker_error.emit(sock_err))
+        self.errorOccurred = pyqtSignal(QTcpSocket.SocketError)
 
     def run(self):
         while not self.stop:

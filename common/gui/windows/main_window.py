@@ -183,9 +183,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         return self._json_view.get_field_data(field_number)
 
-    def lock_connection_buttons(self, lock=True):
+    def block_connection_buttons(self):
+        self.change_connection_buttons_state(enabled=False)
+
+    def unblock_connection_buttons(self):
+        self.change_connection_buttons_state(enabled=True)
+
+    def change_connection_buttons_state(self, enabled: bool):
         for button in (self.ButtonReconnect, self.ButtonSend, self.ButtonEchoTest, self.ButtonReverse):
-            button.setDisabled(lock)
+            button.setEnabled(enabled)
 
     def set_mti_values(self, mti_list: list[str]):
         for mti in mti_list:

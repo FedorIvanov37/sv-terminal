@@ -19,12 +19,13 @@ from common.gui.constants.ButtonActions import ButtonAction
 from common.lib.Terminal import SvTerminal
 from common.gui.core.wireless_log_handler import WirelessHandler
 from common.gui.constants.LogDefinition import LogDefinition
+from common.gui.core.connection_thread import ConnectionThread
 
 
 class SvTerminalGui(SvTerminal):
     def __init__(self, config: Config):
-        super(SvTerminalGui, self).__init__(config)
-        self.window: MainWindow = MainWindow(config)
+        super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
+        self.window: MainWindow = MainWindow(self.config)
         self.setup()
 
     def setup(self):
@@ -34,6 +35,8 @@ class SvTerminalGui(SvTerminal):
         self.window.set_log_data(TextConstants.HELLO_MESSAGE)
         self.window.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
+        self.connector.errorOccurred.connect(self.set_connection_status)
+        self.connector.errorOccurred.connect(self.window.unblock_connection_buttons)
 
         if self.config.terminal.process_default_dump:
             self.set_default_values()
@@ -62,17 +65,26 @@ class SvTerminalGui(SvTerminal):
         for button, slot in buttons_connection_map.items():
             button.clicked.connect(slot)
 
-        self.window.window_close.connect(self.disconnect)
+        self.window.window_close.connect(self.stop_sv_terminal)
         self.window.menu_button_clicked.connect(self.proces_button_menu)
         self.window.field_changed.connect(self.set_bitmap)
-        self.connector.connection_finished.connect(self.set_connection_status)
-        self.connector.connected.connect(self.set_connection_status)
-        self.connector.disconnected.connect(self.set_connection_status)
-        self.connector.connection_started.connect(self.window.lock_connection_buttons)
-        self.connector.connection_finished.connect(lambda: self.window.lock_connection_buttons(lock=False))
+        self.connector.stateChanged.connect(self.set_connection_status)
+
+    def stop_sv_terminal(self):
+        self.connector.disconnect_sv()
+        self.connector.stop_thread()
+
+    def reconnect(self):
+        SvTerminal.reconnect(self)
+        self.window.block_connection_buttons()
 
     def set_connection_status(self):
-        self.window.set_connection_status(self.connector.state)
+        connection_status = self.connector.state()
+
+        if connection_status == QTcpSocket.SocketState.ConnectedState:
+            self.window.unblock_connection_buttons()
+
+        self.window.set_connection_status(connection_status)
 
     def create_window_logger(self):
         formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DATE_FORMAT, LogDefinition.MARK_STYLE)

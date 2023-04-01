@@ -1,39 +1,46 @@
 from struct import pack
-from logging import error, debug
+from logging import error, debug, warning, info
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtCore import pyqtSignal
-from .Parser import Parser
-from .data_models.Config import Config
-from .data_models.Transaction import Transaction
+from common.lib.data_models.Config import Config
 
 
 class Connector(QTcpSocket):
-    _incoming_message: pyqtSignal = pyqtSignal(Transaction)
-
-    @property
-    def incoming_message(self):
-        return self._incoming_message
+    incoming_transaction_data: pyqtSignal = pyqtSignal(bytes)
+    transaction_sent: pyqtSignal = pyqtSignal(str)
 
     def __init__(self, config: Config):
         QTcpSocket.__init__(self)
         self.config = config
-        self.parser = Parser(self.config)
+        self.readyRead.connect(self.read_transaction_data)
 
-    def read_from_socket(self):
-        debug("Socket has %d bytes of an incoming data", self.bytesAvailable())
-        incoming_data = self.readAll()
-        return incoming_data[2:]  # Cut the header
+    def send_transaction_data(self, trans_id: str, transaction_data: bytes):
+        if not self.state() == self.SocketState.ConnectedState:
+            warning("SmartVista disconnected. Trying to established the connection")
+            self.reconnect_sv()
 
-    def read_transaction_data(self):
-        data = self.read_from_socket().data()
-
-        try:
-            transaction: Transaction = self.parser.parse_dump(data=data)
-        except Exception as parsing_error:
-            error("Incoming transaction parsing error: %s", parsing_error)
+        if not self.state() == self.SocketState.ConnectedState:
             return
 
-        self.incoming_message.emit(transaction)
+        transaction_header = pack("!H", len(transaction_data))
+        transaction_data = transaction_header + transaction_data
+        bytes_sent = self.write(transaction_data)
+
+        if bytes_sent == int():
+            error("Cannot send transaction data")
+            return
+
+        debug("bytes sent %s", bytes_sent)
+
+        self.flush()
+        self.transaction_sent.emit(trans_id)
+
+    def read_transaction_data(self):
+        debug("Socket has %d bytes of an incoming data", self.bytesAvailable())
+        incoming_data = self.readAll()
+        incoming_data = incoming_data.data()
+        incoming_data = incoming_data[2:]  # Cut the header
+        self.incoming_transaction_data.emit(incoming_data)
 
     def connect_sv(self):
         host = self.config.smartvista.host
@@ -51,7 +58,7 @@ class Connector(QTcpSocket):
         self.waitForConnected(msecs=10000)
 
         if not self.state() == self.SocketState.ConnectedState:
-            error("Cannot connect SV: SmartVista Host Connection Timeout")
+            self.errorOccurred.emit(QTcpSocket.SocketError.SocketTimeoutError)
 
     def disconnect_sv(self):
         if self.state() == QTcpSocket.SocketState.UnconnectedState:
@@ -72,22 +79,3 @@ class Connector(QTcpSocket):
             return
 
         self.connect_sv()
-
-    def send_transaction(self, transaction: Transaction = None) -> bool:
-        if transaction is None:
-            return False
-
-        if self.state() != self.SocketState.ConnectedState:
-            error("Connection with SmartVista is not established")
-            return False
-
-        dump: bytes = self.parser.create_dump(transaction)
-        dump = pack("!H", len(dump)) + dump
-        bytes_sent = self.write(dump)
-
-        if bytes_sent > int():
-            debug("bytes sent %s", bytes_sent)
-            self.flush()
-            return True
-
-        return False
