@@ -9,27 +9,21 @@ from common.gui.constants.TermFilesPath import TermFilesPath
 
 
 class Croak(Ui_HelpWindow, QDialog):
-    _max_amount = "100"
-
-    @property
-    def max_amount(self):
-        return self._max_amount
-
     def __init__(self):
         try:
-            super().__init__()
+            super(Croak, self).__init__()
             self.setupUi(self)
             self.movie = QMovie(r"common\gui\forms\help.pyc")
             self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
-            self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
             self.Toad.setMovie(self.movie)
-            self.movie.start()
             self.show()
+            self.movie.start()
             self.exec()
 
         except Exception:
             ...
 
-    def keyPressEvent(self, a0: QKeyEvent) -> None:  # TODO does not work :(
+    def keyPressEvent(self, a0: QKeyEvent) -> None:
         if a0.key() == Qt.Key.Key_Escape:
-            self.close()  # WTF
+            self.close()

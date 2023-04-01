@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_HelpWindow(object):
     def setupUi(self, HelpWindow):
         HelpWindow.setObjectName("HelpWindow")
-        HelpWindow.setEnabled(False)
+        HelpWindow.setEnabled(True)
         HelpWindow.resize(500, 500)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)

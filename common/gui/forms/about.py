@@ -80,6 +80,7 @@ class Ui_AboutWindow(object):
         self.AuthorLabel.setObjectName("AuthorLabel")
         self.verticalLayout.addWidget(self.AuthorLabel)
         self.ContactLabel = QtWidgets.QLabel(parent=AboutWindow)
+        self.ContactLabel.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.TextBrowserInteraction)
         self.ContactLabel.setObjectName("ContactLabel")
         self.verticalLayout.addWidget(self.ContactLabel)
         self.horizontalLayout.addLayout(self.verticalLayout)

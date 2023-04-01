@@ -1811,3 +1811,77 @@
 03:49:11 [INFO] Default file parsed
 04:00:02 [INFO] Default file parsed
 04:06:09 [INFO] Default file parsed
+10:41:17 [INFO] Default file parsed
+11:07:37 [INFO] Default file parsed
+11:08:24 [INFO] Default file parsed
+11:08:49 [INFO] Default file parsed
+11:09:25 [INFO] Default file parsed
+11:09:44 [INFO] Settings applied
+11:10:25 [INFO] Default file parsed
+11:10:37 [INFO] Default file parsed
+11:11:00 [INFO] Default file parsed
+11:12:17 [INFO] Default file parsed
+11:15:47 [INFO] Default file parsed
+11:16:26 [INFO] Default file parsed
+11:17:35 [INFO] Default file parsed
+11:18:10 [INFO] Default file parsed
+11:19:30 [INFO] Default file parsed
+11:21:17 [INFO] Default file parsed
+11:23:19 [INFO] Default file parsed
+11:23:51 [INFO] Default file parsed
+11:24:41 [INFO] Default file parsed
+11:25:20 [INFO] Default file parsed
+11:29:46 [INFO] Default file parsed
+11:30:41 [INFO] Default file parsed
+11:35:04 [INFO] Default file parsed
+11:38:50 [INFO] Default file parsed
+11:39:26 [INFO] Default file parsed
+11:58:29 [INFO] Default file parsed
+11:59:23 [INFO] [Re]connecting...
+11:59:23 [INFO] SmartVista host connection ESTABLISHED
+11:59:29 [INFO] Settings applied
+11:59:30 [INFO] [Re]connecting...
+11:59:30 [INFO] SmartVista host connection DISCONNECTED
+11:59:34 [INFO] Settings applied
+11:59:40 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+11:59:43 [INFO] [Re]connecting...
+11:59:43 [INFO] SmartVista host connection ESTABLISHED
+11:59:52 [INFO] SmartVista host connection DISCONNECTED
+12:05:41 [INFO] Default file parsed
+12:19:06 [INFO] Default file parsed
+12:21:45 [INFO] Default file parsed
+12:23:08 [INFO] Default file parsed
+12:24:29 [INFO] Default file parsed
+12:26:20 [INFO] Default file parsed
+12:32:17 [INFO] Default file parsed
+12:34:32 [INFO] Default file parsed
+12:35:51 [INFO] Default file parsed
+12:36:29 [INFO] Default file parsed
+12:38:06 [INFO] Default file parsed
+12:38:41 [INFO] Default file parsed
+12:39:18 [INFO] Default file parsed
+12:44:18 [INFO] Default file parsed
+12:44:40 [INFO] Default file parsed
+12:45:52 [INFO] Default file parsed
+12:47:26 [INFO] Default file parsed
+12:48:05 [INFO] Default file parsed
+12:50:07 [INFO] Default file parsed
+12:50:19 [INFO] Settings applied
+12:50:25 [INFO] Settings applied
+12:55:59 [INFO] Default file parsed
+12:56:26 [INFO] Default file parsed
+12:56:38 [INFO] Default file parsed
+12:56:59 [INFO] Default file parsed
+12:57:22 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+12:57:24 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+12:57:24 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+12:57:25 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+12:57:25 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+12:57:26 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+12:57:26 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+12:57:26 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+12:57:26 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+12:57:27 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+12:57:27 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+12:57:27 [ERROR] Field 14 less MinLength. Min length: 4 got: 1
+13:09:04 [INFO] Default file parsed

@@ -71,6 +71,9 @@ class SvTerminal(QObject):
         self.trans_queue.outgoing_transaction.connect(self.transaction_sent)
         self.trans_queue.transaction_timeout.connect(self.got_timeout)
 
+    def get_transaction(self, trans_id: str):
+        return self.trans_queue.get_transaction(trans_id)
+
     @staticmethod
     def sv_connected():
         info("SmartVista host connection ESTABLISHED")

@@ -200,6 +200,9 @@
            <property name="text">
             <string>Contact</string>
            </property>
+           <property name="textInteractionFlags">
+            <set>Qt::TextBrowserInteraction</set>
+           </property>
           </widget>
          </item>
         </layout>
