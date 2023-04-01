@@ -13,7 +13,9 @@ class TermFilesPath(object):
     DEFAULT_FILE: FilePath = f"{DATA_DIR}/settings/default.json"
     SPECIFICATION: FilePath = f"{DATA_DIR}/settings/specification.json"
     LOG_FILE_NAME: FilePath = f"{DATA_DIR}/log/sv_terminal.log"
+
     MAIN_LOGO: FilePath = f"{STYLE_DIR}/logo_triangle.png"
     MUSIC_ON: FilePath = f"{STYLE_DIR}/music_on.png"
     MUSIC_OFF: FilePath = f"{STYLE_DIR}/music_off.png"
-    VVVVVV = f"{STYLE_DIR}/VVVVVV.mp3"
+    VVVVVV: FilePath = f"{STYLE_DIR}/VVVVVV.mp3"
+    GIF_ABOUT: FilePath = f"{STYLE_DIR}/rocks.gif"

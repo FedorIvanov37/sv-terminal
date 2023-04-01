@@ -6,10 +6,12 @@ from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
 from common.gui.forms.about import Ui_AboutWindow
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.constants.ReleaseDefinitoin import ReleaseDefinition
+from PyQt6.QtGui import QMovie
 
 
 class AboutWindow(Ui_AboutWindow, QDialog):
     player = QMediaPlayer()
+    movie: QMovie
 
     def __init__(self):
         super().__init__()
@@ -18,8 +20,9 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         self.init_music_player()
 
     def setup(self):
-        self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
-        self.logoLabel.setPixmap(QPixmap(TermFilesPath.MAIN_LOGO))
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.movie: QMovie = QMovie(TermFilesPath.GIF_ABOUT)
+        self.logoLabel.setMovie(self.movie)
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(TermFilesPath.MAIN_LOGO)))
         self.MusicOnOfButton.clicked.connect(self.switch_musing)
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(TermFilesPath.MUSIC_ON)))
@@ -36,6 +39,8 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         for element in data_bind:
             element.setText("%s %s" % (element.text(), data_bind.get(element)))
 
+        self.movie.start()
+
     def init_music_player(self):
         music_file_path = path.normpath(f"{getcwd()}/{TermFilesPath.VVVVVV}")
         music_file_path = QUrl.fromLocalFile(music_file_path)
@@ -43,6 +48,11 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         self.player.setAudioOutput(audio_output)
         self.player.setSource(music_file_path)
         self.exec()
+
+    @staticmethod
+    def open_url(link):
+        link = QUrl(link)
+        QDesktopServices.openUrl(link)
 
     def play_music(self):
         if self.player.playbackState() == self.player.PlaybackState.PlayingState:
@@ -70,11 +80,6 @@ class AboutWindow(Ui_AboutWindow, QDialog):
                 return
 
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(icon)))
-
-    @staticmethod
-    def open_url(link):
-        link = QUrl(link)
-        QDesktopServices.openUrl(link)
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         self.player.stop()

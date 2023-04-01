@@ -43,8 +43,6 @@ class SvTerminalGui(SvTerminal):
 
         self.window.show()
 
-        SvTerminal.run(self)
-
     def connect_widgets(self):
         window = self.window
 

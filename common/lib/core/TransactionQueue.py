@@ -4,8 +4,8 @@ from PyQt6.QtCore import QTimer
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.data_models.Transaction import Transaction
-from common.lib.core.Connector import Connector
 from common.lib.core.Parser import Parser
+from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from logging import error
 
 
@@ -17,7 +17,7 @@ class TransactionQueue(QObject):
     transaction_timeout: pyqtSignal = pyqtSignal(Transaction, float)
     ready_to_send: pyqtSignal = pyqtSignal(str, bytes)
 
-    def __init__(self, connector: Connector):
+    def __init__(self, connector: ConnectionInterface):
         QObject.__init__(self)
         self.connector = connector
         self.generator: FieldsGenerator = FieldsGenerator()
@@ -168,4 +168,5 @@ class TransactionQueue(QObject):
         response.matched = True
         response.match_id = matched_request.trans_id
         matched_request.match_id = response.trans_id
+
         return True

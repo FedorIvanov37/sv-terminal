@@ -4,7 +4,7 @@ from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.forms.help_window import Croak
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QIntValidator, QRegularExpressionValidator, QIcon, QPixmap
-from PyQt6.QtCore import Qt, QRegularExpression
+from PyQt6.QtCore import QRegularExpression
 from common.gui.constants.TextConstants import TextConstants
 from common.gui.constants.LogDefinition import LogDefinition
 from logging import info, warning, getLogger, getLevelName
@@ -24,7 +24,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.ButtonAbout.setIcon(QIcon(QPixmap(TermFilesPath.MAIN_LOGO)))
         self.SvPort.setValidator(QIntValidator(1, 65535))
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){3}\d+")))
-        self.MaxAmount.setValidator(QRegularExpressionValidator(QRegularExpression(r"\d{1,12}|" + self.easter)))
+        self.MaxAmount.setValidator(QRegularExpressionValidator(QRegularExpression(r"\d{1,12}")))  # |" + self.easter
         self.DebugLevel.addItems(LogDefinition.LOG_LEVEL)
         self.ParseSubfields.setHidden(True)  # TODO
         self.buttonBox.accepted.connect(self.ok)
@@ -42,7 +42,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.SvAddress.setText(self.config.smartvista.host)
         self.SvPort.setText(self.config.smartvista.port)
         self.MaxAmount.setText(str(self.config.fields.max_amount))
-        self.MaxAmount.textEdited.connect(self.croak)
+        # self.MaxAmount.textEdited.connect(self.croak)  # Bye, Toad
         self.ProcessDefaultDump.setChecked(self.config.terminal.process_default_dump)
         self.ConnectOnStartup.setChecked(self.config.terminal.connect_on_startup)
         self.ClearLog.setChecked(self.config.debug.clear_log)

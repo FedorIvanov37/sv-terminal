@@ -14,7 +14,7 @@ from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.Connector import Connector
 from PyQt6.QtNetwork import QTcpSocket
-from common.gui.core.connection_thread import ConnectionThread
+from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 
 
 class SvTerminal(QObject):
@@ -40,7 +40,7 @@ class SvTerminal(QObject):
     def spec(self):
         return self._spec
 
-    def __init__(self, config: Config, connector: Connector | ConnectionThread | None = None):
+    def __init__(self, config: Config, connector: ConnectionInterface | None = None):
         super(SvTerminal, self).__init__()
         self.config = config
 
