@@ -1,8 +1,8 @@
 from datetime import datetime
 from random import randint, choice
-from .exceptions.exceptions import ParsingError
-from .data_models.Transaction import Transaction
-from .EpaySpecification import EpaySpecification
+from common.lib.exceptions.exceptions import ParsingError
+from common.lib.data_models.Transaction import Transaction
+from common.lib.core.EpaySpecification import EpaySpecification
 
 
 class FieldsGenerator(object):

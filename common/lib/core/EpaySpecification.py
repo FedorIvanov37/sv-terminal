@@ -1,10 +1,10 @@
 from json import dumps
 from dataclasses import asdict
 from pydantic import FilePath
-from .decorators.singleton import singleton
-from .constants.MessageLength import MessageLength
-from .constants.EpaySpecificationData import EpaySpecificationData
-from .data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField
+from common.lib.decorators.singleton import singleton
+from common.lib.constants.MessageLength import MessageLength
+from common.lib.constants.EpaySpecificationData import EpaySpecificationData
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField
 from common.gui.constants.TermFilesPath import TermFilesPath
 
 
