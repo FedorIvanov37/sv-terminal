@@ -157,7 +157,7 @@ class SpecView(QObject):
                 SpecFieldDef.get_column_position(SpecFieldDef.ALPHA): field_data.alpha,
                 SpecFieldDef.get_column_position(SpecFieldDef.NUMERIC): field_data.numeric,
                 SpecFieldDef.get_column_position(SpecFieldDef.SPECIAL): field_data.special,
-                SpecFieldDef.get_column_position(SpecFieldDef.BYTES): field_data.bytes,
+                # SpecFieldDef.get_column_position(SpecFieldDef.BYTES): field_data.bytes,
                 # SpecFieldDef.get_column_position(SpecFieldDef.IS_SECRET): field_data.is_secret,
             }
 

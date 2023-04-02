@@ -68,9 +68,9 @@ class SpecItem(AbstractItem):
     def special(self):
         return self.is_checked(SpecFieldDef.SPECIAL)
 
-    @property
-    def bytes(self):
-        return self.is_checked(SpecFieldDef.BYTES)
+    # @property
+    # def bytes(self):
+    #     return self.is_checked(SpecFieldDef.BYTES)
 
     @property
     def is_secret(self):

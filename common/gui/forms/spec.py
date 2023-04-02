@@ -12,14 +12,14 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_SpecificationWindow(object):
     def setupUi(self, SpecificationWindow):
         SpecificationWindow.setObjectName("SpecificationWindow")
-        SpecificationWindow.resize(1250, 700)
+        SpecificationWindow.resize(1150, 700)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(SpecificationWindow.sizePolicy().hasHeightForWidth())
         SpecificationWindow.setSizePolicy(sizePolicy)
-        SpecificationWindow.setMinimumSize(QtCore.QSize(1250, 700))
-        SpecificationWindow.setMaximumSize(QtCore.QSize(1250, 700))
+        SpecificationWindow.setMinimumSize(QtCore.QSize(1150, 700))
+        SpecificationWindow.setMaximumSize(QtCore.QSize(1150, 700))
         self.gridLayout = QtWidgets.QGridLayout(SpecificationWindow)
         self.gridLayout.setObjectName("gridLayout")
         spacerItem = QtWidgets.QSpacerItem(1164, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)

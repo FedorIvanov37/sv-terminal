@@ -11,7 +11,7 @@ class SpecFieldDef(object):
     ALPHA: str = "Alpha"
     NUMERIC: str = "Numeric"
     SPECIAL: str = "Special"
-    BYTES: str = "Bytes"
+    # BYTES: str = "Bytes"
     # IS_SECRET: str = "Is secret"
 
     COLUMNS: tuple[str, str, str, str, str, str, str, str, str, str, str, str, str, str, str] = (
@@ -24,7 +24,7 @@ class SpecFieldDef(object):
         ALPHA,
         NUMERIC,
         SPECIAL,
-        BYTES,
+        # BYTES,
         USE_FOR_MATCHING,
         USE_FOR_REVERSAL,
         CAN_BE_GENERATED,
@@ -38,7 +38,7 @@ class SpecFieldDef(object):
         ALPHA,
         NUMERIC,
         SPECIAL,
-        BYTES,
+        # BYTES,
         # IS_SECRET
     )
 
