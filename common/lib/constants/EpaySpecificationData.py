@@ -139,7 +139,7 @@ class DataTypes(object):
     FIELD_TYPE_ALPHA: str = "FIELD_TYPE_ALPHA"
     FIELD_TYPE_NUMERIC: str = "FIELD_TYPE_NUMERIC"
     FIELD_TYPE_SPECIAL: str = "FIELD_TYPE_SPECIAL"
-    FIELD_TYPE_BYTES: str = "FIELD_TYPE_BYTES"
+    # FIELD_TYPE_BYTES: str = "FIELD_TYPE_BYTES"
 
 
 @dataclass(frozen=True)
@@ -147,7 +147,7 @@ class FieldDataKit(object):
     FIELD_TYPE_ALPHA: str = ascii_letters
     FIELD_TYPE_NUMERIC: str = digits
     FIELD_TYPE_SPECIAL: str = punctuation + " "
-    FIELD_TYPE_BYTES: str | None = None
+    # FIELD_TYPE_BYTES: str | None = None
 
 
 @dataclass(frozen=True)

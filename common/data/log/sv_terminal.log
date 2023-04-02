@@ -3558,3 +3558,962 @@
 00:52:49 [ERROR] No output filename recognized
 00:53:50 [INFO] Default file parsed
 00:55:52 [INFO] Default file parsed
+01:00:24 [INFO] Default file parsed
+01:00:27 [INFO] [Re]connecting...
+01:00:32 [INFO] Settings applied
+01:00:37 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+01:00:39 [INFO] [Re]connecting...
+01:00:39 [INFO] SmartVista host connection ESTABLISHED
+01:00:40 [INFO] SmartVista host connection DISCONNECTED
+01:05:25 [INFO] Default file parsed
+01:08:37 [INFO] Default file parsed
+01:09:59 [INFO] Default file parsed
+01:10:08 [INFO] Specification accepted
+01:10:27 [INFO] Specification accepted
+01:11:58 [INFO] Default file parsed
+01:12:36 [INFO] Default file parsed
+01:12:48 [INFO] Specification accepted
+01:13:36 [INFO] Default file parsed
+01:15:01 [INFO] Default file parsed
+01:15:56 [INFO] Default file parsed
+01:49:48 [INFO] Default file parsed
+01:49:53 [INFO] Specification accepted
+01:50:05 [INFO] Specification accepted
+01:50:22 [INFO] Default file parsed
+01:50:31 [INFO] Specification accepted
+01:51:33 [INFO] Default file parsed
+01:53:20 [INFO] Default file parsed
+01:53:26 [INFO] Specification accepted
+01:54:19 [INFO] Default file parsed
+01:56:06 [INFO] Default file parsed
+01:59:50 [INFO] Default file parsed
+01:59:56 [INFO] Specification accepted
+02:00:40 [INFO] Default file parsed
+02:01:38 [INFO] Default file parsed
+02:01:42 [INFO] Specification accepted
+02:06:31 [INFO] Default file parsed
+02:06:47 [INFO] Specification accepted
+02:11:48 [INFO] Default file parsed
+02:11:54 [INFO] Specification accepted
+02:12:10 [INFO] Specification accepted
+02:12:15 [INFO] Default file parsed
+02:13:14 [INFO] Default file parsed
+02:29:44 [INFO] Default file parsed
+02:35:52 [INFO] Default file parsed
+02:36:00 [INFO] Specification accepted
+02:36:07 [INFO] Default file parsed
+02:36:17 [ERROR] Field 2 less MinLength. Min length: 16 got: 14
+02:36:53 [INFO] Default file parsed
+02:38:51 [INFO] Default file parsed
+02:39:03 [INFO] Default file parsed
+02:39:16 [INFO] Default file parsed
+02:39:22 [INFO] Default file parsed
+02:40:26 [INFO] Default file parsed
+02:40:44 [INFO] Default file parsed
+02:41:32 [INFO] Default file parsed
+02:41:55 [INFO] Default file parsed
+02:42:00 [INFO] Processing transaction ID [20230402_024200_122012705]
+02:42:00 [WARNING] SmartVista disconnected. Trying to established the connection
+02:42:00 [INFO] SmartVista host connection ESTABLISHED
+02:42:00 [INFO] 
+02:42:00 [INFO] [TRANS_ID][20230402_024200_122012705]
+02:42:00 [INFO] [MSG_TYPE][0800]
+02:42:00 [INFO] [BITMAP  ][7, 11, 70]
+02:42:00 [INFO] [007][010][0402024200]
+02:42:00 [INFO] [011][006][844043]
+02:42:00 [INFO] [070][003][301]
+02:42:00 [INFO] 
+02:42:00 [INFO] Transaction [20230402_024200_122012705] was sent 
+02:42:00 [INFO] 
+02:42:00 [INFO] [TRANS_ID][20230402_024200_122012705]
+02:42:00 [INFO] [MSG_TYPE][0810]
+02:42:00 [INFO] [BITMAP  ][7, 11, 39, 70]
+02:42:00 [INFO] [007][010][0402024200]
+02:42:00 [INFO] [011][006][844043]
+02:42:00 [INFO] [039][002][00]
+02:42:00 [INFO] [070][003][301]
+02:42:00 [INFO] 
+02:42:00 [INFO] Transaction ID [20230402_024200_122012705] matched, response time seconds: 0.957
+02:42:12 [INFO] Processing transaction ID [20230402_024212_399058397]
+02:42:12 [INFO] 
+02:42:12 [INFO] [TRANS_ID][20230402_024212_399058397]
+02:42:12 [INFO] [MSG_TYPE][0800]
+02:42:12 [INFO] [BITMAP  ][7, 11, 70]
+02:42:12 [INFO] [007][010][0402024212]
+02:42:12 [INFO] [011][006][563445]
+02:42:12 [INFO] [070][003][301]
+02:42:12 [INFO] 
+02:42:12 [INFO] Transaction [20230402_024212_399058397] was sent 
+02:42:12 [INFO] 
+02:42:12 [INFO] [TRANS_ID][20230402_024212_399058397]
+02:42:12 [INFO] [MSG_TYPE][0810]
+02:42:12 [INFO] [BITMAP  ][7, 11, 39, 70]
+02:42:12 [INFO] [007][010][0402024212]
+02:42:12 [INFO] [011][006][563445]
+02:42:12 [INFO] [039][002][00]
+02:42:12 [INFO] [070][003][301]
+02:42:12 [INFO] 
+02:42:12 [INFO] Transaction ID [20230402_024212_399058397] matched, response time seconds: 0.173
+02:42:13 [INFO] Processing transaction ID [20230402_024213_025918566]
+02:42:13 [INFO] 
+02:42:13 [INFO] [TRANS_ID][20230402_024213_025918566]
+02:42:13 [INFO] [MSG_TYPE][0800]
+02:42:13 [INFO] [BITMAP  ][7, 11, 70]
+02:42:13 [INFO] [007][010][0402024213]
+02:42:13 [INFO] [011][006][095012]
+02:42:13 [INFO] [070][003][301]
+02:42:13 [INFO] 
+02:42:13 [INFO] Transaction [20230402_024213_025918566] was sent 
+02:42:13 [INFO] 
+02:42:13 [INFO] [TRANS_ID][20230402_024213_025918566]
+02:42:13 [INFO] [MSG_TYPE][0810]
+02:42:13 [INFO] [BITMAP  ][7, 11, 39, 70]
+02:42:13 [INFO] [007][010][0402024213]
+02:42:13 [INFO] [011][006][095012]
+02:42:13 [INFO] [039][002][00]
+02:42:13 [INFO] [070][003][301]
+02:42:13 [INFO] 
+02:42:13 [INFO] Transaction ID [20230402_024213_025918566] matched, response time seconds: 0.939
+02:42:13 [INFO] Processing transaction ID [20230402_024213_766215134]
+02:42:13 [INFO] 
+02:42:13 [INFO] [TRANS_ID][20230402_024213_766215134]
+02:42:13 [INFO] [MSG_TYPE][0800]
+02:42:13 [INFO] [BITMAP  ][7, 11, 70]
+02:42:13 [INFO] [007][010][0402024213]
+02:42:13 [INFO] [011][006][918545]
+02:42:13 [INFO] [070][003][301]
+02:42:13 [INFO] 
+02:42:13 [INFO] Transaction [20230402_024213_766215134] was sent 
+02:42:13 [INFO] 
+02:42:13 [INFO] [TRANS_ID][20230402_024213_766215134]
+02:42:13 [INFO] [MSG_TYPE][0810]
+02:42:13 [INFO] [BITMAP  ][7, 11, 39, 70]
+02:42:13 [INFO] [007][010][0402024213]
+02:42:13 [INFO] [011][006][918545]
+02:42:13 [INFO] [039][002][00]
+02:42:13 [INFO] [070][003][301]
+02:42:13 [INFO] 
+02:42:13 [INFO] Transaction ID [20230402_024213_766215134] matched, response time seconds: 0.633
+02:42:14 [INFO] Processing transaction ID [20230402_024214_359363341]
+02:42:14 [INFO] 
+02:42:14 [INFO] [TRANS_ID][20230402_024214_359363341]
+02:42:14 [INFO] [MSG_TYPE][0800]
+02:42:14 [INFO] [BITMAP  ][7, 11, 70]
+02:42:14 [INFO] [007][010][0402024214]
+02:42:14 [INFO] [011][006][570545]
+02:42:14 [INFO] [070][003][301]
+02:42:14 [INFO] 
+02:42:14 [INFO] Transaction [20230402_024214_359363341] was sent 
+02:42:14 [INFO] 
+02:42:14 [INFO] [TRANS_ID][20230402_024214_359363341]
+02:42:14 [INFO] [MSG_TYPE][0810]
+02:42:14 [INFO] [BITMAP  ][7, 11, 39, 70]
+02:42:14 [INFO] [007][010][0402024214]
+02:42:14 [INFO] [011][006][570545]
+02:42:14 [INFO] [039][002][00]
+02:42:14 [INFO] [070][003][301]
+02:42:14 [INFO] 
+02:42:14 [INFO] Transaction ID [20230402_024214_359363341] matched, response time seconds: 0.242
+02:42:16 [INFO] SmartVista host connection DISCONNECTED
+02:42:19 [INFO] Default file parsed
+02:43:25 [INFO] Default file parsed
+02:49:57 [INFO] Default file parsed
+02:50:02 [ERROR] Field 2 less MinLength. Min length: 16 got: 15
+02:50:18 [INFO] Specification accepted
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:22 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:26 [INFO] Default file parsed
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:28 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:50:45 [INFO] Default file parsed
+02:50:58 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:03 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:04 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:05 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:07 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:07 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:08 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:09 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:09 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:09 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:10 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:10 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:10 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:10 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:10 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:10 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:10 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:11 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:11 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:11 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:11 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:11 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:11 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:11 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:12 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:12 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:12 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:12 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:12 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:12 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:13 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:13 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:13 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:13 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:13 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:14 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:14 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:14 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:14 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:15 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:15 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:15 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:15 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:16 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:16 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:16 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:16 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:16 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:16 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:16 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:17 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:17 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:17 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:17 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:17 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:17 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:18 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:18 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:18 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:18 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:18 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:19 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:19 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:19 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:19 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:19 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:20 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:20 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:20 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:51:21 [ERROR] Special values not allowed in field 2 - Primary Account Number
+02:52:01 [INFO] Default file parsed
+02:52:45 [INFO] Default file parsed
+02:53:04 [INFO] Default file parsed
+02:53:09 [INFO] Default file parsed
+02:53:40 [INFO] Default file parsed
+02:53:45 [INFO] Default file parsed
+02:53:55 [INFO] Default file parsed
+02:54:44 [INFO] Default file parsed
+02:55:15 [INFO] Specification accepted
+02:55:28 [INFO] Specification accepted
+02:57:44 [INFO] Default file parsed
+02:57:51 [INFO] Settings applied
+02:57:54 [INFO] Settings applied
+02:58:12 [INFO] Specification accepted
+03:00:06 [INFO] Default file parsed
+03:01:58 [INFO] Default file parsed
+03:02:31 [INFO] Default file parsed
+03:02:41 [INFO] Default file parsed
+03:03:11 [INFO] Processing transaction ID [20230402_030311_566495957]
+03:03:11 [WARNING] SmartVista disconnected. Trying to established the connection
+03:03:11 [INFO] SmartVista host connection ESTABLISHED
+03:03:11 [INFO] 
+03:03:11 [INFO] [TRANS_ID][20230402_030311_566495957]
+03:03:11 [INFO] [MSG_TYPE][0800]
+03:03:11 [INFO] [BITMAP  ][7, 11, 70]
+03:03:11 [INFO] [007][010][0402030311]
+03:03:11 [INFO] [011][006][940114]
+03:03:11 [INFO] [070][003][301]
+03:03:11 [INFO] 
+03:03:11 [INFO] Transaction [20230402_030311_566495957] was sent 
+03:03:11 [INFO] 
+03:03:11 [INFO] [TRANS_ID][20230402_030311_566495957]
+03:03:11 [INFO] [MSG_TYPE][0810]
+03:03:11 [INFO] [BITMAP  ][7, 11, 39, 70]
+03:03:11 [INFO] [007][010][0402030311]
+03:03:11 [INFO] [011][006][940114]
+03:03:11 [INFO] [039][002][00]
+03:03:11 [INFO] [070][003][301]
+03:03:11 [INFO] 
+03:03:11 [INFO] Transaction ID [20230402_030311_566495957] matched, response time seconds: 0.421
+03:03:12 [INFO] Processing transaction ID [20230402_030312_334378146]
+03:03:12 [INFO] 
+03:03:12 [INFO] [TRANS_ID][20230402_030312_334378146]
+03:03:12 [INFO] [MSG_TYPE][0800]
+03:03:12 [INFO] [BITMAP  ][7, 11, 70]
+03:03:12 [INFO] [007][010][0402030312]
+03:03:12 [INFO] [011][006][078644]
+03:03:12 [INFO] [070][003][301]
+03:03:12 [INFO] 
+03:03:12 [INFO] Transaction [20230402_030312_334378146] was sent 
+03:03:12 [INFO] 
+03:03:12 [INFO] [TRANS_ID][20230402_030312_334378146]
+03:03:12 [INFO] [MSG_TYPE][0810]
+03:03:12 [INFO] [BITMAP  ][7, 11, 39, 70]
+03:03:12 [INFO] [007][010][0402030312]
+03:03:12 [INFO] [011][006][078644]
+03:03:12 [INFO] [039][002][00]
+03:03:12 [INFO] [070][003][301]
+03:03:12 [INFO] 
+03:03:12 [INFO] Transaction ID [20230402_030312_334378146] matched, response time seconds: 0.12
+03:03:12 [INFO] Processing transaction ID [20230402_030312_887742349]
+03:03:12 [INFO] 
+03:03:12 [INFO] [TRANS_ID][20230402_030312_887742349]
+03:03:12 [INFO] [MSG_TYPE][0800]
+03:03:12 [INFO] [BITMAP  ][7, 11, 70]
+03:03:12 [INFO] [007][010][0402030312]
+03:03:12 [INFO] [011][006][686162]
+03:03:12 [INFO] [070][003][301]
+03:03:12 [INFO] 
+03:03:12 [INFO] Transaction [20230402_030312_887742349] was sent 
+03:03:13 [INFO] 
+03:03:13 [INFO] [TRANS_ID][20230402_030312_887742349]
+03:03:13 [INFO] [MSG_TYPE][0810]
+03:03:13 [INFO] [BITMAP  ][7, 11, 39, 70]
+03:03:13 [INFO] [007][010][0402030312]
+03:03:13 [INFO] [011][006][686162]
+03:03:13 [INFO] [039][002][00]
+03:03:13 [INFO] [070][003][301]
+03:03:13 [INFO] 
+03:03:13 [INFO] Transaction ID [20230402_030312_887742349] matched, response time seconds: 0.99
+03:03:14 [INFO] SmartVista host connection DISCONNECTED

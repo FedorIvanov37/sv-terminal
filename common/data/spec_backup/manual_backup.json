@@ -94,7 +94,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Primary Account Number",
-            "is_secret": false,
             "fields": null
         },
         "3": {
@@ -111,7 +110,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Processing code",
-            "is_secret": false,
             "fields": null
         },
         "4": {
@@ -128,7 +126,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Transaction amount",
-            "is_secret": false,
             "fields": null
         },
         "5": {
@@ -145,7 +142,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "6": {
@@ -162,7 +158,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Cardholder billing amount",
-            "is_secret": false,
             "fields": null
         },
         "7": {
@@ -179,7 +174,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Transmission date and time MMDDhhmmss",
-            "is_secret": false,
             "fields": null
         },
         "8": {
@@ -196,7 +190,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "9": {
@@ -213,7 +206,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "10": {
@@ -230,7 +222,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Conversion rate cardholder billing",
-            "is_secret": false,
             "fields": null
         },
         "11": {
@@ -247,7 +238,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "System Trace Audit Number",
-            "is_secret": false,
             "fields": null
         },
         "12": {
@@ -264,7 +254,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Transaction local date and time YYMMDDhhmmss",
-            "is_secret": false,
             "fields": null
         },
         "13": {
@@ -281,7 +270,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "14": {
@@ -298,7 +286,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Primary account number expiration date YYMM",
-            "is_secret": false,
             "fields": null
         },
         "15": {
@@ -315,7 +302,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Settelmet date YYMMDD",
-            "is_secret": false,
             "fields": null
         },
         "16": {
@@ -332,7 +318,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "17": {
@@ -349,7 +334,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "18": {
@@ -366,7 +350,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Merchant Category Code",
-            "is_secret": false,
             "fields": null
         },
         "19": {
@@ -383,7 +366,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "20": {
@@ -400,7 +382,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "21": {
@@ -417,7 +398,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "22": {
@@ -434,7 +414,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Point of Service Date Code",
-            "is_secret": false,
             "fields": null
         },
         "23": {
@@ -451,7 +430,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Card Sequence Number",
-            "is_secret": false,
             "fields": null
         },
         "24": {
@@ -468,7 +446,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Function Code",
-            "is_secret": false,
             "fields": null
         },
         "25": {
@@ -485,7 +462,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Point of Service Condition Code",
-            "is_secret": false,
             "fields": null
         },
         "26": {
@@ -502,7 +478,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "27": {
@@ -519,7 +494,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "28": {
@@ -536,7 +510,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Transaction Fee Amount",
-            "is_secret": false,
             "fields": null
         },
         "29": {
@@ -553,7 +526,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "30": {
@@ -570,7 +542,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "31": {
@@ -587,7 +558,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "32": {
@@ -604,7 +574,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Acquiring Institution ID Code",
-            "is_secret": false,
             "fields": null
         },
         "33": {
@@ -621,7 +590,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "34": {
@@ -638,7 +606,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Primary Account Number Extended",
-            "is_secret": false,
             "fields": null
         },
         "35": {
@@ -655,7 +622,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Track 2 Data",
-            "is_secret": false,
             "fields": null
         },
         "36": {
@@ -672,7 +638,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "37": {
@@ -689,7 +654,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Retrieval Reference Number",
-            "is_secret": false,
             "fields": null
         },
         "38": {
@@ -706,7 +670,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Authorization ID code",
-            "is_secret": false,
             "fields": null
         },
         "39": {
@@ -723,7 +686,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Authorization response code",
-            "is_secret": false,
             "fields": null
         },
         "40": {
@@ -740,7 +702,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Service code",
-            "is_secret": false,
             "fields": null
         },
         "41": {
@@ -757,7 +718,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Card Acceptor Terminal Identification",
-            "is_secret": false,
             "fields": null
         },
         "42": {
@@ -774,7 +734,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Merchant Identification",
-            "is_secret": false,
             "fields": null
         },
         "43": {
@@ -791,7 +750,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Card Acceptor Name and Location",
-            "is_secret": false,
             "fields": null
         },
         "44": {
@@ -808,7 +766,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "45": {
@@ -825,7 +782,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "46": {
@@ -842,7 +798,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "47": {
@@ -859,7 +814,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Proprietary Data Field",
-            "is_secret": false,
             "fields": {
                 "001": {
                     "min_length": 1,
@@ -875,7 +829,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "002": {
@@ -892,7 +845,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "003": {
@@ -909,7 +861,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "004": {
@@ -926,7 +877,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "005": {
@@ -943,7 +893,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "006": {
@@ -960,7 +909,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "007": {
@@ -977,7 +925,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "008": {
@@ -994,7 +941,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "009": {
@@ -1011,7 +957,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "010": {
@@ -1028,7 +973,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "011": {
@@ -1045,7 +989,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "012": {
@@ -1062,7 +1005,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "013": {
@@ -1079,7 +1021,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "014": {
@@ -1096,7 +1037,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "015": {
@@ -1113,7 +1053,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "ATM Statement data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "016": {
@@ -1130,7 +1069,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "SMS Notification Message Data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "017": {
@@ -1147,7 +1085,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "EMail Notification Message Subject",
-                    "is_secret": false,
                     "fields": null
                 },
                 "018": {
@@ -1164,7 +1101,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "EMail Notification Message Data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "019": {
@@ -1181,7 +1117,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Service Information Message",
-                    "is_secret": false,
                     "fields": null
                 },
                 "020": {
@@ -1198,7 +1133,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "FirstName MiddleName Surname of Cardholder",
-                    "is_secret": false,
                     "fields": null
                 },
                 "021": {
@@ -1215,7 +1149,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Sender Data",
-                    "is_secret": false,
                     "fields": {
                         "01": {
                             "min_length": 1,
@@ -1231,7 +1164,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Last Name",
-                            "is_secret": false,
                             "fields": null
                         },
                         "02": {
@@ -1248,7 +1180,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "First Name",
-                            "is_secret": false,
                             "fields": null
                         },
                         "03": {
@@ -1265,7 +1196,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "City",
-                            "is_secret": false,
                             "fields": null
                         },
                         "04": {
@@ -1282,7 +1212,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Country",
-                            "is_secret": false,
                             "fields": null
                         },
                         "05": {
@@ -1299,7 +1228,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Street",
-                            "is_secret": false,
                             "fields": null
                         },
                         "06": {
@@ -1316,7 +1244,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "ZIP code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "07": {
@@ -1333,7 +1260,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "State",
-                            "is_secret": false,
                             "fields": null
                         },
                         "08": {
@@ -1350,7 +1276,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Phone",
-                            "is_secret": false,
                             "fields": null
                         }
                     }
@@ -1369,7 +1294,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Data on WU Transfer Receiver",
-                    "is_secret": false,
                     "fields": null
                 },
                 "023": {
@@ -1386,7 +1310,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "SV Transaction Type",
-                    "is_secret": false,
                     "fields": null
                 },
                 "024": {
@@ -1403,7 +1326,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Issuer Institution Identifier",
-                    "is_secret": false,
                     "fields": null
                 },
                 "025": {
@@ -1420,7 +1342,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Acquirer Institution ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "026": {
@@ -1437,7 +1358,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Flexible limit data",
-                    "is_secret": false,
                     "fields": {
                         "01": {
                             "min_length": 1,
@@ -1453,7 +1373,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Limit Name",
-                            "is_secret": false,
                             "fields": null
                         },
                         "02": {
@@ -1470,7 +1389,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Limit Object type",
-                            "is_secret": false,
                             "fields": null
                         },
                         "03": {
@@ -1487,7 +1405,6 @@
                             "bytes": true,
                             "reserved_for_future": false,
                             "description": "Exception Flag",
-                            "is_secret": false,
                             "fields": null
                         },
                         "04": {
@@ -1504,7 +1421,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Limit Descx",
-                            "is_secret": false,
                             "fields": null
                         },
                         "05": {
@@ -1521,7 +1437,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Start date",
-                            "is_secret": false,
                             "fields": null
                         },
                         "06": {
@@ -1538,7 +1453,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "End date",
-                            "is_secret": false,
                             "fields": null
                         },
                         "07": {
@@ -1555,7 +1469,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "End date",
-                            "is_secret": false,
                             "fields": null
                         },
                         "08": {
@@ -1572,7 +1485,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Cycle type",
-                            "is_secret": false,
                             "fields": null
                         },
                         "09": {
@@ -1589,7 +1501,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Cycle length",
-                            "is_secret": false,
                             "fields": null
                         },
                         "10": {
@@ -1606,7 +1517,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Limit currency",
-                            "is_secret": false,
                             "fields": null
                         }
                     }
@@ -1625,7 +1535,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Visa 3-D Secure transaction ID Hex representation",
-                    "is_secret": false,
                     "fields": null
                 },
                 "028": {
@@ -1642,7 +1551,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Visa CAVV Hex representation",
-                    "is_secret": false,
                     "fields": null
                 },
                 "029": {
@@ -1659,7 +1567,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "UCAF Universal Cardholder Authentication Field Hex representation",
-                    "is_secret": false,
                     "fields": null
                 },
                 "030": {
@@ -1676,7 +1583,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Electronic Commerce Authentication Indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "031": {
@@ -1693,7 +1599,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Customer name",
-                    "is_secret": false,
                     "fields": null
                 },
                 "032": {
@@ -1710,7 +1615,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Customer address",
-                    "is_secret": false,
                     "fields": null
                 },
                 "033": {
@@ -1727,7 +1631,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Pos Cardholder presence",
-                    "is_secret": false,
                     "fields": null
                 },
                 "034": {
@@ -1744,7 +1647,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Tokenized PAN",
-                    "is_secret": false,
                     "fields": null
                 },
                 "035": {
@@ -1761,7 +1663,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Busines Application ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "036": {
@@ -1778,7 +1679,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Special transaction indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "037": {
@@ -1795,7 +1695,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Address verification data",
-                    "is_secret": false,
                     "fields": {
                         "01": {
                             "min_length": 1,
@@ -1811,7 +1710,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Customer postal code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "02": {
@@ -1828,7 +1726,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Customer address",
-                            "is_secret": false,
                             "fields": null
                         },
                         "03": {
@@ -1845,7 +1742,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "AVS response",
-                            "is_secret": false,
                             "fields": null
                         }
                     }
@@ -1864,7 +1760,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment facilitator and sub-merchant data",
-                    "is_secret": false,
                     "fields": {
                         "01": {
                             "min_length": 1,
@@ -1880,7 +1775,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Payment facilitator ID",
-                            "is_secret": false,
                             "fields": null
                         },
                         "02": {
@@ -1897,7 +1791,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Independent sales organization ID",
-                            "is_secret": false,
                             "fields": null
                         },
                         "03": {
@@ -1914,7 +1807,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Sub-merchant ID",
-                            "is_secret": false,
                             "fields": null
                         },
                         "04": {
@@ -1931,7 +1823,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Sub-merchant city",
-                            "is_secret": false,
                             "fields": null
                         },
                         "05": {
@@ -1948,7 +1839,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Sub-merchant postal code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "06": {
@@ -1965,7 +1855,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Sub-merchant country",
-                            "is_secret": false,
                             "fields": null
                         },
                         "07": {
@@ -1982,7 +1871,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Sub-merchant name",
-                            "is_secret": false,
                             "fields": null
                         },
                         "08": {
@@ -1999,7 +1887,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Payment facilitator name",
-                            "is_secret": false,
                             "fields": null
                         },
                         "09": {
@@ -2016,7 +1903,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Sub-merchant street line",
-                            "is_secret": false,
                             "fields": null
                         }
                     }
@@ -2035,7 +1921,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "External payment identifier",
-                    "is_secret": false,
                     "fields": null
                 },
                 "040": {
@@ -2052,7 +1937,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Dynamic payment number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "041": {
@@ -2069,7 +1953,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Funding source type",
-                    "is_secret": false,
                     "fields": null
                 },
                 "042": {
@@ -2086,7 +1969,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Card Identification in External System",
-                    "is_secret": false,
                     "fields": null
                 },
                 "043": {
@@ -2103,7 +1985,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Description of error in external message with details.",
-                    "is_secret": false,
                     "fields": null
                 },
                 "044": {
@@ -2120,7 +2001,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Card2 ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "045": {
@@ -2137,7 +2017,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Card Settlement Type",
-                    "is_secret": false,
                     "fields": null
                 },
                 "046": {
@@ -2154,7 +2033,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Additional terminal information",
-                    "is_secret": false,
                     "fields": {
                         "01": {
                             "min_length": 2,
@@ -2170,7 +2048,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Country",
-                            "is_secret": false,
                             "fields": null
                         },
                         "02": {
@@ -2187,7 +2064,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Postal code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "03": {
@@ -2204,7 +2080,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "City",
-                            "is_secret": false,
                             "fields": null
                         },
                         "04": {
@@ -2221,7 +2096,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Street address",
-                            "is_secret": false,
                             "fields": null
                         },
                         "05": {
@@ -2238,7 +2112,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Merchant name",
-                            "is_secret": false,
                             "fields": null
                         }
                     }
@@ -2257,7 +2130,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "First Card Customer identification level",
-                    "is_secret": false,
                     "fields": null
                 },
                 "048": {
@@ -2274,7 +2146,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Customer ID level",
-                    "is_secret": false,
                     "fields": null
                 },
                 "049": {
@@ -2291,7 +2162,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Currencies information",
-                    "is_secret": false,
                     "fields": {
                         "49": {
                             "min_length": 1,
@@ -2307,7 +2177,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Transaction currency information",
-                            "is_secret": false,
                             "fields": null
                         },
                         "54": {
@@ -2324,7 +2193,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Additional amounts currency information",
-                            "is_secret": false,
                             "fields": null
                         }
                     }
@@ -2343,7 +2211,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Customer identification level for the second card",
-                    "is_secret": false,
                     "fields": null
                 },
                 "051": {
@@ -2360,7 +2227,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Benefit program ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "052": {
@@ -2377,7 +2243,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Benefit program voucher type",
-                    "is_secret": false,
                     "fields": null
                 },
                 "053": {
@@ -2394,7 +2259,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Specific internal transaction ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "054": {
@@ -2411,7 +2275,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Airline specific data",
-                    "is_secret": false,
                     "fields": {
                         "01": {
                             "min_length": 6,
@@ -2427,7 +2290,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fare Basis Code-Leg 1",
-                            "is_secret": false,
                             "fields": null
                         },
                         "02": {
@@ -2444,7 +2306,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fare Basis Code-Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "03": {
@@ -2461,7 +2322,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fare Basis Code-Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "04": {
@@ -2478,7 +2338,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fare Basis Code-Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "05": {
@@ -2495,7 +2354,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Computerized Res System",
-                            "is_secret": false,
                             "fields": null
                         },
                         "06": {
@@ -2512,7 +2370,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Flight Number-Leg 1",
-                            "is_secret": false,
                             "fields": null
                         },
                         "07": {
@@ -2529,7 +2386,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Flight Number-Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "08": {
@@ -2546,7 +2402,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Flight Number-Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "09": {
@@ -2563,7 +2418,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Flight Number-Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "10": {
@@ -2580,7 +2434,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Credit Reason Indicator",
-                            "is_secret": false,
                             "fields": null
                         },
                         "11": {
@@ -2597,7 +2450,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Ticket Change Indicator",
-                            "is_secret": false,
                             "fields": null
                         },
                         "12": {
@@ -2614,7 +2466,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Passenger Name",
-                            "is_secret": false,
                             "fields": null
                         },
                         "13": {
@@ -2631,7 +2482,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Departure Date MMDDYY",
-                            "is_secret": false,
                             "fields": null
                         },
                         "14": {
@@ -2648,7 +2498,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Origination City/Airport Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "15": {
@@ -2665,7 +2514,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 1 Carrier Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "16": {
@@ -2682,7 +2530,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 1 Service Class Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "17": {
@@ -2699,7 +2546,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 1 Stop-over Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "18": {
@@ -2716,7 +2562,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 1 Destination City/Airport Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "19": {
@@ -2733,7 +2578,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 2 Carrier Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "20": {
@@ -2750,7 +2594,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 2 Service Class Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "21": {
@@ -2767,7 +2610,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 2 Stop-over Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "22": {
@@ -2784,7 +2626,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 2 Destination City/Airport Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "23": {
@@ -2801,7 +2642,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 3 Carrier Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "24": {
@@ -2818,7 +2658,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 3 Service Class Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "25": {
@@ -2835,7 +2674,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 3 Stop-over Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "26": {
@@ -2852,7 +2690,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 3 Destination City/Airport Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "27": {
@@ -2869,7 +2706,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 4 Carrier Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "28": {
@@ -2886,7 +2722,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 4 Service Class Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "29": {
@@ -2903,7 +2738,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 4 Stop-over Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "30": {
@@ -2920,7 +2754,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Leg 4 Destination City/Airport Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "31": {
@@ -2937,7 +2770,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Travel Agency Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "32": {
@@ -2954,7 +2786,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Travel Agency Name",
-                            "is_secret": false,
                             "fields": null
                         },
                         "33": {
@@ -2971,7 +2802,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Restricted Ticket Indicator",
-                            "is_secret": false,
                             "fields": null
                         },
                         "34": {
@@ -2988,7 +2818,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Ticket Number",
-                            "is_secret": false,
                             "fields": null
                         },
                         "35": {
@@ -3005,7 +2834,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Customer Code",
-                            "is_secret": false,
                             "fields": null
                         },
                         "36": {
@@ -3022,7 +2850,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Issue Date MMDDYY",
-                            "is_secret": false,
                             "fields": null
                         },
                         "37": {
@@ -3039,7 +2866,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Departure Time hhmmA",
-                            "is_secret": false,
                             "fields": null
                         },
                         "38": {
@@ -3056,7 +2882,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Issuing Carrier",
-                            "is_secret": false,
                             "fields": null
                         },
                         "39": {
@@ -3073,7 +2898,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Total Fare",
-                            "is_secret": false,
                             "fields": null
                         },
                         "40": {
@@ -3090,7 +2914,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Total Fees",
-                            "is_secret": false,
                             "fields": null
                         },
                         "41": {
@@ -3107,7 +2930,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Total Taxes",
-                            "is_secret": false,
                             "fields": null
                         },
                         "42": {
@@ -3124,7 +2946,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Conjunction Ticket",
-                            "is_secret": false,
                             "fields": null
                         },
                         "43": {
@@ -3141,7 +2962,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Exchange Ticket",
-                            "is_secret": false,
                             "fields": null
                         },
                         "44": {
@@ -3158,7 +2978,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Coupon Number",
-                            "is_secret": false,
                             "fields": null
                         },
                         "45": {
@@ -3175,7 +2994,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Arrival Time hhmmA",
-                            "is_secret": false,
                             "fields": null
                         },
                         "46": {
@@ -3192,7 +3010,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fare",
-                            "is_secret": false,
                             "fields": null
                         },
                         "47": {
@@ -3209,7 +3026,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fee",
-                            "is_secret": false,
                             "fields": null
                         },
                         "48": {
@@ -3226,7 +3042,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Taxes",
-                            "is_secret": false,
                             "fields": null
                         },
                         "49": {
@@ -3243,7 +3058,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Endorsements/Restrictions",
-                            "is_secret": false,
                             "fields": null
                         },
                         "50": {
@@ -3260,7 +3074,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Travel Date Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "51": {
@@ -3277,7 +3090,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Travel Date Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "52": {
@@ -3294,7 +3106,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Travel Date Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "53": {
@@ -3311,7 +3122,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "City of Origin/Airport Code Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "54": {
@@ -3328,7 +3138,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "City of Origin/Airport Code Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "55": {
@@ -3345,7 +3154,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "City of Origin/Airport Code Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "56": {
@@ -3362,7 +3170,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Conjunction Ticket Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "57": {
@@ -3379,7 +3186,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Conjunction Ticket Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "58": {
@@ -3396,7 +3202,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Conjunction Ticket Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "59": {
@@ -3413,7 +3218,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Exchange Ticket Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "60": {
@@ -3430,7 +3234,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Exchange Ticket Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "61": {
@@ -3447,7 +3250,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Exchange Ticket Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "62": {
@@ -3464,7 +3266,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Coupon Number Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "63": {
@@ -3481,7 +3282,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Coupon Number Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "64": {
@@ -3498,7 +3298,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Coupon Number Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "65": {
@@ -3515,7 +3314,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Departure Time Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "66": {
@@ -3532,7 +3330,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Departure Time Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "67": {
@@ -3549,7 +3346,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Departure Time Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "68": {
@@ -3566,7 +3362,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Arrival Time Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "69": {
@@ -3583,7 +3378,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Arrival Time Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "70": {
@@ -3600,7 +3394,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Arrival Time Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "71": {
@@ -3617,7 +3410,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fare Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "72": {
@@ -3634,7 +3426,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fare Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "73": {
@@ -3651,7 +3442,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fare Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "74": {
@@ -3668,7 +3458,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fee Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "75": {
@@ -3685,7 +3474,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fee Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "76": {
@@ -3702,7 +3490,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Fee Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "77": {
@@ -3719,7 +3506,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Taxes Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "78": {
@@ -3736,7 +3522,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Taxes Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "79": {
@@ -3753,7 +3538,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Taxes Leg 4",
-                            "is_secret": false,
                             "fields": null
                         },
                         "80": {
@@ -3770,7 +3554,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Endorsements/Restrictions Leg 2",
-                            "is_secret": false,
                             "fields": null
                         },
                         "81": {
@@ -3787,7 +3570,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Endorsements/Restrictions Leg 3",
-                            "is_secret": false,
                             "fields": null
                         },
                         "82": {
@@ -3804,7 +3586,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Endorsements/Restrictions Leg 4",
-                            "is_secret": false,
                             "fields": null
                         }
                     }
@@ -3823,7 +3604,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Digital Wallet Operator indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "056": {
@@ -3840,7 +3620,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Wallet Identification Number for DWO operation",
-                    "is_secret": false,
                     "fields": null
                 },
                 "057": {
@@ -3857,7 +3636,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "BIN value",
-                    "is_secret": false,
                     "fields": null
                 },
                 "058": {
@@ -3874,7 +3652,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Customer ID value for limits action",
-                    "is_secret": false,
                     "fields": null
                 },
                 "059": {
@@ -3891,7 +3668,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Card identification data from UkrCard",
-                    "is_secret": false,
                     "fields": null
                 },
                 "060": {
@@ -3908,7 +3684,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Card identification data from UkrCard",
-                    "is_secret": false,
                     "fields": null
                 },
                 "061": {
@@ -3925,7 +3700,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Transaction Type Indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "062": {
@@ -3942,7 +3716,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "OTP for Visa card tokenization",
-                    "is_secret": false,
                     "fields": null
                 },
                 "063": {
@@ -3959,7 +3732,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Refund To Another Customer Card",
-                    "is_secret": false,
                     "fields": null
                 },
                 "064": {
@@ -3976,7 +3748,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "SVFE UTRNNO Unic Transaction Number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "065": {
@@ -3993,7 +3764,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "FE Trace Number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "066": {
@@ -4010,7 +3780,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Network Reference Data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "067": {
@@ -4027,7 +3796,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "FE Transaction Date and Time YYYYMMDDhhmmss",
-                    "is_secret": false,
                     "fields": null
                 },
                 "068": {
@@ -4044,7 +3812,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "MDES Wallet Program Data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "069": {
@@ -4061,7 +3828,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "MDES Payment Application Instance",
-                    "is_secret": false,
                     "fields": null
                 },
                 "070": {
@@ -4078,7 +3844,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "External Account Number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "071": {
@@ -4095,7 +3860,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Transaction Local Date and Time YYMMDDhhmmss",
-                    "is_secret": false,
                     "fields": null
                 },
                 "072": {
@@ -4112,7 +3876,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "External Transaction ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "073": {
@@ -4129,7 +3892,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Additional POS environment data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "074": {
@@ -4146,7 +3908,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "MDES or VDEP Token",
-                    "is_secret": false,
                     "fields": null
                 },
                 "075": {
@@ -4163,7 +3924,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "MDES or VDEP Device Name",
-                    "is_secret": false,
                     "fields": null
                 },
                 "076": {
@@ -4180,7 +3940,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Token Requestor ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "077": {
@@ -4197,7 +3956,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Sender State",
-                    "is_secret": false,
                     "fields": null
                 },
                 "078": {
@@ -4214,7 +3972,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Terminal Branch",
-                    "is_secret": false,
                     "fields": null
                 },
                 "079": {
@@ -4231,7 +3988,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "POS Card Data Input Capability",
-                    "is_secret": false,
                     "fields": null
                 },
                 "080": {
@@ -4248,7 +4004,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "POS Operating Environment",
-                    "is_secret": false,
                     "fields": null
                 },
                 "081": {
@@ -4265,7 +4020,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Additional Payment description",
-                    "is_secret": false,
                     "fields": null
                 },
                 "082": {
@@ -4282,7 +4036,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Billing Card ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "083": {
@@ -4299,7 +4052,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Cardless expiration time",
-                    "is_secret": false,
                     "fields": null
                 },
                 "084": {
@@ -4316,7 +4068,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Cardless Withdrawal code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "085": {
@@ -4333,7 +4084,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Authorization Retrieval Reference Number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "086": {
@@ -4350,7 +4100,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Contract Id",
-                    "is_secret": false,
                     "fields": null
                 },
                 "087": {
@@ -4367,7 +4116,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "3DS Downgrade",
-                    "is_secret": false,
                     "fields": null
                 },
                 "088": {
@@ -4384,7 +4132,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "New EC Authentication Indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "089": {
@@ -4401,7 +4148,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "MVV",
-                    "is_secret": false,
                     "fields": null
                 },
                 "090": {
@@ -4418,7 +4164,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "MasterCard MCA",
-                    "is_secret": false,
                     "fields": null
                 },
                 "091": {
@@ -4435,7 +4180,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Mobile Operator Name for TOPUP assigned for given merchant",
-                    "is_secret": false,
                     "fields": null
                 },
                 "092": {
@@ -4452,7 +4196,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "External Tarif",
-                    "is_secret": false,
                     "fields": null
                 },
                 "093": {
@@ -4469,7 +4212,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "External Service",
-                    "is_secret": false,
                     "fields": null
                 },
                 "094": {
@@ -4486,7 +4228,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Conversion Rate in Account Currency",
-                    "is_secret": false,
                     "fields": null
                 },
                 "095": {
@@ -4503,7 +4244,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Other Amount ",
-                    "is_secret": false,
                     "fields": null
                 },
                 "096": {
@@ -4520,7 +4260,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Cryptocurrency transaction indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "097": {
@@ -4537,7 +4276,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Card Processing Type ",
-                    "is_secret": false,
                     "fields": null
                 },
                 "098": {
@@ -4554,7 +4292,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "MIR Payment Transaction Type Indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "099": {
@@ -4571,7 +4308,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Western Union transaction currency",
-                    "is_secret": false,
                     "fields": null
                 },
                 "100": {
@@ -4588,7 +4324,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "MIR Multipurpose Payment Identifier",
-                    "is_secret": false,
                     "fields": null
                 },
                 "101": {
@@ -4605,7 +4340,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "MIR Full Financial Indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "102": {
@@ -4622,7 +4356,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Partner ID Code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "103": {
@@ -4639,7 +4372,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Transaction Category",
-                    "is_secret": false,
                     "fields": null
                 },
                 "104": {
@@ -4656,7 +4388,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "MIR Assigned Merchant ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "105": {
@@ -4673,7 +4404,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Geographical coordinates of transaction",
-                    "is_secret": false,
                     "fields": null
                 },
                 "106": {
@@ -4690,7 +4420,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Free for use",
-                    "is_secret": false,
                     "fields": null
                 },
                 "107": {
@@ -4707,7 +4436,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Reason Code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "108": {
@@ -4724,7 +4452,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Script status",
-                    "is_secret": false,
                     "fields": null
                 },
                 "109": {
@@ -4741,7 +4468,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Script type",
-                    "is_secret": false,
                     "fields": null
                 },
                 "110": {
@@ -4758,7 +4484,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Financial indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "111": {
@@ -4775,7 +4500,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Digital Payment Cryptogram or TAVV",
-                    "is_secret": false,
                     "fields": null
                 },
                 "112": {
@@ -4792,7 +4516,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "P2P Cross Platform Identificator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "113": {
@@ -4809,7 +4532,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Terminal time offset SNNN",
-                    "is_secret": false,
                     "fields": null
                 },
                 "114": {
@@ -4826,7 +4548,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Original Network Reference Number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "115": {
@@ -4843,7 +4564,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Transit Program Data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "116": {
@@ -4860,7 +4580,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Remote Commerce Acceptor Identifier",
-                    "is_secret": false,
                     "fields": null
                 },
                 "117": {
@@ -4877,7 +4596,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Acquirers BIN",
-                    "is_secret": false,
                     "fields": null
                 },
                 "118": {
@@ -4894,7 +4612,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "OTP code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "119": {
@@ -4911,7 +4628,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Merchant card indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "120": {
@@ -4928,7 +4644,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "SCA exemption indicators",
-                    "is_secret": false,
                     "fields": {
                         "01": {
                             "min_length": 1,
@@ -4944,7 +4659,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Delegated Authentication",
-                            "is_secret": false,
                             "fields": null
                         },
                         "02": {
@@ -4961,7 +4675,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Trusted Merchant",
-                            "is_secret": false,
                             "fields": null
                         },
                         "03": {
@@ -4978,7 +4691,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Low Value",
-                            "is_secret": false,
                             "fields": null
                         },
                         "04": {
@@ -4995,7 +4707,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Secure Corporate Payment (SCP)",
-                            "is_secret": false,
                             "fields": null
                         },
                         "05": {
@@ -5012,7 +4723,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Transaction Risk Analysis",
-                            "is_secret": false,
                             "fields": null
                         },
                         "06": {
@@ -5029,7 +4739,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Merchant initiated",
-                            "is_secret": false,
                             "fields": null
                         },
                         "07": {
@@ -5046,7 +4755,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "Recurring Payment ",
-                            "is_secret": false,
                             "fields": null
                         }
                     }
@@ -5065,7 +4773,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "VIP code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "151": {
@@ -5082,7 +4789,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Authentication Type Indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "154": {
@@ -5099,7 +4805,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Number of Installments",
-                    "is_secret": false,
                     "fields": null
                 },
                 "162": {
@@ -5116,7 +4821,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Customer ID document number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "163": {
@@ -5133,7 +4837,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Dispute Details",
-                    "is_secret": false,
                     "fields": null
                 },
                 "164": {
@@ -5150,7 +4853,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Issuer Transaction Scheme ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "165": {
@@ -5167,7 +4869,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Tax ID Type",
-                    "is_secret": false,
                     "fields": null
                 },
                 "166": {
@@ -5184,7 +4885,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Merchant Tax ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "167": {
@@ -5201,7 +4901,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Auxiliary Institution ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "168": {
@@ -5218,7 +4917,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Deferred Transaction Indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "169": {
@@ -5235,7 +4933,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Merchant-Initiated Transaction",
-                    "is_secret": false,
                     "fields": null
                 },
                 "170": {
@@ -5252,7 +4949,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Airline Code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "171": {
@@ -5269,7 +4965,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Account balance flag",
-                    "is_secret": false,
                     "fields": null
                 },
                 "172": {
@@ -5286,7 +4981,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "IBFT Provider/Network Name",
-                    "is_secret": false,
                     "fields": null
                 },
                 "173": {
@@ -5303,7 +4997,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "External Card 2 ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "174": {
@@ -5320,7 +5013,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Due date",
-                    "is_secret": false,
                     "fields": null
                 },
                 "218": {
@@ -5337,7 +5029,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Recurring info",
-                    "is_secret": false,
                     "fields": {
                         "01": {
                             "min_length": 1,
@@ -5353,7 +5044,6 @@
                             "bytes": false,
                             "reserved_for_future": false,
                             "description": "tag 01",
-                            "is_secret": false,
                             "fields": null
                         }
                     }
@@ -5372,7 +5062,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Service Level Indicator (?)",
-                    "is_secret": false,
                     "fields": null
                 }
             }
@@ -5391,7 +5080,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Private Additional Data",
-            "is_secret": false,
             "fields": {
                 "01": {
                     "min_length": 1,
@@ -5407,7 +5095,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "User Login",
-                    "is_secret": false,
                     "fields": null
                 },
                 "02": {
@@ -5424,7 +5111,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "User Password Clear",
-                    "is_secret": false,
                     "fields": null
                 },
                 "03": {
@@ -5441,7 +5127,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Wallet Number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "04": {
@@ -5458,7 +5143,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Original response code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "05": {
@@ -5475,7 +5159,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Issuer limits mode",
-                    "is_secret": false,
                     "fields": null
                 },
                 "06": {
@@ -5492,7 +5175,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Operation status",
-                    "is_secret": false,
                     "fields": null
                 },
                 "07": {
@@ -5509,7 +5191,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Billing payment number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "08": {
@@ -5526,7 +5207,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Sender Name",
-                    "is_secret": false,
                     "fields": null
                 },
                 "09": {
@@ -5543,7 +5223,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Sender Address",
-                    "is_secret": false,
                     "fields": null
                 },
                 "10": {
@@ -5560,7 +5239,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Sender City",
-                    "is_secret": false,
                     "fields": null
                 },
                 "11": {
@@ -5577,7 +5255,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Sender Country",
-                    "is_secret": false,
                     "fields": null
                 },
                 "12": {
@@ -5594,7 +5271,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Sender Postal Code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "13": {
@@ -5611,7 +5287,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Sender Account",
-                    "is_secret": false,
                     "fields": null
                 },
                 "14": {
@@ -5628,7 +5303,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Receiver Id",
-                    "is_secret": false,
                     "fields": null
                 },
                 "15": {
@@ -5645,7 +5319,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Transfer MTCN",
-                    "is_secret": false,
                     "fields": null
                 },
                 "16": {
@@ -5662,7 +5335,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "External Retrieval Reference Number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "17": {
@@ -5679,7 +5351,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Card No",
-                    "is_secret": false,
                     "fields": null
                 },
                 "18": {
@@ -5696,7 +5367,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Transfer Fee",
-                    "is_secret": false,
                     "fields": null
                 },
                 "19": {
@@ -5713,7 +5383,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Transfer Discount",
-                    "is_secret": false,
                     "fields": null
                 },
                 "20": {
@@ -5730,7 +5399,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Transfer Discount",
-                    "is_secret": false,
                     "fields": null
                 },
                 "21": {
@@ -5747,7 +5415,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Payout Amount",
-                    "is_secret": false,
                     "fields": null
                 },
                 "22": {
@@ -5764,7 +5431,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Transfer FX",
-                    "is_secret": false,
                     "fields": null
                 },
                 "23": {
@@ -5781,7 +5447,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Transfer Gross Amount",
-                    "is_secret": false,
                     "fields": null
                 },
                 "24": {
@@ -5798,7 +5463,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Transfer Answer",
-                    "is_secret": false,
                     "fields": null
                 },
                 "25": {
@@ -5815,7 +5479,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Points Earned",
-                    "is_secret": false,
                     "fields": null
                 },
                 "26": {
@@ -5832,7 +5495,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Points Total",
-                    "is_secret": false,
                     "fields": null
                 },
                 "27": {
@@ -5849,7 +5511,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Action code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "28": {
@@ -5866,7 +5527,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Full Mini Statement flag",
-                    "is_secret": false,
                     "fields": null
                 },
                 "29": {
@@ -5883,7 +5543,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Mini Statement effective date YYMMDDHH24MISS",
-                    "is_secret": false,
                     "fields": null
                 },
                 "30": {
@@ -5900,7 +5559,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Mini Statement amount transaction",
-                    "is_secret": false,
                     "fields": null
                 },
                 "31": {
@@ -5917,7 +5575,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Mini Statement Record",
-                    "is_secret": false,
                     "fields": null
                 },
                 "32": {
@@ -5934,7 +5591,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Account 2 Currency",
-                    "is_secret": false,
                     "fields": null
                 },
                 "33": {
@@ -5951,7 +5607,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Conversion Rate for Account 2",
-                    "is_secret": false,
                     "fields": null
                 },
                 "34": {
@@ -5968,7 +5623,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Conversion Date for Account 2",
-                    "is_secret": false,
                     "fields": null
                 },
                 "35": {
@@ -5985,7 +5639,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Grace Date DDMMYYYY",
-                    "is_secret": false,
                     "fields": null
                 },
                 "36": {
@@ -6002,7 +5655,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Mobile Phone Number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "37": {
@@ -6019,7 +5671,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Language code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "38": {
@@ -6036,7 +5687,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "E-Mail address of customer",
-                    "is_secret": false,
                     "fields": null
                 },
                 "39": {
@@ -6053,7 +5703,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Additional response code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "40": {
@@ -6070,7 +5719,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Additional response text",
-                    "is_secret": false,
                     "fields": null
                 },
                 "41": {
@@ -6087,7 +5735,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "WU Money Transfer Key",
-                    "is_secret": false,
                     "fields": null
                 },
                 "42": {
@@ -6104,7 +5751,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Security level indicator",
-                    "is_secret": false,
                     "fields": null
                 },
                 "43": {
@@ -6121,7 +5767,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Account 1 Currency",
-                    "is_secret": false,
                     "fields": null
                 },
                 "44": {
@@ -6138,7 +5783,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "OKATO",
-                    "is_secret": false,
                     "fields": null
                 },
                 "45": {
@@ -6155,7 +5799,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Debts Protocol Date",
-                    "is_secret": false,
                     "fields": null
                 },
                 "46": {
@@ -6172,7 +5815,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Debts Protocol Number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "47": {
@@ -6189,7 +5831,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Requested Data Type",
-                    "is_secret": false,
                     "fields": null
                 },
                 "48": {
@@ -6206,7 +5847,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Mini Statement credit amount transaction",
-                    "is_secret": false,
                     "fields": null
                 },
                 "49": {
@@ -6223,7 +5863,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Service Type",
-                    "is_secret": false,
                     "fields": null
                 },
                 "50": {
@@ -6240,7 +5879,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Service Identifier",
-                    "is_secret": false,
                     "fields": null
                 },
                 "51": {
@@ -6257,7 +5895,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Cardholder Identification Information Customer ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "52": {
@@ -6274,7 +5911,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Service Authorization Code",
-                    "is_secret": false,
                     "fields": null
                 },
                 "53": {
@@ -6291,7 +5927,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Expiration date of second card for P2P credit YYMM",
-                    "is_secret": false,
                     "fields": null
                 },
                 "54": {
@@ -6308,7 +5943,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "User Entered Data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "55": {
@@ -6325,7 +5959,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "User Entered Data Additional",
-                    "is_secret": false,
                     "fields": null
                 },
                 "56": {
@@ -6342,7 +5975,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "New PIN Data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "57": {
@@ -6359,7 +5991,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "58": {
@@ -6376,7 +6007,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "59": {
@@ -6393,7 +6023,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "60": {
@@ -6410,7 +6039,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "61": {
@@ -6427,7 +6055,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "62": {
@@ -6444,7 +6071,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "63": {
@@ -6461,7 +6087,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "64": {
@@ -6478,7 +6103,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "65": {
@@ -6495,7 +6119,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "66": {
@@ -6512,7 +6135,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "67": {
@@ -6529,7 +6151,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "68": {
@@ -6546,7 +6167,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "69": {
@@ -6563,7 +6183,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "70": {
@@ -6580,7 +6199,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "71": {
@@ -6597,7 +6215,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "72": {
@@ -6614,7 +6231,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "73": {
@@ -6631,7 +6247,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Payment Specific data",
-                    "is_secret": false,
                     "fields": null
                 },
                 "74": {
@@ -6648,7 +6263,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Barcode number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "75": {
@@ -6665,7 +6279,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Unique reference number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "76": {
@@ -6682,7 +6295,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Card ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "78": {
@@ -6699,7 +6311,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Receiver Name",
-                    "is_secret": false,
                     "fields": null
                 },
                 "79": {
@@ -6716,7 +6327,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "External Merchant Id",
-                    "is_secret": false,
                     "fields": null
                 },
                 "80": {
@@ -6733,7 +6343,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Additional Authorization Id Response",
-                    "is_secret": false,
                     "fields": null
                 },
                 "81": {
@@ -6750,7 +6359,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Customer Description",
-                    "is_secret": false,
                     "fields": null
                 },
                 "82": {
@@ -6767,7 +6375,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "SMS Notification Threshold",
-                    "is_secret": false,
                     "fields": null
                 },
                 "83": {
@@ -6784,7 +6391,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "SMS Notification Threshold Currency",
-                    "is_secret": false,
                     "fields": null
                 },
                 "84": {
@@ -6801,7 +6407,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Initiator Device Type",
-                    "is_secret": false,
                     "fields": null
                 },
                 "85": {
@@ -6818,7 +6423,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Person Id",
-                    "is_secret": false,
                     "fields": null
                 },
                 "86": {
@@ -6835,7 +6439,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Account Status",
-                    "is_secret": false,
                     "fields": null
                 },
                 "87": {
@@ -6852,7 +6455,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Virtual Card number",
-                    "is_secret": false,
                     "fields": null
                 },
                 "88": {
@@ -6869,7 +6471,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Virtual Card expiration date MMYY",
-                    "is_secret": false,
                     "fields": null
                 },
                 "89": {
@@ -6886,7 +6487,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Virtual Card product type",
-                    "is_secret": false,
                     "fields": null
                 },
                 "90": {
@@ -6903,7 +6503,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Service expiration date YYMMDDhhmmss",
-                    "is_secret": false,
                     "fields": null
                 },
                 "91": {
@@ -6920,7 +6519,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Keymap buffer",
-                    "is_secret": false,
                     "fields": null
                 },
                 "92": {
@@ -6937,7 +6535,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "CVV2",
-                    "is_secret": false,
                     "fields": null
                 },
                 "93": {
@@ -6954,7 +6551,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Cheque Id",
-                    "is_secret": false,
                     "fields": null
                 },
                 "94": {
@@ -6971,7 +6567,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Message Priority",
-                    "is_secret": false,
                     "fields": null
                 },
                 "95": {
@@ -6988,7 +6583,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Hot Card status",
-                    "is_secret": false,
                     "fields": null
                 },
                 "96": {
@@ -7005,7 +6599,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Card Mask",
-                    "is_secret": false,
                     "fields": null
                 },
                 "97": {
@@ -7022,7 +6615,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Cardholder ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "98": {
@@ -7039,7 +6631,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Service ID",
-                    "is_secret": false,
                     "fields": null
                 },
                 "99": {
@@ -7056,7 +6647,6 @@
                     "bytes": false,
                     "reserved_for_future": false,
                     "description": "Service Object Type",
-                    "is_secret": false,
                     "fields": null
                 }
             }
@@ -7075,7 +6665,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Transaction currency code",
-            "is_secret": false,
             "fields": null
         },
         "50": {
@@ -7092,7 +6681,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "51": {
@@ -7109,7 +6697,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "52": {
@@ -7126,7 +6713,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Personal Identification Data",
-            "is_secret": false,
             "fields": null
         },
         "53": {
@@ -7143,7 +6729,6 @@
             "bytes": true,
             "reserved_for_future": false,
             "description": "Security Related Control Information",
-            "is_secret": false,
             "fields": null
         },
         "54": {
@@ -7160,7 +6745,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Additional Amounts",
-            "is_secret": false,
             "fields": null
         },
         "55": {
@@ -7177,7 +6761,6 @@
             "bytes": true,
             "reserved_for_future": false,
             "description": "EMV Data",
-            "is_secret": false,
             "fields": null
         },
         "56": {
@@ -7194,7 +6777,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Payment Account Data",
-            "is_secret": false,
             "fields": null
         },
         "57": {
@@ -7211,7 +6793,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "58": {
@@ -7228,7 +6809,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "59": {
@@ -7245,7 +6825,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "60": {
@@ -7262,7 +6841,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Accounts, Additional",
-            "is_secret": false,
             "fields": null
         },
         "61": {
@@ -7279,7 +6857,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "62": {
@@ -7296,7 +6873,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Multiple Private Data",
-            "is_secret": false,
             "fields": null
         },
         "63": {
@@ -7313,7 +6889,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "64": {
@@ -7330,7 +6905,6 @@
             "bytes": true,
             "reserved_for_future": false,
             "description": "Primary MAC Data",
-            "is_secret": false,
             "fields": null
         },
         "65": {
@@ -7347,7 +6921,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "66": {
@@ -7364,7 +6937,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "67": {
@@ -7381,7 +6953,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "68": {
@@ -7398,7 +6969,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "69": {
@@ -7415,7 +6985,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "70": {
@@ -7432,7 +7001,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Network Management Code",
-            "is_secret": false,
             "fields": null
         },
         "71": {
@@ -7449,7 +7017,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "72": {
@@ -7466,7 +7033,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "73": {
@@ -7483,7 +7049,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "74": {
@@ -7500,7 +7065,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "75": {
@@ -7517,7 +7081,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "76": {
@@ -7534,7 +7097,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "77": {
@@ -7551,7 +7113,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "78": {
@@ -7568,7 +7129,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "79": {
@@ -7585,7 +7145,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "80": {
@@ -7602,7 +7161,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "81": {
@@ -7619,7 +7177,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "82": {
@@ -7636,7 +7193,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "83": {
@@ -7653,7 +7209,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "84": {
@@ -7670,7 +7225,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "85": {
@@ -7687,7 +7241,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "86": {
@@ -7704,7 +7257,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "87": {
@@ -7721,7 +7273,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "88": {
@@ -7738,7 +7289,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "89": {
@@ -7755,7 +7305,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "90": {
@@ -7772,7 +7321,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Original Data Elements",
-            "is_secret": false,
             "fields": null
         },
         "91": {
@@ -7789,7 +7337,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Action Code",
-            "is_secret": false,
             "fields": null
         },
         "92": {
@@ -7806,7 +7353,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "93": {
@@ -7823,7 +7369,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "94": {
@@ -7840,7 +7385,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "95": {
@@ -7857,7 +7401,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Replacement Amounts",
-            "is_secret": false,
             "fields": null
         },
         "96": {
@@ -7874,7 +7417,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "97": {
@@ -7891,7 +7433,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "98": {
@@ -7908,7 +7449,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "99": {
@@ -7925,7 +7465,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "100": {
@@ -7942,7 +7481,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "101": {
@@ -7959,7 +7497,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "102": {
@@ -7976,7 +7513,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Account Identification",
-            "is_secret": false,
             "fields": null
         },
         "103": {
@@ -7993,7 +7529,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "104": {
@@ -8010,7 +7545,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "105": {
@@ -8027,7 +7561,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "106": {
@@ -8044,7 +7577,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "107": {
@@ -8061,7 +7593,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "108": {
@@ -8078,7 +7609,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "109": {
@@ -8095,7 +7625,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "110": {
@@ -8112,7 +7641,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "111": {
@@ -8129,7 +7657,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "112": {
@@ -8146,7 +7673,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "113": {
@@ -8163,7 +7689,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "114": {
@@ -8180,7 +7705,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Additional Sets of Private Data",
-            "is_secret": false,
             "fields": null
         },
         "115": {
@@ -8197,7 +7721,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Private Data, Extended",
-            "is_secret": false,
             "fields": null
         },
         "116": {
@@ -8214,7 +7737,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "117": {
@@ -8231,7 +7753,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "118": {
@@ -8248,7 +7769,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "119": {
@@ -8265,7 +7785,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "120": {
@@ -8282,7 +7801,6 @@
             "bytes": false,
             "reserved_for_future": false,
             "description": "Expanded Additional Accounts",
-            "is_secret": false,
             "fields": null
         },
         "121": {
@@ -8299,7 +7817,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "122": {
@@ -8316,7 +7833,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "123": {
@@ -8333,7 +7849,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "124": {
@@ -8350,7 +7865,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "125": {
@@ -8367,7 +7881,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "126": {
@@ -8384,7 +7897,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "127": {
@@ -8401,7 +7913,6 @@
             "bytes": false,
             "reserved_for_future": true,
             "description": "Reserved for future",
-            "is_secret": false,
             "fields": null
         },
         "128": {
@@ -8418,7 +7929,6 @@
             "bytes": true,
             "reserved_for_future": false,
             "description": "Secondary MAC Data",
-            "is_secret": false,
             "fields": null
         }
     }

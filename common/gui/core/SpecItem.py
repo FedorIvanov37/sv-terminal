@@ -7,19 +7,6 @@ from common.gui.core.AbstractItem import AbstractItem
 class SpecItem(AbstractItem):
     _spec: IsoField = None
     _field_number: str = None
-    _min_length: int
-    _max_length: int
-    _var_length: int
-    _tag_length: int
-    _description: str
-    _reserved_for_future: bool
-    _generate: bool
-    _reversal: bool
-    _matching: bool
-    _alpha: bool
-    _numeric: bool
-    _special: bool
-    _bytes: bool
 
     @property
     def tag_length(self):
@@ -59,35 +46,35 @@ class SpecItem(AbstractItem):
 
     @property
     def generate(self):
-        return bool(self.checkState(SpecFieldDef.get_column_position(SpecFieldDef.CAN_BE_GENERATED)))
+        return self.is_checked(SpecFieldDef.CAN_BE_GENERATED)
 
     @property
     def reversal(self):
-        return bool(self.checkState(SpecFieldDef.get_column_position(SpecFieldDef.USE_FOR_REVERSAL)))
+        return self.is_checked(SpecFieldDef.USE_FOR_REVERSAL)
 
     @property
     def matching(self):
-        return bool(self.checkState(SpecFieldDef.get_column_position(SpecFieldDef.USE_FOR_MATCHING)))
+        return self.is_checked(SpecFieldDef.USE_FOR_MATCHING)
 
     @property
     def alpha(self):
-        return bool(self.checkState(SpecFieldDef.get_column_position(SpecFieldDef.ALPHA)))
+        return self.is_checked(SpecFieldDef.ALPHA)
 
     @property
     def numeric(self):
-        return bool(self.checkState(SpecFieldDef.get_column_position(SpecFieldDef.NUMERIC)))
+        return self.is_checked(SpecFieldDef.NUMERIC)
 
     @property
     def special(self):
-        return bool(self.checkState(SpecFieldDef.get_column_position(SpecFieldDef.SPECIAL)))
-
-    @property
-    def bytes(self):
-        return bool(self.checkState(SpecFieldDef.get_column_position(SpecFieldDef.BYTES)))
+        return self.is_checked(SpecFieldDef.SPECIAL)
 
     # @property
-    # def protected(self):
-    #     return self._protected
+    # def bytes(self):
+    #     return self.is_checked(SpecFieldDef.BYTES)
+
+    @property
+    def is_secret(self):
+        return self.is_checked(SpecFieldDef.IS_SECRET)
 
     @property
     def spec(self):
@@ -147,3 +134,13 @@ class SpecItem(AbstractItem):
     def set_checkbox(self, column: int, checked: bool = True) -> None:
         state = Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked
         self.setCheckState(column, state)
+
+    def is_checked(self, column):
+        if not (column_position := SpecFieldDef.get_column_position(column)):
+            return False
+
+        state = self.checkState(column_position)
+        state = state.value
+        state = bool(state)
+
+        return state

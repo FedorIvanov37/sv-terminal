@@ -13,6 +13,14 @@ class Item(AbstractItem):
     _field_number: str = str()
     _is_field_complex: bool = False
     _data_was_set: pyqtSignal = pyqtSignal()
+    _value: str = ""
+
+    @property
+    def is_secret(self):
+        if not self.spec:
+            return False
+
+        return self.spec.is_secret
 
     @property
     def data_was_set(self):
