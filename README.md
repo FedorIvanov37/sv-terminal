@@ -75,6 +75,9 @@ The table describes fundamental system objects. In fact, SvTerminal contains muc
 
 ![image](https://camo.githubusercontent.com/dccafcb932d549e921b2adb6d56d1bc521c51e2bc8e0f4be5fbaade5c7fef22f/68747470733a2f2f692e696d6775722e636f6d2f75444a334b78352e706e67)
 
+
+![image](https://i.imgur.com/1zeIbXk.jpeg)
+
 ## Usage example
 In this case, we'll see the general usage of the SvTerminal library. The example below is ready to start out of the box, without any changes. 
 
