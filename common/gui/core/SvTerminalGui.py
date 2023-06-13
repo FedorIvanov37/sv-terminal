@@ -129,8 +129,12 @@ class SvTerminalGui(SvTerminal):
                 error(f"Transaction building error")
                 [error(err.strip()) for err in str(building_error).splitlines()]
                 return
+                # raise TypeError
 
         info(f"Processing transaction ID [{transaction.trans_id}]")
+
+        if not SvTerminal.is_connected(self):
+            self.window.block_connection_buttons()
 
         SvTerminal.send(self, transaction)
 
@@ -142,7 +146,7 @@ class SvTerminalGui(SvTerminal):
 
     def specification(self):
         spec_window: SpecWindow = SpecWindow(self.window)
-        spec_window.spec_accepted.connect(lambda: info("Specification accepted"))
+        spec_window.spec_accepted.connect(lambda name: info(f"Specification applied: {name}"))
         spec_window.exec()
 
     @staticmethod

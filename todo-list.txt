@@ -1,0 +1,36 @@
++ Hide project on GIT
++ Hide card data in log
++ Transaction does not block buttons
++ No complex fields in bitmap
+? Connection error return twice
++ Hide PCI DSS mode
++ Unlimit
++ Down when no spec for field
+? Exit error
++ Cannot apply spec in spec window
++ Spec backup does not work
++ Check the reversal fields
++ No warning after delete field and close spec
++ Spec applies after parsing file
++ Decide how to parse incoming message when no spec exists
++ Expand the MTI set window ???
+
+
+• No data in socket if delete field in spec
+
+
+#
+• Exceptions policy
+• Set connection timeouts in Connector
+• Testing
+• Correct the default message
+• Correct and publish the Specification
+• Publish on confluence
+• Rename?
+• Logo capitan
+• Try to compile .exe
+• Prepare document
+• Add button to Validate
+• Emembed cards
+• Complex field parser
+• Spec explanation

@@ -12,7 +12,7 @@
 #
 # Version: v0.15 
 #
-# Author: Fedor Ivanov | Unlimint
+# Author: Fedor Ivanov | Unlimit
 #
 # Released in Apr 2023
 #
@@ -35,7 +35,7 @@
 # FIX: Fixed incorrect field name in INI files
 # FIX: Optimized work with bitmap in GUI
 # FIX: Terminal fall down when empty field number set in Specification
-# FIX: Fixed small bugs inherited from v0.14
+# FIX: Fixed small todo-list.txt inherited from v0.14
 # FIX: Code and project structure optimization
 #
 

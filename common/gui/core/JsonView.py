@@ -24,7 +24,7 @@ class JsonView(QTreeWidget):
 
     def __init__(self, config: Config):
         super(JsonView, self).__init__()
-        self.config = config
+        self.config: Config = config
         self._setup()
 
     def _setup(self):
@@ -182,15 +182,15 @@ class JsonView(QTreeWidget):
             field_spec = specification.fields.get(field)
             description = field_spec.description if field_spec else None
 
-            if isinstance(field_data, str):
-                string_data = [field, field_data, None, description]
-                child: Item = Item(string_data)
-                self.itemChanged.connect(child.process_change_item)
-
-            else:
+            if isinstance(field_data, dict):
                 child = Item([field])
                 child.setText(3, description)  # TODO
                 self._parse_fields(field_data, parent=child, specification=specification.fields.get(field))
+
+            else:
+                string_data = [field, str(field_data), None, description]
+                child: Item = Item(string_data)
+                self.itemChanged.connect(child.process_change_item)
 
             parent.addChild(child)
 
@@ -244,5 +244,14 @@ class JsonView(QTreeWidget):
 
             if item.field_number != field_number:
                 continue
+
+            if item.field_data:
+                return item.field_data
+
+            if self.spec.is_field_complex(field_number) or item.get_children():
+                field_data = "".join([data.field_data for data in item.get_children()])
+                field_data = f"{item.field_data}{field_data}"
+
+                return field_data
 
             return item.field_data
