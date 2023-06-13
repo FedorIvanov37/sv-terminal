@@ -54,6 +54,9 @@ class SvTerminal(QObject):
         self.trans_queue: TransactionQueue = TransactionQueue(self.connector)
         self.connect_interfaces()
 
+    def is_connected(self):
+        return self.connector.is_connected()
+
     def run(self):
         if self.config.terminal.connect_on_startup:
             self.reconnect()

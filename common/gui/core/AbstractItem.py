@@ -23,7 +23,7 @@ class AbstractItem(QTreeWidgetItem):
         return len(self.get_field_path())
 
     def get_field_path(self, string=False) -> list[str] | str:
-        path = list()
+        path: list[str] = list()
         item = self
 
         while item.parent() is not None:

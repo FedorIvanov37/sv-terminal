@@ -194,7 +194,7 @@ class SpecView(QObject):
                     alpha=row.alpha,
                     numeric=row.numeric,
                     special=row.special,
-                    bytes=row.bytes,
+                    # bytes=row.bytes,
                     reserved_for_future=row.reserved_for_future,
                     description=row.description,
                     # is_secret=row.is_secret,

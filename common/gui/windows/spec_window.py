@@ -19,7 +19,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     _mti_changed: bool = False
     _read_only: bool = True
     _spec: EpaySpecification = EpaySpecification()
-    _spec_accepted: pyqtSignal = pyqtSignal()
+    _spec_accepted: pyqtSignal = pyqtSignal(str)
     _need_to_close: bool = False
 
     @property
@@ -73,7 +73,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.StatusLabel.setText(str())
         self.SpecTree.itemChanged.connect(self.item_changed)
         self.PlusButton.clicked.connect(self.SpecView.plus)
-        self.MinusButton.clicked.connect(self.SpecView.minus)
+        self.MinusButton.clicked.connect(self.minus)
         self.NextLevelButton.clicked.connect(self.SpecView.next_level)
         self.ButtonClose.clicked.connect(self.close)
         self.ButtonReset.clicked.connect(self.reload)
@@ -84,6 +84,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.ButtonBackup.clicked.connect(self.backup)
         self.ParseFile.pressed.connect(self.parse_file)
         self.ButtonSetMti.clicked.connect(self.set_mti)
+        self.spec_accepted.connect(lambda name: self.set_status(f"Specification applied - {name}"))
 
         apply_menu = QMenu()
 
@@ -97,13 +98,17 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
         self.set_status(">")
 
-    def set_tmi_list(self, mti_list):
+    def minus(self):
+        self.changed = True
+        self.SpecView.minus()
+
+    def set_mti_list(self, mti_list):
         self.spec.spec.mti = mti_list
         self.changed = True
 
     def set_mti(self):
         mti_window = MtiSpecWindow()
-        mti_window.need_to_set_mti.connect(self.set_tmi_list)
+        mti_window.need_to_set_mti.connect(self.set_mti_list)
         mti_window.changed.connect(self.set_mti_changed)
         mti_window.rejected.connect(lambda: self.set_mti_changed(changed=False))
         mti_window.exec()
@@ -131,8 +136,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.set_status(str(E))
             return
 
-        self.set_status("New Specification applied")
-        self.spec_accepted.emit()
+        self.spec_accepted.emit(self.spec.name)
         self.changed = False
 
     def closeEvent(self, a0: QCloseEvent) -> None:
@@ -179,8 +183,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
         else:
             self.SpecView.parse_spec(specification)
-            self.apply(commit=False)
-            self.set_status("Specification successfully parsed!")
+            self.changed = True
 
     def reload(self):
         self.SpecView.reload()

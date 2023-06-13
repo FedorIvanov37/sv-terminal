@@ -56,7 +56,10 @@ class Logger:
         debug("Logger started")
 
     def print_dump(self, transaction: Transaction):
-        for string in self.parser.create_sv_dump(transaction).split("\n"):
+        if not (dump := self.parser.create_sv_dump(transaction)):
+            return
+
+        for string in dump.split("\n"):
             debug(string)
 
     def print_config(self, config=None, level=_default_level):
@@ -72,8 +75,6 @@ class Logger:
             return f"[{string.zfill(size)}]"
 
         level("")
-
-        # bitmap: str = Bitmap(transaction.data_fields).get_bitmap(str)
 
         bitmap = ", ".join(transaction.data_fields.keys())
 
@@ -93,6 +94,9 @@ class Logger:
         for field, field_data in transaction.data_fields.items():
             if field == self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
                 continue
+
+            if field == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+                field_data = f"{field_data[:6]}******{field_data[-4:]}"
 
             log_set = str()
             log_set += put(field, size=3)

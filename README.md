@@ -196,4 +196,4 @@ if transaction.success:
 Designed and developed by Fedor Ivanov   
   
 
-In case of any question contract [f.ivanov@unlimint.com](mailto:f.ivanov@unlimint.com?subject=SvTerminal%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SvTerminal%20version%20is%20v0.15%20%7C%20Released%20in%20Apr%202023%0A)
+In case of any question contract [f.ivanov@unlimit.com](mailto:f.ivanov@unlimit.com?subject=SvTerminal%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SvTerminal%20version%20is%20v0.15%20%7C%20Released%20in%20Apr%202023%0A)

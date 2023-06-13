@@ -80,3 +80,14 @@ class ConnectionThread(ConnectionInterface, QObject, metaclass=QobjecAbcMeta):
 
     def stop_thread(self):
         self.stop = True
+
+    def is_connected(self):
+        return self.connector.state() == self.connector.SocketState.ConnectedState
+
+
+
+
+
+
+
+

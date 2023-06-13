@@ -53,3 +53,7 @@ class ConnectionInterface(metaclass=ABCMeta):
     @abstractmethod
     def stateChanged(self):
         ...
+
+    @abstractmethod
+    def is_connected(self):
+        ...

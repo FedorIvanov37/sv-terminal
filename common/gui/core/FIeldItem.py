@@ -28,7 +28,10 @@ class Item(AbstractItem):
 
     @property
     def is_field_complex(self):
-        return self._is_field_complex
+        if not self.spec:
+            return False
+
+        return bool(self.spec.fields)
 
     @property
     def spec(self):
@@ -50,9 +53,9 @@ class Item(AbstractItem):
     def spec(self, spec: IsoField):
         self._spec: IsoField = spec
 
-    @is_field_complex.setter
-    def is_field_complex(self, is_field_complex: bool):
-        self._is_field_complex: bool = is_field_complex
+    # @is_field_complex.setter
+    # def is_field_complex(self, is_field_complex: bool):
+    #     self._is_field_complex: bool = is_field_complex
 
     def __init__(self, item_data: list[str]):
         super(Item, self).__init__(item_data)

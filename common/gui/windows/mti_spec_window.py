@@ -37,14 +37,27 @@ class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):
         self.ButtonCancel.clicked.connect(self.cancel)
         self.parse_mti_list(self.spec.spec.mti)
         self.MtiTable.verticalHeader().hide()
-        self.ButtonPlus.setDisabled(True)
-        self.ButtonMinus.setDisabled(True)
-
-    def plus(self):
-        ...
 
     def minus(self):
-        ...
+        position = self.MtiTable.currentRow()
+        self.MtiTable.removeRow(position)
+
+        if self.MtiTable.item(position, 0) is None:
+            position = position - 1
+
+        self.MtiTable.setCurrentCell(position, 0)
+
+    def add_item(self, row_set=None):
+        if row_set is None:
+            row_set = ("", "", "", False, "")
+
+        for item_count, item_data in enumerate(row_set):
+            item = self.MtiItem(self.MtiTable, item_data)
+
+            if isinstance(item_data, bool):
+                item.set_checkbox(item_data, self.MtiTable.rowCount() - 1, item_count)
+
+            self.MtiTable.setItem(self.MtiTable.rowCount(), item_count, item)
 
     def ok(self):
         mti_list = self.create_mti_list()
@@ -54,21 +67,33 @@ class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):
     def cancel(self):
         self.close()
 
+    def add_bottom_row(self, row_data=None):
+        if not row_data:
+            row_data = (None, None, None, False, None)
+
+        self.MtiTable.insertRow(self.MtiTable.rowCount())
+
+        for item_count, item_data in enumerate(row_data):
+            item = self.MtiItem(self.MtiTable, item_data)
+
+            if isinstance(item_data, bool):
+                item.set_checkbox(item_data, self.MtiTable.rowCount() - 1, item_count)
+
+            self.MtiTable.setItem(self.MtiTable.rowCount() - 1, item_count, item)
+
+    def plus(self):
+        self.add_bottom_row()
+        self.MtiTable.scrollToBottom()
+        self.MtiTable.setCurrentCell(self.MtiTable.rowCount() - 1, int())
+        self.MtiTable.editItem(self.MtiTable.currentItem())
+
     def parse_mti_list(self, mti_list: list[Mti]):
         for row_count, mti in enumerate(mti_list):
             row_set = (mti.description, mti.request, mti.response, mti.is_reversible, mti.reversal_mti)
-            self.MtiTable.insertRow(row_count)
+            self.add_bottom_row(row_set)
 
-            for item_count, item_data in enumerate(row_set):
-                item = self.MtiItem(self.MtiTable, item_data)
-
-                if isinstance(item_data, bool):
-                    item.set_checkbox(item_data, row_count, item_count)
-
-                self.MtiTable.setItem(row_count, item_count, item)
         header_view: QHeaderView = self.MtiTable.horizontalHeader()
         header_view.setSectionResizeMode(header_view.ResizeMode.ResizeToContents)
-        # self.MtiTable.horizontalHeader().setSectionResizeMode(self.MtiTable.horizontalHeader().ResizeToContents)
 
     def create_mti_list(self) -> list[Mti] | None:
         result: list = list()

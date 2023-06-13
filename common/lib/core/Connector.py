@@ -57,7 +57,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QobjecAbcMeta):
         debug("Connecting to %s:%s", host, port)
 
         self.connectToHost(host, port)
-        self.waitForConnected(msecs=10000)
+        self.waitForConnected(msecs=3000)
 
         if not self.state() == self.SocketState.ConnectedState:
             self.errorOccurred.emit(QTcpSocket.SocketError.SocketTimeoutError)
@@ -67,7 +67,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QobjecAbcMeta):
             return
 
         self.disconnectFromHost()
-        self.waitForDisconnected(msecs=10000)
+        self.waitForDisconnected(msecs=3000)
 
     def reconnect_sv(self):
         for retry in range(3):
@@ -81,3 +81,6 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QobjecAbcMeta):
             return
 
         self.connect_sv()
+
+    def is_connected(self):
+        return self.state() == self.SocketState.ConnectedState
