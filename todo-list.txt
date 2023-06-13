@@ -14,23 +14,17 @@
 + Spec applies after parsing file
 + Decide how to parse incoming message when no spec exists
 + Expand the MTI set window ???
++ No buttons enabled after transaction building error
++ No generated fields appear in message when they don't exist in file
 
 
 • No data in socket if delete field in spec
-
-
-#
 • Exceptions policy
 • Set connection timeouts in Connector
-• Testing
 • Correct the default message
 • Correct and publish the Specification
 • Publish on confluence
-• Rename?
-• Logo capitan
 • Try to compile .exe
 • Prepare document
-• Add button to Validate
-• Emembed cards
 • Complex field parser
 • Spec explanation
