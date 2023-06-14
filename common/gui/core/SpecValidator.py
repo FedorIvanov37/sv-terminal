@@ -48,13 +48,13 @@ class SpecValidator:
         try:
             number = int(number)
         except ValueError:
-            raise ValueError("Only numeric values allowed")
+            raise ValueError("only numeric values allowed")
 
         if number < 1:
             if allow_zero and number == 0:
                 return
 
-            raise ValueError("Only positive digits allowed")
+            raise ValueError("only positive digits allowed")
 
     def validate_field_number(self, item):
         field_path = item.get_field_path(string=True)
@@ -69,13 +69,14 @@ class SpecValidator:
         if current_field_numbers.count(field_path) > 1:
             raise ValueError(f"Field {field_path} - Duplicated field number")
 
-        if int(item.field_number) < int(self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY):
-            raise ValueError(f"Field {field_path}, column {SpecFieldDef.FIELD} - Cannot set "
-                             f"field number less than {self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY}")
+        if item.get_field_depth() == 1:
+            if int(item.field_number) < int(self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY):
+                raise ValueError(f"Field {field_path}, column {SpecFieldDef.FIELD} - Cannot set "
+                                 f"field number less than {self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY}")
 
-        if int(item.field_number) > int(self.spec.FIELD_SET.FIELD_128_SECONDARY_MAC_DATA):
-            raise ValueError(f"Field {field_path}, column {SpecFieldDef.FIELD} - Cannot set "
-                             f"top level field number greater than {self.spec.FIELD_SET.FIELD_128_SECONDARY_MAC_DATA}")
+            if int(item.field_number) > int(self.spec.FIELD_SET.FIELD_128_SECONDARY_MAC_DATA):
+                raise ValueError(f"Field {field_path}, column {SpecFieldDef.FIELD} - Cannot set top level "
+                                 f"field number greater than {self.spec.FIELD_SET.FIELD_128_SECONDARY_MAC_DATA}")
 
     def validate_field_length(self, item):
         field_path = item.get_field_path(string=True)

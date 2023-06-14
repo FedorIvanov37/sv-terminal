@@ -88,7 +88,7 @@ class SvTerminalGui(SvTerminal):
         self.window.set_connection_status(status)
 
     def create_window_logger(self):
-        formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DATE_FORMAT, LogDefinition.MARK_STYLE)
+        formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
         wireless_handler = WirelessHandler()
         stream = LogStream(self.window.log_browser)
         wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))

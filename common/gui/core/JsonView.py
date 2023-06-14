@@ -1,4 +1,4 @@
-from logging import error
+from logging import error, warning
 from collections import OrderedDict
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget
@@ -48,9 +48,12 @@ class JsonView(QTreeWidget):
 
         if item.generate_checkbox_checked():
             item.set_item_color(red=False)
+            return
 
-        else:
+        try:
             self.validate(item)
+        except ValueError as validation_error:
+            warning(validation_error)
 
     def field_number_duplicated(self, item: Item):
         root = self.root
@@ -72,24 +75,21 @@ class JsonView(QTreeWidget):
             item.set_item_color(red=False)
             return
 
-        if item.generate_checkbox_checked():
+        if self.spec.can_be_generated(item.field_number) and item.generate_checkbox_checked():
             item.set_item_color(red=False)
             return
 
         if self.field_number_duplicated(item):
-            error(f"Duplicated field number {item.get_field_path(string=True)} found")
-            item.set_item_color()
-            return
+            raise ValueError(f"Duplicated field number {item.get_field_path(string=True)} found")
 
         validator = Validator()
 
         try:
             validator.validate_field_data(item.get_field_path(), item.field_data)
         except ValueError as validation_error:
-            error(validation_error)
             item.set_item_color()
-            return
-
+            raise validation_error
+                
         item.set_item_color(red=False)
 
     def plus(self):
@@ -214,14 +214,13 @@ class JsonView(QTreeWidget):
 
     def generate_fields(self, parent=None):
         result: TypeFields = dict()
-        validator = Validator()
 
         if parent is None:
             parent = self.root
 
         for row in parent.get_children():
             if self.config.fields.validation:
-                validator.validate_field_item(row)
+                self.validate(row)
 
             result[row.field_number] = self.generate_fields(row) if row.childCount() else row.field_data
 

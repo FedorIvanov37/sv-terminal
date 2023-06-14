@@ -36,11 +36,15 @@ class SpecView(QObject):
         self.make_order()
 
     def validate_item(self, item: SpecItem, column: int, validate_all=False):
+        if item is self.root:
+            return
+
         self.set_field_path(item)
 
         try:
             if validate_all:
                 self.validator.validate_spec_row(item)
+
             else:
                 self.validator.validate_column(item, column)
 

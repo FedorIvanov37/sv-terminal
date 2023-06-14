@@ -21,8 +21,6 @@ class SpecUnsaved(Ui_SpecUnsaved, QDialog):
         super().__init__()
         self.setupUi(self)
         self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
-        self.LogoLabel.setPixmap(QPixmap(TermFilesPath.MAIN_LOGO))
-        self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
         self.setup()
 
     def setup(self):
@@ -32,7 +30,7 @@ class SpecUnsaved(Ui_SpecUnsaved, QDialog):
             apply_menu.addAction(action, self.need_apply)
 
         self.ButtonSave.setMenu(apply_menu)
-        self.ButtonReturn.clicked.connect(self.close)
+        self.ButtonReturn.clicked.connect(self.return_to_spec.emit)
 
     def need_apply(self):
         commit = self.sender().text().upper() == "PERMANENTLY"  # TODO Hardcode

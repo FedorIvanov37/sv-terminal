@@ -1,6 +1,6 @@
+from json import dumps
 from logging import info, debug, getLevelName, getLogger, Formatter
 from logging.handlers import RotatingFileHandler
-from json import dumps
 from common.gui.constants.LogDefinition import LogDefinition
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Parser import Parser
@@ -43,7 +43,7 @@ class Logger:
         logger = getLogger()
         logger.handlers.clear()
         logger.setLevel(getLevelName(self.config.debug.level))
-        formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DATE_FORMAT, LogDefinition.MARK_STYLE)
+        formatter = Formatter(LogDefinition.FORMAT, LogDefinition.LOGFILE_DATE_FORMAT, LogDefinition.MARK_STYLE)
         file_handler = RotatingFileHandler(
             filename=TermFilesPath.LOG_FILE_NAME,
             maxBytes=LogDefinition.LOG_MAX_SIZE_MEGABYTES * 1024000,
