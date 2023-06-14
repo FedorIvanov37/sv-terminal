@@ -20,19 +20,15 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     _read_only: bool = True
     _spec: EpaySpecification = EpaySpecification()
     _spec_accepted: pyqtSignal = pyqtSignal(str)
-    _need_to_close: bool = False
-
-    @property
-    def need_to_close(self):
-        return self._need_to_close
-
-    @need_to_close.setter
-    def need_to_close(self, need_to_close):
-        self._need_to_close = need_to_close
+    _spec_rejected: pyqtSignal = pyqtSignal()
 
     @property
     def spec_accepted(self):
         return self._spec_accepted
+
+    @property
+    def spec_rejected(self):
+        return self._spec_rejected
 
     @property
     def changed(self):
@@ -132,19 +128,24 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
         try:
             self.SpecView.reload_spec(commit)
+
         except Exception as E:
-            self.set_status(str(E))
+            self.set_status(str(E), error=True)
+            self.spec_rejected.emit()
             return
 
         self.spec_accepted.emit(self.spec.name)
         self.changed = False
+        self._mti_changed = False
 
     def closeEvent(self, a0: QCloseEvent) -> None:
-        if self.process_close():
-            a0.accept()
-            return
+        self.process_close(a0)
 
-        a0.ignore()
+        # a0.ignore()
+            # a0.accept()
+            # return
+        #
+        # a0.ignore()
 
     def item_changed(self, item, column):
         self.changed = True
@@ -191,19 +192,19 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.CheckBoxHideReverved.setCheckState(Qt.CheckState.Checked)
         self.SpecView.hide_reserved()
 
-    def process_close(self) -> bool:
-        self.need_to_close = True
+    def process_close(self, close_event):
+        if not any((self.changed, self._mti_changed)):
+            close_event.accept()
+            return
 
-        if self.changed or self._mti_changed:
-            window = SpecUnsaved()
-            window.save.connect(self.apply)
-            window.return_to_spec.connect(self.set_need_to_close)
-            window.exec()
+        window = SpecUnsaved()
+        window.return_to_spec.connect(close_event.ignore)
+        window.return_to_spec.connect(window.accept)
+        window.save.connect(self.apply)
 
-        return self.need_to_close
+        self.spec_rejected.connect(close_event.ignore)
 
-    def set_need_to_close(self, need=False):
-        self.need_to_close = need
+        window.exec()
 
     def set_status(self, text: str, error: bool = False) -> None:
         text_message = list()

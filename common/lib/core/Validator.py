@@ -26,6 +26,9 @@ class Validator(object):
         if mti not in self.spec.get_mti_codes():
             raise ValueError(f"Unknown MTI: {mti}")
 
+    def validate_fields_duplicates(self):
+        ...
+
     def validate_fields(self, fields: TypeFields, field_path: list[str] | None = None):
         if self._config is None:
             return

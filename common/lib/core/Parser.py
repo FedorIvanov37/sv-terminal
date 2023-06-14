@@ -102,20 +102,10 @@ class Parser:
 
         for subfield, subfield_data in field_data.items():
             path.append(subfield)
-            subfield_spec = spec.get_field_spec(path)
 
-            if subfield_spec is None:
-                warning("Lost specification for field %s! Set parameters in the Specification tool", ".".join(path))
-                field_spec: IsoField = spec.get_field_spec(path[:-1])
-
-                length = str()
-
-                if field_spec:
-                    length = f"{len(subfield_data)}:0{field_spec.tag_length}"
-
-                result += f"{subfield}{length}{subfield_data}"
-                path.pop()
-                continue
+            if not (subfield_spec := spec.get_field_spec(path)):
+                raise ValueError(f"Lost specification for field {'.'.join(path)}! " 
+                                 "Set parameters in the Specification tool. ")
 
             if subfield_spec.fields:
                 result += Parser.join_complex_field(subfield, subfield_data, path)

@@ -1,5 +1,5 @@
 from json import dumps
-from logging import error, info
+from logging import error, info, warning
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
@@ -75,18 +75,20 @@ class SvTerminalGui(SvTerminal):
 
     def reconnect(self):
         SvTerminal.reconnect(self)
-        self.window.block_connection_buttons()
 
     def set_connection_status(self):
-        connection_status = self.connector.state()
+        status = self.connector.state()
 
-        if connection_status == QTcpSocket.SocketState.ConnectedState:
-            self.window.unblock_connection_buttons()
+        match self.connector.state():
+            case QTcpSocket.SocketState.ConnectingState:
+                self.window.block_connection_buttons()
+            case _:
+                self.window.unblock_connection_buttons()
 
-        self.window.set_connection_status(connection_status)
+        self.window.set_connection_status(status)
 
     def create_window_logger(self):
-        formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DATE_FORMAT, LogDefinition.MARK_STYLE)
+        formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
         wireless_handler = WirelessHandler()
         stream = LogStream(self.window.log_browser)
         wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
@@ -129,12 +131,8 @@ class SvTerminalGui(SvTerminal):
                 error(f"Transaction building error")
                 [error(err.strip()) for err in str(building_error).splitlines()]
                 return
-                # raise TypeError
 
         info(f"Processing transaction ID [{transaction.trans_id}]")
-
-        if not SvTerminal.is_connected(self):
-            self.window.block_connection_buttons()
 
         SvTerminal.send(self, transaction)
 
@@ -226,6 +224,10 @@ class SvTerminalGui(SvTerminal):
             error(f"File parsing error: {parsing_error}")
             return
 
+        if transaction.generate_fields:
+            self.generator.set_generated_fields(transaction)
+            self.set_generated_fields(transaction)
+
         try:
             self.window.set_mti_value(transaction.message_type)
             self.window.set_fields(transaction)
@@ -276,11 +278,12 @@ class SvTerminalGui(SvTerminal):
 
     def set_generated_fields(self, transaction: Transaction):
         for field in transaction.generate_fields:
-            if not transaction.data_fields.get(field):
-                error("Lost field data for field %s")
 
             if not self.spec.can_be_generated([field]):
-                error(f"Field {field} cannot be generated")
-                return
+                warning(f"According to specification Field {field} cannot be generated")
+                continue
+
+            if not transaction.data_fields.get(field):
+                transaction.data_fields[field] = self.generator.generate_field(field)
 
             self.window.set_field_value(field, transaction.data_fields.get(field))

@@ -11,7 +11,9 @@ class LogDefinition(object):
     CRITICAL = "CRITICAL"
     NOTSET = "NOTSET"
 
-    DATE_FORMAT = "%T"
+    DISPLAY_DATE_FORMAT = "%T"
+    LOGFILE_DATE_FORMAT = "%d.%m.%Y %H:%M:%S"
+
     FORMAT = "{asctime} [{levelname}] {message}"
     MARK_STYLE = "{"
     LOG_MAX_SIZE_MEGABYTES = 10

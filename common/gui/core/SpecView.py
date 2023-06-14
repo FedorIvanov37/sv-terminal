@@ -5,6 +5,7 @@ from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.gui.constants.SpecFieldDef import SpecFieldDef
 from common.gui.core.SpecItem import SpecItem
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
+from common.gui.core.SpecValidator import SpecValidator
 
 
 class SpecView(QObject):
@@ -21,21 +22,40 @@ class SpecView(QObject):
         self.root: SpecItem = SpecItem(["Specification"])
         self.tree: QTreeWidget = tree
         self.window = window
+        self.validator = SpecValidator()
         self.setup()
 
     def setup(self):
         self.tree.setHeaderLabels(SpecFieldDef.COLUMNS)
         self.tree.addTopLevelItem(self.root)
         self.tree.itemDoubleClicked.connect(self.edit)
-        self.tree.itemChanged.connect(self.item_was_changed)
-        self.tree.itemPressed.connect(self.set_field_path)
+        self.tree.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
+        self.tree.itemChanged.connect(lambda item, column: self.validate_item(item, column))
         self.tree.setSortingEnabled(False)
         self.parse_spec()
         self.make_order()
 
+    def validate_item(self, item: SpecItem, column: int, validate_all=False):
+        if item is self.root:
+            return
+
+        self.set_field_path(item)
+
+        try:
+            if validate_all:
+                self.validator.validate_spec_row(item)
+
+            else:
+                self.validator.validate_column(item, column)
+
+        except ValueError as validation_error:
+            self.status_changed.emit(str(validation_error), True)
+
     def hide_reserved(self, hide=True):
         item: SpecItem
+
         for item in self.root.get_children():
+
             if item.reserved_for_future:
                 item.setHidden(hide)
 
@@ -49,17 +69,15 @@ class SpecView(QObject):
     def clean(self):
         self.root.takeChildren()
 
-    def item_was_changed(self, item: SpecItem, column: int):
-        if item is self.root:
-            return
+    def resize_all(self):
+        for column in range(self.tree.columnCount()):
+            self.tree.resizeColumnToContents(column)
 
-        if column == SpecFieldDef.get_column_position(SpecFieldDef.FIELD):
-            item.field_number = item.text(column)
-
-        if column == SpecFieldDef.get_column_position(SpecFieldDef.TAG_LENGTH):
-            data_item: SpecItem
-
-        # TODO Validation
+    def make_order(self):
+        self.tree.collapseAll()
+        self.tree.expandToDepth(int())
+        self.resize_all()
+        self.hide_reserved()
 
     def edit(self, item, column):
         if item is self.root and column != SpecFieldDef.get_column_position(SpecFieldDef.DESCRIPTION):
@@ -74,7 +92,7 @@ class SpecView(QObject):
 
         self.tree.editItem(item, column)
 
-    def set_field_path(self, item, column):
+    def set_field_path(self, item):
         path = item.get_field_path(string=True)
 
         if not path:
@@ -93,14 +111,16 @@ class SpecView(QObject):
             self.tree.setFocus()
             return
 
-        self.tree.previousInFocusChain()
         self.tree.setFocus()
         parent: SpecItem = item.parent()
         parent.takeChild(parent.indexOfChild(item))
 
     def plus(self):
         item = SpecItem([])
-        current_item = self.tree.currentItem()
+
+        if not (current_item := self.tree.currentItem()):
+            return
+
         parent = current_item.parent()
 
         if parent is None:
@@ -110,6 +130,7 @@ class SpecView(QObject):
         parent.insertChild(current_index + 1, item)
         self.tree.scrollToItem(item)
         self.edit(item, 0)
+        self.tree.setCurrentItem(item)
 
     def next_level(self):
         item = SpecItem([])
@@ -157,8 +178,6 @@ class SpecView(QObject):
                 SpecFieldDef.get_column_position(SpecFieldDef.ALPHA): field_data.alpha,
                 SpecFieldDef.get_column_position(SpecFieldDef.NUMERIC): field_data.numeric,
                 SpecFieldDef.get_column_position(SpecFieldDef.SPECIAL): field_data.special,
-                # SpecFieldDef.get_column_position(SpecFieldDef.BYTES): field_data.bytes,
-                # SpecFieldDef.get_column_position(SpecFieldDef.IS_SECRET): field_data.is_secret,
             }
 
             item: SpecItem = SpecItem(field_data_for_item, checkboxes=checkboxes)
@@ -183,7 +202,11 @@ class SpecView(QObject):
             row: SpecItem
 
             for row in spec_item.get_children():
+                self.validator.validate_spec_row(row)
+
                 field = IsoField(
+                    field_number=row.field_number,
+                    field_path=row.get_field_path(),
                     min_length=row.min_length,
                     max_length=row.max_length,
                     var_length=row.var_length,
@@ -194,10 +217,8 @@ class SpecView(QObject):
                     alpha=row.alpha,
                     numeric=row.numeric,
                     special=row.special,
-                    # bytes=row.bytes,
                     reserved_for_future=row.reserved_for_future,
                     description=row.description,
-                    # is_secret=row.is_secret,
                     fields=None
                 )
 
@@ -216,12 +237,3 @@ class SpecView(QObject):
             mti=self.spec.mti
         )
 
-    def resize_all(self):
-        for column in range(self.tree.columnCount()):
-            self.tree.resizeColumnToContents(column)
-
-    def make_order(self):
-        self.tree.collapseAll()
-        self.tree.expandToDepth(int())
-        self.resize_all()
-        self.hide_reserved()

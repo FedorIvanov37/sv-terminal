@@ -2,39 +2,33 @@ from PyQt6.QtCore import Qt
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.gui.constants.SpecFieldDef import SpecFieldDef
 from common.gui.core.AbstractItem import AbstractItem
+from common.lib.core.EpaySpecification import EpaySpecification
 
 
 class SpecItem(AbstractItem):
     _spec: IsoField = None
     _field_number: str = None
+    _epay_spec: EpaySpecification = EpaySpecification()
+
+    @property
+    def epay_spec(self):
+        return self._epay_spec
 
     @property
     def tag_length(self):
-        try:
-            return int(self.text(SpecFieldDef.get_column_position(SpecFieldDef.TAG_LENGTH)))
-        except ValueError:
-            return int()
+        return self.text(SpecFieldDef.get_column_position(SpecFieldDef.TAG_LENGTH))
 
     @property
     def min_length(self):
-        try:
-            return int(self.text(SpecFieldDef.get_column_position(SpecFieldDef.MIX_LENGTH)))
-        except ValueError:
-            return int()
+        return self.text(SpecFieldDef.get_column_position(SpecFieldDef.MIN_LENGTH))
 
     @property
     def max_length(self):
-        try:
-            return int(self.text(SpecFieldDef.get_column_position(SpecFieldDef.MAX_LENGTH)))
-        except ValueError:
-            return int()
+        return self.text(SpecFieldDef.get_column_position(SpecFieldDef.MAX_LENGTH))
 
     @property
     def var_length(self):
-        try:
-            return int(self.text(SpecFieldDef.get_column_position(SpecFieldDef.VARIABLE_LENGTH)))
-        except ValueError:
-            return int()
+        return self.text(SpecFieldDef.get_column_position(SpecFieldDef.VARIABLE_LENGTH))
 
     @property
     def description(self):
@@ -68,14 +62,6 @@ class SpecItem(AbstractItem):
     def special(self):
         return self.is_checked(SpecFieldDef.SPECIAL)
 
-    # @property
-    # def bytes(self):
-    #     return self.is_checked(SpecFieldDef.BYTES)
-
-    @property
-    def is_secret(self):
-        return self.is_checked(SpecFieldDef.IS_SECRET)
-
     @property
     def spec(self):
         return self._spec
@@ -86,26 +72,10 @@ class SpecItem(AbstractItem):
 
     @property
     def field_number(self):
-        return self._field_number
-
-    @field_number.setter
-    def field_number(self, field_number: str):
-        try:
-            if not field_number.isdigit():
-                return
-        except AttributeError:
-            return
-
-        self._field_number = field_number
+        return self.text(SpecFieldDef.get_column_position(SpecFieldDef.FIELD))
 
     def __init__(self, field_data: list[str], checkboxes: dict[str, bool] = None):
         super(SpecItem, self).__init__(field_data)
-
-        try:
-            self.field_number = field_data[0]
-        except IndexError:
-            self.field_number = None
-
         self.setup(checkboxes=checkboxes)
 
     def setup(self, checkboxes=None):
@@ -116,7 +86,7 @@ class SpecItem(AbstractItem):
                 checkboxes[box] = False
 
         self.set_checkboxes(checkboxes)
-        self.field_number = self.text(SpecFieldDef.get_column_position(SpecFieldDef.FIELD))
+        # self.field_number = self.text(SpecFieldDef.get_column_position(SpecFieldDef.FIELD))
         self.spec = self.epay_spec.get_field_spec(self.get_field_path())
 
     def set_checkboxes(self, checkboxes):

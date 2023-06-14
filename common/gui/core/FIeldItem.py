@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt, QVariant, pyqtSignal
 from common.gui.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.gui.core.AbstractItem import AbstractItem
+from logging import warning
 
 
 class Item(AbstractItem):
@@ -114,7 +115,12 @@ class Item(AbstractItem):
         if role == Qt.ItemDataRole.ForegroundRole:
             return
 
-        self.treeWidget().validate(self)
+        try:
+            self.treeWidget().validate(self)
+        except ValueError as validation_error:
+            warning(validation_error)
+            self.set_item_color()
+
         self.process_change_item(column)
 
     def process_change_item(self, column: int | None = None):

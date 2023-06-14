@@ -30,7 +30,11 @@ class TransactionQueue(QObject):
         if not request.is_request:
             raise TypeError("Wrong MTI")
 
-        transaction_dump: bytes = Parser.create_dump(request)
+        try:
+            transaction_dump: bytes = Parser.create_dump(request)
+        except ValueError as value_error:
+            error(value_error)
+            return
 
         self.ready_to_send.emit(request.trans_id, transaction_dump)
 

@@ -1,7 +1,7 @@
 class SpecFieldDef(object):
     FIELD: str = "Field"
     DESCRIPTION: str = "Description"
-    MIX_LENGTH: str = "Min Len"
+    MIN_LENGTH: str = "Min Len"
     MAX_LENGTH: str = "Max Len"
     VARIABLE_LENGTH: str = "Data Len"
     TAG_LENGTH: str = "Tag Len"
@@ -11,13 +11,11 @@ class SpecFieldDef(object):
     ALPHA: str = "Alpha"
     NUMERIC: str = "Numeric"
     SPECIAL: str = "Special"
-    # BYTES: str = "Bytes"
-    # IS_SECRET: str = "Is secret"
 
     COLUMNS: tuple[str, str, str, str, str, str, str, str, str, str, str, str, str, str, str] = (
         FIELD,
         DESCRIPTION,
-        MIX_LENGTH,
+        MIN_LENGTH,
         MAX_LENGTH,
         VARIABLE_LENGTH,
         TAG_LENGTH,

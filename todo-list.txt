@@ -2,35 +2,40 @@
 + Hide card data in log
 + Transaction does not block buttons
 + No complex fields in bitmap
-? Connection error return twice
++ Connection error return twice
 + Hide PCI DSS mode
 + Unlimit
 + Down when no spec for field
-? Exit error
++ Exit error
 + Cannot apply spec in spec window
 + Spec backup does not work
 + Check the reversal fields
 + No warning after delete field and close spec
 + Spec applies after parsing file
 + Decide how to parse incoming message when no spec exists
-+ Expand the MTI set window ???
++ Expand the MTI set window
++ No buttons enabled after transaction building error
++ No generated fields appear in message when they don't exist in file
++ Spec plus button does not work
++ Set connection timeouts in Connector
++ Create log when it does not exists
++ Add date to logfile, display log is staying as is
++ Changed pre-validation error level from ERROR to WARNING
++ Root spec item validates, should be ignored
++ Validate 1-128 for top-level items only
++ Spec window does not save spec even if error happens
++ Check the field duplicates before sent transaction
+
+
+
 
 
 • No data in socket if delete field in spec
-
-
-#
 • Exceptions policy
-• Set connection timeouts in Connector
-• Testing
 • Correct the default message
 • Correct and publish the Specification
 • Publish on confluence
-• Rename?
-• Logo capitan
 • Try to compile .exe
 • Prepare document
-• Add button to Validate
-• Emembed cards
 • Complex field parser
 • Spec explanation
