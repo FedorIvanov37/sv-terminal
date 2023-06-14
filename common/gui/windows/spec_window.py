@@ -133,7 +133,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         try:
             self.SpecView.reload_spec(commit)
         except Exception as E:
-            self.set_status(str(E))
+            self.set_status(str(E), error=True)
             return
 
         self.spec_accepted.emit(self.spec.name)

@@ -25,6 +25,7 @@
 # NEW: Added transaction timeouts: in case of no response for 60 seconds transaction will be declined
 # NEW: Added possibility to set MTI map in GUI. See specification window
 # NEW: Added warning when Specification was changed but not saved
+# NEW: Specification validators
 #
 # UPD: Updated requirements - framework changed to PyQt6, SvTerminal does not support PyQt5 since v0.15
 # UPD: Since v0.15 Specification settings are required for any fields

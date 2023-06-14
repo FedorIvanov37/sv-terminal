@@ -11520,3 +11520,540 @@ Field has subfields, no way to guess the field spec
 13:19:30 [INFO] Processing transaction ID [20230613_131930_237143138]
 13:19:30 [ERROR] Lost specification for field 47.888! Set parameters in the Specification tool. 
 13:19:37 [INFO] Settings applied
+13:29:14 [INFO] Default file parsed
+13:29:23 [INFO] Processing transaction ID [20230613_132923_356612037]
+13:29:23 [WARNING] SmartVista disconnected. Trying to established the connection
+13:29:26 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+13:29:27 [INFO] Settings applied
+13:29:30 [INFO] Processing transaction ID [20230613_132930_625162814]
+13:29:30 [WARNING] SmartVista disconnected. Trying to established the connection
+13:29:30 [INFO] SmartVista host connection ESTABLISHED
+13:29:30 [INFO] 
+13:29:30 [INFO] [TRANS_ID][20230613_132930_625162814]
+13:29:30 [INFO] [MSG_TYPE][0800]
+13:29:30 [INFO] [BITMAP  ][7, 11, 70]
+13:29:30 [INFO] [007][010][0613132930]
+13:29:30 [INFO] [011][006][104050]
+13:29:30 [INFO] [070][003][301]
+13:29:30 [INFO] 
+13:29:30 [INFO] Transaction [20230613_132930_625162814] was sent 
+13:29:31 [INFO] 
+13:29:31 [INFO] [TRANS_ID][20230613_132930_625162814]
+13:29:31 [INFO] [MSG_TYPE][0810]
+13:29:31 [INFO] [BITMAP  ][7, 11, 39, 70]
+13:29:31 [INFO] [007][010][0613132930]
+13:29:31 [INFO] [011][006][104050]
+13:29:31 [INFO] [039][002][00]
+13:29:31 [INFO] [070][003][301]
+13:29:31 [INFO] 
+13:29:31 [INFO] Transaction ID [20230613_132930_625162814] matched, response time seconds: 1.214
+13:55:20 [ERROR] Received a socket error from SmartVista host: The remote host closed the connection
+13:55:20 [INFO] SmartVista host connection DISCONNECTED
+15:49:41 [INFO] [Re]connecting...
+15:49:41 [INFO] SmartVista host connection ESTABLISHED
+15:50:26 [INFO] Processing transaction ID [20230613_155026_646933741]
+15:50:26 [INFO] 
+15:50:26 [INFO] [TRANS_ID][20230613_155026_646933741]
+15:50:26 [INFO] [MSG_TYPE][0800]
+15:50:26 [INFO] [BITMAP  ][7, 11, 70]
+15:50:26 [INFO] [007][010][0613155026]
+15:50:26 [INFO] [011][006][206309]
+15:50:26 [INFO] [070][003][301]
+15:50:26 [INFO] 
+15:50:26 [INFO] Transaction [20230613_155026_646933741] was sent 
+15:50:26 [INFO] 
+15:50:26 [INFO] [TRANS_ID][20230613_155026_646933741]
+15:50:26 [INFO] [MSG_TYPE][0810]
+15:50:26 [INFO] [BITMAP  ][7, 11, 39, 70]
+15:50:26 [INFO] [007][010][0613155026]
+15:50:26 [INFO] [011][006][206309]
+15:50:26 [INFO] [039][002][00]
+15:50:26 [INFO] [070][003][301]
+15:50:26 [INFO] 
+15:50:26 [INFO] Transaction ID [20230613_155026_646933741] matched, response time seconds: 1.059
+15:50:33 [INFO] Settings applied
+15:50:34 [INFO] [Re]connecting...
+15:50:34 [INFO] SmartVista host connection DISCONNECTED
+15:50:37 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+15:51:13 [INFO] Default file parsed
+15:51:15 [INFO] [Re]connecting...
+15:51:18 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+15:51:23 [INFO] Processing transaction ID [20230613_155123_103790817]
+15:51:23 [WARNING] SmartVista disconnected. Trying to established the connection
+15:51:26 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+15:52:34 [INFO] Processing transaction ID [20230613_155234_368715946]
+15:52:34 [WARNING] SmartVista disconnected. Trying to established the connection
+15:52:37 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+15:55:56 [INFO] Default file parsed
+15:55:58 [INFO] [Re]connecting...
+15:56:01 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+15:56:04 [INFO] Settings applied
+15:56:06 [INFO] [Re]connecting...
+15:56:06 [INFO] SmartVista host connection ESTABLISHED
+15:56:15 [INFO] [Re]connecting...
+15:56:15 [INFO] SmartVista host connection DISCONNECTED
+15:56:15 [INFO] SmartVista host connection ESTABLISHED
+15:56:18 [INFO] [Re]connecting...
+15:56:18 [INFO] SmartVista host connection DISCONNECTED
+15:56:18 [INFO] SmartVista host connection ESTABLISHED
+15:56:20 [INFO] SmartVista host connection DISCONNECTED
+15:57:08 [INFO] Default file parsed
+16:00:55 [INFO] Default file parsed
+16:13:36 [INFO] Default file parsed
+16:16:28 [INFO] Default file parsed
+16:16:32 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+16:16:49 [INFO] Default file parsed
+16:16:53 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+16:16:56 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+16:18:03 [INFO] Default file parsed
+16:18:05 [INFO] [Re]connecting...
+16:18:05 [INFO] SmartVista host connection ESTABLISHED
+16:18:40 [INFO] Processing transaction ID [20230613_161840_675306953]
+16:18:40 [INFO] 
+16:18:40 [INFO] [TRANS_ID][20230613_161840_675306953]
+16:18:40 [INFO] [MSG_TYPE][0800]
+16:18:40 [INFO] [BITMAP  ][7, 11, 70]
+16:18:40 [INFO] [007][010][0613161840]
+16:18:40 [INFO] [011][006][094467]
+16:18:40 [INFO] [070][003][301]
+16:18:40 [INFO] 
+16:18:40 [INFO] Transaction [20230613_161840_675306953] was sent 
+16:18:42 [INFO] 
+16:18:42 [INFO] [TRANS_ID][20230613_161840_675306953]
+16:18:42 [INFO] [MSG_TYPE][0810]
+16:18:42 [INFO] [BITMAP  ][7, 11, 39, 70]
+16:18:42 [INFO] [007][010][0613161840]
+16:18:42 [INFO] [011][006][094467]
+16:18:42 [INFO] [039][002][00]
+16:18:42 [INFO] [070][003][301]
+16:18:42 [INFO] 
+16:18:42 [INFO] Transaction ID [20230613_161840_675306953] matched, response time seconds: 2.22
+16:18:44 [INFO] Processing transaction ID [20230613_161844_796104330]
+16:18:44 [INFO] 
+16:18:44 [INFO] [TRANS_ID][20230613_161844_796104330]
+16:18:44 [INFO] [MSG_TYPE][0800]
+16:18:44 [INFO] [BITMAP  ][7, 11, 70]
+16:18:44 [INFO] [007][010][0613161844]
+16:18:44 [INFO] [011][006][620786]
+16:18:44 [INFO] [070][003][301]
+16:18:44 [INFO] 
+16:18:44 [INFO] Transaction [20230613_161844_796104330] was sent 
+16:18:44 [INFO] 
+16:18:44 [INFO] [TRANS_ID][20230613_161844_796104330]
+16:18:44 [INFO] [MSG_TYPE][0810]
+16:18:44 [INFO] [BITMAP  ][7, 11, 39, 70]
+16:18:44 [INFO] [007][010][0613161844]
+16:18:44 [INFO] [011][006][620786]
+16:18:44 [INFO] [039][002][00]
+16:18:44 [INFO] [070][003][301]
+16:18:44 [INFO] 
+16:18:44 [INFO] Transaction ID [20230613_161844_796104330] matched, response time seconds: 1.096
+16:18:49 [INFO] Processing transaction ID [20230613_161849_863171378]
+16:18:49 [INFO] 
+16:18:49 [INFO] [TRANS_ID][20230613_161849_863171378]
+16:18:49 [INFO] [MSG_TYPE][0800]
+16:18:49 [INFO] [BITMAP  ][7, 11, 70]
+16:18:49 [INFO] [007][010][0613161849]
+16:18:49 [INFO] [011][006][416132]
+16:18:49 [INFO] [070][003][301]
+16:18:49 [INFO] 
+16:18:49 [INFO] Transaction [20230613_161849_863171378] was sent 
+16:18:49 [INFO] 
+16:18:49 [INFO] [TRANS_ID][20230613_161849_863171378]
+16:18:49 [INFO] [MSG_TYPE][0810]
+16:18:49 [INFO] [BITMAP  ][7, 11, 39, 70]
+16:18:49 [INFO] [007][010][0613161849]
+16:18:49 [INFO] [011][006][416132]
+16:18:49 [INFO] [039][002][00]
+16:18:49 [INFO] [070][003][301]
+16:18:49 [INFO] 
+16:18:49 [INFO] Transaction ID [20230613_161849_863171378] matched, response time seconds: 0.141
+16:18:50 [INFO] Processing transaction ID [20230613_161850_483097410]
+16:18:50 [INFO] 
+16:18:50 [INFO] [TRANS_ID][20230613_161850_483097410]
+16:18:50 [INFO] [MSG_TYPE][0800]
+16:18:50 [INFO] [BITMAP  ][7, 11, 70]
+16:18:50 [INFO] [007][010][0613161850]
+16:18:50 [INFO] [011][006][076505]
+16:18:50 [INFO] [070][003][301]
+16:18:50 [INFO] 
+16:18:50 [INFO] Transaction [20230613_161850_483097410] was sent 
+16:18:50 [INFO] 
+16:18:50 [INFO] [TRANS_ID][20230613_161850_483097410]
+16:18:50 [INFO] [MSG_TYPE][0810]
+16:18:50 [INFO] [BITMAP  ][7, 11, 39, 70]
+16:18:50 [INFO] [007][010][0613161850]
+16:18:50 [INFO] [011][006][076505]
+16:18:50 [INFO] [039][002][00]
+16:18:50 [INFO] [070][003][301]
+16:18:50 [INFO] 
+16:18:50 [INFO] Transaction ID [20230613_161850_483097410] matched, response time seconds: 0.871
+16:18:51 [INFO] Processing transaction ID [20230613_161851_139432228]
+16:18:51 [INFO] 
+16:18:51 [INFO] [TRANS_ID][20230613_161851_139432228]
+16:18:51 [INFO] [MSG_TYPE][0800]
+16:18:51 [INFO] [BITMAP  ][7, 11, 70]
+16:18:51 [INFO] [007][010][0613161851]
+16:18:51 [INFO] [011][006][888184]
+16:18:51 [INFO] [070][003][301]
+16:18:51 [INFO] 
+16:18:51 [INFO] Transaction [20230613_161851_139432228] was sent 
+16:18:51 [INFO] 
+16:18:51 [INFO] [TRANS_ID][20230613_161851_139432228]
+16:18:51 [INFO] [MSG_TYPE][0810]
+16:18:51 [INFO] [BITMAP  ][7, 11, 39, 70]
+16:18:51 [INFO] [007][010][0613161851]
+16:18:51 [INFO] [011][006][888184]
+16:18:51 [INFO] [039][002][00]
+16:18:51 [INFO] [070][003][301]
+16:18:51 [INFO] 
+16:18:51 [INFO] Transaction ID [20230613_161851_139432228] matched, response time seconds: 0.62
+16:18:51 [INFO] Processing transaction ID [20230613_161851_617091342]
+16:18:51 [INFO] 
+16:18:51 [INFO] [TRANS_ID][20230613_161851_617091342]
+16:18:51 [INFO] [MSG_TYPE][0800]
+16:18:51 [INFO] [BITMAP  ][7, 11, 70]
+16:18:51 [INFO] [007][010][0613161851]
+16:18:51 [INFO] [011][006][427533]
+16:18:51 [INFO] [070][003][301]
+16:18:51 [INFO] 
+16:18:51 [INFO] Transaction [20230613_161851_617091342] was sent 
+16:18:51 [INFO] 
+16:18:51 [INFO] [TRANS_ID][20230613_161851_617091342]
+16:18:51 [INFO] [MSG_TYPE][0810]
+16:18:51 [INFO] [BITMAP  ][7, 11, 39, 70]
+16:18:51 [INFO] [007][010][0613161851]
+16:18:51 [INFO] [011][006][427533]
+16:18:51 [INFO] [039][002][00]
+16:18:51 [INFO] [070][003][301]
+16:18:51 [INFO] 
+16:18:51 [INFO] Transaction ID [20230613_161851_617091342] matched, response time seconds: 0.904
+16:18:52 [INFO] Processing transaction ID [20230613_161852_223380182]
+16:18:52 [INFO] 
+16:18:52 [INFO] [TRANS_ID][20230613_161852_223380182]
+16:18:52 [INFO] [MSG_TYPE][0800]
+16:18:52 [INFO] [BITMAP  ][7, 11, 70]
+16:18:52 [INFO] [007][010][0613161852]
+16:18:52 [INFO] [011][006][003054]
+16:18:52 [INFO] [070][003][301]
+16:18:52 [INFO] 
+16:18:52 [INFO] Transaction [20230613_161852_223380182] was sent 
+16:18:52 [INFO] 
+16:18:52 [INFO] [TRANS_ID][20230613_161852_223380182]
+16:18:52 [INFO] [MSG_TYPE][0810]
+16:18:52 [INFO] [BITMAP  ][7, 11, 39, 70]
+16:18:52 [INFO] [007][010][0613161852]
+16:18:52 [INFO] [011][006][003054]
+16:18:52 [INFO] [039][002][00]
+16:18:52 [INFO] [070][003][301]
+16:18:52 [INFO] 
+16:18:52 [INFO] Transaction ID [20230613_161852_223380182] matched, response time seconds: 0.5
+16:18:54 [INFO] SmartVista host connection DISCONNECTED
+16:18:58 [INFO] Default file parsed
+16:19:33 [INFO] Default file parsed
+16:19:41 [INFO] Processing transaction ID [20230613_161941_377533243]
+16:19:41 [WARNING] SmartVista disconnected. Trying to established the connection
+16:19:41 [INFO] SmartVista host connection ESTABLISHED
+16:19:41 [INFO] 
+16:19:41 [INFO] [TRANS_ID][20230613_161941_377533243]
+16:19:41 [INFO] [MSG_TYPE][0800]
+16:19:41 [INFO] [BITMAP  ][7, 11, 70]
+16:19:41 [INFO] [007][010][0613161941]
+16:19:41 [INFO] [011][006][737265]
+16:19:41 [INFO] [070][003][301]
+16:19:41 [INFO] 
+16:19:41 [INFO] Transaction [20230613_161941_377533243] was sent 
+16:19:42 [INFO] 
+16:19:42 [INFO] [TRANS_ID][20230613_161941_377533243]
+16:19:42 [INFO] [MSG_TYPE][0810]
+16:19:42 [INFO] [BITMAP  ][7, 11, 39, 70]
+16:19:42 [INFO] [007][010][0613161941]
+16:19:42 [INFO] [011][006][737265]
+16:19:42 [INFO] [039][002][00]
+16:19:42 [INFO] [070][003][301]
+16:19:42 [INFO] 
+16:19:42 [INFO] Transaction ID [20230613_161941_377533243] matched, response time seconds: 1.179
+16:19:44 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+16:27:04 [INFO] Default file parsed
+16:32:51 [INFO] Default file parsed
+17:26:37 [INFO] Default file parsed
+17:26:43 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:27:06 [INFO] Default file parsed
+17:27:10 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:28:50 [INFO] Default file parsed
+17:29:00 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:29:31 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:29:44 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:29:51 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:30:13 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:30:27 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:30:59 [INFO] Default file parsed
+17:31:26 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:31:38 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:32:05 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:32:06 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:32:22 [INFO] Default file parsed
+17:36:19 [INFO] Default file parsed
+17:36:24 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:36:51 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:38:21 [INFO] Default file parsed
+17:38:30 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+17:38:38 [INFO] Default file parsed
+18:04:47 [INFO] Default file parsed
+18:04:52 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+18:04:59 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+18:05:08 [INFO] Default file parsed
+18:05:22 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+18:06:13 [INFO] Default file parsed
+18:06:21 [INFO] Default file parsed
+18:06:40 [INFO] Default file parsed
+18:06:56 [INFO] Default file parsed
+18:08:04 [INFO] Default file parsed
+18:08:17 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+18:08:26 [INFO] Default file parsed
+18:08:39 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+18:09:59 [INFO] Default file parsed
+18:10:30 [INFO] Default file parsed
+18:11:21 [INFO] Default file parsed
+18:17:14 [INFO] Default file parsed
+18:17:24 [INFO] Default file parsed
+18:17:28 [INFO] Default file parsed
+18:48:40 [INFO] Default file parsed
+18:48:52 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+18:59:51 [INFO] Default file parsed
+19:01:10 [INFO] Default file parsed
+19:09:59 [INFO] Default file parsed
+19:10:14 [INFO] Default file parsed
+19:11:18 [INFO] Default file parsed
+19:12:39 [INFO] Default file parsed
+19:14:22 [INFO] Default file parsed
+19:16:42 [INFO] Default file parsed
+19:17:06 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+19:17:13 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+19:18:35 [INFO] Default file parsed
+19:37:27 [ERROR] Default file parsing error! Exception: 'NoneType' object cannot be interpreted as an integer
+19:42:50 [INFO] Default file parsed
+19:46:50 [INFO] Default file parsed
+19:50:17 [INFO] Default file parsed
+19:52:43 [INFO] Default file parsed
+19:53:04 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+19:55:05 [INFO] Default file parsed
+19:55:13 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+20:09:34 [INFO] Default file parsed
+20:09:42 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+20:12:06 [INFO] Default file parsed
+20:12:19 [INFO] Default file parsed
+20:12:34 [INFO] Default file parsed
+20:13:29 [INFO] Default file parsed
+20:14:51 [INFO] Default file parsed
+20:14:57 [INFO] Default file parsed
+20:15:04 [INFO] Default file parsed
+20:15:41 [INFO] Default file parsed
+20:15:47 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+20:15:51 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+20:17:09 [INFO] Default file parsed
+20:17:13 [INFO] Processing transaction ID [20230613_201713_029658849]
+20:17:13 [WARNING] SmartVista disconnected. Trying to established the connection
+20:17:13 [INFO] SmartVista host connection ESTABLISHED
+20:17:13 [INFO] 
+20:17:13 [INFO] [TRANS_ID][20230613_201713_029658849]
+20:17:13 [INFO] [MSG_TYPE][0800]
+20:17:13 [INFO] [BITMAP  ][7, 11, 70]
+20:17:13 [INFO] [007][010][0613201713]
+20:17:13 [INFO] [011][006][290462]
+20:17:13 [INFO] [070][003][301]
+20:17:13 [INFO] 
+20:17:13 [INFO] Transaction [20230613_201713_029658849] was sent 
+20:17:13 [INFO] 
+20:17:13 [INFO] [TRANS_ID][20230613_201713_029658849]
+20:17:13 [INFO] [MSG_TYPE][0810]
+20:17:13 [INFO] [BITMAP  ][7, 11, 39, 70]
+20:17:13 [INFO] [007][010][0613201713]
+20:17:13 [INFO] [011][006][290462]
+20:17:13 [INFO] [039][002][00]
+20:17:13 [INFO] [070][003][301]
+20:17:13 [INFO] 
+20:17:13 [INFO] Transaction ID [20230613_201713_029658849] matched, response time seconds: 0.427
+20:18:06 [INFO] Default file parsed
+20:18:19 [INFO] Default file parsed
+20:18:32 [INFO] Default file parsed
+20:19:17 [INFO] Default file parsed
+20:19:28 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+20:20:42 [INFO] Default file parsed
+20:20:44 [INFO] [Re]connecting...
+20:20:44 [INFO] SmartVista host connection ESTABLISHED
+20:20:46 [INFO] Processing transaction ID [20230613_202046_832222025]
+20:20:46 [INFO] 
+20:20:46 [INFO] [TRANS_ID][20230613_202046_832222025]
+20:20:46 [INFO] [MSG_TYPE][0800]
+20:20:46 [INFO] [BITMAP  ][7, 11, 70]
+20:20:46 [INFO] [007][010][0613202046]
+20:20:46 [INFO] [011][006][119333]
+20:20:46 [INFO] [070][003][301]
+20:20:46 [INFO] 
+20:20:46 [INFO] Transaction [20230613_202046_832222025] was sent 
+20:20:46 [INFO] 
+20:20:46 [INFO] [TRANS_ID][20230613_202046_832222025]
+20:20:46 [INFO] [MSG_TYPE][0810]
+20:20:46 [INFO] [BITMAP  ][7, 11, 39, 70]
+20:20:46 [INFO] [007][010][0613202046]
+20:20:46 [INFO] [011][006][119333]
+20:20:46 [INFO] [039][002][00]
+20:20:46 [INFO] [070][003][301]
+20:20:46 [INFO] 
+20:20:46 [INFO] Transaction ID [20230613_202046_832222025] matched, response time seconds: 0.08
+20:20:59 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+20:21:04 [INFO] SmartVista host connection DISCONNECTED
+20:22:15 [INFO] Default file parsed
+20:38:30 [INFO] Default file parsed
+20:39:02 [INFO] Default file parsed
+20:39:03 [INFO] [Re]connecting...
+20:39:03 [INFO] SmartVista host connection ESTABLISHED
+20:39:06 [INFO] SmartVista host connection DISCONNECTED
+20:41:02 [INFO] Default file parsed
+20:41:26 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+20:43:17 [INFO] Default file parsed
+20:46:39 [INFO] Default file parsed
+20:57:49 [INFO] Default file parsed
+20:58:58 [INFO] Default file parsed
+20:59:33 [INFO] Default file parsed
+20:59:37 [INFO] Default file parsed
+21:01:45 [INFO] Default file parsed
+21:02:40 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+21:02:44 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+21:02:55 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+21:03:06 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+21:03:18 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+21:03:40 [INFO] Default file parsed
+21:03:45 [ERROR] Field numbers can be digits only. = is wrong value
+21:03:55 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+21:04:15 [INFO] Default file parsed
+21:08:42 [INFO] Default file parsed
+21:08:55 [INFO] Default file parsed
+21:09:08 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+21:10:25 [INFO] Default file parsed
+21:11:11 [INFO] Default file parsed
+21:12:39 [INFO] Default file parsed
+21:17:17 [INFO] Default file parsed
+21:18:15 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+21:18:56 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+21:19:07 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+21:20:01 [INFO] Default file parsed
+21:47:38 [INFO] Default file parsed
+21:53:16 [INFO] Default file parsed
+21:54:54 [INFO] Default file parsed
+21:55:11 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+21:58:20 [INFO] Default file parsed
+21:58:54 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+22:04:46 [INFO] Default file parsed
+22:06:25 [INFO] Default file parsed
+22:07:13 [INFO] Default file parsed
+22:08:30 [INFO] Default file parsed
+22:09:54 [INFO] Default file parsed
+22:09:55 [INFO] [Re]connecting...
+22:09:55 [INFO] SmartVista host connection ESTABLISHED
+22:10:28 [INFO] SmartVista host connection DISCONNECTED
+22:10:57 [INFO] Default file parsed
+22:11:29 [INFO] Default file parsed
+22:11:30 [INFO] [Re]connecting...
+22:11:31 [INFO] SmartVista host connection ESTABLISHED
+22:12:56 [INFO] Default file parsed
+22:13:00 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+22:15:49 [INFO] Default file parsed
+22:15:51 [INFO] [Re]connecting...
+22:15:51 [INFO] SmartVista host connection ESTABLISHED
+22:15:54 [INFO] Settings applying was canceled
+22:17:08 [INFO] Default file parsed
+22:17:18 [INFO] Default file parsed
+22:18:00 [INFO] Default file parsed
+22:19:58 [INFO] Default file parsed
+22:24:44 [INFO] Default file parsed
+22:24:57 [INFO] Default file parsed
+22:42:35 [INFO] Default file parsed
+22:43:21 [INFO] Default file parsed
+22:44:19 [INFO] Default file parsed
+22:44:53 [INFO] Default file parsed
+22:46:45 [INFO] Default file parsed
+22:47:45 [INFO] Default file parsed
+22:49:03 [INFO] Default file parsed
+22:49:25 [INFO] Default file parsed
+22:49:41 [INFO] Default file parsed
+22:50:07 [INFO] Default file parsed
+22:51:19 [INFO] [Re]connecting...
+22:51:19 [INFO] SmartVista host connection ESTABLISHED
+22:51:22 [INFO] SmartVista host connection DISCONNECTED
+22:51:46 [INFO] Default file parsed
+22:51:48 [INFO] [Re]connecting...
+22:51:48 [INFO] SmartVista host connection ESTABLISHED
+22:51:52 [INFO] Settings applying was canceled
+22:59:02 [INFO] SmartVista host connection DISCONNECTED
+23:02:51 [INFO] Default file parsed
+23:08:16 [INFO] Default file parsed
+23:08:27 [INFO] Default file parsed
+23:08:54 [INFO] Default file parsed
+23:10:27 [INFO] Default file parsed
+23:11:39 [INFO] Default file parsed
+23:13:19 [INFO] Default file parsed
+23:16:02 [INFO] Default file parsed
+23:25:18 [INFO] Default file parsed
+23:27:48 [INFO] Default file parsed
+23:27:52 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+23:29:49 [INFO] Default file parsed
+23:30:51 [INFO] Default file parsed
+23:34:08 [INFO] Default file parsed
+23:39:38 [INFO] Default file parsed
+23:40:22 [INFO] Default file parsed
+23:43:36 [INFO] Default file parsed
+23:44:02 [INFO] Default file parsed
+23:44:31 [INFO] Default file parsed
+23:44:38 [INFO] Default file parsed
+23:45:51 [INFO] Default file parsed
+00:44:43 [INFO] Default file parsed
+00:44:47 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+01:38:39 [INFO] Default file parsed
+01:38:47 [INFO] Default file parsed
+01:39:22 [INFO] Default file parsed
+01:39:27 [INFO] Default file parsed
+01:39:54 [INFO] Default file parsed
+01:40:37 [INFO] Default file parsed
+01:40:58 [INFO] Default file parsed
+01:43:52 [INFO] Default file parsed
+01:44:07 [INFO] Default file parsed
+01:44:57 [INFO] Default file parsed
+01:45:12 [INFO] Default file parsed
+01:45:26 [INFO] Default file parsed
+01:48:14 [INFO] Default file parsed
+01:49:27 [INFO] Default file parsed
+01:50:51 [INFO] Default file parsed
+01:51:08 [INFO] Default file parsed
+01:51:47 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+01:53:20 [INFO] Default file parsed
+01:54:53 [INFO] Default file parsed
+01:55:52 [INFO] Default file parsed
+01:56:23 [INFO] Default file parsed
+01:58:02 [INFO] Default file parsed
+05:06:42 [INFO] Default file parsed
+05:34:17 [INFO] Default file parsed
+05:39:55 [INFO] Default file parsed
+05:41:03 [INFO] Default file parsed
+05:43:15 [INFO] Default file parsed
+05:44:20 [INFO] Default file parsed
+05:48:04 [INFO] Default file parsed
+05:52:28 [INFO] Default file parsed
+06:02:33 [INFO] Default file parsed
+06:03:13 [INFO] Default file parsed
+06:04:02 [INFO] Default file parsed
+06:04:06 [INFO] Specification applied: ISO-8583 E-PAY Specification v1.1
+06:06:00 [INFO] Default file parsed
+06:06:17 [INFO] Default file parsed
+06:09:12 [INFO] Default file parsed
+06:09:29 [INFO] Default file parsed
+06:09:57 [INFO] Default file parsed
+06:13:06 [INFO] Default file parsed
+06:26:32 [INFO] Default file parsed
+06:30:27 [INFO] Default file parsed
+06:31:35 [INFO] Default file parsed
+07:03:39 [INFO] Default file parsed
+07:03:53 [INFO] Default file parsed
+07:12:02 [INFO] Default file parsed
+07:13:53 [INFO] Default file parsed

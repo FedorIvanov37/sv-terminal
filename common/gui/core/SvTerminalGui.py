@@ -75,7 +75,6 @@ class SvTerminalGui(SvTerminal):
 
     def reconnect(self):
         SvTerminal.reconnect(self)
-        self.window.block_connection_buttons()
 
     def set_connection_status(self):
         status = self.connector.state()

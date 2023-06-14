@@ -47,6 +47,13 @@ class EpaySpecification(EpaySpecificationData):
 
         return False
 
+    @staticmethod
+    def field_reserved_for_future(field_path: list[str]):
+        if len(field_path) > 1:
+            raise NotImplemented("Does not work for complex fields")
+
+        return field_path.pop() in asdict(EpaySpecificationData.RESERVED_FOR_FUTURE).keys()
+
     def get_reversal_mti(self, original_mti: str):
         for mti in self.spec.mti:
             if not (mti.reversal_mti and mti.is_reversible):

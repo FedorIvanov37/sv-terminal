@@ -18,6 +18,11 @@
 + No generated fields appear in message when they don't exist in file
 
 
+• Spec plus button does not work
+
+
+
+
 • No data in socket if delete field in spec
 • Exceptions policy
 • Set connection timeouts in Connector

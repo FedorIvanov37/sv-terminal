@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 
 FieldSet = dict[str, "IsoField"]
@@ -15,21 +15,22 @@ class Mti(BaseModel):
 
 
 class IsoField(BaseModel):
-    min_length: int = int()
-    max_length: int = int()
-    var_length: int = int()
-    tag_length: int = int()
-    generate: bool = False
-    reversal: bool = False
-    matching: bool = False
-    alpha: bool = False
-    numeric: bool = False
-    special: bool = False
-    bytes: bool = False
-    reserved_for_future: bool = False
+    field_number: str = ""
+    field_path: list = []
+    min_length: int
+    max_length: int
+    var_length: int
+    tag_length: int
+    generate: bool
+    reversal: bool
+    matching: bool
+    alpha: bool
+    numeric: bool
+    special: bool
+    reserved_for_future: bool
     description: str = str()
-    is_secret: bool = False
-    fields: FieldSet | None
+    is_secret: bool | None = None
+    fields: FieldSet | None = None
 
 
 class EpaySpecModel(BaseModel):
