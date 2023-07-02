@@ -1,26 +1,36 @@
 from common.lib.core.Validator import Validator
 from common.gui.core.FIeldItem import Item
+from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.data_models.Config import Config
 
 
 class ItemsValidator(Validator):
-    def validate_single_item(self, item: Item):
-        if item.generate_checkbox_checked():
+    spec: EpaySpecification = EpaySpecification()
+
+    def __init__(self, config: Config):
+        self.config: Config = config
+
+    def validate_item(self, item: Item):
+        if not any((item.field_number, item.field_data)):
             return
 
-        if not item.field_number:
-            raise ValueError(f"Lost field number")
+        field_path: list[str] = item.get_field_path()
 
-        if not item.field_number.isdigit():
-            raise ValueError(f"Non-numeric field number found: {item.get_field_path(string=True)}")
+        self.validate_field_path(field_path)
+        self.validate_duplicates(item)
 
-        if not all((item.get_field_path(), item.field_data)):
+        if self.spec.is_field_complex(field_path) and not item.field_data:
             return
 
-        self.validate_field_data(item.get_field_path(), item.field_data)
+        self.validate_field_data(field_path, item.field_data)
 
-    def validate_item(self, parent_item: Item):
-        if parent_item.childCount():
-            for child in parent_item.get_children():
-                self.validate_item(parent_item=child)
-        else:
-            self.validate_single_item(parent_item)
+    def validate_duplicates(self, item: Item, parent: Item = None):
+        if parent is None:
+            if not (parent := item.parent()):
+                return
+
+        for child in item.get_children():
+            self.validate_duplicates(child)
+
+        if [child_item.field_number for child_item in parent.get_children()].count(item.field_number) > 1:
+            raise ValueError(f"Duplicated field number {item.get_field_path(string=True)}")

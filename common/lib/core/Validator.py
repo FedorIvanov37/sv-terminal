@@ -36,10 +36,11 @@ class Validator(object):
 
         return fields
 
-    def validate_field_data(self, field_path: list[str], value: TypeFields | str):
-        # if not all((value, field_path)):
-        #     return
+    def validate_field_path(self, path: list[str]):
+        if not self.spec.get_field_spec(path=path):
+            raise ValueError(f"Lost spec for field {'.'.join(path)}")
 
+    def validate_field_data(self, field_path: list[str], value: TypeFields | str):
         alphabetic = ascii_letters
         numeric = digits
         specials = punctuation + " "
@@ -48,15 +49,15 @@ class Validator(object):
         length = len(value)
         validation_errors: set = set()
 
-        if not value:
-            raise ValueError(f"Lost field value for field {path}")
-
         if not (field_spec := self.spec.get_field_spec(list(field_path))):
             raise ValueError(f"Lost spec for field {path}")
 
         if isinstance(value, dict):
             self.validate_fields(value, field_path)
             return
+
+        if not value:
+            raise ValueError(f"Lost field value for field {path}")
 
         if not all(field for field in field_path if field.isdigit()):
             raise ValueError(f"Field numbers can be digits only. {path} is wrong value")

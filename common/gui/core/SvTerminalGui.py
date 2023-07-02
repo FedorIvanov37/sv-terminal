@@ -1,4 +1,4 @@
-from json import dumps, loads
+from json import dumps
 from logging import error, info, warning
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
@@ -153,6 +153,7 @@ class SvTerminalGui(SvTerminal):
         if not transaction:
             try:
                 transaction: Transaction = self.parse_main_window()
+
             except Exception as building_error:
                 error(f"Transaction building error")
                 [error(err) for err in str(building_error).splitlines()]
@@ -212,7 +213,7 @@ class SvTerminalGui(SvTerminal):
 
         try:
             self.window.set_log_data(function())
-        except (ValidationError, ValueError) as validation_error:
+        except (ValidationError, ValueError, LookupError) as validation_error:
             error(f"{validation_error}")
 
     def copy_log(self):

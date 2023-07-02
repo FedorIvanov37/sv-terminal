@@ -55,8 +55,8 @@ class Item(AbstractItem):
         self.setText(Spec.columns_order.get(Spec.DESCRIPTION), self.spec.description)
 
     def process_change_item(self):
-        self.set_item_color()
         self.set_spec()
+        self.set_item_color()
         self.set_length()
         self.set_description()
 

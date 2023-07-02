@@ -47,7 +47,6 @@
 
 
 • Work with empty fields
-
 • Check the old files processing
 • Unknown fields in incoming files and messages - what are you going to do
 

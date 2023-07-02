@@ -1,3 +1,4 @@
+from typing import Callable
 from logging import warning
 from collections import OrderedDict
 from PyQt6.QtGui import QFont
@@ -14,6 +15,14 @@ class JsonView(QTreeWidget):
     root: Item = Item(["Message"])
     spec: EpaySpecification = EpaySpecification()
 
+    def void_qt_signals(function: Callable):
+        def wrapper(self, *args):
+            self.blockSignals(True)
+            function(self, *args)
+            self.blockSignals(False)
+
+        return wrapper
+
     def __init__(self, config: Config):
         super(JsonView, self).__init__()
         self.config: Config = config
@@ -23,7 +32,7 @@ class JsonView(QTreeWidget):
         for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
             action.connect(self.resize_all)
 
-        self.validator = ItemsValidator()
+        self.validator = ItemsValidator(self.config)
         self.itemDoubleClicked.connect(self.edit_item)
         self.itemChanged.connect(self.process_change_item)
         self.setFont(QFont("Calibri", 12))
@@ -34,108 +43,120 @@ class JsonView(QTreeWidget):
         self.addTopLevelItem(self.root)
         self.make_order()
 
-    def process_change_item(self, item, column):
+    @void_qt_signals
+    def process_change_item(self, item: Item, column):
         if item is self.root:
             return
 
-        self.blockSignals(True)
-
-        item.process_change_item()
+        try:
+            item.process_change_item()
+        except LookupError as spec_error:
+            item.set_item_color(red=True)
+            warning(spec_error)
+            return
 
         if column == Spec.columns_order.get(Spec.FIELD):
             item.set_checkbox()
 
         try:
-            self.validate_item(item)
+            self.validate(item, column)
+
         except ValueError as validation_error:
-            [warning(err) for err in str(validation_error).splitlines()]
             item.set_item_color(red=True)
+            [warning(err) for err in str(validation_error).splitlines()]
 
-        self.blockSignals(False)
-
-    def field_number_duplicated(self, item: Item):
-        root = self.root
-        path = item.get_field_path()
-
-        for field in path:
-            if [item.field_number for item in root.get_children()].count(field) > 1:
-                return True
-
-            root = [item for item in root.get_children() if item.field_number == field][0]
-
-        return False
-
-    def validate_fields(self, fields: TypeFields):
-        self.validator.validate_fields(fields)
-
-    def validate_item(self, item: Item):
-        if item is self.root:
-            return
-
+    def validate(self, item, column=None):
         if not self.config.fields.validation:
             return
 
-        if self.spec.can_be_generated(item.field_number) and item.generate_checkbox_checked():
+        if self.spec.can_be_generated(item.get_field_path()) and item.generate_checkbox_checked():
             return
 
-        if self.field_number_duplicated(item):
-            raise ValueError(f"Duplicated field number {item.get_field_path(string=True)} found")
+        if column == Spec.columns_order.get(Spec.FIELD):
+            if all((item.field_number, not item.field_data, not item.childCount())):
+                self.validator.validate_field_path(item.get_field_path())
+                self.validator.validate_duplicates(item)
+                return
 
         self.validator.validate_item(item)
 
-    def plus(self):
+    def plus(self, checked):
         item = Item([])
-        current_item = self.currentItem()
-        parent = self.currentItem().parent()
+        parent = None
 
-        if parent is None:
-            parent = self.root
+        if current_item := self.currentItem():
+            if not (parent := current_item.parent()):
+                parent = self.root
 
         index = parent.indexOfChild(current_item) + 1
         parent.insertChild(index, item)
-        self.setCurrentItem(item)
-        self.scrollToItem(item)
-        self.setFocus()
-        self.editItem(item, int())  # TODO
+        self.set_new_item(item)
 
-    def minus(self):
-        item: Item | QTreeWidgetItem = self.currentItem()
+    @void_qt_signals
+    def minus(self, checked):
+        item: Item | QTreeWidgetItem
+
+        if not (item := self.currentItem()):
+            return
 
         if item is self.root:
-            self.setCurrentItem(self.root)
             self.setFocus()
             return
 
         parent: Item = item.parent()
-        parent.takeChild(parent.indexOfChild(item))
+        removed_item_index = parent.indexOfChild(item)
+        removed_item: Item = parent.takeChild(removed_item_index)
+        cursor_position = removed_item_index if removed_item_index == 0 else removed_item_index - 1
         parent.set_length()
+
+        if not (new_position_item := parent.child(cursor_position)):
+            new_position_item = parent
+
+        self.setCurrentItem(new_position_item)
+        self.check_duplicates_after_remove(removed_item, parent)
         self.setFocus()
 
-    def next_level(self):
+    def next_level(self, checked):
         item = Item([])
         current_item: Item | None = self.currentItem()
 
         if current_item is None:
             return
 
-        self.currentItem().setText(1, str())
-        self.currentItem().insertChild(0, item)
+        self.currentItem().setText(Spec.columns_order.get(Spec.VALUE), str())
+        self.currentItem().insertChild(int(), item)
+        self.set_new_item(item)
+
+    def set_new_item(self, item: Item):
         self.setCurrentItem(item)
         self.scrollToItem(item)
         self.setFocus()
         self.editItem(item, int())
 
+    def check_duplicates_after_remove(self, removed_item: Item, parent_item: Item):
+        try:
+            self.validator.validate_duplicates(removed_item, parent=parent_item)
+        except ValueError:
+            return
+
+        for item in parent_item.get_children():
+            if not item.field_number == removed_item.field_number:
+                continue
+
+            item.set_item_color(red=False)
+
+    @void_qt_signals
     def clean(self):
         self.root.takeChildren()
         self.root.set_length()
 
     def set_field_value(self, field, value):
-        column = 1  # TODO
-
         for item in self.root.get_children():
-            if item.field_number == field:
-                item.setText(column, value)
-                break
+            if item.field_number != field:
+                continue
+
+            item.setText(Spec.columns_order.get(Spec.VALUE), value)
+            return
 
     def edit_item(self, item, column):
         if item is self.root:
@@ -155,14 +176,13 @@ class JsonView(QTreeWidget):
         self.set_checkboxes(transaction)
         self.make_order()
 
+    @void_qt_signals
     def set_checkboxes(self, transaction: Transaction):
         for item in self.root.get_children():
             if item.field_number not in Spec.generated_fields:
                 continue
 
-            self.blockSignals(True)
             item.set_checkbox(item.field_number in transaction.generate_fields)
-            self.blockSignals(False)
 
     def _parse_fields(self, input_json: dict, parent: QTreeWidgetItem = None, specification=None):
         if parent is None:
@@ -211,16 +231,19 @@ class JsonView(QTreeWidget):
             parent = self.root
 
         for row in parent.get_children():
+            if not row.field_number:
+                warning("Emtpy field number found. The field left out")
+                continue
+
+            if not any((row.field_data, self.spec.is_field_complex(row.get_field_path()))):
+                warning(f"Emtpy field found {row.get_field_path(string=True)}. The field left out")
+                continue
+
             result[row.field_number] = self.generate_fields(row) if row.childCount() else row.field_data
 
         if parent is self.root:
             fields = OrderedDict({k: result[k] for k in sorted(result.keys(), key=int)})
-            try:
-                self.validate_fields(fields)
-            except ValueError as validation_error:
-                print(validation_error)
-                return {}
-
+            self.validator.validate_fields(fields)
             return fields
 
         return result
@@ -243,7 +266,7 @@ class JsonView(QTreeWidget):
             if item.field_data:
                 return item.field_data
 
-            if self.spec.is_field_complex(field_number) or item.get_children():
+            if self.spec.is_field_complex([field_number]) or item.get_children():
                 field_data = "".join([data.field_data for data in item.get_children()])
                 field_data = f"{item.field_data}{field_data}"
 
