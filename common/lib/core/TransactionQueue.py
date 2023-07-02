@@ -68,7 +68,7 @@ class TransactionQueue(QObject):
             self.generator.merge_trans_data(request, response)
 
         if not response.trans_id:
-            response.trans_id = self.generator.trans_id()
+            response.trans_id = FieldsGenerator.generate_trans_id()
 
         self.incoming_transaction.emit(response)
 
@@ -164,6 +164,7 @@ class TransactionQueue(QObject):
                 continue
 
             matched_request = request
+            break
 
         if not matched_request:
             return False

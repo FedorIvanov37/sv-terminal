@@ -13,8 +13,8 @@ class FieldsGenerator(object):
         return self._spec
 
     @staticmethod
-    def trans_id() -> str:
-        return f"{datetime.now():%Y%m%d_%H%M%S_%f}{randint(0, 999):03}"
+    def generate_trans_id() -> str:
+        return f"{datetime.now():%Y%m%d_%H%M%S_%f}{randint(1000, 9999)}"
 
     def generate_original_data_elements(self, transaction: Transaction) -> str:
         try:
@@ -67,7 +67,12 @@ class FieldsGenerator(object):
         return data
 
     def add_logical_fields(self, transaction: Transaction) -> Transaction:
-        transaction.trans_id = self.trans_id() if not transaction.trans_id else transaction.trans_id
+        if transaction.message_type == '0210':
+            print(1)
+
+        if not transaction.trans_id:
+            transaction.trans_id = FieldsGenerator.generate_trans_id()
+
         transaction.is_request = self.spec.is_request(transaction)
         transaction.is_reversal = self.spec.is_reversal(transaction.message_type)
 

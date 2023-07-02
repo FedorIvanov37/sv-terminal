@@ -1,26 +1,18 @@
-from logging import error, warning
+from logging import warning
 from collections import OrderedDict
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget
-from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.constants.MainFieldSpec import MainFieldSpec as Spec
 from common.gui.core.FIeldItem import Item
+from common.gui.core.ItemsValidator import ItemsValidator
+from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
-from common.lib.core.Validator import Validator
 from common.lib.data_models.Config import Config
 
 
 class JsonView(QTreeWidget):
-    _spec: EpaySpecification = EpaySpecification()
-    _root: Item = Item(["Message"])
-
-    @property
-    def spec(self):
-        return self._spec
-
-    @property
-    def root(self):
-        return self._root
+    root: Item = Item(["Message"])
+    spec: EpaySpecification = EpaySpecification()
 
     def __init__(self, config: Config):
         super(JsonView, self).__init__()
@@ -31,9 +23,9 @@ class JsonView(QTreeWidget):
         for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
             action.connect(self.resize_all)
 
-        self.validator = Validator()
+        self.validator = ItemsValidator()
         self.itemDoubleClicked.connect(self.edit_item)
-        self.itemClicked.connect(self.process_checkbox_change)
+        self.itemChanged.connect(self.process_change_item)
         self.setFont(QFont("Calibri", 12))
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
@@ -42,18 +34,24 @@ class JsonView(QTreeWidget):
         self.addTopLevelItem(self.root)
         self.make_order()
 
-    def process_checkbox_change(self, item, column):
-        if column != Spec.columns_order.get(Spec.PROPERTY):
+    def process_change_item(self, item, column):
+        if item is self.root:
             return
 
-        if item.generate_checkbox_checked():
-            item.set_item_color(red=False)
-            return
+        self.blockSignals(True)
+
+        item.process_change_item()
+
+        if column == Spec.columns_order.get(Spec.FIELD):
+            item.set_checkbox()
 
         try:
-            self.validate(item)
+            self.validate_item(item)
         except ValueError as validation_error:
-            warning(validation_error)
+            [warning(err) for err in str(validation_error).splitlines()]
+            item.set_item_color(red=True)
+
+        self.blockSignals(False)
 
     def field_number_duplicated(self, item: Item):
         root = self.root
@@ -67,30 +65,23 @@ class JsonView(QTreeWidget):
 
         return False
 
-    def validate(self, item: Item):
+    def validate_fields(self, fields: TypeFields):
+        self.validator.validate_fields(fields)
+
+    def validate_item(self, item: Item):
         if item is self.root:
             return
 
         if not self.config.fields.validation:
-            item.set_item_color(red=False)
             return
 
         if self.spec.can_be_generated(item.field_number) and item.generate_checkbox_checked():
-            item.set_item_color(red=False)
             return
 
         if self.field_number_duplicated(item):
             raise ValueError(f"Duplicated field number {item.get_field_path(string=True)} found")
 
-        validator = Validator()
-
-        try:
-            validator.validate_field_data(item.get_field_path(), item.field_data)
-        except ValueError as validation_error:
-            item.set_item_color()
-            raise validation_error
-                
-        item.set_item_color(red=False)
+        self.validator.validate_item(item)
 
     def plus(self):
         item = Item([])
@@ -169,7 +160,9 @@ class JsonView(QTreeWidget):
             if item.field_number not in Spec.generated_fields:
                 continue
 
+            self.blockSignals(True)
             item.set_checkbox(item.field_number in transaction.generate_fields)
+            self.blockSignals(False)
 
     def _parse_fields(self, input_json: dict, parent: QTreeWidgetItem = None, specification=None):
         if parent is None:
@@ -190,7 +183,6 @@ class JsonView(QTreeWidget):
             else:
                 string_data = [field, str(field_data), None, description]
                 child: Item = Item(string_data)
-                self.itemChanged.connect(child.process_change_item)
 
             parent.addChild(child)
 
@@ -219,13 +211,17 @@ class JsonView(QTreeWidget):
             parent = self.root
 
         for row in parent.get_children():
-            if self.config.fields.validation:
-                self.validate(row)
-
             result[row.field_number] = self.generate_fields(row) if row.childCount() else row.field_data
 
         if parent is self.root:
-            return OrderedDict({k: result[k] for k in sorted(result.keys(), key=int)})
+            fields = OrderedDict({k: result[k] for k in sorted(result.keys(), key=int)})
+            try:
+                self.validate_fields(fields)
+            except ValueError as validation_error:
+                print(validation_error)
+                return {}
+
+            return fields
 
         return result
 

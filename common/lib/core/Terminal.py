@@ -1,5 +1,5 @@
 from json import dumps
-from logging import error, info, warning
+from logging import error, info, warning, debug
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject
 from common.lib.core.Parser import Parser
@@ -18,27 +18,11 @@ from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 
 
 class SvTerminal(QObject):
-    _config: Config = Config.parse_file(TermFilesPath.CONFIG)
-    _pyqt_application = QtWidgets.QApplication([])
-    _validator = Validator(_config)
-    _spec: EpaySpecification = EpaySpecification(TermFilesPath.CONFIG)
+    pyqt_application = QtWidgets.QApplication([])
+    spec: EpaySpecification = EpaySpecification(TermFilesPath.CONFIG)
+    config: Config = Config.parse_file(TermFilesPath.CONFIG)
+    validator = Validator()
     need_reconnect: pyqtSignal = pyqtSignal()
-
-    @property
-    def config(self):
-        return self._config
-
-    @config.setter
-    def config(self, config):
-        self._config = config
-
-    @property
-    def validator(self):
-        return self._validator
-
-    @property
-    def spec(self):
-        return self._spec
 
     def __init__(self, config: Config, connector: ConnectionInterface | None = None):
         super(SvTerminal, self).__init__()
@@ -61,7 +45,7 @@ class SvTerminal(QObject):
         if self.config.terminal.connect_on_startup:
             self.reconnect()
 
-        status = self._pyqt_application.exec()
+        status = self.pyqt_application.exec()
 
         return status
 
@@ -118,9 +102,58 @@ class SvTerminal(QObject):
 
         self.trans_queue.put_transaction(transaction)
 
+    def print_transaction(self, transaction: Transaction):
+        def put(string: str, size=0):
+            return f"[{string.zfill(size)}]"
+
+        transaction_data = str()
+
+        bitmap = ", ".join(transaction.data_fields.keys())
+        trans_id = transaction.trans_id
+
+        if transaction.matched and not transaction.is_request:
+            trans_id = transaction.match_id
+
+        transaction_data = f"{transaction_data}\n[TRANS_ID][{trans_id}]"
+
+        if transaction.utrnno:
+            transaction_data = f"{transaction_data}\n[UTRNNO  ][{transaction.utrnno}]"
+
+        transaction_data = f"{transaction_data}\n[MSG_TYPE][{transaction.message_type}]"
+        transaction_data = f"{transaction_data}\n[BITMAP  ][{bitmap}]"
+
+        for field, field_data in transaction.data_fields.items():
+            if field == self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
+                continue
+
+            if field == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+                field_data = f"{field_data[:6]}******{field_data[-4:]}"
+
+            if isinstance(field_data, dict):
+                field_data = self.parser.join_complex_field(field, field_data)
+
+            length = str(len(field_data))
+
+            transaction_string = f"{put(field, size=3)}{put(length, size=3)}{put(field_data)}"
+
+            transaction_data = f"{transaction_data}\n{transaction_string}"
+
+        self.logger.print_multi_row(transaction_data)
+
+    def print_dump(self, transaction: Transaction, level=debug):
+        if not(dump := self.parser.create_sv_dump(transaction)):
+            return
+
+        self.logger.print_multi_row(dump, level)
+
+    def transaction_sent(self, request: Transaction):
+        self.print_dump(request)
+        self.print_transaction(request)
+        info(f"Transaction [{request.trans_id}] was sent ")
+
     def transaction_received(self, response: Transaction):
-        self.logger.print_dump(response)
-        self.logger.print_transaction(response)
+        self.print_dump(response)
+        self.print_transaction(response)
 
         if response.matched and response.resp_time_seconds:
             info(f"Transaction ID [{response.match_id}] matched, response time seconds: {response.resp_time_seconds}")
@@ -137,11 +170,6 @@ class SvTerminal(QObject):
         if not response.resp_time_seconds:
             warning(f"Transaction ID [{response.match_id}] received and matched after timeout 60 seconds")
             return
-
-    def transaction_sent(self, request: Transaction):
-        self.logger.print_dump(request)
-        self.logger.print_transaction(request)
-        info(f"Transaction [{request.trans_id}] was sent ")
 
     def save_transaction(self, transaction: Transaction, file_format: str, file_name) -> None:
         data_processing_map = {
@@ -207,6 +235,7 @@ class SvTerminal(QObject):
             data_fields=fields,
             trans_id=reversal_trans_id,
             generate_fields=list(),
+            utrnno=original_transaction.utrnno
         )
 
         return reversal

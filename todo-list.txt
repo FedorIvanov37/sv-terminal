@@ -26,10 +26,33 @@
 + Spec window does not save spec even if error happens
 + Check the field duplicates before sent transaction
 
+#
++ Change ascii logo
++ Add traceback to ErrorWindow
++ Remove window parsing from the parser
++ Optimize trans_id
++ Generated fields should be non-validated
++ Multiple validations
++ Property click validates field
++ F1 doesn't trigger About window
++ Remove points from bitmap
++ Rebrand
++ Utrnno in request
++ Add release info to the logfile
++ Logger refactoring
++ Echo-test stuck on log
++ Lost response for transaction
++ Add utrnno to reversal
++ Change buttons design
 
 
+• Work with empty fields
+
+• Check the old files processing
+• Unknown fields in incoming files and messages - what are you going to do
 
 
+• Change approach to fields path
 • No data in socket if delete field in spec
 • Exceptions policy
 • Correct the default message

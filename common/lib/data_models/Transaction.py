@@ -5,7 +5,7 @@ TypeFields = dict[str, str | dict]
 
 
 class Transaction(BaseModel):
-    trans_id: str = str()
+    trans_id: str = ""
     match_id: str = str()
     utrnno: str = str()
     message_type: str = str()

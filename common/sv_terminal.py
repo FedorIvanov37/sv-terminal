@@ -4,11 +4,19 @@ from common.gui.windows.error_window import ErrorWindow
 from common.lib.data_models.Config import Config
 
 
+status: int = int()
+
+
 try:
     config: Config = Config.parse_file(TermFilesPath.CONFIG)
     sv_terminal_gui: SvTerminalGui = SvTerminalGui(config)
     status: int = sv_terminal_gui.run()
+
+except SystemExit:
     exit(status)
 
-except Exception as execution_error:
-    ErrorWindow(exception=execution_error).exec()
+except Exception as exception:
+    ErrorWindow(exception).exec()
+
+else:
+    exit(status)

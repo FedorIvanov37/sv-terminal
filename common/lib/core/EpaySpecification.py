@@ -147,8 +147,8 @@ class EpaySpecification(EpaySpecificationData):
 
         return field_data
 
-    def is_field_complex(self, field):
-        field_spec = self.get_field_spec([field])
+    def is_field_complex(self, field_path: list[str]):
+        field_spec = self.get_field_spec(field_path)
 
         if field_spec is None:
             return False
