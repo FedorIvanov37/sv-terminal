@@ -1,9 +1,9 @@
 from json import dumps
-from logging import error, info, warning, debug
+from logging import error, info, warning
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject
 from common.lib.core.Parser import Parser
-from common.gui.core.Logger import Logger
+from common.lib.core.Logger import Logger
 from common.lib.core.TransactionQueue import TransactionQueue
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.FieldsGenerator import FieldsGenerator
@@ -15,6 +15,7 @@ from common.lib.data_models.Transaction import Transaction
 from common.lib.core.Connector import Connector
 from PyQt6.QtNetwork import QTcpSocket
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
+from common.lib.core.LogPrinter import LogPrinter
 
 
 class SvTerminal(QObject):
@@ -31,6 +32,7 @@ class SvTerminal(QObject):
         if connector is None:
             connector: Connector = Connector(self.config)
 
+        self.log_printer: LogPrinter = LogPrinter(self.config)
         self.connector: Connector = connector
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator()
@@ -102,58 +104,14 @@ class SvTerminal(QObject):
 
         self.trans_queue.put_transaction(transaction)
 
-    def print_transaction(self, transaction: Transaction):
-        def put(string: str, size=0):
-            return f"[{string.zfill(size)}]"
-
-        transaction_data = str()
-
-        bitmap = ", ".join(transaction.data_fields.keys())
-        trans_id = transaction.trans_id
-
-        if transaction.matched and not transaction.is_request:
-            trans_id = transaction.match_id
-
-        transaction_data = f"{transaction_data}\n[TRANS_ID][{trans_id}]"
-
-        if transaction.utrnno:
-            transaction_data = f"{transaction_data}\n[UTRNNO  ][{transaction.utrnno}]"
-
-        transaction_data = f"{transaction_data}\n[MSG_TYPE][{transaction.message_type}]"
-        transaction_data = f"{transaction_data}\n[BITMAP  ][{bitmap}]"
-
-        for field, field_data in transaction.data_fields.items():
-            if field == self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
-                continue
-
-            if field == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-                field_data = f"{field_data[:6]}******{field_data[-4:]}"
-
-            if isinstance(field_data, dict):
-                field_data = self.parser.join_complex_field(field, field_data)
-
-            length = str(len(field_data))
-
-            transaction_string = f"{put(field, size=3)}{put(length, size=3)}{put(field_data)}"
-
-            transaction_data = f"{transaction_data}\n{transaction_string}"
-
-        self.logger.print_multi_row(transaction_data)
-
-    def print_dump(self, transaction: Transaction, level=debug):
-        if not(dump := self.parser.create_sv_dump(transaction)):
-            return
-
-        self.logger.print_multi_row(dump, level)
-
     def transaction_sent(self, request: Transaction):
-        self.print_dump(request)
-        self.print_transaction(request)
+        self.log_printer.print_dump(request)
+        self.log_printer.print_transaction(request)
         info(f"Transaction [{request.trans_id}] was sent ")
 
     def transaction_received(self, response: Transaction):
-        self.print_dump(response)
-        self.print_transaction(response)
+        self.log_printer.print_dump(response)
+        self.log_printer.print_transaction(response)
 
         if response.matched and response.resp_time_seconds:
             info(f"Transaction ID [{response.match_id}] matched, response time seconds: {response.resp_time_seconds}")
