@@ -13,8 +13,8 @@ class FieldsGenerator(object):
         return self._spec
 
     @staticmethod
-    def trans_id() -> str:
-        return f"{datetime.now():%Y%m%d_%H%M%S_%f}{randint(0, 999):03}"
+    def generate_trans_id() -> str:
+        return f"{datetime.now():%Y%m%d_%H%M%S_%f}{randint(1000, 9999)}"
 
     def generate_original_data_elements(self, transaction: Transaction) -> str:
         try:
@@ -48,26 +48,31 @@ class FieldsGenerator(object):
 
         return transaction
 
-    def generate_field(self, field: str, max_amount="100"):
-        if field == self.spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT:
+    @staticmethod
+    def generate_field(field: str, max_amount="100"):
+        spec = EpaySpecification()
+
+        if field == spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT:
             max_amount = str(randint(0, int(max_amount) * 100))
-            field_length = self.spec.get_field_length(self.spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT)
+            field_length = spec.get_field_length(spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT)
             max_amount = max_amount.zfill(field_length)
 
             return max_amount
 
-        if date_format := self.spec.get_field_date_format(field):
+        if date_format := spec.get_field_date_format(field):
             return f"{datetime.now():{date_format}}"
 
-        data_kit = self.spec.get_field_data_kit([field])
-        length = self.spec.get_field_length(field)
+        data_kit = spec.get_field_data_kit([field])
+        length = spec.get_field_length(field)
         data = (choice(data_kit) for _ in range(length))
         data = "".join(data)
 
         return data
 
     def add_logical_fields(self, transaction: Transaction) -> Transaction:
-        transaction.trans_id = self.trans_id() if not transaction.trans_id else transaction.trans_id
+        if not transaction.trans_id:
+            transaction.trans_id = FieldsGenerator.generate_trans_id()
+
         transaction.is_request = self.spec.is_request(transaction)
         transaction.is_reversal = self.spec.is_reversal(transaction.message_type)
 

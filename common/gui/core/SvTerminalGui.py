@@ -14,7 +14,7 @@ from common.gui.constants.TextConstants import TextConstants
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
-from common.lib.data_models.Transaction import Transaction
+from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.gui.constants.ButtonActions import ButtonAction
 from common.lib.core.Terminal import SvTerminal
 from common.gui.core.WirelessHandler import WirelessHandler
@@ -31,19 +31,24 @@ class SvTerminalGui(SvTerminal):
         self.setup()
 
     def setup(self):
-        self.connect_widgets()
         self.create_window_logger()
+        self.print_startup_info()
+        self.connect_widgets()
         self.window.set_mti_values(self.spec.get_mti_list())
-        self.window.set_log_data(TextConstants.HELLO_MESSAGE)
         self.window.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
-        self.connector.errorOccurred.connect(self.set_connection_status)
-        self.connector.errorOccurred.connect(self.window.unblock_connection_buttons)
+        self.print_data(DataFormats.TERM)
 
         if self.config.terminal.process_default_dump:
             self.set_default_values()
 
         self.window.show()
+
+    def print_startup_info(self):
+        self.logger.print_multi_row(TextConstants.HELLO_MESSAGE)
+        config_data = dumps(self.config.dict(), indent=4)
+        config_data = f"## Configuration parameters ##\n{config_data}\n## End of configuration parameters ##"
+        self.logger.print_multi_row(config_data)
 
     def connect_widgets(self):
         window = self.window
@@ -69,6 +74,8 @@ class SvTerminalGui(SvTerminal):
         self.window.menu_button_clicked.connect(self.proces_button_menu)
         self.window.field_changed.connect(self.set_bitmap)
         self.connector.stateChanged.connect(self.set_connection_status)
+        self.connector.errorOccurred.connect(self.set_connection_status)
+        self.connector.errorOccurred.connect(self.window.unblock_connection_buttons)
 
     def stop_sv_terminal(self):
         self.connector.stop_thread()
@@ -120,16 +127,36 @@ class SvTerminalGui(SvTerminal):
 
         SvTerminal.reverse_transaction(self, original_trans)
 
+    def parse_main_window(self) -> Transaction:
+        data_fields: TypeFields = self.window.get_fields()
+
+        if not data_fields:
+            raise ValueError("No data to send")
+
+        if not (message_type := self.window.get_mti(self.spec.MessageLength.message_type_length)):
+            raise ValueError("Invalid MTI")
+
+        transaction = Transaction(
+            trans_id=self.generator.generate_trans_id(),
+            message_type=message_type,
+            max_amount=self.config.fields.max_amount,
+            generate_fields=self.window.get_fields_to_generate(),
+            data_fields=data_fields
+        )
+
+        return transaction
+
     def send(self, transaction: Transaction | None = None):
         if self.config.debug.clear_log:
             self.window.clear_log()
 
         if not transaction:
             try:
-                transaction: Transaction = self.parser.parse_main_window(self.window)
+                transaction: Transaction = self.parse_main_window()
+
             except Exception as building_error:
                 error(f"Transaction building error")
-                [error(err.strip()) for err in str(building_error).splitlines()]
+                [error(err) for err in str(building_error).splitlines()]
                 return
 
         info(f"Processing transaction ID [{transaction.trans_id}]")
@@ -160,7 +187,7 @@ class SvTerminalGui(SvTerminal):
             return
 
         try:
-            transaction = self.parser.parse_main_window(self.window)
+            transaction = self.parse_main_window()
         except Exception as file_saving_error:
             error("File saving error: %s", file_saving_error)
             return
@@ -173,9 +200,9 @@ class SvTerminalGui(SvTerminal):
             return
 
         data_processing_map = {
-            DataFormats.JSON: lambda: dumps(self.parser.parse_main_window(self.window).dict(), indent=4),
-            DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parser.parse_main_window(self.window)),
-            DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parser.parse_main_window(self.window)),
+            DataFormats.JSON: lambda: dumps(self.parse_main_window().dict(), indent=4),
+            DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window()),
+            DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window()),
             DataFormats.TERM: lambda: TextConstants.HELLO_MESSAGE,
             DataFormats.SPEC: lambda: dumps(self.spec.spec.dict(), indent=4)
         }
@@ -186,7 +213,7 @@ class SvTerminalGui(SvTerminal):
 
         try:
             self.window.set_log_data(function())
-        except (ValidationError, ValueError) as validation_error:
+        except (ValidationError, ValueError, LookupError) as validation_error:
             error(f"{validation_error}")
 
     def copy_log(self):

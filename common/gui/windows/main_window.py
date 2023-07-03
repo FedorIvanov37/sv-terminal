@@ -1,11 +1,12 @@
 from ctypes import windll
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QPalette, QColor, QCloseEvent
+from PyQt6.QtGui import QPalette, QColor, QCloseEvent, QKeyEvent
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
+from common.gui.windows.about_window import AboutWindow
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.constants.DataFormats import DataFormats
-from common.gui.constants.ConnectionStatus import ConnectionStatus
+from common.gui.constants.ConnectionStatus import ConnectionDefinitions
 from common.gui.core.JsonView import JsonView
 from common.gui.core.FIeldItem import Item
 from common.lib.data_models.Transaction import TypeFields, Transaction
@@ -100,9 +101,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self._json_view: JsonView = JsonView(self.config)
         self._json_view.itemChanged.connect(self.field_changed.emit)
         self.FieldsTreeLayout.addWidget(self._json_view)
-        self.PlusButton = QPushButton("+")
-        self.MinusButton = QPushButton("-")
-        self.NextLevelButton = QPushButton("↵")
+        self.PlusButton = QPushButton("✚")
+        self.MinusButton = QPushButton("━")
+        self.NextLevelButton = QPushButton("🡾")
 
         buttons_layouts_map = {
             self.PlusLayout: self.PlusButton,
@@ -164,8 +165,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def get_fields_to_generate(self):
         return self._json_view.get_checkboxes()
 
-    def get_mti(self):
-        return self.msgtype.currentText()
+    def get_mti(self, length=4):
+        message_type = self.msgtype.currentText()
+        message_type = message_type[:length]
+
+        return message_type
 
     def set_log_data(self, data: str = str()):
         self.LogArea.setText(data)
@@ -175,12 +179,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def get_bitmap_data(self) -> str:
         return self.Bitmap.text()
-
-    def get_field_data(self, field_number):
-        if not field_number.isdigit():
-            return
-
-        return self._json_view.get_field_data(field_number)
 
     def block_connection_buttons(self):
         self.change_connection_buttons_state(enabled=False)
@@ -219,8 +217,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self._json_view.clean()
 
     def set_connection_status(self, status):
-        self.ConnectionStatus.setText(ConnectionStatus.get_state_description(status))
-        color = ConnectionStatus.get_state_color(status)
+        self.ConnectionStatus.setText(ConnectionDefinitions.get_state_description(status))
+        color = ConnectionDefinitions.get_state_color(status)
         palette = self.ConnectionScreen.palette()
         palette.setColor(QPalette.ColorRole.Base, QColor(*color))
         self.ConnectionScreen.setPalette(palette)
@@ -232,3 +230,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.hide()
         self.window_close.emit()
         a0.accept()
+
+    def keyPressEvent(self, a0: QKeyEvent) -> None:
+        if a0.key() == Qt.Key.Key_F1:
+            AboutWindow()

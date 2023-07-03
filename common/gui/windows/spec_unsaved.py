@@ -1,6 +1,6 @@
 from common.gui.forms.spec_unsaved import Ui_SpecUnsaved
 from PyQt6.QtWidgets import QDialog, QMenu
-from PyQt6.QtGui import QIcon, QCloseEvent, QKeyEvent, QPixmap
+from PyQt6.QtGui import QIcon, QCloseEvent, QKeyEvent
 from PyQt6.QtCore import Qt, pyqtSignal
 from common.gui.constants.TermFilesPath import TermFilesPath
 

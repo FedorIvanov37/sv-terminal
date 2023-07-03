@@ -56,6 +56,8 @@ class Bitmap:
             return self._parse_bitmap(b2a_hex(bitmap), hex)
 
         if bitmap_type is hex:
+            bitmap = bitmap.replace(b'.', b'.')
+
             if len(bitmap) not in (self.spec.MessageLength.first_bitmap_length_hex,
                                    self.spec.MessageLength.second_bitmap_length_hex):
                 raise ValueError("Invalid bitmap length")

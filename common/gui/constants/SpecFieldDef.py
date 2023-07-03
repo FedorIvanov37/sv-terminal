@@ -1,55 +1,46 @@
-class SpecFieldDef(object):
-    FIELD: str = "Field"
-    DESCRIPTION: str = "Description"
-    MIN_LENGTH: str = "Min Len"
-    MAX_LENGTH: str = "Max Len"
-    VARIABLE_LENGTH: str = "Data Len"
-    TAG_LENGTH: str = "Tag Len"
-    USE_FOR_MATCHING: str = "Matching"
-    USE_FOR_REVERSAL: str = "Reversal"
-    CAN_BE_GENERATED: str = "Generated"
-    ALPHA: str = "Alpha"
-    NUMERIC: str = "Numeric"
-    SPECIAL: str = "Special"
+from enum import Enum
+from dataclasses import dataclass
 
-    COLUMNS: tuple[str, str, str, str, str, str, str, str, str, str, str, str, str, str, str] = (
-        FIELD,
-        DESCRIPTION,
-        MIN_LENGTH,
-        MAX_LENGTH,
-        VARIABLE_LENGTH,
-        TAG_LENGTH,
-        ALPHA,
-        NUMERIC,
-        SPECIAL,
-        # BYTES,
-        USE_FOR_MATCHING,
-        USE_FOR_REVERSAL,
-        CAN_BE_GENERATED,
-        # IS_SECRET,
+
+@dataclass
+class SpecFieldDefinition:
+
+    class _Columns(Enum):
+        FIELD: str = "Field"
+        DESCRIPTION: str = "Description"
+        MIN_LENGTH: str = "Min Len"
+        MAX_LENGTH: str = "Max Len"
+        VARIABLE_LENGTH: str = "Data Len"
+        TAG_LENGTH: str = "Tag Len"
+        ALPHA: str = "Alpha"
+        NUMERIC: str = "Numeric"
+        SPECIAL: str = "Special"
+        USE_FOR_MATCHING: str = "Matching"
+        USE_FOR_REVERSAL: str = "Reversal"
+        CAN_BE_GENERATED: str = "Generated"
+
+    @dataclass
+    class ColumnsOrder:
+        FIELD = 0
+        DESCRIPTION = 1
+        MIN_LENGTH = 2
+        MAX_LENGTH = 3
+        VARIABLE_LENGTH = 4
+        TAG_LENGTH = 5
+        ALPHA = 6
+        NUMERIC = 7
+        SPECIAL = 8
+        USE_FOR_MATCHING = 9
+        USE_FOR_REVERSAL = 10
+        CAN_BE_GENERATED = 11
+
+    COLUMNS = (column.value for column in _Columns)
+
+    CHECKBOXES = (
+            ColumnsOrder.USE_FOR_MATCHING,
+            ColumnsOrder.USE_FOR_REVERSAL,
+            ColumnsOrder.CAN_BE_GENERATED,
+            ColumnsOrder.ALPHA,
+            ColumnsOrder.NUMERIC,
+            ColumnsOrder.SPECIAL
     )
-
-    CHECKBOXES: tuple[str, str, str, str, str, str, str, str] = (
-        USE_FOR_MATCHING,
-        USE_FOR_REVERSAL,
-        CAN_BE_GENERATED,
-        ALPHA,
-        NUMERIC,
-        SPECIAL,
-        # BYTES,
-        # IS_SECRET
-    )
-
-    @staticmethod
-    def get_column_position(column):
-        return SpecFieldDef.COLUMNS.index(column)
-
-    @staticmethod
-    def get_checkbox_positions():
-        pos = []
-
-        for column in SpecFieldDef.COLUMNS:
-            if column in SpecFieldDef.CHECKBOXES:
-                pos.append(SpecFieldDef.COLUMNS.index(column))
-
-        return pos

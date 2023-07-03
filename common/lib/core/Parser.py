@@ -1,5 +1,5 @@
 from json import loads
-from os.path import splitext
+from pathlib import Path
 from logging import error, warning, info
 from pydantic import FilePath
 from binascii import hexlify, unhexlify
@@ -7,7 +7,7 @@ from configparser import ConfigParser, NoSectionError, NoOptionError
 from common.lib.exceptions.exceptions import DumpFileParsingError
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Bitmap import Bitmap
-from common.lib.toolkit.trans_id import trans_id
+from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.constants.DumpDefinition import DumpDefinition
 from common.lib.constants.IniMessageDefinition import IniMessageDefinition
 from common.lib.constants.DataFormats import DataFormats
@@ -46,7 +46,8 @@ class Parser:
             field_length_var = spec.get_field_length_var(field)
 
             if field_length_var:
-                text: str = f"{len(text):0{field_length_var}}{text}"
+                text_length = str(len(text)).zfill(field_length_var)
+                text = f"{text_length}{text}"
 
             if text is not None:
                 msg_body: bytes = msg_body + text.encode()
@@ -163,11 +164,11 @@ class Parser:
             position += length
 
         for field in fields:
-            if spec.is_field_complex(field):
+            if spec.is_field_complex([field]):
                 fields[field]: RawFieldSet = Parser.split_complex_field(field, fields[field])
 
         transaction: Transaction = Transaction(
-            trans_id=trans_id(),
+            trans_id=FieldsGenerator.generate_trans_id(),
             message_type=message_type_indicator,
             data_fields=fields
         )
@@ -191,7 +192,7 @@ class Parser:
                 var_length = spec.tag_length
 
                 if not var_length:
-                    raise ValueError
+                    raise ValueError("Lost variable length")
 
             except(AttributeError, ValueError):
                 error("Lost specification for field %s ", field)
@@ -211,29 +212,6 @@ class Parser:
             complex_field_data[tag_number] = value_data
 
         return complex_field_data
-
-    def parse_main_window(self, form) -> Transaction:
-        data_fields: TypeFields = form.get_fields()
-
-        if not data_fields:
-            raise ValueError("No data to send")
-
-        if not (message_type := form.get_mti()):
-            raise ValueError("Invalid MTI")
-
-        message_type = message_type[:self.spec.MessageLength.message_type_length]
-        generate_fields = form.get_fields_to_generate()
-        max_amount = self.config.fields.max_amount
-
-        transaction = Transaction(
-            trans_id=trans_id(),
-            message_type=message_type,
-            max_amount=max_amount,
-            generate_fields=generate_fields,
-            data_fields=data_fields
-        )
-
-        return transaction
 
     def transaction_to_ini_string(self, transaction: Transaction):
         generate_fields: list[str] = sorted(transaction.generate_fields, key=int)
@@ -266,7 +244,9 @@ class Parser:
         return ini_data
 
     def parse_file(self, filename: FilePath) -> Transaction:
-        file_extension = splitext(filename)[-1].upper().replace(".", "")
+        file_extension = Path(filename).suffix
+        file_extension = file_extension.replace(".", "")
+        file_extension = file_extension.upper()
 
         data_processing_map = {
             DataFormats.JSON: self._parse_json_file,
@@ -295,7 +275,7 @@ class Parser:
     @staticmethod
     def _parse_json_file(filename: str) -> Transaction:
         transaction: Transaction = Transaction.parse_file(filename)
-        transaction.trans_id = trans_id()
+        transaction.trans_id = FieldsGenerator.generate_trans_id()
         return transaction
 
     @staticmethod
@@ -341,7 +321,7 @@ class Parser:
             field = str(int(option.removeprefix("f")))
             value = self.unpack_ini_field(ini.get(IniMessageDefinition.MESSAGE, option))
 
-            if self.spec.is_field_complex(field):
+            if self.spec.is_field_complex([field]):
                 value = self.split_complex_field(field, value)
 
             fields[field] = value

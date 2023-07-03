@@ -12,6 +12,7 @@ from common.gui.constants.TermFilesPath import TermFilesPath
 class EpaySpecification(EpaySpecificationData):
     _MessageLength: MessageLength = MessageLength()
     _specification_model: EpaySpecModel = None
+    type_field_path = list[str]
 
     def __init__(self, filename: FilePath | None = None):
         if filename is None:
@@ -47,13 +48,6 @@ class EpaySpecification(EpaySpecificationData):
 
         return False
 
-    @staticmethod
-    def field_reserved_for_future(field_path: list[str]):
-        if len(field_path) > 1:
-            raise NotImplemented("Does not work for complex fields")
-
-        return field_path.pop() in asdict(EpaySpecificationData.RESERVED_FOR_FUTURE).keys()
-
     def get_reversal_mti(self, original_mti: str):
         for mti in self.spec.mti:
             if not (mti.reversal_mti and mti.is_reversible):
@@ -62,7 +56,7 @@ class EpaySpecification(EpaySpecificationData):
             if mti.request == original_mti:
                 return mti.reversal_mti
 
-    def can_be_generated(self, field_path: list[str]):
+    def can_be_generated(self, field_path: type_field_path):
         if not (field_spec := self.get_field_spec(field_path)):
             return False
 
@@ -112,17 +106,9 @@ class EpaySpecification(EpaySpecificationData):
     def get_match_fields(self):
         return [field for field, field_data in self.fields.items() if field_data.matching]
 
-    def get_field_description(self, path: list[str]) -> str | None:
-        field_spec: IsoField = self.get_field_spec(path)
-
-        try:
-            return field_spec.description
-        except AttributeError:
-            return ""
-
     def is_request(self, transaction):
         if not transaction.message_type:
-            return
+            return False
 
         for mti in self.mti:
             if transaction.message_type == mti.request:
@@ -131,7 +117,9 @@ class EpaySpecification(EpaySpecificationData):
             if transaction.message_type == mti.response:
                 return False
 
-    def get_field_spec(self, path: list[str], spec=None) -> IsoField | None:
+        return False
+
+    def get_field_spec(self, path: type_field_path, spec=None) -> IsoField | None:
         if spec is None:
             spec = self.spec
 
@@ -147,10 +135,8 @@ class EpaySpecification(EpaySpecificationData):
 
         return field_data
 
-    def is_field_complex(self, field):
-        field_spec = self.get_field_spec([field])
-
-        if field_spec is None:
+    def is_field_complex(self, field_path: type_field_path):
+        if not (field_spec := self.get_field_spec(field_path)):
             return False
 
         return bool(field_spec.fields)
@@ -174,10 +160,10 @@ class EpaySpecification(EpaySpecificationData):
 
             return getattr(self.FIELD_DATE_FORMAT, field_name, "")
 
-    def get_field_data_kit(self, field_path: list[str]):
-        field_spec: IsoField = self.get_field_spec(field_path)
+    def get_field_data_kit(self, field_path: type_field_path):
+        field_spec: IsoField
 
-        if not field_spec:
+        if not (field_spec := self.get_field_spec(field_path)):
             raise ValueError("Lost field spec for field %s" % ".".join(field_path))
 
         data_map: dict[str, bool] = {
