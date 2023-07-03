@@ -5,21 +5,22 @@ from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QFileDialog
 from PyQt6.QtGui import QIcon
+from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.spec_window import SpecWindow
-from common.gui.core.Logger import LogStream, getLogger, Formatter
 from common.gui.constants.TextConstants import TextConstants
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.TermFilesPath import TermFilesPath
+from common.gui.constants.ButtonActions import ButtonAction
+from common.gui.constants.LogDefinition import LogDefinition
+from common.gui.core.WirelessHandler import WirelessHandler
+from common.gui.core.ConnectionThread import ConnectionThread
+from common.lib.core.LogPrinter import LogPrinter
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
-from common.gui.constants.ButtonActions import ButtonAction
 from common.lib.core.Terminal import SvTerminal
-from common.gui.core.WirelessHandler import WirelessHandler
-from common.gui.constants.LogDefinition import LogDefinition
-from common.gui.core.ConnectionThread import ConnectionThread
 
 
 class SvTerminalGui(SvTerminal):
@@ -28,11 +29,12 @@ class SvTerminalGui(SvTerminal):
     def __init__(self, config: Config):
         super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
         self.window: MainWindow = MainWindow(self.config)
+        self.log_printer = LogPrinter()
         self.setup()
 
     def setup(self):
         self.create_window_logger()
-        self.print_startup_info()
+        self.log_printer.print_startup_info(self.config)
         self.connect_widgets()
         self.window.set_mti_values(self.spec.get_mti_list())
         self.window.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
@@ -43,12 +45,6 @@ class SvTerminalGui(SvTerminal):
             self.set_default_values()
 
         self.window.show()
-
-    def print_startup_info(self):
-        self.logger.print_multi_row(TextConstants.HELLO_MESSAGE)
-        config_data = dumps(self.config.dict(), indent=4)
-        config_data = f"## Configuration parameters ##\n{config_data}\n## End of configuration parameters ##"
-        self.logger.print_multi_row(config_data)
 
     def connect_widgets(self):
         window = self.window

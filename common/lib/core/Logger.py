@@ -1,4 +1,4 @@
-from logging import info, debug, getLevelName, getLogger, Formatter
+from logging import debug, getLevelName, getLogger, Formatter
 from logging.handlers import RotatingFileHandler
 from common.gui.constants.LogDefinition import LogDefinition
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -16,7 +16,6 @@ class LogStream:
 
 class Logger:
     _spec = EpaySpecification()
-    _default_level = info
     _stream = None
 
     @property
@@ -50,10 +49,3 @@ class Logger:
         logger.addHandler(file_handler)
 
         debug("Logger started")
-
-    @staticmethod
-    def print_multi_row(data: str, level=_default_level):
-        for string in data.splitlines():
-            level(string)
-
-        level("")
