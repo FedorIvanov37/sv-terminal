@@ -123,6 +123,22 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for button, action in connection_buttons_map.items():
             button.clicked.connect(action)
 
+        #
+        # Why it does not work?
+        #
+        # button_actions_map = {
+        #     self.ButtonSave: DataFormats.get_output_file_formats(),
+        #     self.ButtonReverse: ButtonAction.get_reversal_actions(),
+        #     self.ButtonPrintData: DataFormats.get_print_data_formats(),
+        # }
+        #
+        # for button, formats in button_actions_map.items():
+        #     button.setMenu(QMenu())
+        #
+        #     for action in formats:
+        #         button.menu().addAction(action, lambda: self.menu_button_clicked.emit(button, action))
+        #         button.menu().addSeparator()
+
         buttons_menu_structure = {
             self.ButtonReverse: {
                 ButtonAction.LAST: lambda: self.menu_button_clicked.emit(self.ButtonReverse, ButtonAction.LAST),
