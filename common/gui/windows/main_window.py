@@ -138,8 +138,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         #     for action in formats:
         #         button.menu().addAction(action, lambda: self.menu_button_clicked.emit(button, action))
         #         button.menu().addSeparator()
+        #
 
-        buttons_menu_structure = {
+        buttons_menu_structure = {  # And why it works instead?
             self.ButtonReverse: {
                 ButtonAction.LAST: lambda: self.menu_button_clicked.emit(self.ButtonReverse, ButtonAction.LAST),
                 ButtonAction.OTHER: lambda: self.menu_button_clicked.emit(self.ButtonReverse, ButtonAction.OTHER),
@@ -156,7 +157,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonSave: {
                 DataFormats.JSON: lambda: self.menu_button_clicked.emit(self.ButtonSave, DataFormats.JSON),
                 DataFormats.INI: lambda: self.menu_button_clicked.emit(self.ButtonSave, DataFormats.INI),
-                DataFormats.DUMP: lambda: self.menu_button_clicked.emit(self.ButtonSave, DataFormats.DUMP)
+                DataFormats.DUMP: lambda: self.menu_button_clicked.emit(self.ButtonSave, DataFormats.DUMP),
             }
         }
 
