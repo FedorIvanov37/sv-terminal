@@ -1,5 +1,5 @@
-from common.gui.constants.ReleaseDefinitoin import ReleaseDefinition
 from dataclasses import dataclass
+from common.gui.constants.ReleaseDefinitoin import ReleaseDefinition
 
 
 @dataclass(frozen=True)
@@ -25,4 +25,3 @@ class TextConstants(object):
  
  :: {ReleaseDefinition.VERSION} ::
  """
-
