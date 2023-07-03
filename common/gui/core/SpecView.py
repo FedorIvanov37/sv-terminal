@@ -2,7 +2,7 @@ from PyQt6.QtCore import pyqtSignal, QObject
 from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
-from common.gui.constants.SpecFieldDef import SpecFieldDef
+from common.gui.constants.SpecFieldDef import SpecFieldDefinition
 from common.gui.core.SpecItem import SpecItem
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
 from common.gui.core.SpecValidator import SpecValidator
@@ -26,7 +26,7 @@ class SpecView(QObject):
         self.setup()
 
     def setup(self):
-        self.tree.setHeaderLabels(SpecFieldDef.COLUMNS)
+        self.tree.setHeaderLabels(SpecFieldDefinition.COLUMNS)
         self.tree.addTopLevelItem(self.root)
         self.tree.itemDoubleClicked.connect(self.edit)
         self.tree.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
@@ -80,10 +80,10 @@ class SpecView(QObject):
         self.hide_reserved()
 
     def edit(self, item, column):
-        if item is self.root and column != SpecFieldDef.get_column_position(SpecFieldDef.DESCRIPTION):
+        if item is self.root and column != SpecFieldDefinition.ColumnsOrder.DESCRIPTION:
             return
 
-        if column > SpecFieldDef.get_column_position(SpecFieldDef.TAG_LENGTH):
+        if column > SpecFieldDefinition.ColumnsOrder.TAG_LENGTH:
             return
 
         if self.window.read_only:
@@ -148,7 +148,7 @@ class SpecView(QObject):
             spec = self.spec
 
         self.clean()
-        self.root.setText(SpecFieldDef.get_column_position(SpecFieldDef.DESCRIPTION), spec.name)
+        self.root.setText(SpecFieldDefinition.ColumnsOrder.DESCRIPTION, spec.name)
         self.parse_spec_fields(spec.fields)
 
     def parse_spec_fields(self, input_json, parent: QTreeWidgetItem = None):
@@ -172,12 +172,12 @@ class SpecView(QObject):
             ]
 
             checkboxes: dict[str, bool] = {
-                SpecFieldDef.get_column_position(SpecFieldDef.USE_FOR_MATCHING): field_data.matching,
-                SpecFieldDef.get_column_position(SpecFieldDef.USE_FOR_REVERSAL): field_data.reversal,
-                SpecFieldDef.get_column_position(SpecFieldDef.CAN_BE_GENERATED): field_data.generate,
-                SpecFieldDef.get_column_position(SpecFieldDef.ALPHA): field_data.alpha,
-                SpecFieldDef.get_column_position(SpecFieldDef.NUMERIC): field_data.numeric,
-                SpecFieldDef.get_column_position(SpecFieldDef.SPECIAL): field_data.special,
+                SpecFieldDefinition.ColumnsOrder.USE_FOR_MATCHING: field_data.matching,
+                SpecFieldDefinition.ColumnsOrder.USE_FOR_REVERSAL: field_data.reversal,
+                SpecFieldDefinition.ColumnsOrder.CAN_BE_GENERATED: field_data.generate,
+                SpecFieldDefinition.ColumnsOrder.ALPHA: field_data.alpha,
+                SpecFieldDefinition.ColumnsOrder.NUMERIC: field_data.numeric,
+                SpecFieldDefinition.ColumnsOrder.SPECIAL: field_data.special,
             }
 
             item: SpecItem = SpecItem(field_data_for_item, checkboxes=checkboxes)
@@ -190,7 +190,7 @@ class SpecView(QObject):
         self.make_order()
 
     def generate_spec(self):
-        name: str = self.root.text(SpecFieldDef.get_column_position(SpecFieldDef.DESCRIPTION))
+        name: str = self.root.text(SpecFieldDefinition.ColumnsOrder.DESCRIPTION)
         fields_set: FieldSet
 
         def generate_fields(spec_item: SpecItem = None) -> FieldSet:

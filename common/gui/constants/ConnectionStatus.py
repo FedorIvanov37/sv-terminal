@@ -1,42 +1,47 @@
 from PyQt6.QtNetwork import QTcpSocket
+from dataclasses import dataclass
 
 
-class ConnectionStatus(object):
-    CONNECTED: str = "SVFE Connected"
-    DISCONNECTED: str = "SVFE Disconnected"
-    IN_PROGRESS: str = "SVFE Connection In Progress"
-    UNKNOWN: str = "Unknown"
+@dataclass(frozen=True)
+class ConnectionDefinitions:
 
-    # RGB
-    GREY = (195, 195, 195)
-    YELLOW = (255, 255, 0)
-    RED = (255, 0, 0)
-    GREEN = (0, 255, 0)
+    @dataclass(frozen=True)
+    class ConnectionStatuses:
+        CONNECTED: str = "SVFE Connected"
+        DISCONNECTED: str = "SVFE Disconnected"
+        IN_PROGRESS: str = "SVFE Connection In Progress"
+        UNKNOWN: str = "Unknown"
 
-    STATE_MAP = {
-        QTcpSocket.SocketState.ConnectedState: CONNECTED,
-        QTcpSocket.SocketState.UnconnectedState: DISCONNECTED,
-        QTcpSocket.SocketState.ConnectingState: IN_PROGRESS,
-        QTcpSocket.SocketState.HostLookupState: IN_PROGRESS,
-        QTcpSocket.SocketState.BoundState: IN_PROGRESS,
-        QTcpSocket.SocketState.ClosingState: IN_PROGRESS,
-        QTcpSocket.SocketState.ListeningState: UNKNOWN
-    }
-
-    COLOR_MAP = {
-        QTcpSocket.SocketState.ConnectedState: GREEN,
-        QTcpSocket.SocketState.UnconnectedState: RED,
-        QTcpSocket.SocketState.ConnectingState: YELLOW,
-        QTcpSocket.SocketState.HostLookupState: YELLOW,
-        QTcpSocket.SocketState.BoundState: YELLOW,
-        QTcpSocket.SocketState.ClosingState: YELLOW,
-        QTcpSocket.SocketState.ListeningState: GREEN
-    }
+        # RGB
+        GREY = (195, 195, 195)
+        YELLOW = (255, 255, 0)
+        RED = (255, 0, 0)
+        GREEN = (0, 255, 0)
 
     @staticmethod
     def get_state_description(state):
-        return ConnectionStatus.STATE_MAP.get(state, ConnectionStatus.UNKNOWN)
+        return ConnectionDefinitions.ConnectionStatusMap.get(state, ConnectionDefinitions.ConnectionStatuses.UNKNOWN)
 
     @staticmethod
     def get_state_color(state):
-        return ConnectionStatus.COLOR_MAP.get(state, ConnectionStatus.GREY)
+        return ConnectionDefinitions.ConnectionColorMap.get(state, ConnectionDefinitions.ConnectionStatuses.GREY)
+
+    ConnectionStatusMap = {
+        QTcpSocket.SocketState.ConnectedState: ConnectionStatuses.CONNECTED,
+        QTcpSocket.SocketState.UnconnectedState: ConnectionStatuses.DISCONNECTED,
+        QTcpSocket.SocketState.ConnectingState: ConnectionStatuses.IN_PROGRESS,
+        QTcpSocket.SocketState.HostLookupState: ConnectionStatuses.IN_PROGRESS,
+        QTcpSocket.SocketState.BoundState: ConnectionStatuses.IN_PROGRESS,
+        QTcpSocket.SocketState.ClosingState: ConnectionStatuses.IN_PROGRESS,
+        QTcpSocket.SocketState.ListeningState: ConnectionStatuses.UNKNOWN,
+    }
+
+    ConnectionColorMap = {
+        QTcpSocket.SocketState.ConnectedState: ConnectionStatuses.GREEN,
+        QTcpSocket.SocketState.UnconnectedState: ConnectionStatuses.RED,
+        QTcpSocket.SocketState.ConnectingState: ConnectionStatuses.YELLOW,
+        QTcpSocket.SocketState.HostLookupState: ConnectionStatuses.YELLOW,
+        QTcpSocket.SocketState.BoundState: ConnectionStatuses.YELLOW,
+        QTcpSocket.SocketState.ClosingState: ConnectionStatuses.YELLOW,
+        QTcpSocket.SocketState.ListeningState: ConnectionStatuses.GREEN,
+    }

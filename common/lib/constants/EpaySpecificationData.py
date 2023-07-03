@@ -135,7 +135,7 @@ class FieldSet:
 
 
 @dataclass(frozen=True)
-class ReservedForFuture(object):
+class ReservedForFuture:
     FIELD_005_RESERVED_FOR_FUTURE: str = "5"
     FIELD_008_RESERVED_FOR_FUTURE: str = "8"
     FIELD_009_RESERVED_FOR_FUTURE: str = "9"
@@ -222,21 +222,21 @@ class ReservedForFuture(object):
 
 
 @dataclass(frozen=True)
-class DataTypes(object):
+class DataTypes:
     FIELD_TYPE_ALPHA: str = "FIELD_TYPE_ALPHA"
     FIELD_TYPE_NUMERIC: str = "FIELD_TYPE_NUMERIC"
     FIELD_TYPE_SPECIAL: str = "FIELD_TYPE_SPECIAL"
 
 
 @dataclass(frozen=True)
-class FieldDataKit(object):
+class FieldDataKit:
     FIELD_TYPE_ALPHA: str = ascii_letters
     FIELD_TYPE_NUMERIC: str = digits
     FIELD_TYPE_SPECIAL: str = punctuation + " "
 
 
 @dataclass(frozen=True)
-class FieldDateFormat(object):
+class FieldDateFormat:
     FIELD_007_TRANSMISSION_DATE_AND_TIME = "%m%d%H%M%S"
     FIELD_012_TRANSACTION_LOCAL_DATE_AND_TIME = "%y%m%d%H%M%S"
     FIELD_014_EXPIRATION_DATE_YYMM = "%y%m"
@@ -244,7 +244,7 @@ class FieldDateFormat(object):
 
 
 @dataclass
-class EpaySpecificationData(object):
+class EpaySpecificationData:
     FIELD_SET: FieldSet = FieldSet()
     DATA_TYPES: DataTypes = DataTypes()
     FIELD_DATA_KIT: FieldDataKit = FieldDataKit()

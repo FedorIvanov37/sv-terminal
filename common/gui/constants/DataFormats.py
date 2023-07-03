@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class DataFormats(object):
     INI: str = "INI"
     JSON: str = "JSON"

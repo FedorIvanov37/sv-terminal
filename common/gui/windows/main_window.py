@@ -6,7 +6,7 @@ from common.gui.windows.about_window import AboutWindow
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.constants.DataFormats import DataFormats
-from common.gui.constants.ConnectionStatus import ConnectionStatus
+from common.gui.constants.ConnectionStatus import ConnectionDefinitions
 from common.gui.core.JsonView import JsonView
 from common.gui.core.FIeldItem import Item
 from common.lib.data_models.Transaction import TypeFields, Transaction
@@ -217,8 +217,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self._json_view.clean()
 
     def set_connection_status(self, status):
-        self.ConnectionStatus.setText(ConnectionStatus.get_state_description(status))
-        color = ConnectionStatus.get_state_color(status)
+        self.ConnectionStatus.setText(ConnectionDefinitions.get_state_description(status))
+        color = ConnectionDefinitions.get_state_color(status)
         palette = self.ConnectionScreen.palette()
         palette.setColor(QPalette.ColorRole.Base, QColor(*color))
         self.ConnectionScreen.setPalette(palette)

@@ -2,7 +2,7 @@ from logging import _levelToName as levels
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class LogDefinition(object):
     DEBUG = "DEBUG"
     INFO = "INFO"

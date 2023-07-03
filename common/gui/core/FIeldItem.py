@@ -1,7 +1,7 @@
 from PyQt6 import QtGui
 from PyQt6.QtWidgets import QTreeWidgetItem
-from PyQt6.QtCore import Qt, QVariant, pyqtSignal
-from common.gui.constants.MainFieldSpec import MainFieldSpec as Spec, ColumnsOrder
+from PyQt6.QtCore import Qt, QVariant
+from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.gui.core.AbstractItem import AbstractItem
 
@@ -12,15 +12,15 @@ class Item(AbstractItem):
 
     @property
     def field_data(self):
-        return self.text(ColumnsOrder.VALUE)
+        return self.text(FieldsSpec.ColumnsOrder.VALUE)
 
     @field_data.setter
     def field_data(self, field_data):
-        self.setText(ColumnsOrder.VALUE, field_data)
+        self.setText(FieldsSpec.ColumnsOrder.VALUE, field_data)
 
     @property
     def field_number(self):
-        return self.text(ColumnsOrder.FIELD)
+        return self.text(FieldsSpec.ColumnsOrder.FIELD)
 
     def __init__(self, item_data: list[str]):
         super(Item, self).__init__(item_data)
@@ -36,12 +36,12 @@ class Item(AbstractItem):
         self.spec: IsoField = self.epay_spec.get_field_spec(self.get_field_path())
 
     def generate_checkbox_checked(self):
-        return bool(self.checkState(ColumnsOrder.PROPERTY).value)
+        return bool(self.checkState(FieldsSpec.ColumnsOrder.PROPERTY).value)
 
     def set_checkbox(self, checked=True):
-        column_number = ColumnsOrder.PROPERTY
+        column_number = FieldsSpec.ColumnsOrder.PROPERTY
 
-        if self.field_number not in Spec.generated_fields:
+        if self.field_number not in FieldsSpec.generated_fields:
             self.setData(column_number, Qt.ItemDataRole.CheckStateRole, QVariant())
             self.setText(column_number, str())
             return
@@ -56,7 +56,7 @@ class Item(AbstractItem):
         if not self.spec:
             return
 
-        self.setText(ColumnsOrder.DESCRIPTION, self.spec.description)
+        self.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, self.spec.description)
 
     def process_change_item(self):
         self.set_spec()
@@ -65,7 +65,7 @@ class Item(AbstractItem):
         self.set_description()
 
     def set_length(self) -> None:
-        column = ColumnsOrder.LENGTH
+        column = FieldsSpec.ColumnsOrder.LENGTH
         length = f"{self.get_field_length():03}"
         self.setText(column, length)
 
@@ -76,7 +76,7 @@ class Item(AbstractItem):
         if self.childCount():
             length = sum([item.get_field_length() for item in self.get_children()])
         else:
-            length = len(self.text(ColumnsOrder.VALUE))
+            length = len(self.text(FieldsSpec.ColumnsOrder.VALUE))
 
         return length
 
