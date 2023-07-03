@@ -44,13 +44,11 @@
 + Lost response for transaction
 + Add utrnno to reversal
 + Change buttons design
++ Work with empty fields
 
 
-• Work with empty fields
 • Check the old files processing
 • Unknown fields in incoming files and messages - what are you going to do
-
-
 • Change approach to fields path
 • No data in socket if delete field in spec
 • Exceptions policy

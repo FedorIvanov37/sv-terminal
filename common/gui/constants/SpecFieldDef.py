@@ -6,18 +6,18 @@ from dataclasses import dataclass
 class SpecFieldDefinition:
 
     class _Columns(Enum):
-        FIELD: str = "Field"
-        DESCRIPTION: str = "Description"
-        MIN_LENGTH: str = "Min Len"
-        MAX_LENGTH: str = "Max Len"
-        VARIABLE_LENGTH: str = "Data Len"
-        TAG_LENGTH: str = "Tag Len"
-        ALPHA: str = "Alpha"
-        NUMERIC: str = "Numeric"
-        SPECIAL: str = "Special"
-        USE_FOR_MATCHING: str = "Matching"
-        USE_FOR_REVERSAL: str = "Reversal"
-        CAN_BE_GENERATED: str = "Generated"
+        FIELD = "Field"
+        DESCRIPTION = "Description"
+        MIN_LENGTH = "Min Len"
+        MAX_LENGTH = "Max Len"
+        VARIABLE_LENGTH = "Data Len"
+        TAG_LENGTH = "Tag Len"
+        ALPHA = "Alpha"
+        NUMERIC = "Numeric"
+        SPECIAL = "Special"
+        USE_FOR_MATCHING = "Matching"
+        USE_FOR_REVERSAL = "Reversal"
+        CAN_BE_GENERATED = "Generated"
 
     @dataclass
     class ColumnsOrder:
@@ -42,5 +42,5 @@ class SpecFieldDefinition:
             ColumnsOrder.CAN_BE_GENERATED,
             ColumnsOrder.ALPHA,
             ColumnsOrder.NUMERIC,
-            ColumnsOrder.SPECIAL
+            ColumnsOrder.SPECIAL,
     )
