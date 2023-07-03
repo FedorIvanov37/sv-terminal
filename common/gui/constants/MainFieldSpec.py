@@ -1,24 +1,28 @@
 from common.lib.core.EpaySpecification import EpaySpecification
+from dataclasses import dataclass
+from enum import Enum
+
+
+@dataclass
+class ColumnsOrder:
+    FIELD = 0
+    VALUE = 1
+    LENGTH = 2
+    DESCRIPTION = 3
+    PROPERTY = 4
+
+
+class Columns(Enum):
+    FIELD = "Field"
+    VALUE = "Value"
+    LENGTH = "Length"
+    DESCRIPTION = "Description"
+    PROPERTY = "Property"
 
 
 class MainFieldSpec(object):
+    columns = (field.value for field in Columns)
     spec: EpaySpecification = EpaySpecification()
-    FIELD: str = "Field"
-    VALUE: str = "Value"
-    LENGTH: str = "Length"
-    DESCRIPTION: str = "Description"
-    PROPERTY: str = "Property"
-    GENERATE: str = "Generate"
-
-    columns: tuple[str, str, str, str, str] = (FIELD, VALUE, LENGTH, DESCRIPTION, PROPERTY)
-
-    columns_order: dict[str, int] = {
-        FIELD: 0,
-        VALUE: 1,
-        LENGTH: 2,
-        DESCRIPTION: 3,
-        PROPERTY: 4
-    }
 
     generated_fields: list[str] = [
         spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT,

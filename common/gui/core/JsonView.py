@@ -3,12 +3,13 @@ from logging import warning
 from collections import OrderedDict
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget
-from common.gui.constants.MainFieldSpec import MainFieldSpec as Spec
+from common.gui.constants.MainFieldSpec import MainFieldSpec as Spec, ColumnsOrder
 from common.gui.core.FIeldItem import Item
 from common.gui.core.ItemsValidator import ItemsValidator
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
+from common.lib.core.FieldsGenerator import FieldsGenerator
 
 
 class JsonView(QTreeWidget):
@@ -55,8 +56,12 @@ class JsonView(QTreeWidget):
             warning(spec_error)
             return
 
-        if column == Spec.columns_order.get(Spec.FIELD):
+        if column == ColumnsOrder.FIELD:
             item.set_checkbox()
+
+        if column in (ColumnsOrder.PROPERTY, ColumnsOrder.VALUE):
+            if item.generate_checkbox_checked():
+                item.field_data = FieldsGenerator.generate_field(item.field_number)
 
         try:
             self.validate(item, column)
@@ -72,7 +77,7 @@ class JsonView(QTreeWidget):
         if self.spec.can_be_generated(item.get_field_path()) and item.generate_checkbox_checked():
             return
 
-        if column == Spec.columns_order.get(Spec.FIELD):
+        if column == ColumnsOrder.FIELD:
             if all((item.field_number, not item.field_data, not item.childCount())):
                 self.validator.validate_field_path(item.get_field_path())
                 self.validator.validate_duplicates(item)
@@ -80,7 +85,7 @@ class JsonView(QTreeWidget):
 
         self.validator.validate_item(item)
 
-    def plus(self, checked):
+    def plus(self):
         item = Item([])
         parent = None
 
@@ -123,7 +128,7 @@ class JsonView(QTreeWidget):
         if current_item is None:
             return
 
-        self.currentItem().setText(Spec.columns_order.get(Spec.VALUE), str())
+        self.currentItem().setText(ColumnsOrder.VALUE, str())
         self.currentItem().insertChild(int(), item)
         self.set_new_item(item)
 
@@ -155,7 +160,7 @@ class JsonView(QTreeWidget):
             if item.field_number != field:
                 continue
 
-            item.setText(Spec.columns_order.get(Spec.VALUE), value)
+            item.setText(ColumnsOrder.VALUE, value)
             return
 
     def edit_item(self, item, column):
@@ -165,9 +170,9 @@ class JsonView(QTreeWidget):
         if item.get_children():
             return
 
-        if column not in (Spec.columns_order.get(Spec.FIELD), Spec.columns_order.get(Spec.VALUE)):
+        if column not in (ColumnsOrder.FIELD, ColumnsOrder.VALUE):
             return
-        
+
         self.editItem(item, column)
 
     def parse_transaction(self, transaction: Transaction) -> None:
@@ -219,7 +224,7 @@ class JsonView(QTreeWidget):
         field_numbers: list[str] = list()
 
         for item in self.root.get_children():
-            if item.field_data or bool(item.checkState(Spec.columns_order.get(Spec.PROPERTY))):
+            if item.field_data or bool(item.checkState(ColumnsOrder.PROPERTY)):
                 field_numbers.append(item.field_number)
 
         return field_numbers
@@ -249,7 +254,7 @@ class JsonView(QTreeWidget):
         return result
 
     def get_checkboxes(self) -> list:
-        column = Spec.columns_order.get(Spec.PROPERTY)
+        column = ColumnsOrder.PROPERTY
         return [item.field_number for item in self.root.get_children() if bool(item.checkState(column).value)]
 
     def get_field_set(self):
