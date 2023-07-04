@@ -2,7 +2,7 @@ from typing import Callable
 from logging import warning
 from collections import OrderedDict
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget
+from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget, QItemDelegate
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.gui.core.FIeldItem import Item
 from common.gui.core.ItemsValidator import ItemsValidator
@@ -28,6 +28,9 @@ class JsonView(QTreeWidget):
         super(JsonView, self).__init__()
         self.config: Config = config
         self._setup()
+        self.delegate = QItemDelegate()
+        self.delegate.closeEditor.connect(lambda: self.process_change_item(self.currentItem()))
+        self.setItemDelegate(self.delegate)
 
     def _setup(self):
         for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
@@ -45,9 +48,17 @@ class JsonView(QTreeWidget):
         self.make_order()
 
     @void_qt_signals
-    def process_change_item(self, item: Item, column):
+    def process_change_item(self, item: Item, column=None):
         if item is self.root:
             return
+
+        if column is None:
+            item.hide_pan()
+            return
+
+        if column in (FieldsSpec.ColumnsOrder.PROPERTY, FieldsSpec.ColumnsOrder.VALUE):
+            if item.generate_checkbox_checked():
+                item.field_data = FieldsGenerator.generate_field(item.field_number)
 
         try:
             item.process_change_item()
@@ -59,13 +70,11 @@ class JsonView(QTreeWidget):
         if column == FieldsSpec.ColumnsOrder.FIELD:
             item.set_checkbox()
 
-        if column in (FieldsSpec.ColumnsOrder.PROPERTY, FieldsSpec.ColumnsOrder.VALUE):
-            if item.generate_checkbox_checked():
-                item.field_data = FieldsGenerator.generate_field(item.field_number)
+        if column in (FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.FIELD):
+            item.hide_pan(True)
 
         try:
             self.validate(item, column)
-
         except ValueError as validation_error:
             item.set_item_color(red=True)
             [warning(err) for err in str(validation_error).splitlines()]
@@ -177,6 +186,9 @@ class JsonView(QTreeWidget):
 
         if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE):
             return
+
+        if column == FieldsSpec.ColumnsOrder.VALUE:
+            item.hide_pan(False)
 
         self.editItem(item, column)
 

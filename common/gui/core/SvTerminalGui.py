@@ -14,7 +14,7 @@ from common.gui.constants.TextConstants import TextConstants
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.constants.ButtonActions import ButtonAction
-from common.gui.constants.LogDefinition import LogDefinition
+from common.lib.constants.LogDefinition import LogDefinition
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread
 from common.lib.core.LogPrinter import LogPrinter

@@ -32,7 +32,7 @@ class SvTerminal(QObject):
         if connector is None:
             connector: Connector = Connector(self.config)
 
-        self.log_printer: LogPrinter = LogPrinter(self.config)
+        self.log_printer: LogPrinter = LogPrinter()
         self.connector: Connector = connector
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator()
