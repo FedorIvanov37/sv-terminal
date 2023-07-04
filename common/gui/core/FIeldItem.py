@@ -5,6 +5,7 @@ from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.gui.core.AbstractItem import AbstractItem
 from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.toolkit.toolkit import mask_pan
 from typing import Callable
 
 
@@ -14,13 +15,13 @@ class Item(AbstractItem):
     pan = ""
 
     def void_tree_signals(function: Callable):
-        def wrapper(self, *args):
+        def wrapper(self, *args, **kwargs):
             try:
                 self.treeWidget().blockSignals(True)
             except AttributeError:
                 pass
 
-            function(self, *args)
+            function(self, *args, **kwargs)
 
             try:
                 self.treeWidget().blockSignals(False)
@@ -50,6 +51,7 @@ class Item(AbstractItem):
         self.spec: IsoField = self.epay_spec.get_field_spec(field_path)
 
         if self.field_number == self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+            self.pan = self.field_data
             self.hide_pan(True)
 
     def addChild(self, item):
@@ -70,20 +72,17 @@ class Item(AbstractItem):
             self.pan = ""
             return
 
-        pan = self.field_data
-        mask = self.mask_pan(pan)
+        if not (pan := self.field_data):
+            return
+
+        mask = mask_pan(pan)
         self.setText(FieldsSpec.ColumnsOrder.VALUE, mask)
         self.pan = pan
 
     def generate_checkbox_checked(self):
         return bool(self.checkState(FieldsSpec.ColumnsOrder.PROPERTY).value)
 
-    def mask_pan(self, pan: str):
-        if len(pan) < 10:
-            return pan
-
-        return f"{pan[:6]}******{pan[-4:]}"
-
+    @void_tree_signals
     def set_checkbox(self, checked=True):
         column_number = FieldsSpec.ColumnsOrder.PROPERTY
 
@@ -98,18 +97,20 @@ class Item(AbstractItem):
         self.setCheckState(column_number, Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked)
         self.setText(column_number, "Generate")
 
-    def set_description(self):
-        if not self.spec:
-            return
-
-        self.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, self.spec.description)
-
     def process_change_item(self):
         self.set_spec()
         self.set_item_color()
         self.set_length()
         self.set_description()
 
+    @void_tree_signals
+    def set_description(self):
+        if not self.spec:
+            return
+
+        self.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, self.spec.description)
+
+    @void_tree_signals
     def set_length(self) -> None:
         column = FieldsSpec.ColumnsOrder.LENGTH
         length = f"{self.get_field_length():03}"
@@ -126,6 +127,7 @@ class Item(AbstractItem):
 
         return length
 
+    @void_tree_signals
     def set_item_color(self, red=False):
         color = "#ff0000" if red else "#000000"
 

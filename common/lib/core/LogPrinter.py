@@ -5,6 +5,7 @@ from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Parser import Parser
+from common.lib.toolkit.toolkit import mask_pan
 
 
 class LogPrinter:
@@ -54,7 +55,7 @@ class LogPrinter:
                 continue
 
             if field == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-                field_data = f"{field_data[:6]}******{field_data[-4:]}"
+                field_data = mask_pan(field_data)
 
             if isinstance(field_data, dict):
                 field_data = Parser.join_complex_field(field, field_data)

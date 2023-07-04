@@ -29,7 +29,7 @@ class JsonView(QTreeWidget):
         self.config: Config = config
         self._setup()
         self.delegate = QItemDelegate()
-        self.delegate.closeEditor.connect(lambda: self.editing_finished(self.currentItem()))
+        self.delegate.closeEditor.connect(lambda: self.process_change_item(self.currentItem()))
         self.setItemDelegate(self.delegate)
 
     def _setup(self):
@@ -47,15 +47,13 @@ class JsonView(QTreeWidget):
         self.addTopLevelItem(self.root)
         self.make_order()
 
-    def editing_finished(self, item: Item):
-        if item.field_number != self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+    @void_qt_signals
+    def process_change_item(self, item: Item, column=None):
+        if item is self.root:
             return
 
-        item.hide_pan(True)
-
-    @void_qt_signals
-    def process_change_item(self, item: Item, column):
-        if item is self.root:
+        if column is None:
+            item.hide_pan()
             return
 
         if column in (FieldsSpec.ColumnsOrder.PROPERTY, FieldsSpec.ColumnsOrder.VALUE):
@@ -69,15 +67,14 @@ class JsonView(QTreeWidget):
             warning(spec_error)
             return
 
-        if column == FieldsSpec.ColumnsOrder.VALUE and item.field_data:
-            item.hide_pan(True)
-
         if column == FieldsSpec.ColumnsOrder.FIELD:
             item.set_checkbox()
 
+        if column in (FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.FIELD):
+            item.hide_pan(True)
+
         try:
             self.validate(item, column)
-
         except ValueError as validation_error:
             item.set_item_color(red=True)
             [warning(err) for err in str(validation_error).splitlines()]

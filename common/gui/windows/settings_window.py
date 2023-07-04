@@ -51,9 +51,9 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.SendInternalId.setChecked(self.config.fields.send_internal_id)
         self.ValidationEnabled.setChecked(self.config.fields.validation)
 
-    def process_debug_level_change(self, _):
+    def process_debug_level_change(self):
         disabled = False
-        checked = bool(self.ClearLog.checkState())
+        checked = self.config.debug.clear_log
 
         if self.DebugLevel.currentText() == LogDefinition.DEBUG:
             checked = False
