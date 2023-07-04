@@ -20,7 +20,7 @@ class LogPrinter:
 
     def print_startup_info(self, config: Config, level=default_level):
         LogPrinter.print_multi_row(TextConstants.HELLO_MESSAGE)
-        config_data = dumps(self.config.dict(), indent=4)
+        config_data = dumps(config.dict(), indent=4)
         config_data = f"## Configuration parameters ##\n{config_data}\n## End of configuration parameters ##"
         self.print_multi_row(config_data, level=level)
 

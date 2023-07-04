@@ -2,7 +2,7 @@ from typing import Callable
 from logging import warning
 from collections import OrderedDict
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget
+from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget, QItemDelegate
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.gui.core.FIeldItem import Item
 from common.gui.core.ItemsValidator import ItemsValidator
@@ -28,6 +28,9 @@ class JsonView(QTreeWidget):
         super(JsonView, self).__init__()
         self.config: Config = config
         self._setup()
+        self.delegate = QItemDelegate()
+        self.delegate.closeEditor.connect(lambda: self.editing_finished(self.currentItem()))
+        self.setItemDelegate(self.delegate)
 
     def _setup(self):
         for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
@@ -44,10 +47,20 @@ class JsonView(QTreeWidget):
         self.addTopLevelItem(self.root)
         self.make_order()
 
+    def editing_finished(self, item: Item):
+        if item.field_number != self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+            return
+
+        item.hide_pan(True)
+
     @void_qt_signals
     def process_change_item(self, item: Item, column):
         if item is self.root:
             return
+
+        if column in (FieldsSpec.ColumnsOrder.PROPERTY, FieldsSpec.ColumnsOrder.VALUE):
+            if item.generate_checkbox_checked():
+                item.field_data = FieldsGenerator.generate_field(item.field_number)
 
         try:
             item.process_change_item()
@@ -56,12 +69,11 @@ class JsonView(QTreeWidget):
             warning(spec_error)
             return
 
+        if column == FieldsSpec.ColumnsOrder.VALUE and item.field_data:
+            item.hide_pan(True)
+
         if column == FieldsSpec.ColumnsOrder.FIELD:
             item.set_checkbox()
-
-        if column in (FieldsSpec.ColumnsOrder.PROPERTY, FieldsSpec.ColumnsOrder.VALUE):
-            if item.generate_checkbox_checked():
-                item.field_data = FieldsGenerator.generate_field(item.field_number)
 
         try:
             self.validate(item, column)
@@ -177,6 +189,9 @@ class JsonView(QTreeWidget):
 
         if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE):
             return
+
+        if column == FieldsSpec.ColumnsOrder.VALUE:
+            item.hide_pan(False)
 
         self.editItem(item, column)
 

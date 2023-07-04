@@ -1,6 +1,6 @@
 from logging import debug, getLevelName, getLogger, Formatter
 from logging.handlers import RotatingFileHandler
-from common.gui.constants.LogDefinition import LogDefinition
+from common.lib.constants.LogDefinition import LogDefinition
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Config import Config
 from common.gui.constants.TermFilesPath import TermFilesPath

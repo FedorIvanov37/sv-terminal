@@ -45,6 +45,8 @@
 + Add utrnno to reversal
 + Change buttons design
 + Work with empty fields
++ PAN mask in fields
++ Checkboxes generate fields when activate
 
 
 • Check the old files processing

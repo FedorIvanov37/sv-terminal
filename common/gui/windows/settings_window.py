@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QIntValidator, QRegularExpressionValidator, QIcon, QPixmap
 from PyQt6.QtCore import QRegularExpression
 from common.gui.constants.TextConstants import TextConstants
-from common.gui.constants.LogDefinition import LogDefinition
+from common.lib.constants.LogDefinition import LogDefinition
 from logging import info, warning, getLogger, getLevelName
 from common.gui.windows.about_window import AboutWindow
 from common.lib.data_models.Config import Config
