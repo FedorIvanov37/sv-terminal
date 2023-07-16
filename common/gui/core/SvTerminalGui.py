@@ -148,12 +148,15 @@ class SvTerminalGui(SvTerminal):
         return transaction
 
     def send(self, transaction: Transaction | None = None):
+        sender = self.sender()
+
         if self.config.debug.clear_log:
             self.window.clean_window_log()
 
         if not transaction:
             try:
                 transaction: Transaction = self.parse_main_window()
+                sender = self.window
 
             except Exception as building_error:
                 error(f"Transaction building error")
@@ -164,8 +167,10 @@ class SvTerminalGui(SvTerminal):
 
         SvTerminal.send(self, transaction)
 
-        if self.sender() is self.window.button_send:
-            self.set_generated_fields(transaction)
+        if sender is not self.window:
+            return
+
+        self.set_generated_fields(transaction)
 
     @staticmethod
     def get_output_filename():

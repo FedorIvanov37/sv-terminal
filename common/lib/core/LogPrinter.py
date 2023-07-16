@@ -54,7 +54,7 @@ class LogPrinter:
             if field == self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
                 continue
 
-            if field == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+            if level is not debug and field == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
                 field_data = mask_pan(field_data)
 
             if isinstance(field_data, dict):
@@ -64,4 +64,4 @@ class LogPrinter:
             transaction_string = f"{put(field, size=3)}{put(length, size=3)}{put(field_data)}"
             transaction_data = f"{transaction_data}\n{transaction_string}"
 
-        self.print_multi_row(transaction_data, level=level)
+        self.print_multi_row(transaction_data)

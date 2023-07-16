@@ -68,8 +68,8 @@
 + Spec window different colors
 + Card disappears while editing
 + Cancel save the config
-
-
++ Don't hide card in log on debug
+• Window signals isolated
 
 
 

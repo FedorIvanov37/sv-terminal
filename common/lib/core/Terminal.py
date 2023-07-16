@@ -1,5 +1,6 @@
+import logging
 from json import dumps
-from logging import error, info, warning
+from logging import error, info, warning, debug
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject
 from common.lib.core.Parser import Parser
@@ -110,13 +111,27 @@ class SvTerminal(QObject):
         self.trans_queue.put_transaction(transaction)
 
     def transaction_sent(self, request: Transaction):
+        levels = {  # TODO
+            'DEBUG': debug,
+            'INFO': info,
+            'ERROR': error,
+            'WARNING': warning
+        }
+
         self.log_printer.print_dump(request)
-        self.log_printer.print_transaction(request)
+        self.log_printer.print_transaction(request, level=levels.get(self.config.debug.level))
         info(f"Transaction [{request.trans_id}] was sent ")
 
     def transaction_received(self, response: Transaction):
+        levels = {  # TODO
+            'DEBUG': debug,
+            'INFO': info,
+            'ERROR': error,
+            'WARNING': warning
+        }
+
         self.log_printer.print_dump(response)
-        self.log_printer.print_transaction(response)
+        self.log_printer.print_transaction(response, level=levels.get(self.config.debug.level))
 
         if response.matched and response.resp_time_seconds:
             info(f"Transaction ID [{response.match_id}] matched, response time seconds: {response.resp_time_seconds}")

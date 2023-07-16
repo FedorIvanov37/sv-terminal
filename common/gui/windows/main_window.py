@@ -24,6 +24,19 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _field_changed: pyqtSignal = pyqtSignal()
     _field_removed: pyqtSignal = pyqtSignal()
     _field_added: pyqtSignal = pyqtSignal()
+    #
+    _clear_log: pyqtSignal = pyqtSignal()
+    _settings: pyqtSignal = pyqtSignal()
+    _specification: pyqtSignal = pyqtSignal()
+    _echo_test: pyqtSignal = pyqtSignal()
+    _clear: pyqtSignal = pyqtSignal()
+    _copy_log: pyqtSignal = pyqtSignal()
+    _copy_bitmap: pyqtSignal = pyqtSignal()
+    _reconnect: pyqtSignal = pyqtSignal()
+    _parse_file: pyqtSignal = pyqtSignal()
+    _hotkeys: pyqtSignal = pyqtSignal()
+    _send: pyqtSignal = pyqtSignal()
+    _reset: pyqtSignal = pyqtSignal()
 
     @property
     def field_added(self):
@@ -46,44 +59,40 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         return self._window_close
 
     @property
-    def button_send(self):
-        return self.ButtonSend
-
-    @property
     def send(self):
-        return self.ButtonSend.clicked
+        return self._send
 
     @property
     def reset(self):
-        return self.ButtonDefault.clicked
+        return self._reset
 
     @property
     def clear_log(self):
-        return self.ButtonClearLog.clicked
+        return self._clear_log
 
     @property
     def settings(self):
-        return self.ButtonSettings.clicked
+        return self._settings
 
     @property
     def specification(self):
-        return self.ButtonSpecification.clicked
+        return self._specification
 
     @property
     def echo_test(self):
-        return self.ButtonEchoTest.clicked
+        return self._echo_test
 
     @property
     def clear(self):
-        return self.ButtonClearMessage.clicked
+        return self._clear
 
     @property
     def copy_log(self):
-        return self.ButtonCopyLog.clicked
+        return self._copy_log
 
     @property
     def copy_bitmap(self):
-        return self.ButtonCopyBitmap.clicked
+        return self._copy_bitmap
 
     @property
     def save(self):
@@ -91,7 +100,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     @property
     def reconnect(self):
-        return self.ButtonReconnect.clicked
+        return self._reconnect
 
     @property
     def reverse(self):
@@ -103,11 +112,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     @property
     def parse_file(self):
-        return self.ButtonParseDump.clicked
+        return self._parse_file
 
     @property
     def hotkeys(self):
-        return self.ButtonHotkeys.clicked
+        return self._hotkeys
 
     @property
     def field_changed(self):
@@ -147,6 +156,19 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.json_view.itemChanged: self.field_changed.emit,
             self.json_view.field_added: self.field_added.emit,
             self.json_view.field_removed: self.field_removed.emit,
+            #
+            self.ButtonSend.clicked: self.send.emit,
+            self.ButtonClearLog.clicked: self.clear_log.emit,
+            self.ButtonCopyLog.clicked: self.copy_log.emit,
+            self.ButtonParseDump.clicked: self.parse_file.emit,
+            self.ButtonClearMessage.clicked: self.clear.emit,
+            self.ButtonDefault.clicked: self.reset.emit,
+            self.ButtonEchoTest.clicked: self.echo_test.emit,
+            self.ButtonReconnect.clicked: self.reconnect.emit,
+            self.ButtonSpecification.clicked: self.specification.emit,
+            self.ButtonHotkeys.clicked: self.hotkeys.emit,
+            self.ButtonSettings.clicked: self.settings.emit,
+            #
             QShortcut(QKeySequence('Ctrl+T'), self).activated: lambda: self.print.emit(DataFormats.TERM),
             QShortcut(QKeySequence('Ctrl+Shift+Return'), self).activated: lambda: self.reverse.emit(ButtonAction.LAST),
             QShortcut(QKeySequence('Ctrl+Return'), self).activated: self.send.emit,
