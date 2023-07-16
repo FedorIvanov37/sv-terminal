@@ -1,7 +1,7 @@
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QCheckBox, QHBoxLayout, QWidget, QHeaderView
-from common.gui.forms.mti_spec import Ui_MtiSpecWindow
 from common.lib.core.EpaySpecification import EpaySpecification, Mti
+from common.gui.forms.mti_spec import Ui_MtiSpecWindow
 from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 

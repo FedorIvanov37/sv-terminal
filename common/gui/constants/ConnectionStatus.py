@@ -1,5 +1,5 @@
-from PyQt6.QtNetwork import QTcpSocket
 from dataclasses import dataclass
+from PyQt6.QtNetwork import QTcpSocket
 
 
 @dataclass(frozen=True)

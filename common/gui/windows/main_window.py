@@ -208,7 +208,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
             # Signals, which should be emitted by key sequences on keyboard
 
-            'Ctrl+T': lambda: self.print.emit(DataFormats.TERM),
+            'Ctrl+T': lambda: self.print.emit(DataFormats.TERM),  # The modifier is a hint about a requested data format
             'Ctrl+Shift+Return': lambda: self.reverse.emit(ButtonAction.LAST),
             'Ctrl+Return': self.send,
             'Ctrl+R': self.reconnect,
