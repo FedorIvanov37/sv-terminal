@@ -48,32 +48,31 @@ class SvTerminalGui(SvTerminal):
 
     def connect_widgets(self):
         window = self.window
+        connector = self.connector
 
-        buttons_connection_map = {
-            window.button_clear_log: self.window.clear_log,
-            window.button_send: self.send,
-            window.button_reset: self.set_default_values,
-            window.button_echo_test: self.echo_test,
-            window.button_clear: self.clear_message,
-            window.button_copy_log: self.copy_log,
-            window.button_copy_bitmap: self.copy_bitmap,
-            window.button_reconnect: self.reconnect,
-            window.button_parse_file: self.parse_file,
-            window.button_settings: lambda: self.run_child_window(SettingsWindow, self.config),
-            window.button_hotkeys: lambda: self.run_child_window(HotKeysHintWindow),
-            window.button_specification: lambda: self.run_child_window(SpecWindow),
+        terminal_connections_map = {
+            window.button_clear_log.clicked: self.window.clear_log,
+            window.button_send.clicked: self.send,
+            window.button_reset.clicked: self.set_default_values,
+            window.button_echo_test.clicked: self.echo_test,
+            window.button_clear.clicked: self.clear_message,
+            window.button_copy_log.clicked: self.copy_log,
+            window.button_copy_bitmap.clicked: self.copy_bitmap,
+            window.button_reconnect.clicked: self.reconnect,
+            window.button_parse_file.clicked: self.parse_file,
+            window.button_settings.clicked: lambda: self.run_child_window(SettingsWindow, self.config),
+            window.button_hotkeys.clicked: lambda: self.run_child_window(HotKeysHintWindow),
+            window.button_specification.clicked: lambda: self.run_child_window(SpecWindow),
+            window.about: lambda: self.run_child_window(AboutWindow),
+            window.window_close: self.stop_sv_terminal,
+            window.menu_button_clicked: self.proces_button_menu,
+            window.field_changed: self.set_bitmap,
+            connector.stateChanged: self.set_connection_status,
+            connector.errorOccurred: self.process_connection_error,
         }
 
-        for button, slot in buttons_connection_map.items():
-            button.clicked.connect(slot)
-
-        self.window.about.connect(lambda: self.run_child_window(AboutWindow))
-        self.window.window_close.connect(self.stop_sv_terminal)
-        self.window.menu_button_clicked.connect(self.proces_button_menu)
-        self.window.field_changed.connect(self.set_bitmap)
-        self.connector.stateChanged.connect(self.set_connection_status)
-        self.connector.errorOccurred.connect(self.set_connection_status)
-        self.connector.errorOccurred.connect(self.window.unblock_connection_buttons)
+        for signal, slot in terminal_connections_map.items():
+            signal.connect(slot)
 
     @staticmethod
     def run_child_window(child_window, *args, **kwargs):
@@ -81,6 +80,10 @@ class SvTerminalGui(SvTerminal):
 
     def stop_sv_terminal(self):
         self.connector.stop_thread()
+
+    def process_connection_error(self):
+        self.set_connection_status()
+        self.window.unblock_connection_buttons()
 
     def reconnect(self):
         SvTerminal.reconnect(self)

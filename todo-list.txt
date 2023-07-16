@@ -67,9 +67,8 @@
 + Window type decorators
 + Spec window different colors
 + Card disappears while editing
++ Cancel save the config
 
-
-• Cancel save the config
 
 
 
