@@ -64,13 +64,13 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
     def ok(self):
         getLogger().setLevel(getLevelName(self.DebugLevel.currentText()))
 
-        try:
-            # raise ValueError when max_amount is zero or has non-int value
-            if not (max_amount := int(self.MaxAmount.text())):
+        try:  # Raise ValueError when max_amount is less than one or has a non-int value
+            if (max_amount := int(self.MaxAmount.text())) < 1:
                 raise ValueError
 
         except ValueError:
-            max_amount: int = 100  # When max_amount is zero or has non-int value
+            warning(f"Incorrect max amount. The default value 100 will be set instead")
+            max_amount: int = 100  # When max_amount is less than one or has a non-int value
 
         self.MaxAmount.setText(str(max_amount))
         self.config.smartvista.host = self.SvAddress.text()

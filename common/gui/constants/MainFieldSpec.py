@@ -23,7 +23,7 @@ class MainFieldSpec:
 
     spec: EpaySpecification = EpaySpecification()
 
-    columns = (field.value for field in Columns)
+    columns = tuple(field.value for field in Columns)
 
     generated_fields = (
         spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT,

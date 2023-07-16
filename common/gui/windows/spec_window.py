@@ -52,10 +52,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def read_only(self, checked):
         self._read_only = checked
 
-    def __init__(self, window):
+    def __init__(self):
         super(SpecWindow, self).__init__()
         self.setupUi(self)
-        self.main_window = window
         self.setup()
 
     @set_window_icon
@@ -67,7 +66,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.PlusLayout.addWidget(self.PlusButton)
         self.MinusLayout.addWidget(self.MinusButton)
         self.NextLevelLayout.addWidget(self.NextLevelButton)
+
         self.SpecView: SpecView = SpecView(self.SpecTree, self)
+
         self.StatusLabel.setText(str())
         self.SpecTree.itemChanged.connect(self.item_changed)
         self.PlusButton.clicked.connect(self.SpecView.plus)

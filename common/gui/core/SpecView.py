@@ -184,6 +184,8 @@ class SpecView(QObject):
 
             parent.addChild(item)
 
+            item.set_spec()
+
             if field_data.fields:
                 self.parse_spec_fields(input_json=field_data.fields, parent=item)
 

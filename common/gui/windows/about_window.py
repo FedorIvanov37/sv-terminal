@@ -46,7 +46,6 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         audio_output = QAudioOutput()
         self.player.setAudioOutput(audio_output)
         self.player.setSource(music_file_path)
-        self.exec()
 
     @staticmethod
     def open_url(link):

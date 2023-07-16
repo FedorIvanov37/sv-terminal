@@ -34,7 +34,7 @@ class SpecFieldDefinition:
         USE_FOR_REVERSAL = 10
         CAN_BE_GENERATED = 11
 
-    COLUMNS = (column.value for column in _Columns)
+    COLUMNS = tuple(column.value for column in _Columns)
 
     CHECKBOXES = (
             ColumnsOrder.USE_FOR_MATCHING,

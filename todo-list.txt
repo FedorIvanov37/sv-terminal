@@ -69,6 +69,8 @@
 + Card disappears while editing
 
 
+• Cancel save the config
+
 
 
 

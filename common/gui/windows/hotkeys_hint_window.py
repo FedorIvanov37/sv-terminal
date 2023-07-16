@@ -18,5 +18,3 @@ class HotKeysHintWindow(Ui_HotKeysHint, QDialog):
 
         for column, width in {0: 200, 1: 400}.items():
             self.HintTable.setColumnWidth(column, width)
-
-        self.exec()

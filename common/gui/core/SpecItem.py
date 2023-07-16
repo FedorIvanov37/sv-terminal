@@ -86,6 +86,8 @@ class SpecItem(AbstractItem):
                 checkboxes[box] = False
 
         self.set_checkboxes(checkboxes)
+
+    def set_spec(self):
         self.spec = self.epay_spec.get_field_spec(self.get_field_path())
 
     def set_checkboxes(self, checkboxes):

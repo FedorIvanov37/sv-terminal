@@ -30,8 +30,6 @@ class SvTerminalGui(SvTerminal):
     def __init__(self, config: Config):
         super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
         self.window: MainWindow = MainWindow(self.config)
-        self.spec_window: SpecWindow = SpecWindow(self.window)
-        self.settings_window = SettingsWindow(self.config)
         self.log_printer = LogPrinter()
         self.setup()
 
@@ -55,36 +53,31 @@ class SvTerminalGui(SvTerminal):
             window.button_clear_log: self.window.clear_log,
             window.button_send: self.send,
             window.button_reset: self.set_default_values,
-            window.button_settings: self.settings,
-            window.button_specification: self.specification,
             window.button_echo_test: self.echo_test,
             window.button_clear: self.clear_message,
             window.button_copy_log: self.copy_log,
             window.button_copy_bitmap: self.copy_bitmap,
             window.button_reconnect: self.reconnect,
             window.button_parse_file: self.parse_file,
-            window.button_hotkeys: self.hotkeys_hint,
+            window.button_settings: lambda: self.run_child_window(SettingsWindow, self.config),
+            window.button_hotkeys: lambda: self.run_child_window(HotKeysHintWindow),
+            window.button_specification: lambda: self.run_child_window(SpecWindow),
         }
 
         for button, slot in buttons_connection_map.items():
             button.clicked.connect(slot)
 
+        self.window.about.connect(lambda: self.run_child_window(AboutWindow))
         self.window.window_close.connect(self.stop_sv_terminal)
-        self.window.about.connect(self.about)
         self.window.menu_button_clicked.connect(self.proces_button_menu)
         self.window.field_changed.connect(self.set_bitmap)
         self.connector.stateChanged.connect(self.set_connection_status)
         self.connector.errorOccurred.connect(self.set_connection_status)
         self.connector.errorOccurred.connect(self.window.unblock_connection_buttons)
-        self.spec_window.spec_accepted.connect(lambda name: info(f"Specification applied: {name}"))
 
     @staticmethod
-    def hotkeys_hint():
-        HotKeysHintWindow()
-
-    @staticmethod
-    def about():
-        AboutWindow()
+    def run_child_window(child_window, *args, **kwargs):
+        child_window(*args, **kwargs).exec()
 
     def stop_sv_terminal(self):
         self.connector.stop_thread()
@@ -174,12 +167,6 @@ class SvTerminalGui(SvTerminal):
 
         if self.sender() is self.window.button_send:
             self.set_generated_fields(transaction)
-
-    def settings(self):
-        self.settings_window.exec()
-
-    def specification(self):
-        self.spec_window.exec()
 
     @staticmethod
     def get_output_filename():
