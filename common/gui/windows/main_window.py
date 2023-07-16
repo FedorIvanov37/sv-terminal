@@ -170,6 +170,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonSettings.clicked: self.settings.emit,
             self.ButtonCopyBitmap.clicked: self.copy_bitmap.emit,
             #
+
             QShortcut(QKeySequence('Ctrl+T'), self).activated: lambda: self.print.emit(DataFormats.TERM),
             QShortcut(QKeySequence('Ctrl+Shift+Return'), self).activated: lambda: self.reverse.emit(ButtonAction.LAST),
             QShortcut(QKeySequence('Ctrl+Return'), self).activated: self.send.emit,
