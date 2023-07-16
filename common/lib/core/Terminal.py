@@ -1,4 +1,3 @@
-import logging
 from json import dumps
 from logging import error, info, warning, debug
 from PyQt6 import QtWidgets

@@ -59,10 +59,6 @@ class SvTerminalGui(SvTerminal):
             window.copy_bitmap: self.copy_bitmap,
             window.reconnect: self.reconnect,
             window.parse_file: self.parse_file,
-            window.settings: lambda: self.run_child_window(SettingsWindow, self.config),
-            window.hotkeys: lambda: self.run_child_window(HotKeysHintWindow),
-            window.specification: lambda: self.run_child_window(SpecWindow),
-            window.about: lambda: self.run_child_window(AboutWindow),
             window.window_close: self.stop_sv_terminal,
             window.reverse: self.perform_reversal,
             window.print: self.print_data,
@@ -70,6 +66,10 @@ class SvTerminalGui(SvTerminal):
             window.field_changed: self.set_bitmap,
             window.field_removed: self.set_bitmap,
             window.field_added: self.set_bitmap,
+            window.settings: lambda: self.run_child_window(SettingsWindow, self.config),
+            window.hotkeys: lambda: self.run_child_window(HotKeysHintWindow),
+            window.specification: lambda: self.run_child_window(SpecWindow),
+            window.about: lambda: self.run_child_window(AboutWindow),
             self.connector.stateChanged: self.set_connection_status,
         }
 

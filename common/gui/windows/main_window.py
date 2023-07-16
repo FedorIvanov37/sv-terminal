@@ -168,6 +168,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonSpecification.clicked: self.specification.emit,
             self.ButtonHotkeys.clicked: self.hotkeys.emit,
             self.ButtonSettings.clicked: self.settings.emit,
+            self.ButtonCopyBitmap.clicked: self.copy_bitmap.emit,
             #
             QShortcut(QKeySequence('Ctrl+T'), self).activated: lambda: self.print.emit(DataFormats.TERM),
             QShortcut(QKeySequence('Ctrl+Shift+Return'), self).activated: lambda: self.reverse.emit(ButtonAction.LAST),
@@ -177,6 +178,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             QShortcut(QKeySequence('Ctrl+E'), self).activated: self.json_view.edit_current_item,
             QShortcut(QKeySequence('Ctrl+Shift+N'), self).activated: self.NextLevelButton.clicked.emit,
             QShortcut(QKeySequence('Ctrl+Q'), self).activated: exit,
+            QShortcut(QKeySequence('Ctrl+Alt+Return'), self).activated: self.echo_test,
             QShortcut(QKeySequence(QKeySequence.StandardKey.New), self).activated: self.PlusButton.clicked.emit,
             QShortcut(QKeySequence(QKeySequence.StandardKey.Delete), self).activated: self.MinusButton.clicked.emit,
             QShortcut(QKeySequence(QKeySequence.StandardKey.HelpContents), self).activated: self.about.emit,
