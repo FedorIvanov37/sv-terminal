@@ -1,12 +1,12 @@
 from os import getcwd, path
-from PyQt6.QtGui import QPixmap, QIcon, QDesktopServices, QCloseEvent, QKeyEvent
+from PyQt6.QtGui import QPixmap, QIcon, QDesktopServices, QCloseEvent, QKeyEvent, QMovie
 from PyQt6.QtCore import Qt, QUrl
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
 from common.gui.forms.about import Ui_AboutWindow
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.constants.ReleaseDefinitoin import ReleaseDefinition
-from PyQt6.QtGui import QMovie
+from common.lib.decorators.window_settings import frameless_window
 
 
 class AboutWindow(Ui_AboutWindow, QDialog):
@@ -19,15 +19,14 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         self.setup()
         self.init_music_player()
 
+    @frameless_window
     def setup(self):
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.movie: QMovie = QMovie(TermFilesPath.GIF_ABOUT)
         self.logoLabel.setMovie(self.movie)
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(TermFilesPath.MAIN_LOGO)))
         self.MusicOnOfButton.clicked.connect(self.switch_musing)
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(TermFilesPath.MUSIC_ON)))
         self.ContactLabel.linkActivated.connect(self.open_url)
-        # self.ContactLabel.linkActivated.connect(self.play_music)
 
         data_bind = {
             self.VersionLabel: ReleaseDefinition.VERSION,

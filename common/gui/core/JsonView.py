@@ -17,6 +17,9 @@ class JsonView(QTreeWidget):
     spec: EpaySpecification = EpaySpecification()
 
     def void_qt_signals(function: Callable):
+        #  The decorator switches off field data validation and helps to avoid the recursive effects
+        #  while the field data changes automatically
+
         def wrapper(self, *args):
             self.blockSignals(True)
             function(self, *args)
@@ -29,10 +32,23 @@ class JsonView(QTreeWidget):
         self.config: Config = config
         self._setup()
         self.delegate = QItemDelegate()
-        self.delegate.closeEditor.connect(lambda: self.process_change_item(self.currentItem()))
+        self.delegate.closeEditor.connect(self.hide_pan_after_edit)
         self.setItemDelegate(self.delegate)
 
+    def hide_pan_after_edit(self):  # TODO
+        child: Item
+
+        for child in self.root.get_children():
+            if not child.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+                continue
+
+            self.process_change_item(child, FieldsSpec.ColumnsOrder.VALUE)
+
+            return
+
     def _setup(self):
+        self.setTabKeyNavigation(True)
+
         for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
             action.connect(self.resize_all)
 
@@ -58,7 +74,7 @@ class JsonView(QTreeWidget):
 
         if column in (FieldsSpec.ColumnsOrder.PROPERTY, FieldsSpec.ColumnsOrder.VALUE):
             if item.generate_checkbox_checked():
-                item.field_data = FieldsGenerator.generate_field(item.field_number)
+                item.field_data = FieldsGenerator.generate_field(item.field_number, self.config.fields.max_amount)
 
         try:
             item.process_change_item()
@@ -75,9 +91,21 @@ class JsonView(QTreeWidget):
 
         try:
             self.validate(item, column)
+
         except ValueError as validation_error:
             item.set_item_color(red=True)
             [warning(err) for err in str(validation_error).splitlines()]
+
+    def edit_current_item(self):
+        if not self.hasFocus():
+            self.setFocus()
+
+        item: Item | QTreeWidgetItem
+
+        if not (item := self.currentItem()):
+            return
+
+        self.edit_item(item, FieldsSpec.ColumnsOrder.VALUE)
 
     def validate(self, item, column=None):
         if not self.config.fields.validation:
@@ -160,6 +188,7 @@ class JsonView(QTreeWidget):
             try:
                 self.validate(item)
             except ValueError:
+                item.set_item_color(red=True)
                 return
 
             item.set_item_color(red=False)
@@ -169,6 +198,7 @@ class JsonView(QTreeWidget):
         self.root.takeChildren()
         self.root.set_length()
 
+    @void_qt_signals
     def set_field_value(self, field, value):
         for item in self.root.get_children():
             if item.field_number != field:
@@ -253,14 +283,7 @@ class JsonView(QTreeWidget):
             parent = self.root
 
         for row in parent.get_children():
-            if not row.field_number:
-                warning("Emtpy field number found. The field left out")
-                continue
-
-            if not any((row.field_data, self.spec.is_field_complex(row.get_field_path()))):
-                warning(f"Emtpy field found {row.get_field_path(string=True)}. The field left out")
-                continue
-
+            self.validator.validate_item(row)
             result[row.field_number] = self.generate_fields(row) if row.childCount() else row.field_data
 
         if parent is self.root:

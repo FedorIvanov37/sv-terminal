@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1404</width>
-    <height>954</height>
+    <height>959</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -171,7 +171,7 @@
         <property name="font">
          <font>
           <family>Calibri</family>
-          <pointsize>11</pointsize>
+          <pointsize>12</pointsize>
          </font>
         </property>
         <property name="mouseTracking">
@@ -559,6 +559,27 @@
         </property>
         <property name="text">
          <string>Specification</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="ButtonHotkeys">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Hotkeys</string>
         </property>
        </widget>
       </item>

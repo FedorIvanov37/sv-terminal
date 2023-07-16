@@ -1,8 +1,7 @@
 from ctypes import windll
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QPalette, QColor, QCloseEvent, QKeyEvent
+from PyQt6.QtGui import QPalette, QColor, QCloseEvent
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
-from common.gui.windows.about_window import AboutWindow
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.constants.DataFormats import DataFormats
@@ -11,6 +10,9 @@ from common.gui.core.JsonView import JsonView
 from common.gui.core.FIeldItem import Item
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Config import Config
+from PyQt6.QtGui import QKeySequence, QShortcut
+from common.lib.decorators.window_settings import set_window_icon
+from sys import exit
 
 
 class MainWindow(Ui_MainWindow, QMainWindow):
@@ -18,6 +20,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _menu_button_clicked: pyqtSignal = pyqtSignal(QPushButton, str)
     _field_changed: pyqtSignal = pyqtSignal(Item, int)
     _json_view: JsonView
+    _about: pyqtSignal = pyqtSignal()
 
     @property
     def log_browser(self):
@@ -88,22 +91,52 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         return self.ButtonParseDump
 
     @property
+    def button_hotkeys(self):
+        return self.ButtonHotkeys
+
+    @property
     def field_changed(self):
         return self._field_changed
+
+    @property
+    def about(self):
+        return self._about
 
     def __init__(self, config: Config):
         super().__init__()
         self.config = config
         self._setup()
 
+        QShortcut(QKeySequence('Ctrl+Return'), self).activated.connect(self.button_send.clicked.emit)
+        QShortcut(QKeySequence('Ctrl+R'), self).activated.connect(self.button_reconnect.clicked.emit)
+        QShortcut(QKeySequence('Ctrl+L'), self).activated.connect(self.button_clear_log.clicked.emit)
+        QShortcut(QKeySequence('Ctrl+E'), self).activated.connect(self._json_view.edit_current_item)
+        QShortcut(QKeySequence('Ctrl+Shift+N'), self).activated.connect(self.NextLevelButton.clicked.emit)
+        QShortcut(QKeySequence('Ctrl+Q'), self).activated.connect(exit)
+        QShortcut(QKeySequence(QKeySequence.StandardKey.New), self).activated.connect(self.PlusButton.clicked.emit)
+        QShortcut(QKeySequence(QKeySequence.StandardKey.Delete), self).activated.connect(self.MinusButton.clicked.emit)
+        QShortcut(QKeySequence(QKeySequence.StandardKey.HelpContents), self).activated.connect(self.about.emit)
+        QShortcut(QKeySequence(QKeySequence.StandardKey.Save), self).activated.connect(self.button_save.showMenu)
+        QShortcut(QKeySequence(QKeySequence.StandardKey.Print), self).activated.connect(self.button_print.showMenu)
+        QShortcut(QKeySequence(QKeySequence.StandardKey.Open), self).activated.connect(
+            self.button_parse_file.clicked.emit
+        )
+        QShortcut(QKeySequence('Ctrl+T'), self).activated.connect(
+            lambda: self.menu_button_clicked.emit(self.button_print, DataFormats.TERM)
+        )
+        QShortcut(QKeySequence('Ctrl+Shift+Return'), self).activated.connect(
+            lambda: self.menu_button_clicked.emit(self.button_reverse, ButtonAction.LAST)
+        )
+
+    @set_window_icon
     def _setup(self):
         self.setupUi(self)
         self._json_view: JsonView = JsonView(self.config)
         self._json_view.itemChanged.connect(self.field_changed.emit)
         self.FieldsTreeLayout.addWidget(self._json_view)
-        self.PlusButton = QPushButton("✚")
-        self.MinusButton = QPushButton("━")
-        self.NextLevelButton = QPushButton("🡾")
+        self.PlusButton = QPushButton(ButtonAction.BUTTON_PLUS_SIGN)
+        self.MinusButton = QPushButton(ButtonAction.BUTTON_MINUS_SIGN)
+        self.NextLevelButton = QPushButton(ButtonAction.BUTTON_NEXT_LEVEL_SIGN)
 
         buttons_layouts_map = {
             self.PlusLayout: self.PlusButton,
@@ -247,7 +280,3 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.hide()
         self.window_close.emit()
         a0.accept()
-
-    def keyPressEvent(self, a0: QKeyEvent) -> None:
-        if a0.key() == Qt.Key.Key_F1:
-            AboutWindow()

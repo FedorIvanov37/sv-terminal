@@ -4,12 +4,13 @@ from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QFileDialog
-from PyQt6.QtGui import QIcon
 from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.spec_window import SpecWindow
+from common.gui.windows.hotkeys_hint_window import HotKeysHintWindow
+from common.gui.windows.about_window import AboutWindow
 from common.gui.constants.TextConstants import TextConstants
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.TermFilesPath import TermFilesPath
@@ -29,6 +30,8 @@ class SvTerminalGui(SvTerminal):
     def __init__(self, config: Config):
         super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
         self.window: MainWindow = MainWindow(self.config)
+        self.spec_window: SpecWindow = SpecWindow(self.window)
+        self.settings_window = SettingsWindow(self.config)
         self.log_printer = LogPrinter()
         self.setup()
 
@@ -37,7 +40,6 @@ class SvTerminalGui(SvTerminal):
         self.log_printer.print_startup_info(self.config)
         self.connect_widgets()
         self.window.set_mti_values(self.spec.get_mti_list())
-        self.window.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
         self.print_data(DataFormats.TERM)
 
@@ -60,18 +62,29 @@ class SvTerminalGui(SvTerminal):
             window.button_copy_log: self.copy_log,
             window.button_copy_bitmap: self.copy_bitmap,
             window.button_reconnect: self.reconnect,
-            window.button_parse_file: self.parse_file
+            window.button_parse_file: self.parse_file,
+            window.button_hotkeys: self.hotkeys_hint,
         }
 
         for button, slot in buttons_connection_map.items():
             button.clicked.connect(slot)
 
         self.window.window_close.connect(self.stop_sv_terminal)
+        self.window.about.connect(self.about)
         self.window.menu_button_clicked.connect(self.proces_button_menu)
         self.window.field_changed.connect(self.set_bitmap)
         self.connector.stateChanged.connect(self.set_connection_status)
         self.connector.errorOccurred.connect(self.set_connection_status)
         self.connector.errorOccurred.connect(self.window.unblock_connection_buttons)
+        self.spec_window.spec_accepted.connect(lambda name: info(f"Specification applied: {name}"))
+
+    @staticmethod
+    def hotkeys_hint():
+        HotKeysHintWindow()
+
+    @staticmethod
+    def about():
+        AboutWindow()
 
     def stop_sv_terminal(self):
         self.connector.stop_thread()
@@ -163,12 +176,10 @@ class SvTerminalGui(SvTerminal):
             self.set_generated_fields(transaction)
 
     def settings(self):
-        SettingsWindow(self.config).exec()
+        self.settings_window.exec()
 
     def specification(self):
-        spec_window: SpecWindow = SpecWindow(self.window)
-        spec_window.spec_accepted.connect(lambda name: info(f"Specification applied: {name}"))
-        spec_window.exec()
+        self.spec_window.exec()
 
     @staticmethod
     def get_output_filename():
@@ -199,7 +210,7 @@ class SvTerminalGui(SvTerminal):
             DataFormats.JSON: lambda: dumps(self.parse_main_window().dict(), indent=4),
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window()),
             DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window()),
-            DataFormats.TERM: lambda: TextConstants.HELLO_MESSAGE,
+            DataFormats.TERM: lambda: f"{TextConstants.HELLO_MESSAGE}",
             DataFormats.SPEC: lambda: dumps(self.spec.spec.dict(), indent=4)
         }
 

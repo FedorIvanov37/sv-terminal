@@ -171,6 +171,7 @@ if transaction.success:
 * NEW: Transaction timeouts: in case of no response for 60 seconds transaction will be marked as timeout with a warning
 * NEW: ISO8583 Message Type Indicators (MTI) setting window. Opens by the button "Set MTI" in the Specification window
 * NEW: Small warning window in case when Specification was changed but not saved 
+* NEW: Hotkeys combinations, hotkeys hint window, and button to call the window
 * UPD: Full renovation of Window About
 * UPD: Framework changed to PyQt6, SvTerminal does not support PyQt5 since v0.15
 * UPD: Since v0.15 Specification settings are required for any fields

@@ -5,7 +5,7 @@ spec: EpaySpecification = EpaySpecification()
 
 
 def mask_secret(value: str) -> str:
-    return '#' * len(value)
+    return '.' * len(value)
 
 
 def mask_pan(pan: str):
@@ -20,6 +20,6 @@ def mask_pan(pan: str):
     hide: int = length - head - tail
     head: str = pan[:head]
     tail: str = pan[-tail:]
-    hide: str = '#' * hide
+    hide: str = '.' * hide
 
     return f"{head}{hide}{tail}"

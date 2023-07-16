@@ -85,7 +85,12 @@ class SvTerminal(QObject):
         self.connector.disconnect_sv()
 
     def reconnect(self):
+        if self.connector.state() == self.connector.state().ConnectingState:
+            warning("Unable to reconnect while connection in progress")
+            return
+
         info("[Re]connecting...")
+
         self.need_reconnect.emit()
 
     def send(self, transaction: Transaction | None = None):

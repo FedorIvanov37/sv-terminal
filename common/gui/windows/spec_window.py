@@ -2,7 +2,7 @@ from json import dumps
 from typing import Optional
 from datetime import datetime
 from pydantic import ValidationError
-from PyQt6.QtGui import QIcon, QCloseEvent, QKeyEvent
+from PyQt6.QtGui import QCloseEvent, QKeyEvent
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog, QPushButton
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -12,6 +12,8 @@ from common.gui.forms.spec import Ui_SpecificationWindow
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.core.SpecView import SpecView
 from common.gui.windows.mti_spec_window import MtiSpecWindow
+from common.gui.constants.ButtonActions import ButtonAction
+from common.lib.decorators.window_settings import set_window_icon, has_close_button_only
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):
@@ -56,12 +58,12 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.main_window = window
         self.setup()
 
+    @set_window_icon
+    @has_close_button_only
     def setup(self):
-        self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
-        self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
-        self.PlusButton = QPushButton("+")
-        self.MinusButton = QPushButton("-")
-        self.NextLevelButton = QPushButton("↵")
+        self.PlusButton = QPushButton(ButtonAction.BUTTON_PLUS_SIGN)
+        self.MinusButton = QPushButton(ButtonAction.BUTTON_MINUS_SIGN)
+        self.NextLevelButton = QPushButton(ButtonAction.BUTTON_NEXT_LEVEL_SIGN)
         self.PlusLayout.addWidget(self.PlusButton)
         self.MinusLayout.addWidget(self.MinusButton)
         self.NextLevelLayout.addWidget(self.NextLevelButton)
@@ -140,12 +142,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         self.process_close(a0)
-
-        # a0.ignore()
-            # a0.accept()
-            # return
-        #
-        # a0.ignore()
 
     def item_changed(self, item, column):
         self.changed = True
