@@ -66,19 +66,15 @@ class SvTerminalGui(SvTerminal):
             window.field_changed: self.set_bitmap,
             window.field_removed: self.set_bitmap,
             window.field_added: self.set_bitmap,
-            window.settings: lambda: self.run_child_window(SettingsWindow, self.config),
-            window.hotkeys: lambda: self.run_child_window(HotKeysHintWindow),
-            window.specification: lambda: self.run_child_window(SpecWindow),
-            window.about: lambda: self.run_child_window(AboutWindow),
+            window.settings: lambda: SettingsWindow(self.config).exec(),
+            window.hotkeys: lambda: HotKeysHintWindow().exec(),
+            window.specification: lambda: SpecWindow().exec(),
+            window.about: lambda: AboutWindow(),
             self.connector.stateChanged: self.set_connection_status,
         }
 
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
-
-    @staticmethod
-    def run_child_window(child_window, *args, **kwargs):
-        child_window(*args, **kwargs).exec()
 
     def stop_sv_terminal(self):
         self.connector.stop_thread()
@@ -107,18 +103,16 @@ class SvTerminalGui(SvTerminal):
     def perform_reversal(self, id_source: str):
         lost_transaction_message = "Cannot reverse transaction, lost transaction ID or non-reversible MTI"
 
-        match id_source:
-            case ButtonAction.LAST:
-                transaction_id = self.trans_queue.get_last_reversible_transaction_id()
+        transaction_source_map = {
+            ButtonAction.LAST: self.trans_queue.get_last_reversible_transaction_id,
+            ButtonAction.OTHER: self.show_reversal_window
+        }
 
-            case ButtonAction.OTHER:
-                transaction_id = self.show_reversal_window()
+        if not (transaction_source := transaction_source_map.get(id_source)):
+            error(lost_transaction_message)
+            return
 
-            case _:
-                error(lost_transaction_message)
-                return
-
-        if not transaction_id:
+        if not (transaction_id := transaction_source()):
             error(lost_transaction_message)
             return
 
@@ -148,7 +142,7 @@ class SvTerminalGui(SvTerminal):
         return transaction
 
     def send(self, transaction: Transaction | None = None):
-        sender = self.sender()
+        sender = None
 
         if self.config.debug.clear_log:
             self.window.clean_window_log()

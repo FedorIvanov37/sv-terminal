@@ -99,7 +99,10 @@ class JsonView(QTreeWidget):
             item.set_item_color(red=True)
             [warning(err) for err in str(validation_error).splitlines()]
 
-    def edit_current_item(self):
+    def edit_column(self, column: int):
+        if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE):
+            return
+
         if not self.hasFocus():
             self.setFocus()
 
@@ -108,7 +111,7 @@ class JsonView(QTreeWidget):
         if not (item := self.currentItem()):
             return
 
-        self.edit_item(item, FieldsSpec.ColumnsOrder.VALUE)
+        self.edit_item(item, column)
 
     def validate(self, item, column=None):
         if not self.config.fields.validation:
@@ -139,7 +142,7 @@ class JsonView(QTreeWidget):
         self.field_added.emit()
 
     @void_qt_signals
-    def minus(self, checked):
+    def minus(self, checked=None):
         item: Item | QTreeWidgetItem
 
         if not (item := self.currentItem()):
@@ -163,7 +166,7 @@ class JsonView(QTreeWidget):
         self.setFocus()
         self.field_removed.emit()
 
-    def next_level(self, checked):
+    def next_level(self, checked=None):
         item = Item([])
         current_item: Item | None = self.currentItem()
 

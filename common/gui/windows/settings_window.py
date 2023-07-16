@@ -35,7 +35,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
     @staticmethod
     def about():
-        AboutWindow().exec()
+        AboutWindow()
 
     def process_config(self):
         self.DebugLevel.setCurrentText(self.config.debug.level)

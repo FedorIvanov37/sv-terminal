@@ -17,14 +17,14 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         super().__init__()
         self.setupUi(self)
         self.setup()
-        self.init_music_player()
+        self.init_music_player()  # self.exec() is here, otherwise music does not play
 
     @frameless_window
     def setup(self):
         self.movie: QMovie = QMovie(TermFilesPath.GIF_ABOUT)
         self.logoLabel.setMovie(self.movie)
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(TermFilesPath.MAIN_LOGO)))
-        self.MusicOnOfButton.clicked.connect(self.switch_musing)
+        self.MusicOnOfButton.clicked.connect(self.switch_music)
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(TermFilesPath.MUSIC_ON)))
         self.ContactLabel.linkActivated.connect(self.open_url)
 
@@ -46,20 +46,14 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         audio_output = QAudioOutput()
         self.player.setAudioOutput(audio_output)
         self.player.setSource(music_file_path)
+        self.exec()
 
     @staticmethod
     def open_url(link):
         link = QUrl(link)
         QDesktopServices.openUrl(link)
 
-    def play_music(self):
-        if self.player.playbackState() == self.player.PlaybackState.PlayingState:
-            return
-
-        self.player.play()
-        self.MusicOnOfButton.setIcon(QIcon(QPixmap(TermFilesPath.MUSIC_OFF)))
-
-    def switch_musing(self):
+    def switch_music(self):
         match self.player.playbackState():
             case self.player.PlaybackState.PlayingState:
                 icon = TermFilesPath.MUSIC_ON
