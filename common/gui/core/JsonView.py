@@ -42,9 +42,7 @@ class JsonView(QTreeWidget):
             if not child.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
                 continue
 
-            self.process_change_item(child, FieldsSpec.ColumnsOrder.VALUE)
-
-            return
+            child.hide_pan(True)
 
     def _setup(self):
         self.setTabKeyNavigation(True)

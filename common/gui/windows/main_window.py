@@ -11,7 +11,7 @@ from common.gui.core.FIeldItem import Item
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Config import Config
 from PyQt6.QtGui import QKeySequence, QShortcut
-from common.lib.decorators.window_settings import set_window_icon
+from common.gui.decorators.window_settings import set_window_icon
 from sys import exit
 
 

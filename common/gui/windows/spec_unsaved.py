@@ -2,7 +2,7 @@ from common.gui.forms.spec_unsaved import Ui_SpecUnsaved
 from PyQt6.QtWidgets import QDialog, QMenu
 from PyQt6.QtGui import QCloseEvent, QKeyEvent
 from PyQt6.QtCore import Qt, pyqtSignal
-from common.lib.decorators.window_settings import set_window_icon, has_close_button_only
+from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 
 
 class SpecUnsaved(Ui_SpecUnsaved, QDialog):
