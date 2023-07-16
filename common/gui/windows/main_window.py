@@ -15,8 +15,23 @@ from common.gui.decorators.window_settings import set_window_icon
 from sys import exit
 
 
+"""
+ MainWindow - central SVTerminal GUI, Runs as an independent application, interacts with the backend using pyqtSignal. 
+ Can be run separately from the backend, but does nothing in this case. 
+ 
+ The goals of MainWindow are interaction with the GUI user, user input data collection, and data processing requests 
+ using pyqtSignal. Better to not force it to process the data, validate values, and so on.
+"""
+
+
 class MainWindow(Ui_MainWindow, QMainWindow):
-    _json_view: JsonView
+
+    """
+    Data processing request signals. Some of them send string modifiers as a hint on how to process the data
+    Each signal has a corresponding @property for external interactions. The signals handling should be build
+    using then properties
+    """
+
     _window_close: pyqtSignal = pyqtSignal()
     _print: pyqtSignal = pyqtSignal(str)
     _save: pyqtSignal = pyqtSignal(str)
@@ -25,7 +40,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _field_changed: pyqtSignal = pyqtSignal()
     _field_removed: pyqtSignal = pyqtSignal()
     _field_added: pyqtSignal = pyqtSignal()
-    #
     _clear_log: pyqtSignal = pyqtSignal()
     _settings: pyqtSignal = pyqtSignal()
     _specification: pyqtSignal = pyqtSignal()
@@ -66,11 +80,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     @property
     def reset(self):
         return self._reset
-    #
+
     @property
     def clear_log(self):
         return self._clear_log
-    #
+
     @property
     def settings(self):
         return self._settings
@@ -136,6 +150,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     @set_window_icon
     def _setup(self):
         self.setupUi(self)
+        self._add_json_control_buttons()
+        self._connect_all()
+        windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
+
+    def _add_json_control_buttons(self) -> None:
+        # Create, place, and connect the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
 
         self.FieldsTreeLayout.addWidget(self.json_view)
         self.PlusButton = QPushButton(ButtonAction.BUTTON_PLUS_SIGN)
@@ -151,12 +171,19 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for layout, button in buttons_layouts_map.items():
             layout.addWidget(button)
 
-        self.connect_all()
+    def _connect_all(self) -> None:
+        """
+        This function connects buttons, key sequences, and special menu buttons to corresponding data processing
+        requests. The MainWindow doesn't process the data by itself, instead of this it will send a data processing
+        request by pyqtSignal. All of these groups use the same signals - clear, echo_test, parse_file, reconnect,
+        and so on. Call syntax is a little different for each group. One signal can be emitted by different methods,
+        e.g. cause for transaction data sending (signal "send") can be MainWindow key press or keyboard key sequence.
+        """
 
-        windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
-
-    def connect_all(self):
         buttons_connection_map = {
+
+            # Signals, which should be emitted by MainWindow key press event
+
             self.PlusButton.clicked: self.json_view.plus,
             self.MinusButton.clicked: self.json_view.minus,
             self.NextLevelButton.clicked: self.json_view.next_level,
@@ -178,6 +205,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         }
 
         keys_connection_map = {
+
+            # Signals, which should be emitted by key sequences on keyboard
+
             'Ctrl+T': lambda: self.print.emit(DataFormats.TERM),
             'Ctrl+Shift+Return': lambda: self.reverse.emit(ButtonAction.LAST),
             'Ctrl+Return': self.send,
@@ -197,6 +227,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         }
 
         buttons_menu_structure = {
+
+            # Special menu buttons. Along with the signal they send modifiers - string values, aka pragma.
+            # The modifiers are used to define the requested data format or as a hint on how to process the data
+
             self.ButtonReverse: {
                 ButtonAction.LAST: lambda: self.reverse.emit(ButtonAction.LAST),
                 ButtonAction.OTHER: lambda: self.reverse.emit(ButtonAction.OTHER),
@@ -217,13 +251,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             }
         }
 
-        for signal, slot in buttons_connection_map.items():
+        # The mapping is defined, let's connect them all
+
+        for signal, slot in buttons_connection_map.items():  # Regular buttons
             signal.connect(slot)
 
-        for combination, function in keys_connection_map.items():
+        for combination, function in keys_connection_map.items():  # Key sequences
             QShortcut(QKeySequence(combination), self).activated.connect(function)
 
-        for button, actions in buttons_menu_structure.items():
+        for button, actions in buttons_menu_structure.items():  # Menu buttons
             button.setMenu(QMenu())
 
             for action, function in actions.items():
@@ -257,9 +293,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         return self.Bitmap.text()
 
     def block_connection_buttons(self):
+        # To avoid errors connection buttons will be disabled during the network connection opening
         self.change_connection_buttons_state(enabled=False)
 
     def unblock_connection_buttons(self):
+        # After the connection status is changed connection buttons will be enabled again
         self.change_connection_buttons_state(enabled=True)
 
     def change_connection_buttons_state(self, enabled: bool):
@@ -303,6 +341,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.Bitmap.setText(bitmap)
 
     def closeEvent(self, a0: QCloseEvent) -> None:
+        # Closing network connections and so on before MainWindow switch off
         self.hide()
         self.window_close.emit()
         a0.accept()

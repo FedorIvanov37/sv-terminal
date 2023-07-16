@@ -8,8 +8,8 @@
         "connect_on_startup": false
     },
     "debug": {
-        "level": "INFO",
-        "clear_log": true,
+        "level": "DEBUG",
+        "clear_log": false,
         "parse_subfields": false
     },
     "fields": {
