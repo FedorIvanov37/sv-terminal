@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
-from common.gui.constants.TermFilesPath import TermFilesPath
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
+from common.gui.constants.TermFilesPath import TermFilesPath
 
 
 # Set default window icon before show window
