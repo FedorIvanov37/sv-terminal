@@ -579,7 +579,7 @@
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="text">
-         <string>Hotkeys Info</string>
+         <string>Hotkeys</string>
         </property>
        </widget>
       </item>

@@ -32,14 +32,22 @@ class JsonView(QTreeWidget):
         self.config: Config = config
         self._setup()
         self.delegate = QItemDelegate()
-        self.delegate.closeEditor.connect(lambda: self.process_change_item(self.currentItem()))
+        self.delegate.closeEditor.connect(self.hide_pan_after_edit)
         self.setItemDelegate(self.delegate)
 
-    def _setup(self):
-        from PyQt6.QtCore import Qt
+    def hide_pan_after_edit(self):  # TODO
+        child: Item
 
+        for child in self.root.get_children():
+            if not child.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+                continue
+
+            self.process_change_item(child, FieldsSpec.ColumnsOrder.VALUE)
+
+            return
+
+    def _setup(self):
         self.setTabKeyNavigation(True)
-        self.setInputMethodHints(Qt.InputMethodHint.ImhLatinOnly)
 
         for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
             action.connect(self.resize_all)

@@ -65,9 +65,9 @@
 + Socket error returns twice
 + Spec disappear after close
 + Window type decorators
++ Spec window different colors
++ Card disappears while editing
 
-
-• Spec window different colors
 
 
 
