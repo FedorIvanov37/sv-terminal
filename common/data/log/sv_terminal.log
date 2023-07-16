@@ -32075,3 +32075,2738 @@
 16.07.2023 11:24:19 [INFO] [Re]connecting...
 16.07.2023 11:24:19 [INFO] SmartVista host connection ESTABLISHED
 16.07.2023 11:24:22 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:31:53 [INFO] 
+16.07.2023 11:31:53 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 11:31:53 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 11:31:53 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 11:31:53 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 11:31:53 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 11:31:53 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 11:31:53 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 11:31:53 [INFO]  
+16.07.2023 11:31:53 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 11:31:53 [INFO]  
+16.07.2023 11:31:53 [INFO] 
+16.07.2023 11:31:53 [INFO] ## Configuration parameters ##
+16.07.2023 11:31:53 [INFO] {
+16.07.2023 11:31:53 [INFO]     "smartvista": {
+16.07.2023 11:31:53 [INFO]         "host": "172.21.30.5",
+16.07.2023 11:31:53 [INFO]         "port": "16677"
+16.07.2023 11:31:53 [INFO]     },
+16.07.2023 11:31:53 [INFO]     "terminal": {
+16.07.2023 11:31:53 [INFO]         "process_default_dump": true,
+16.07.2023 11:31:53 [INFO]         "connect_on_startup": false
+16.07.2023 11:31:53 [INFO]     },
+16.07.2023 11:31:53 [INFO]     "debug": {
+16.07.2023 11:31:53 [INFO]         "level": "INFO",
+16.07.2023 11:31:53 [INFO]         "clear_log": true,
+16.07.2023 11:31:53 [INFO]         "parse_subfields": false
+16.07.2023 11:31:53 [INFO]     },
+16.07.2023 11:31:53 [INFO]     "fields": {
+16.07.2023 11:31:53 [INFO]         "max_amount": "100",
+16.07.2023 11:31:53 [INFO]         "build_fld_90": true,
+16.07.2023 11:31:53 [INFO]         "send_internal_id": true,
+16.07.2023 11:31:53 [INFO]         "validation": true
+16.07.2023 11:31:53 [INFO]     }
+16.07.2023 11:31:53 [INFO] }
+16.07.2023 11:31:53 [INFO] ## End of configuration parameters ##
+16.07.2023 11:31:53 [INFO] 
+16.07.2023 11:31:53 [INFO] Default file parsed
+16.07.2023 11:31:55 [INFO] [Re]connecting...
+16.07.2023 11:31:55 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:31:59 [INFO] Settings applied
+16.07.2023 11:32:00 [INFO] [Re]connecting...
+16.07.2023 11:32:00 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:32:06 [INFO] Settings applied
+16.07.2023 11:32:10 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+16.07.2023 11:32:15 [INFO] [Re]connecting...
+16.07.2023 11:32:20 [ERROR] Received a socket error from SmartVista host: Connection refused
+16.07.2023 11:32:23 [INFO] [Re]connecting...
+16.07.2023 11:32:27 [ERROR] Received a socket error from SmartVista host: Connection refused
+16.07.2023 11:32:29 [INFO] Settings applied
+16.07.2023 11:32:29 [INFO] [Re]connecting...
+16.07.2023 11:32:29 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:32:32 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:35:57 [INFO] 
+16.07.2023 11:35:57 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 11:35:57 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 11:35:57 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 11:35:57 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 11:35:57 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 11:35:57 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 11:35:57 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 11:35:57 [INFO]  
+16.07.2023 11:35:57 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 11:35:57 [INFO]  
+16.07.2023 11:35:57 [INFO] 
+16.07.2023 11:35:57 [INFO] ## Configuration parameters ##
+16.07.2023 11:35:57 [INFO] {
+16.07.2023 11:35:57 [INFO]     "smartvista": {
+16.07.2023 11:35:57 [INFO]         "host": "172.21.30.5",
+16.07.2023 11:35:57 [INFO]         "port": "16677"
+16.07.2023 11:35:57 [INFO]     },
+16.07.2023 11:35:57 [INFO]     "terminal": {
+16.07.2023 11:35:57 [INFO]         "process_default_dump": true,
+16.07.2023 11:35:57 [INFO]         "connect_on_startup": false
+16.07.2023 11:35:57 [INFO]     },
+16.07.2023 11:35:57 [INFO]     "debug": {
+16.07.2023 11:35:57 [INFO]         "level": "INFO",
+16.07.2023 11:35:57 [INFO]         "clear_log": true,
+16.07.2023 11:35:57 [INFO]         "parse_subfields": false
+16.07.2023 11:35:57 [INFO]     },
+16.07.2023 11:35:57 [INFO]     "fields": {
+16.07.2023 11:35:57 [INFO]         "max_amount": "100",
+16.07.2023 11:35:57 [INFO]         "build_fld_90": true,
+16.07.2023 11:35:57 [INFO]         "send_internal_id": true,
+16.07.2023 11:35:57 [INFO]         "validation": true
+16.07.2023 11:35:57 [INFO]     }
+16.07.2023 11:35:57 [INFO] }
+16.07.2023 11:35:57 [INFO] ## End of configuration parameters ##
+16.07.2023 11:35:57 [INFO] 
+16.07.2023 11:35:57 [INFO] Default file parsed
+16.07.2023 11:36:00 [INFO] [Re]connecting...
+16.07.2023 11:36:00 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:36:01 [INFO] [Re]connecting...
+16.07.2023 11:36:01 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:36:01 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:36:05 [INFO] Settings applied
+16.07.2023 11:36:06 [INFO] [Re]connecting...
+16.07.2023 11:36:06 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:36:10 [ERROR] Received a socket error from SmartVista host: Connection refused
+16.07.2023 11:36:14 [INFO] [Re]connecting...
+16.07.2023 11:36:18 [INFO] Settings applied
+16.07.2023 11:36:18 [ERROR] Received a socket error from SmartVista host: Connection refused
+16.07.2023 11:36:19 [INFO] [Re]connecting...
+16.07.2023 11:36:19 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:36:23 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:37:27 [INFO] 
+16.07.2023 11:37:27 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 11:37:27 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 11:37:27 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 11:37:27 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 11:37:27 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 11:37:27 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 11:37:27 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 11:37:27 [INFO]  
+16.07.2023 11:37:27 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 11:37:27 [INFO]  
+16.07.2023 11:37:27 [INFO] 
+16.07.2023 11:37:27 [INFO] ## Configuration parameters ##
+16.07.2023 11:37:27 [INFO] {
+16.07.2023 11:37:27 [INFO]     "smartvista": {
+16.07.2023 11:37:27 [INFO]         "host": "172.21.30.5",
+16.07.2023 11:37:27 [INFO]         "port": "16677"
+16.07.2023 11:37:27 [INFO]     },
+16.07.2023 11:37:27 [INFO]     "terminal": {
+16.07.2023 11:37:27 [INFO]         "process_default_dump": true,
+16.07.2023 11:37:27 [INFO]         "connect_on_startup": false
+16.07.2023 11:37:27 [INFO]     },
+16.07.2023 11:37:27 [INFO]     "debug": {
+16.07.2023 11:37:27 [INFO]         "level": "INFO",
+16.07.2023 11:37:27 [INFO]         "clear_log": true,
+16.07.2023 11:37:27 [INFO]         "parse_subfields": false
+16.07.2023 11:37:27 [INFO]     },
+16.07.2023 11:37:27 [INFO]     "fields": {
+16.07.2023 11:37:27 [INFO]         "max_amount": "100",
+16.07.2023 11:37:27 [INFO]         "build_fld_90": true,
+16.07.2023 11:37:27 [INFO]         "send_internal_id": true,
+16.07.2023 11:37:27 [INFO]         "validation": true
+16.07.2023 11:37:27 [INFO]     }
+16.07.2023 11:37:27 [INFO] }
+16.07.2023 11:37:27 [INFO] ## End of configuration parameters ##
+16.07.2023 11:37:27 [INFO] 
+16.07.2023 11:37:28 [INFO] Default file parsed
+16.07.2023 11:37:29 [INFO] [Re]connecting...
+16.07.2023 11:37:29 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:37:30 [INFO] [Re]connecting...
+16.07.2023 11:37:30 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:37:30 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:37:30 [INFO] [Re]connecting...
+16.07.2023 11:37:30 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:37:30 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:37:31 [INFO] [Re]connecting...
+16.07.2023 11:37:31 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:37:31 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:37:31 [INFO] [Re]connecting...
+16.07.2023 11:37:31 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:37:31 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:37:32 [INFO] [Re]connecting...
+16.07.2023 11:37:32 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:37:32 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:37:35 [INFO] [Re]connecting...
+16.07.2023 11:37:35 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:37:35 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:37:35 [INFO] [Re]connecting...
+16.07.2023 11:37:35 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:37:35 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:37:35 [INFO] [Re]connecting...
+16.07.2023 11:37:35 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 11:37:35 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 11:37:46 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:12:11 [INFO] 
+16.07.2023 12:12:11 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:12:11 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:12:11 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:12:11 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:12:11 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:12:11 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:12:11 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:12:11 [INFO]  
+16.07.2023 12:12:11 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:12:11 [INFO]  
+16.07.2023 12:12:11 [INFO] 
+16.07.2023 12:12:11 [INFO] ## Configuration parameters ##
+16.07.2023 12:12:11 [INFO] {
+16.07.2023 12:12:11 [INFO]     "smartvista": {
+16.07.2023 12:12:11 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:12:11 [INFO]         "port": "16677"
+16.07.2023 12:12:11 [INFO]     },
+16.07.2023 12:12:11 [INFO]     "terminal": {
+16.07.2023 12:12:11 [INFO]         "process_default_dump": true,
+16.07.2023 12:12:11 [INFO]         "connect_on_startup": false
+16.07.2023 12:12:11 [INFO]     },
+16.07.2023 12:12:11 [INFO]     "debug": {
+16.07.2023 12:12:11 [INFO]         "level": "INFO",
+16.07.2023 12:12:11 [INFO]         "clear_log": true,
+16.07.2023 12:12:11 [INFO]         "parse_subfields": false
+16.07.2023 12:12:11 [INFO]     },
+16.07.2023 12:12:11 [INFO]     "fields": {
+16.07.2023 12:12:11 [INFO]         "max_amount": "100",
+16.07.2023 12:12:11 [INFO]         "build_fld_90": true,
+16.07.2023 12:12:11 [INFO]         "send_internal_id": true,
+16.07.2023 12:12:11 [INFO]         "validation": true
+16.07.2023 12:12:11 [INFO]     }
+16.07.2023 12:12:11 [INFO] }
+16.07.2023 12:12:11 [INFO] ## End of configuration parameters ##
+16.07.2023 12:12:11 [INFO] 
+16.07.2023 12:13:11 [INFO] 
+16.07.2023 12:13:11 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:13:11 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:13:11 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:13:11 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:13:11 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:13:11 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:13:11 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:13:11 [INFO]  
+16.07.2023 12:13:11 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:13:11 [INFO]  
+16.07.2023 12:13:11 [INFO] 
+16.07.2023 12:13:11 [INFO] ## Configuration parameters ##
+16.07.2023 12:13:11 [INFO] {
+16.07.2023 12:13:11 [INFO]     "smartvista": {
+16.07.2023 12:13:11 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:13:11 [INFO]         "port": "16677"
+16.07.2023 12:13:11 [INFO]     },
+16.07.2023 12:13:11 [INFO]     "terminal": {
+16.07.2023 12:13:11 [INFO]         "process_default_dump": true,
+16.07.2023 12:13:11 [INFO]         "connect_on_startup": false
+16.07.2023 12:13:11 [INFO]     },
+16.07.2023 12:13:11 [INFO]     "debug": {
+16.07.2023 12:13:11 [INFO]         "level": "INFO",
+16.07.2023 12:13:11 [INFO]         "clear_log": true,
+16.07.2023 12:13:11 [INFO]         "parse_subfields": false
+16.07.2023 12:13:11 [INFO]     },
+16.07.2023 12:13:11 [INFO]     "fields": {
+16.07.2023 12:13:11 [INFO]         "max_amount": "100",
+16.07.2023 12:13:11 [INFO]         "build_fld_90": true,
+16.07.2023 12:13:11 [INFO]         "send_internal_id": true,
+16.07.2023 12:13:11 [INFO]         "validation": true
+16.07.2023 12:13:11 [INFO]     }
+16.07.2023 12:13:11 [INFO] }
+16.07.2023 12:13:11 [INFO] ## End of configuration parameters ##
+16.07.2023 12:13:11 [INFO] 
+16.07.2023 12:26:37 [INFO] 
+16.07.2023 12:26:37 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:26:37 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:26:37 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:26:37 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:26:37 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:26:37 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:26:37 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:26:37 [INFO]  
+16.07.2023 12:26:37 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:26:37 [INFO]  
+16.07.2023 12:26:37 [INFO] 
+16.07.2023 12:26:37 [INFO] ## Configuration parameters ##
+16.07.2023 12:26:37 [INFO] {
+16.07.2023 12:26:37 [INFO]     "smartvista": {
+16.07.2023 12:26:37 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:26:37 [INFO]         "port": "16677"
+16.07.2023 12:26:37 [INFO]     },
+16.07.2023 12:26:37 [INFO]     "terminal": {
+16.07.2023 12:26:37 [INFO]         "process_default_dump": true,
+16.07.2023 12:26:37 [INFO]         "connect_on_startup": false
+16.07.2023 12:26:37 [INFO]     },
+16.07.2023 12:26:37 [INFO]     "debug": {
+16.07.2023 12:26:37 [INFO]         "level": "INFO",
+16.07.2023 12:26:37 [INFO]         "clear_log": true,
+16.07.2023 12:26:37 [INFO]         "parse_subfields": false
+16.07.2023 12:26:37 [INFO]     },
+16.07.2023 12:26:37 [INFO]     "fields": {
+16.07.2023 12:26:37 [INFO]         "max_amount": "100",
+16.07.2023 12:26:37 [INFO]         "build_fld_90": true,
+16.07.2023 12:26:37 [INFO]         "send_internal_id": true,
+16.07.2023 12:26:37 [INFO]         "validation": true
+16.07.2023 12:26:37 [INFO]     }
+16.07.2023 12:26:37 [INFO] }
+16.07.2023 12:26:37 [INFO] ## End of configuration parameters ##
+16.07.2023 12:26:37 [INFO] 
+16.07.2023 12:26:37 [INFO] Default file parsed
+16.07.2023 12:27:03 [INFO] 
+16.07.2023 12:27:03 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:27:03 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:27:03 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:27:03 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:27:03 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:27:03 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:27:03 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:27:03 [INFO]  
+16.07.2023 12:27:03 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:27:03 [INFO]  
+16.07.2023 12:27:03 [INFO] 
+16.07.2023 12:27:03 [INFO] ## Configuration parameters ##
+16.07.2023 12:27:03 [INFO] {
+16.07.2023 12:27:03 [INFO]     "smartvista": {
+16.07.2023 12:27:03 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:27:03 [INFO]         "port": "16677"
+16.07.2023 12:27:03 [INFO]     },
+16.07.2023 12:27:03 [INFO]     "terminal": {
+16.07.2023 12:27:03 [INFO]         "process_default_dump": true,
+16.07.2023 12:27:03 [INFO]         "connect_on_startup": false
+16.07.2023 12:27:03 [INFO]     },
+16.07.2023 12:27:03 [INFO]     "debug": {
+16.07.2023 12:27:03 [INFO]         "level": "INFO",
+16.07.2023 12:27:03 [INFO]         "clear_log": true,
+16.07.2023 12:27:03 [INFO]         "parse_subfields": false
+16.07.2023 12:27:03 [INFO]     },
+16.07.2023 12:27:03 [INFO]     "fields": {
+16.07.2023 12:27:03 [INFO]         "max_amount": "100",
+16.07.2023 12:27:03 [INFO]         "build_fld_90": true,
+16.07.2023 12:27:03 [INFO]         "send_internal_id": true,
+16.07.2023 12:27:03 [INFO]         "validation": true
+16.07.2023 12:27:03 [INFO]     }
+16.07.2023 12:27:03 [INFO] }
+16.07.2023 12:27:03 [INFO] ## End of configuration parameters ##
+16.07.2023 12:27:03 [INFO] 
+16.07.2023 12:27:03 [INFO] Default file parsed
+16.07.2023 12:27:13 [INFO] 
+16.07.2023 12:27:13 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:27:13 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:27:13 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:27:13 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:27:13 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:27:13 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:27:13 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:27:13 [INFO]  
+16.07.2023 12:27:13 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:27:13 [INFO]  
+16.07.2023 12:27:13 [INFO] 
+16.07.2023 12:27:13 [INFO] ## Configuration parameters ##
+16.07.2023 12:27:13 [INFO] {
+16.07.2023 12:27:13 [INFO]     "smartvista": {
+16.07.2023 12:27:13 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:27:13 [INFO]         "port": "16677"
+16.07.2023 12:27:13 [INFO]     },
+16.07.2023 12:27:13 [INFO]     "terminal": {
+16.07.2023 12:27:13 [INFO]         "process_default_dump": true,
+16.07.2023 12:27:13 [INFO]         "connect_on_startup": false
+16.07.2023 12:27:13 [INFO]     },
+16.07.2023 12:27:13 [INFO]     "debug": {
+16.07.2023 12:27:13 [INFO]         "level": "INFO",
+16.07.2023 12:27:13 [INFO]         "clear_log": true,
+16.07.2023 12:27:13 [INFO]         "parse_subfields": false
+16.07.2023 12:27:13 [INFO]     },
+16.07.2023 12:27:13 [INFO]     "fields": {
+16.07.2023 12:27:13 [INFO]         "max_amount": "100",
+16.07.2023 12:27:13 [INFO]         "build_fld_90": true,
+16.07.2023 12:27:13 [INFO]         "send_internal_id": true,
+16.07.2023 12:27:13 [INFO]         "validation": true
+16.07.2023 12:27:13 [INFO]     }
+16.07.2023 12:27:13 [INFO] }
+16.07.2023 12:27:13 [INFO] ## End of configuration parameters ##
+16.07.2023 12:27:13 [INFO] 
+16.07.2023 12:27:13 [INFO] Default file parsed
+16.07.2023 12:28:50 [INFO] 
+16.07.2023 12:28:50 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:28:50 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:28:50 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:28:50 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:28:50 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:28:50 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:28:50 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:28:50 [INFO]  
+16.07.2023 12:28:50 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:28:50 [INFO]  
+16.07.2023 12:28:50 [INFO] 
+16.07.2023 12:28:50 [INFO] ## Configuration parameters ##
+16.07.2023 12:28:50 [INFO] {
+16.07.2023 12:28:50 [INFO]     "smartvista": {
+16.07.2023 12:28:50 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:28:50 [INFO]         "port": "16677"
+16.07.2023 12:28:50 [INFO]     },
+16.07.2023 12:28:50 [INFO]     "terminal": {
+16.07.2023 12:28:50 [INFO]         "process_default_dump": true,
+16.07.2023 12:28:50 [INFO]         "connect_on_startup": false
+16.07.2023 12:28:50 [INFO]     },
+16.07.2023 12:28:50 [INFO]     "debug": {
+16.07.2023 12:28:50 [INFO]         "level": "INFO",
+16.07.2023 12:28:50 [INFO]         "clear_log": true,
+16.07.2023 12:28:50 [INFO]         "parse_subfields": false
+16.07.2023 12:28:50 [INFO]     },
+16.07.2023 12:28:50 [INFO]     "fields": {
+16.07.2023 12:28:50 [INFO]         "max_amount": "100",
+16.07.2023 12:28:50 [INFO]         "build_fld_90": true,
+16.07.2023 12:28:50 [INFO]         "send_internal_id": true,
+16.07.2023 12:28:50 [INFO]         "validation": true
+16.07.2023 12:28:50 [INFO]     }
+16.07.2023 12:28:50 [INFO] }
+16.07.2023 12:28:50 [INFO] ## End of configuration parameters ##
+16.07.2023 12:28:50 [INFO] 
+16.07.2023 12:28:50 [INFO] Default file parsed
+16.07.2023 12:29:11 [INFO] 
+16.07.2023 12:29:11 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:29:11 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:29:11 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:29:11 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:29:11 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:29:11 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:29:11 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:29:11 [INFO]  
+16.07.2023 12:29:11 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:29:11 [INFO]  
+16.07.2023 12:29:11 [INFO] 
+16.07.2023 12:29:11 [INFO] ## Configuration parameters ##
+16.07.2023 12:29:11 [INFO] {
+16.07.2023 12:29:11 [INFO]     "smartvista": {
+16.07.2023 12:29:11 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:29:11 [INFO]         "port": "16677"
+16.07.2023 12:29:11 [INFO]     },
+16.07.2023 12:29:11 [INFO]     "terminal": {
+16.07.2023 12:29:11 [INFO]         "process_default_dump": true,
+16.07.2023 12:29:11 [INFO]         "connect_on_startup": false
+16.07.2023 12:29:11 [INFO]     },
+16.07.2023 12:29:11 [INFO]     "debug": {
+16.07.2023 12:29:11 [INFO]         "level": "INFO",
+16.07.2023 12:29:11 [INFO]         "clear_log": true,
+16.07.2023 12:29:11 [INFO]         "parse_subfields": false
+16.07.2023 12:29:11 [INFO]     },
+16.07.2023 12:29:11 [INFO]     "fields": {
+16.07.2023 12:29:11 [INFO]         "max_amount": "100",
+16.07.2023 12:29:11 [INFO]         "build_fld_90": true,
+16.07.2023 12:29:11 [INFO]         "send_internal_id": true,
+16.07.2023 12:29:11 [INFO]         "validation": true
+16.07.2023 12:29:11 [INFO]     }
+16.07.2023 12:29:11 [INFO] }
+16.07.2023 12:29:11 [INFO] ## End of configuration parameters ##
+16.07.2023 12:29:11 [INFO] 
+16.07.2023 12:29:11 [INFO] Default file parsed
+16.07.2023 12:31:34 [INFO] 
+16.07.2023 12:31:34 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:31:34 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:31:34 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:31:34 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:31:34 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:31:34 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:31:34 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:31:34 [INFO]  
+16.07.2023 12:31:34 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:31:34 [INFO]  
+16.07.2023 12:31:34 [INFO] 
+16.07.2023 12:31:34 [INFO] ## Configuration parameters ##
+16.07.2023 12:31:34 [INFO] {
+16.07.2023 12:31:34 [INFO]     "smartvista": {
+16.07.2023 12:31:34 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:31:34 [INFO]         "port": "16677"
+16.07.2023 12:31:34 [INFO]     },
+16.07.2023 12:31:34 [INFO]     "terminal": {
+16.07.2023 12:31:34 [INFO]         "process_default_dump": true,
+16.07.2023 12:31:34 [INFO]         "connect_on_startup": false
+16.07.2023 12:31:34 [INFO]     },
+16.07.2023 12:31:34 [INFO]     "debug": {
+16.07.2023 12:31:34 [INFO]         "level": "INFO",
+16.07.2023 12:31:34 [INFO]         "clear_log": true,
+16.07.2023 12:31:34 [INFO]         "parse_subfields": false
+16.07.2023 12:31:34 [INFO]     },
+16.07.2023 12:31:34 [INFO]     "fields": {
+16.07.2023 12:31:34 [INFO]         "max_amount": "100",
+16.07.2023 12:31:34 [INFO]         "build_fld_90": true,
+16.07.2023 12:31:34 [INFO]         "send_internal_id": true,
+16.07.2023 12:31:34 [INFO]         "validation": true
+16.07.2023 12:31:34 [INFO]     }
+16.07.2023 12:31:34 [INFO] }
+16.07.2023 12:31:34 [INFO] ## End of configuration parameters ##
+16.07.2023 12:31:34 [INFO] 
+16.07.2023 12:31:34 [INFO] Default file parsed
+16.07.2023 12:31:42 [INFO] [Re]connecting...
+16.07.2023 12:31:42 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:31:45 [INFO] [Re]connecting...
+16.07.2023 12:31:45 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:31:45 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:31:46 [INFO] [Re]connecting...
+16.07.2023 12:31:46 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:31:46 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:31:49 [INFO] [Re]connecting...
+16.07.2023 12:31:49 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:31:49 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:31:49 [INFO] [Re]connecting...
+16.07.2023 12:31:49 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:31:49 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:31:50 [INFO] [Re]connecting...
+16.07.2023 12:31:50 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:31:50 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:31:50 [INFO] [Re]connecting...
+16.07.2023 12:31:50 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:31:50 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:31:51 [INFO] [Re]connecting...
+16.07.2023 12:31:51 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:31:51 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:31:52 [INFO] [Re]connecting...
+16.07.2023 12:31:52 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:31:52 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:31:52 [INFO] [Re]connecting...
+16.07.2023 12:31:52 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:31:52 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:31:53 [INFO] [Re]connecting...
+16.07.2023 12:31:53 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:31:53 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:31:56 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:31:56 [ERROR] Log writing error: wrapped C/C++ object of type WirelessHandler has been deleted
+16.07.2023 12:36:06 [INFO] 
+16.07.2023 12:36:06 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:36:06 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:36:06 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:36:06 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:36:06 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:36:06 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:36:06 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:36:06 [INFO]  
+16.07.2023 12:36:06 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:36:06 [INFO]  
+16.07.2023 12:36:06 [INFO] 
+16.07.2023 12:36:06 [INFO] ## Configuration parameters ##
+16.07.2023 12:36:06 [INFO] {
+16.07.2023 12:36:06 [INFO]     "smartvista": {
+16.07.2023 12:36:06 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:36:06 [INFO]         "port": "16677"
+16.07.2023 12:36:06 [INFO]     },
+16.07.2023 12:36:06 [INFO]     "terminal": {
+16.07.2023 12:36:06 [INFO]         "process_default_dump": true,
+16.07.2023 12:36:06 [INFO]         "connect_on_startup": false
+16.07.2023 12:36:06 [INFO]     },
+16.07.2023 12:36:06 [INFO]     "debug": {
+16.07.2023 12:36:06 [INFO]         "level": "INFO",
+16.07.2023 12:36:06 [INFO]         "clear_log": true,
+16.07.2023 12:36:06 [INFO]         "parse_subfields": false
+16.07.2023 12:36:06 [INFO]     },
+16.07.2023 12:36:06 [INFO]     "fields": {
+16.07.2023 12:36:06 [INFO]         "max_amount": "100",
+16.07.2023 12:36:06 [INFO]         "build_fld_90": true,
+16.07.2023 12:36:06 [INFO]         "send_internal_id": true,
+16.07.2023 12:36:06 [INFO]         "validation": true
+16.07.2023 12:36:06 [INFO]     }
+16.07.2023 12:36:06 [INFO] }
+16.07.2023 12:36:06 [INFO] ## End of configuration parameters ##
+16.07.2023 12:36:06 [INFO] 
+16.07.2023 12:36:07 [INFO] Default file parsed
+16.07.2023 12:36:13 [INFO] 
+16.07.2023 12:36:13 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:36:13 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:36:13 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:36:13 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:36:13 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:36:13 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:36:13 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:36:13 [INFO]  
+16.07.2023 12:36:13 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:36:13 [INFO]  
+16.07.2023 12:36:13 [INFO] 
+16.07.2023 12:36:13 [INFO] ## Configuration parameters ##
+16.07.2023 12:36:13 [INFO] {
+16.07.2023 12:36:13 [INFO]     "smartvista": {
+16.07.2023 12:36:13 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:36:13 [INFO]         "port": "16677"
+16.07.2023 12:36:13 [INFO]     },
+16.07.2023 12:36:13 [INFO]     "terminal": {
+16.07.2023 12:36:13 [INFO]         "process_default_dump": true,
+16.07.2023 12:36:13 [INFO]         "connect_on_startup": false
+16.07.2023 12:36:13 [INFO]     },
+16.07.2023 12:36:13 [INFO]     "debug": {
+16.07.2023 12:36:13 [INFO]         "level": "INFO",
+16.07.2023 12:36:13 [INFO]         "clear_log": true,
+16.07.2023 12:36:13 [INFO]         "parse_subfields": false
+16.07.2023 12:36:13 [INFO]     },
+16.07.2023 12:36:13 [INFO]     "fields": {
+16.07.2023 12:36:13 [INFO]         "max_amount": "100",
+16.07.2023 12:36:13 [INFO]         "build_fld_90": true,
+16.07.2023 12:36:13 [INFO]         "send_internal_id": true,
+16.07.2023 12:36:13 [INFO]         "validation": true
+16.07.2023 12:36:13 [INFO]     }
+16.07.2023 12:36:13 [INFO] }
+16.07.2023 12:36:13 [INFO] ## End of configuration parameters ##
+16.07.2023 12:36:13 [INFO] 
+16.07.2023 12:36:13 [INFO] Default file parsed
+16.07.2023 12:36:39 [INFO] 
+16.07.2023 12:36:39 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:36:39 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:36:39 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:36:39 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:36:39 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:36:39 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:36:39 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:36:39 [INFO]  
+16.07.2023 12:36:39 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:36:39 [INFO]  
+16.07.2023 12:36:39 [INFO] 
+16.07.2023 12:36:39 [INFO] ## Configuration parameters ##
+16.07.2023 12:36:39 [INFO] {
+16.07.2023 12:36:39 [INFO]     "smartvista": {
+16.07.2023 12:36:39 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:36:39 [INFO]         "port": "16677"
+16.07.2023 12:36:39 [INFO]     },
+16.07.2023 12:36:39 [INFO]     "terminal": {
+16.07.2023 12:36:39 [INFO]         "process_default_dump": true,
+16.07.2023 12:36:39 [INFO]         "connect_on_startup": false
+16.07.2023 12:36:39 [INFO]     },
+16.07.2023 12:36:39 [INFO]     "debug": {
+16.07.2023 12:36:39 [INFO]         "level": "INFO",
+16.07.2023 12:36:39 [INFO]         "clear_log": true,
+16.07.2023 12:36:39 [INFO]         "parse_subfields": false
+16.07.2023 12:36:39 [INFO]     },
+16.07.2023 12:36:39 [INFO]     "fields": {
+16.07.2023 12:36:39 [INFO]         "max_amount": "100",
+16.07.2023 12:36:39 [INFO]         "build_fld_90": true,
+16.07.2023 12:36:39 [INFO]         "send_internal_id": true,
+16.07.2023 12:36:39 [INFO]         "validation": true
+16.07.2023 12:36:39 [INFO]     }
+16.07.2023 12:36:39 [INFO] }
+16.07.2023 12:36:39 [INFO] ## End of configuration parameters ##
+16.07.2023 12:36:39 [INFO] 
+16.07.2023 12:36:39 [INFO] Default file parsed
+16.07.2023 12:36:41 [INFO] Processing transaction ID [20230716_123641_0275826453]
+16.07.2023 12:36:41 [WARNING] SmartVista disconnected. Trying to established the connection
+16.07.2023 12:36:41 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:36:41 [INFO] 
+16.07.2023 12:36:41 [INFO] [TRANS_ID][20230716_123641_0275826453]
+16.07.2023 12:36:41 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:36:41 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:36:41 [INFO] [007][010][0716123641]
+16.07.2023 12:36:41 [INFO] [011][006][389608]
+16.07.2023 12:36:41 [INFO] [070][003][301]
+16.07.2023 12:36:41 [INFO] 
+16.07.2023 12:36:41 [INFO] Transaction [20230716_123641_0275826453] was sent 
+16.07.2023 12:36:44 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:36:49 [INFO] 
+16.07.2023 12:36:49 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:36:49 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:36:49 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:36:49 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:36:49 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:36:49 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:36:49 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:36:49 [INFO]  
+16.07.2023 12:36:49 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:36:49 [INFO]  
+16.07.2023 12:36:49 [INFO] 
+16.07.2023 12:36:49 [INFO] ## Configuration parameters ##
+16.07.2023 12:36:49 [INFO] {
+16.07.2023 12:36:49 [INFO]     "smartvista": {
+16.07.2023 12:36:49 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:36:49 [INFO]         "port": "16677"
+16.07.2023 12:36:49 [INFO]     },
+16.07.2023 12:36:49 [INFO]     "terminal": {
+16.07.2023 12:36:49 [INFO]         "process_default_dump": true,
+16.07.2023 12:36:49 [INFO]         "connect_on_startup": false
+16.07.2023 12:36:49 [INFO]     },
+16.07.2023 12:36:49 [INFO]     "debug": {
+16.07.2023 12:36:49 [INFO]         "level": "INFO",
+16.07.2023 12:36:49 [INFO]         "clear_log": true,
+16.07.2023 12:36:49 [INFO]         "parse_subfields": false
+16.07.2023 12:36:49 [INFO]     },
+16.07.2023 12:36:49 [INFO]     "fields": {
+16.07.2023 12:36:49 [INFO]         "max_amount": "100",
+16.07.2023 12:36:49 [INFO]         "build_fld_90": true,
+16.07.2023 12:36:49 [INFO]         "send_internal_id": true,
+16.07.2023 12:36:49 [INFO]         "validation": true
+16.07.2023 12:36:49 [INFO]     }
+16.07.2023 12:36:49 [INFO] }
+16.07.2023 12:36:49 [INFO] ## End of configuration parameters ##
+16.07.2023 12:36:49 [INFO] 
+16.07.2023 12:36:49 [INFO] Default file parsed
+16.07.2023 12:36:51 [INFO] Processing transaction ID [20230716_123651_4226701537]
+16.07.2023 12:36:51 [WARNING] SmartVista disconnected. Trying to established the connection
+16.07.2023 12:36:51 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:36:51 [INFO] 
+16.07.2023 12:36:51 [INFO] [TRANS_ID][20230716_123651_4226701537]
+16.07.2023 12:36:51 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:36:51 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:36:51 [INFO] [007][010][0716123651]
+16.07.2023 12:36:51 [INFO] [011][006][835947]
+16.07.2023 12:36:51 [INFO] [070][003][301]
+16.07.2023 12:36:51 [INFO] 
+16.07.2023 12:36:51 [INFO] Transaction [20230716_123651_4226701537] was sent 
+16.07.2023 12:36:51 [INFO] 
+16.07.2023 12:36:51 [INFO] [TRANS_ID][20230716_123651_4226701537]
+16.07.2023 12:36:51 [INFO] [MSG_TYPE][0810]
+16.07.2023 12:36:51 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 12:36:51 [INFO] [007][010][0716123651]
+16.07.2023 12:36:51 [INFO] [011][006][835947]
+16.07.2023 12:36:51 [INFO] [039][002][00]
+16.07.2023 12:36:51 [INFO] [070][003][301]
+16.07.2023 12:36:51 [INFO] 
+16.07.2023 12:36:51 [INFO] Transaction ID [20230716_123651_4226701537] matched, response time seconds: 0.197
+16.07.2023 12:36:52 [INFO] Processing transaction ID [20230716_123652_2952196398]
+16.07.2023 12:36:52 [INFO] 
+16.07.2023 12:36:52 [INFO] [TRANS_ID][20230716_123652_2952196398]
+16.07.2023 12:36:52 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:36:52 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:36:52 [INFO] [007][010][0716123652]
+16.07.2023 12:36:52 [INFO] [011][006][589702]
+16.07.2023 12:36:52 [INFO] [070][003][301]
+16.07.2023 12:36:52 [INFO] 
+16.07.2023 12:36:52 [INFO] Transaction [20230716_123652_2952196398] was sent 
+16.07.2023 12:36:52 [INFO] 
+16.07.2023 12:36:52 [INFO] [TRANS_ID][20230716_123652_2952196398]
+16.07.2023 12:36:52 [INFO] [MSG_TYPE][0810]
+16.07.2023 12:36:52 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 12:36:52 [INFO] [007][010][0716123652]
+16.07.2023 12:36:52 [INFO] [011][006][589702]
+16.07.2023 12:36:52 [INFO] [039][002][00]
+16.07.2023 12:36:52 [INFO] [070][003][301]
+16.07.2023 12:36:52 [INFO] 
+16.07.2023 12:36:52 [INFO] Transaction ID [20230716_123652_2952196398] matched, response time seconds: 1.006
+16.07.2023 12:36:52 [INFO] Processing transaction ID [20230716_123652_9085937834]
+16.07.2023 12:36:52 [INFO] 
+16.07.2023 12:36:52 [INFO] [TRANS_ID][20230716_123652_9085937834]
+16.07.2023 12:36:52 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:36:52 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:36:52 [INFO] [007][010][0716123652]
+16.07.2023 12:36:52 [INFO] [011][006][681623]
+16.07.2023 12:36:52 [INFO] [070][003][301]
+16.07.2023 12:36:52 [INFO] 
+16.07.2023 12:36:52 [INFO] Transaction [20230716_123652_9085937834] was sent 
+16.07.2023 12:36:53 [INFO] 
+16.07.2023 12:36:53 [INFO] [TRANS_ID][20230716_123652_9085937834]
+16.07.2023 12:36:53 [INFO] [MSG_TYPE][0810]
+16.07.2023 12:36:53 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 12:36:53 [INFO] [007][010][0716123652]
+16.07.2023 12:36:53 [INFO] [011][006][681623]
+16.07.2023 12:36:53 [INFO] [039][002][00]
+16.07.2023 12:36:53 [INFO] [070][003][301]
+16.07.2023 12:36:53 [INFO] 
+16.07.2023 12:36:53 [INFO] Transaction ID [20230716_123652_9085937834] matched, response time seconds: 0.678
+16.07.2023 12:36:53 [INFO] Processing transaction ID [20230716_123653_5319168242]
+16.07.2023 12:36:53 [INFO] 
+16.07.2023 12:36:53 [INFO] [TRANS_ID][20230716_123653_5319168242]
+16.07.2023 12:36:53 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:36:53 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:36:53 [INFO] [007][010][0716123653]
+16.07.2023 12:36:53 [INFO] [011][006][387148]
+16.07.2023 12:36:53 [INFO] [070][003][301]
+16.07.2023 12:36:53 [INFO] 
+16.07.2023 12:36:53 [INFO] Transaction [20230716_123653_5319168242] was sent 
+16.07.2023 12:36:53 [INFO] 
+16.07.2023 12:36:53 [INFO] [TRANS_ID][20230716_123653_5319168242]
+16.07.2023 12:36:53 [INFO] [MSG_TYPE][0810]
+16.07.2023 12:36:53 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 12:36:53 [INFO] [007][010][0716123653]
+16.07.2023 12:36:53 [INFO] [011][006][387148]
+16.07.2023 12:36:53 [INFO] [039][002][00]
+16.07.2023 12:36:53 [INFO] [070][003][301]
+16.07.2023 12:36:53 [INFO] 
+16.07.2023 12:36:53 [INFO] Transaction ID [20230716_123653_5319168242] matched, response time seconds: 0.263
+16.07.2023 12:36:54 [INFO] [Re]connecting...
+16.07.2023 12:36:54 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:36:54 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:36:54 [INFO] [Re]connecting...
+16.07.2023 12:36:54 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:36:54 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:36:56 [INFO] Processing transaction ID [20230716_123656_1669447480]
+16.07.2023 12:36:56 [INFO] 
+16.07.2023 12:36:56 [INFO] [TRANS_ID][20230716_123656_1669447480]
+16.07.2023 12:36:56 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:36:56 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:36:56 [INFO] [007][010][0716123656]
+16.07.2023 12:36:56 [INFO] [011][006][129474]
+16.07.2023 12:36:56 [INFO] [070][003][301]
+16.07.2023 12:36:56 [INFO] 
+16.07.2023 12:36:56 [INFO] Transaction [20230716_123656_1669447480] was sent 
+16.07.2023 12:36:56 [INFO] 
+16.07.2023 12:36:56 [INFO] [TRANS_ID][20230716_123656_1669447480]
+16.07.2023 12:36:56 [INFO] [MSG_TYPE][0810]
+16.07.2023 12:36:56 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 12:36:56 [INFO] [007][010][0716123656]
+16.07.2023 12:36:56 [INFO] [011][006][129474]
+16.07.2023 12:36:56 [INFO] [039][002][00]
+16.07.2023 12:36:56 [INFO] [070][003][301]
+16.07.2023 12:36:56 [INFO] 
+16.07.2023 12:36:56 [INFO] Transaction ID [20230716_123656_1669447480] matched, response time seconds: 0.888
+16.07.2023 12:36:57 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:37:01 [INFO] 
+16.07.2023 12:37:01 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:37:01 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:37:01 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:37:01 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:37:01 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:37:01 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:37:01 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:37:01 [INFO]  
+16.07.2023 12:37:01 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:37:01 [INFO]  
+16.07.2023 12:37:01 [INFO] 
+16.07.2023 12:37:01 [INFO] ## Configuration parameters ##
+16.07.2023 12:37:01 [INFO] {
+16.07.2023 12:37:01 [INFO]     "smartvista": {
+16.07.2023 12:37:01 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:37:01 [INFO]         "port": "16677"
+16.07.2023 12:37:01 [INFO]     },
+16.07.2023 12:37:01 [INFO]     "terminal": {
+16.07.2023 12:37:01 [INFO]         "process_default_dump": true,
+16.07.2023 12:37:01 [INFO]         "connect_on_startup": false
+16.07.2023 12:37:01 [INFO]     },
+16.07.2023 12:37:01 [INFO]     "debug": {
+16.07.2023 12:37:01 [INFO]         "level": "INFO",
+16.07.2023 12:37:01 [INFO]         "clear_log": true,
+16.07.2023 12:37:01 [INFO]         "parse_subfields": false
+16.07.2023 12:37:01 [INFO]     },
+16.07.2023 12:37:01 [INFO]     "fields": {
+16.07.2023 12:37:01 [INFO]         "max_amount": "100",
+16.07.2023 12:37:01 [INFO]         "build_fld_90": true,
+16.07.2023 12:37:01 [INFO]         "send_internal_id": true,
+16.07.2023 12:37:01 [INFO]         "validation": true
+16.07.2023 12:37:01 [INFO]     }
+16.07.2023 12:37:01 [INFO] }
+16.07.2023 12:37:01 [INFO] ## End of configuration parameters ##
+16.07.2023 12:37:01 [INFO] 
+16.07.2023 12:37:01 [INFO] Default file parsed
+16.07.2023 12:37:08 [INFO] 
+16.07.2023 12:37:08 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:37:08 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:37:08 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:37:08 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:37:08 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:37:08 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:37:08 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:37:08 [INFO]  
+16.07.2023 12:37:08 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:37:08 [INFO]  
+16.07.2023 12:37:08 [INFO] 
+16.07.2023 12:37:08 [INFO] ## Configuration parameters ##
+16.07.2023 12:37:08 [INFO] {
+16.07.2023 12:37:08 [INFO]     "smartvista": {
+16.07.2023 12:37:08 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:37:08 [INFO]         "port": "16677"
+16.07.2023 12:37:08 [INFO]     },
+16.07.2023 12:37:08 [INFO]     "terminal": {
+16.07.2023 12:37:08 [INFO]         "process_default_dump": true,
+16.07.2023 12:37:08 [INFO]         "connect_on_startup": false
+16.07.2023 12:37:08 [INFO]     },
+16.07.2023 12:37:08 [INFO]     "debug": {
+16.07.2023 12:37:08 [INFO]         "level": "INFO",
+16.07.2023 12:37:08 [INFO]         "clear_log": true,
+16.07.2023 12:37:08 [INFO]         "parse_subfields": false
+16.07.2023 12:37:08 [INFO]     },
+16.07.2023 12:37:08 [INFO]     "fields": {
+16.07.2023 12:37:08 [INFO]         "max_amount": "100",
+16.07.2023 12:37:08 [INFO]         "build_fld_90": true,
+16.07.2023 12:37:08 [INFO]         "send_internal_id": true,
+16.07.2023 12:37:08 [INFO]         "validation": true
+16.07.2023 12:37:08 [INFO]     }
+16.07.2023 12:37:08 [INFO] }
+16.07.2023 12:37:08 [INFO] ## End of configuration parameters ##
+16.07.2023 12:37:08 [INFO] 
+16.07.2023 12:37:08 [INFO] Default file parsed
+16.07.2023 12:37:42 [INFO] 
+16.07.2023 12:37:42 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:37:42 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:37:42 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:37:42 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:37:42 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:37:42 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:37:42 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:37:42 [INFO]  
+16.07.2023 12:37:42 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:37:42 [INFO]  
+16.07.2023 12:37:42 [INFO] 
+16.07.2023 12:37:42 [INFO] ## Configuration parameters ##
+16.07.2023 12:37:42 [INFO] {
+16.07.2023 12:37:42 [INFO]     "smartvista": {
+16.07.2023 12:37:42 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:37:42 [INFO]         "port": "16677"
+16.07.2023 12:37:42 [INFO]     },
+16.07.2023 12:37:42 [INFO]     "terminal": {
+16.07.2023 12:37:42 [INFO]         "process_default_dump": true,
+16.07.2023 12:37:42 [INFO]         "connect_on_startup": false
+16.07.2023 12:37:42 [INFO]     },
+16.07.2023 12:37:42 [INFO]     "debug": {
+16.07.2023 12:37:42 [INFO]         "level": "INFO",
+16.07.2023 12:37:42 [INFO]         "clear_log": true,
+16.07.2023 12:37:42 [INFO]         "parse_subfields": false
+16.07.2023 12:37:42 [INFO]     },
+16.07.2023 12:37:42 [INFO]     "fields": {
+16.07.2023 12:37:42 [INFO]         "max_amount": "100",
+16.07.2023 12:37:42 [INFO]         "build_fld_90": true,
+16.07.2023 12:37:42 [INFO]         "send_internal_id": true,
+16.07.2023 12:37:42 [INFO]         "validation": true
+16.07.2023 12:37:42 [INFO]     }
+16.07.2023 12:37:42 [INFO] }
+16.07.2023 12:37:42 [INFO] ## End of configuration parameters ##
+16.07.2023 12:37:42 [INFO] 
+16.07.2023 12:37:42 [INFO] Default file parsed
+16.07.2023 12:37:49 [INFO] 
+16.07.2023 12:37:49 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:37:49 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:37:49 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:37:49 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:37:49 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:37:49 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:37:49 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:37:49 [INFO]  
+16.07.2023 12:37:49 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:37:49 [INFO]  
+16.07.2023 12:37:49 [INFO] 
+16.07.2023 12:37:49 [INFO] ## Configuration parameters ##
+16.07.2023 12:37:49 [INFO] {
+16.07.2023 12:37:49 [INFO]     "smartvista": {
+16.07.2023 12:37:49 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:37:49 [INFO]         "port": "16677"
+16.07.2023 12:37:49 [INFO]     },
+16.07.2023 12:37:49 [INFO]     "terminal": {
+16.07.2023 12:37:49 [INFO]         "process_default_dump": true,
+16.07.2023 12:37:49 [INFO]         "connect_on_startup": false
+16.07.2023 12:37:49 [INFO]     },
+16.07.2023 12:37:49 [INFO]     "debug": {
+16.07.2023 12:37:49 [INFO]         "level": "INFO",
+16.07.2023 12:37:49 [INFO]         "clear_log": true,
+16.07.2023 12:37:49 [INFO]         "parse_subfields": false
+16.07.2023 12:37:49 [INFO]     },
+16.07.2023 12:37:49 [INFO]     "fields": {
+16.07.2023 12:37:49 [INFO]         "max_amount": "100",
+16.07.2023 12:37:49 [INFO]         "build_fld_90": true,
+16.07.2023 12:37:49 [INFO]         "send_internal_id": true,
+16.07.2023 12:37:49 [INFO]         "validation": true
+16.07.2023 12:37:49 [INFO]     }
+16.07.2023 12:37:49 [INFO] }
+16.07.2023 12:37:49 [INFO] ## End of configuration parameters ##
+16.07.2023 12:37:49 [INFO] 
+16.07.2023 12:37:50 [INFO] Default file parsed
+16.07.2023 12:38:13 [INFO] 
+16.07.2023 12:38:13 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:38:13 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:38:13 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:38:13 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:38:13 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:38:13 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:38:13 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:38:13 [INFO]  
+16.07.2023 12:38:13 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:38:13 [INFO]  
+16.07.2023 12:38:13 [INFO] 
+16.07.2023 12:38:13 [INFO] ## Configuration parameters ##
+16.07.2023 12:38:13 [INFO] {
+16.07.2023 12:38:13 [INFO]     "smartvista": {
+16.07.2023 12:38:13 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:38:13 [INFO]         "port": "16677"
+16.07.2023 12:38:13 [INFO]     },
+16.07.2023 12:38:13 [INFO]     "terminal": {
+16.07.2023 12:38:13 [INFO]         "process_default_dump": true,
+16.07.2023 12:38:13 [INFO]         "connect_on_startup": false
+16.07.2023 12:38:13 [INFO]     },
+16.07.2023 12:38:13 [INFO]     "debug": {
+16.07.2023 12:38:13 [INFO]         "level": "INFO",
+16.07.2023 12:38:13 [INFO]         "clear_log": true,
+16.07.2023 12:38:13 [INFO]         "parse_subfields": false
+16.07.2023 12:38:13 [INFO]     },
+16.07.2023 12:38:13 [INFO]     "fields": {
+16.07.2023 12:38:13 [INFO]         "max_amount": "100",
+16.07.2023 12:38:13 [INFO]         "build_fld_90": true,
+16.07.2023 12:38:13 [INFO]         "send_internal_id": true,
+16.07.2023 12:38:13 [INFO]         "validation": true
+16.07.2023 12:38:13 [INFO]     }
+16.07.2023 12:38:13 [INFO] }
+16.07.2023 12:38:13 [INFO] ## End of configuration parameters ##
+16.07.2023 12:38:13 [INFO] 
+16.07.2023 12:38:13 [INFO] Default file parsed
+16.07.2023 12:38:22 [ERROR] Cannot reverse transaction, lost transaction ID or non-reversible MTI
+16.07.2023 12:38:31 [INFO] 
+16.07.2023 12:38:31 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:38:31 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:38:31 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:38:31 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:38:31 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:38:31 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:38:31 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:38:31 [INFO]  
+16.07.2023 12:38:31 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:38:31 [INFO]  
+16.07.2023 12:38:31 [INFO] 
+16.07.2023 12:38:31 [INFO] ## Configuration parameters ##
+16.07.2023 12:38:31 [INFO] {
+16.07.2023 12:38:31 [INFO]     "smartvista": {
+16.07.2023 12:38:31 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:38:31 [INFO]         "port": "16677"
+16.07.2023 12:38:31 [INFO]     },
+16.07.2023 12:38:31 [INFO]     "terminal": {
+16.07.2023 12:38:31 [INFO]         "process_default_dump": true,
+16.07.2023 12:38:31 [INFO]         "connect_on_startup": false
+16.07.2023 12:38:31 [INFO]     },
+16.07.2023 12:38:31 [INFO]     "debug": {
+16.07.2023 12:38:31 [INFO]         "level": "INFO",
+16.07.2023 12:38:31 [INFO]         "clear_log": true,
+16.07.2023 12:38:31 [INFO]         "parse_subfields": false
+16.07.2023 12:38:31 [INFO]     },
+16.07.2023 12:38:31 [INFO]     "fields": {
+16.07.2023 12:38:31 [INFO]         "max_amount": "100",
+16.07.2023 12:38:31 [INFO]         "build_fld_90": true,
+16.07.2023 12:38:31 [INFO]         "send_internal_id": true,
+16.07.2023 12:38:31 [INFO]         "validation": true
+16.07.2023 12:38:31 [INFO]     }
+16.07.2023 12:38:31 [INFO] }
+16.07.2023 12:38:31 [INFO] ## End of configuration parameters ##
+16.07.2023 12:38:31 [INFO] 
+16.07.2023 12:38:31 [INFO] Default file parsed
+16.07.2023 12:38:41 [INFO] The transaction was saved successfully to C:/Users/admin/PycharmProjects/sv-terminal/ll
+16.07.2023 12:43:16 [INFO] 
+16.07.2023 12:43:16 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:43:16 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:43:16 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:43:16 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:43:16 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:43:16 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:43:16 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:43:16 [INFO]  
+16.07.2023 12:43:16 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:43:16 [INFO]  
+16.07.2023 12:43:16 [INFO] 
+16.07.2023 12:43:16 [INFO] ## Configuration parameters ##
+16.07.2023 12:43:16 [INFO] {
+16.07.2023 12:43:16 [INFO]     "smartvista": {
+16.07.2023 12:43:16 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:43:16 [INFO]         "port": "16677"
+16.07.2023 12:43:16 [INFO]     },
+16.07.2023 12:43:16 [INFO]     "terminal": {
+16.07.2023 12:43:16 [INFO]         "process_default_dump": true,
+16.07.2023 12:43:16 [INFO]         "connect_on_startup": false
+16.07.2023 12:43:16 [INFO]     },
+16.07.2023 12:43:16 [INFO]     "debug": {
+16.07.2023 12:43:16 [INFO]         "level": "INFO",
+16.07.2023 12:43:16 [INFO]         "clear_log": true,
+16.07.2023 12:43:16 [INFO]         "parse_subfields": false
+16.07.2023 12:43:16 [INFO]     },
+16.07.2023 12:43:16 [INFO]     "fields": {
+16.07.2023 12:43:16 [INFO]         "max_amount": "100",
+16.07.2023 12:43:16 [INFO]         "build_fld_90": true,
+16.07.2023 12:43:16 [INFO]         "send_internal_id": true,
+16.07.2023 12:43:16 [INFO]         "validation": true
+16.07.2023 12:43:16 [INFO]     }
+16.07.2023 12:43:16 [INFO] }
+16.07.2023 12:43:16 [INFO] ## End of configuration parameters ##
+16.07.2023 12:43:16 [INFO] 
+16.07.2023 12:43:16 [INFO] Default file parsed
+16.07.2023 12:43:19 [INFO] Processing transaction ID [20230716_124319_7530649412]
+16.07.2023 12:43:19 [WARNING] SmartVista disconnected. Trying to established the connection
+16.07.2023 12:43:19 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:43:19 [INFO] 
+16.07.2023 12:43:19 [INFO] [TRANS_ID][20230716_124319_7530649412]
+16.07.2023 12:43:19 [INFO] [MSG_TYPE][0200]
+16.07.2023 12:43:19 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49]
+16.07.2023 12:43:19 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:19 [INFO] [003][006][000000]
+16.07.2023 12:43:19 [INFO] [004][012][000000000743]
+16.07.2023 12:43:19 [INFO] [007][010][0716124319]
+16.07.2023 12:43:19 [INFO] [011][006][500939]
+16.07.2023 12:43:19 [INFO] [012][012][230613110417]
+16.07.2023 12:43:19 [INFO] [014][004][2504]
+16.07.2023 12:43:19 [INFO] [018][004][8999]
+16.07.2023 12:43:19 [INFO] [022][003][810]
+16.07.2023 12:43:19 [INFO] [037][012][395410044356]
+16.07.2023 12:43:19 [INFO] [041][008][70000826]
+16.07.2023 12:43:19 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:19 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 12:43:19 [INFO] [047][225][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202620230716_124319_7530649412]
+16.07.2023 12:43:19 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 12:43:19 [INFO] [049][003][978]
+16.07.2023 12:43:19 [INFO] 
+16.07.2023 12:43:19 [INFO] Transaction [20230716_124319_7530649412] was sent 
+16.07.2023 12:43:20 [INFO] 
+16.07.2023 12:43:20 [INFO] [TRANS_ID][20230716_124319_7530649412]
+16.07.2023 12:43:20 [INFO] [UTRNNO  ][47719888]
+16.07.2023 12:43:20 [INFO] [MSG_TYPE][0210]
+16.07.2023 12:43:20 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 12:43:20 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:20 [INFO] [003][006][000000]
+16.07.2023 12:43:20 [INFO] [004][012][000000000743]
+16.07.2023 12:43:20 [INFO] [007][010][0716124319]
+16.07.2023 12:43:20 [INFO] [011][006][500939]
+16.07.2023 12:43:20 [INFO] [012][012][230613110417]
+16.07.2023 12:43:20 [INFO] [014][004][2504]
+16.07.2023 12:43:20 [INFO] [018][004][8999]
+16.07.2023 12:43:20 [INFO] [022][003][810]
+16.07.2023 12:43:20 [INFO] [037][012][395410044356]
+16.07.2023 12:43:20 [INFO] [039][002][96]
+16.07.2023 12:43:20 [INFO] [041][008][70000826]
+16.07.2023 12:43:20 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:20 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 12:43:20 [INFO] [047][122][045001006400847719888065008477198880670142023071609432007101223061311041707202620230716_124319_75306494121100011113004+000]
+16.07.2023 12:43:20 [INFO] [049][003][978]
+16.07.2023 12:43:20 [INFO] 
+16.07.2023 12:43:20 [INFO] Transaction ID [20230716_124319_7530649412] matched, response time seconds: 0.828
+16.07.2023 12:43:20 [INFO] Processing transaction ID [20230716_124320_3767154399]
+16.07.2023 12:43:20 [INFO] 
+16.07.2023 12:43:20 [INFO] [TRANS_ID][20230716_124320_3767154399]
+16.07.2023 12:43:20 [INFO] [MSG_TYPE][0200]
+16.07.2023 12:43:20 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49]
+16.07.2023 12:43:20 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:20 [INFO] [003][006][000000]
+16.07.2023 12:43:20 [INFO] [004][012][000000003013]
+16.07.2023 12:43:20 [INFO] [007][010][0716124320]
+16.07.2023 12:43:20 [INFO] [011][006][870833]
+16.07.2023 12:43:20 [INFO] [012][012][230613110417]
+16.07.2023 12:43:20 [INFO] [014][004][2504]
+16.07.2023 12:43:20 [INFO] [018][004][8999]
+16.07.2023 12:43:20 [INFO] [022][003][810]
+16.07.2023 12:43:20 [INFO] [037][012][730972228216]
+16.07.2023 12:43:20 [INFO] [041][008][70000826]
+16.07.2023 12:43:20 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:20 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 12:43:20 [INFO] [047][225][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202620230716_124320_3767154399]
+16.07.2023 12:43:20 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 12:43:20 [INFO] [049][003][978]
+16.07.2023 12:43:20 [INFO] 
+16.07.2023 12:43:20 [INFO] Transaction [20230716_124320_3767154399] was sent 
+16.07.2023 12:43:21 [INFO] 
+16.07.2023 12:43:21 [INFO] [TRANS_ID][20230716_124320_3767154399]
+16.07.2023 12:43:21 [INFO] [UTRNNO  ][47719891]
+16.07.2023 12:43:21 [INFO] [MSG_TYPE][0210]
+16.07.2023 12:43:21 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 12:43:21 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:21 [INFO] [003][006][000000]
+16.07.2023 12:43:21 [INFO] [004][012][000000003013]
+16.07.2023 12:43:21 [INFO] [007][010][0716124320]
+16.07.2023 12:43:21 [INFO] [011][006][870833]
+16.07.2023 12:43:21 [INFO] [012][012][230613110417]
+16.07.2023 12:43:21 [INFO] [014][004][2504]
+16.07.2023 12:43:21 [INFO] [018][004][8999]
+16.07.2023 12:43:21 [INFO] [022][003][810]
+16.07.2023 12:43:21 [INFO] [037][012][730972228216]
+16.07.2023 12:43:21 [INFO] [039][002][96]
+16.07.2023 12:43:21 [INFO] [041][008][70000826]
+16.07.2023 12:43:21 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:21 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 12:43:21 [INFO] [047][122][045001006400847719891065008477198910670142023071609432107101223061311041707202620230716_124320_37671543991100011113004+000]
+16.07.2023 12:43:21 [INFO] [049][003][978]
+16.07.2023 12:43:21 [INFO] 
+16.07.2023 12:43:21 [INFO] Transaction ID [20230716_124320_3767154399] matched, response time seconds: 0.713
+16.07.2023 12:43:23 [INFO] Processing transaction ID [20230716_124323_0891799712]
+16.07.2023 12:43:23 [INFO] 
+16.07.2023 12:43:23 [INFO] [TRANS_ID][20230716_124323_0891799712]
+16.07.2023 12:43:23 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:43:23 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:43:23 [INFO] [007][010][0716124323]
+16.07.2023 12:43:23 [INFO] [011][006][054917]
+16.07.2023 12:43:23 [INFO] [070][003][301]
+16.07.2023 12:43:23 [INFO] 
+16.07.2023 12:43:23 [INFO] Transaction [20230716_124323_0891799712] was sent 
+16.07.2023 12:43:23 [INFO] 
+16.07.2023 12:43:23 [INFO] [TRANS_ID][20230716_124323_0891799712]
+16.07.2023 12:43:23 [INFO] [MSG_TYPE][0810]
+16.07.2023 12:43:23 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 12:43:23 [INFO] [007][010][0716124323]
+16.07.2023 12:43:23 [INFO] [011][006][054917]
+16.07.2023 12:43:23 [INFO] [039][002][00]
+16.07.2023 12:43:23 [INFO] [070][003][301]
+16.07.2023 12:43:23 [INFO] 
+16.07.2023 12:43:23 [INFO] Transaction ID [20230716_124323_0891799712] matched, response time seconds: 0.954
+16.07.2023 12:43:23 [INFO] Processing transaction ID [20230716_124323_7798802024]
+16.07.2023 12:43:23 [INFO] 
+16.07.2023 12:43:23 [INFO] [TRANS_ID][20230716_124323_7798802024]
+16.07.2023 12:43:23 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:43:23 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:43:23 [INFO] [007][010][0716124323]
+16.07.2023 12:43:23 [INFO] [011][006][876001]
+16.07.2023 12:43:23 [INFO] [070][003][301]
+16.07.2023 12:43:23 [INFO] 
+16.07.2023 12:43:23 [INFO] Transaction [20230716_124323_7798802024] was sent 
+16.07.2023 12:43:23 [INFO] 
+16.07.2023 12:43:23 [INFO] [TRANS_ID][20230716_124323_7798802024]
+16.07.2023 12:43:23 [INFO] [MSG_TYPE][0810]
+16.07.2023 12:43:23 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 12:43:23 [INFO] [007][010][0716124323]
+16.07.2023 12:43:23 [INFO] [011][006][876001]
+16.07.2023 12:43:23 [INFO] [039][002][00]
+16.07.2023 12:43:23 [INFO] [070][003][301]
+16.07.2023 12:43:23 [INFO] 
+16.07.2023 12:43:23 [INFO] Transaction ID [20230716_124323_7798802024] matched, response time seconds: 0.512
+16.07.2023 12:43:27 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:43:30 [INFO] 
+16.07.2023 12:43:30 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:43:30 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:43:30 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:43:30 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:43:30 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:43:30 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:43:30 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:43:30 [INFO]  
+16.07.2023 12:43:30 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:43:30 [INFO]  
+16.07.2023 12:43:30 [INFO] 
+16.07.2023 12:43:30 [INFO] ## Configuration parameters ##
+16.07.2023 12:43:30 [INFO] {
+16.07.2023 12:43:30 [INFO]     "smartvista": {
+16.07.2023 12:43:30 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:43:30 [INFO]         "port": "16677"
+16.07.2023 12:43:30 [INFO]     },
+16.07.2023 12:43:30 [INFO]     "terminal": {
+16.07.2023 12:43:30 [INFO]         "process_default_dump": true,
+16.07.2023 12:43:30 [INFO]         "connect_on_startup": false
+16.07.2023 12:43:30 [INFO]     },
+16.07.2023 12:43:30 [INFO]     "debug": {
+16.07.2023 12:43:30 [INFO]         "level": "INFO",
+16.07.2023 12:43:30 [INFO]         "clear_log": true,
+16.07.2023 12:43:30 [INFO]         "parse_subfields": false
+16.07.2023 12:43:30 [INFO]     },
+16.07.2023 12:43:30 [INFO]     "fields": {
+16.07.2023 12:43:30 [INFO]         "max_amount": "100",
+16.07.2023 12:43:30 [INFO]         "build_fld_90": true,
+16.07.2023 12:43:30 [INFO]         "send_internal_id": true,
+16.07.2023 12:43:30 [INFO]         "validation": true
+16.07.2023 12:43:30 [INFO]     }
+16.07.2023 12:43:30 [INFO] }
+16.07.2023 12:43:30 [INFO] ## End of configuration parameters ##
+16.07.2023 12:43:30 [INFO] 
+16.07.2023 12:43:30 [INFO] Default file parsed
+16.07.2023 12:43:38 [ERROR] No output filename recognized
+16.07.2023 12:43:39 [ERROR] Cannot reverse transaction, lost transaction ID or non-reversible MTI
+16.07.2023 12:43:44 [ERROR] Cannot reverse transaction, lost transaction ID or non-reversible MTI
+16.07.2023 12:43:45 [ERROR] Cannot reverse transaction, lost transaction ID or non-reversible MTI
+16.07.2023 12:43:46 [ERROR] Cannot reverse transaction, lost transaction ID or non-reversible MTI
+16.07.2023 12:43:46 [ERROR] Cannot reverse transaction, lost transaction ID or non-reversible MTI
+16.07.2023 12:43:46 [ERROR] Cannot reverse transaction, lost transaction ID or non-reversible MTI
+16.07.2023 12:43:46 [ERROR] Cannot reverse transaction, lost transaction ID or non-reversible MTI
+16.07.2023 12:43:48 [INFO] Processing transaction ID [20230716_124348_1946615267]
+16.07.2023 12:43:48 [WARNING] SmartVista disconnected. Trying to established the connection
+16.07.2023 12:43:48 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:43:48 [INFO] 
+16.07.2023 12:43:48 [INFO] [TRANS_ID][20230716_124348_1946615267]
+16.07.2023 12:43:48 [INFO] [MSG_TYPE][0200]
+16.07.2023 12:43:48 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49]
+16.07.2023 12:43:48 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:48 [INFO] [003][006][000000]
+16.07.2023 12:43:48 [INFO] [004][012][000000001004]
+16.07.2023 12:43:48 [INFO] [007][010][0716124348]
+16.07.2023 12:43:48 [INFO] [011][006][027779]
+16.07.2023 12:43:48 [INFO] [012][012][230613110417]
+16.07.2023 12:43:48 [INFO] [014][004][2504]
+16.07.2023 12:43:48 [INFO] [018][004][8999]
+16.07.2023 12:43:48 [INFO] [022][003][810]
+16.07.2023 12:43:48 [INFO] [037][012][006675924171]
+16.07.2023 12:43:48 [INFO] [041][008][70000826]
+16.07.2023 12:43:48 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:48 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 12:43:48 [INFO] [047][225][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202620230716_124348_1946615267]
+16.07.2023 12:43:48 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 12:43:48 [INFO] [049][003][978]
+16.07.2023 12:43:48 [INFO] 
+16.07.2023 12:43:48 [INFO] Transaction [20230716_124348_1946615267] was sent 
+16.07.2023 12:43:48 [INFO] 
+16.07.2023 12:43:48 [INFO] [TRANS_ID][20230716_124348_1946615267]
+16.07.2023 12:43:48 [INFO] [UTRNNO  ][47719929]
+16.07.2023 12:43:48 [INFO] [MSG_TYPE][0210]
+16.07.2023 12:43:48 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 12:43:48 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:48 [INFO] [003][006][000000]
+16.07.2023 12:43:48 [INFO] [004][012][000000001004]
+16.07.2023 12:43:48 [INFO] [007][010][0716124348]
+16.07.2023 12:43:48 [INFO] [011][006][027779]
+16.07.2023 12:43:48 [INFO] [012][012][230613110417]
+16.07.2023 12:43:48 [INFO] [014][004][2504]
+16.07.2023 12:43:48 [INFO] [018][004][8999]
+16.07.2023 12:43:48 [INFO] [022][003][810]
+16.07.2023 12:43:48 [INFO] [037][012][006675924171]
+16.07.2023 12:43:48 [INFO] [039][002][96]
+16.07.2023 12:43:48 [INFO] [041][008][70000826]
+16.07.2023 12:43:48 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:48 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 12:43:48 [INFO] [047][122][045001006400847719929065008477199290670142023071609434907101223061311041707202620230716_124348_19466152671100011113004+000]
+16.07.2023 12:43:48 [INFO] [049][003][978]
+16.07.2023 12:43:48 [INFO] 
+16.07.2023 12:43:48 [INFO] Transaction ID [20230716_124348_1946615267] matched, response time seconds: 1.131
+16.07.2023 12:43:48 [INFO] Processing transaction ID [20230716_124348_1946615267_R]
+16.07.2023 12:43:48 [INFO] 
+16.07.2023 12:43:48 [INFO] [TRANS_ID][20230716_124348_1946615267_R]
+16.07.2023 12:43:48 [INFO] [UTRNNO  ][47719929]
+16.07.2023 12:43:48 [INFO] [MSG_TYPE][0400]
+16.07.2023 12:43:48 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49, 90]
+16.07.2023 12:43:48 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:48 [INFO] [003][006][000000]
+16.07.2023 12:43:48 [INFO] [004][012][000000001004]
+16.07.2023 12:43:48 [INFO] [007][010][0716124348]
+16.07.2023 12:43:48 [INFO] [011][006][027779]
+16.07.2023 12:43:48 [INFO] [012][012][230613110417]
+16.07.2023 12:43:48 [INFO] [014][004][2504]
+16.07.2023 12:43:48 [INFO] [018][004][8999]
+16.07.2023 12:43:48 [INFO] [022][003][810]
+16.07.2023 12:43:48 [INFO] [037][012][006675924171]
+16.07.2023 12:43:48 [INFO] [041][008][70000826]
+16.07.2023 12:43:48 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:48 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 12:43:48 [INFO] [047][227][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202820230716_124348_1946615267_R]
+16.07.2023 12:43:48 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 12:43:48 [INFO] [049][003][978]
+16.07.2023 12:43:48 [INFO] [090][020][02000277790716124348]
+16.07.2023 12:43:48 [INFO] 
+16.07.2023 12:43:48 [INFO] Transaction [20230716_124348_1946615267_R] was sent 
+16.07.2023 12:43:49 [INFO] 
+16.07.2023 12:43:49 [INFO] [TRANS_ID][20230716_124348_1946615267_R]
+16.07.2023 12:43:49 [INFO] [UTRNNO  ][47719929]
+16.07.2023 12:43:49 [INFO] [MSG_TYPE][0410]
+16.07.2023 12:43:49 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 12:43:49 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:49 [INFO] [003][006][000000]
+16.07.2023 12:43:49 [INFO] [004][012][000000001004]
+16.07.2023 12:43:49 [INFO] [007][010][0716124348]
+16.07.2023 12:43:49 [INFO] [011][006][027779]
+16.07.2023 12:43:49 [INFO] [012][012][230613110417]
+16.07.2023 12:43:49 [INFO] [014][004][2504]
+16.07.2023 12:43:49 [INFO] [018][004][8999]
+16.07.2023 12:43:49 [INFO] [022][003][810]
+16.07.2023 12:43:49 [INFO] [037][012][000047719929]
+16.07.2023 12:43:49 [INFO] [039][002][96]
+16.07.2023 12:43:49 [INFO] [041][008][70000826]
+16.07.2023 12:43:49 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:49 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 12:43:49 [INFO] [047][122][045001006400847719929065008477199290670142023071609435007101223061311041707202620230716_124348_19466152671100011113004+000]
+16.07.2023 12:43:49 [INFO] [049][003][978]
+16.07.2023 12:43:49 [INFO] 
+16.07.2023 12:43:49 [INFO] Transaction ID [20230716_124348_1946615267_R] matched, response time seconds: 0.851
+16.07.2023 12:43:50 [INFO] Processing transaction ID [20230716_124348_1946615267_R]
+16.07.2023 12:43:50 [INFO] 
+16.07.2023 12:43:50 [INFO] [TRANS_ID][20230716_124348_1946615267_R]
+16.07.2023 12:43:50 [INFO] [UTRNNO  ][47719929]
+16.07.2023 12:43:50 [INFO] [MSG_TYPE][0400]
+16.07.2023 12:43:50 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49, 90]
+16.07.2023 12:43:50 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:50 [INFO] [003][006][000000]
+16.07.2023 12:43:50 [INFO] [004][012][000000001004]
+16.07.2023 12:43:50 [INFO] [007][010][0716124348]
+16.07.2023 12:43:50 [INFO] [011][006][027779]
+16.07.2023 12:43:50 [INFO] [012][012][230613110417]
+16.07.2023 12:43:50 [INFO] [014][004][2504]
+16.07.2023 12:43:50 [INFO] [018][004][8999]
+16.07.2023 12:43:50 [INFO] [022][003][810]
+16.07.2023 12:43:50 [INFO] [037][012][006675924171]
+16.07.2023 12:43:50 [INFO] [041][008][70000826]
+16.07.2023 12:43:50 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:50 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 12:43:50 [INFO] [047][227][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202820230716_124348_1946615267_R]
+16.07.2023 12:43:50 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 12:43:50 [INFO] [049][003][978]
+16.07.2023 12:43:50 [INFO] [090][020][02000277790716124348]
+16.07.2023 12:43:50 [INFO] 
+16.07.2023 12:43:50 [INFO] Transaction [20230716_124348_1946615267_R] was sent 
+16.07.2023 12:43:50 [INFO] 
+16.07.2023 12:43:50 [INFO] [TRANS_ID][20230716_124348_1946615267_R]
+16.07.2023 12:43:50 [INFO] [UTRNNO  ][47719929]
+16.07.2023 12:43:50 [INFO] [MSG_TYPE][0410]
+16.07.2023 12:43:50 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 12:43:50 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:50 [INFO] [003][006][000000]
+16.07.2023 12:43:50 [INFO] [004][012][000000001004]
+16.07.2023 12:43:50 [INFO] [007][010][0716124348]
+16.07.2023 12:43:50 [INFO] [011][006][027779]
+16.07.2023 12:43:50 [INFO] [012][012][230613110417]
+16.07.2023 12:43:50 [INFO] [014][004][2504]
+16.07.2023 12:43:50 [INFO] [018][004][8999]
+16.07.2023 12:43:50 [INFO] [022][003][810]
+16.07.2023 12:43:50 [INFO] [037][012][006675924171]
+16.07.2023 12:43:50 [INFO] [039][002][96]
+16.07.2023 12:43:50 [INFO] [041][008][70000826]
+16.07.2023 12:43:50 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:50 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 12:43:50 [INFO] [047][110][0450010064008477199290670142023071609435107101223061311041707202820230716_124348_1946615267_R1100011113004+000]
+16.07.2023 12:43:50 [INFO] [049][003][978]
+16.07.2023 12:43:50 [INFO] 
+16.07.2023 12:43:50 [INFO] Transaction ID [20230716_124348_1946615267_R] matched, response time seconds: 1.095
+16.07.2023 12:43:50 [INFO] Processing transaction ID [20230716_124348_1946615267_R]
+16.07.2023 12:43:50 [INFO] 
+16.07.2023 12:43:50 [INFO] [TRANS_ID][20230716_124348_1946615267_R]
+16.07.2023 12:43:50 [INFO] [UTRNNO  ][47719929]
+16.07.2023 12:43:50 [INFO] [MSG_TYPE][0400]
+16.07.2023 12:43:50 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49, 90]
+16.07.2023 12:43:50 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:50 [INFO] [003][006][000000]
+16.07.2023 12:43:50 [INFO] [004][012][000000001004]
+16.07.2023 12:43:50 [INFO] [007][010][0716124348]
+16.07.2023 12:43:50 [INFO] [011][006][027779]
+16.07.2023 12:43:50 [INFO] [012][012][230613110417]
+16.07.2023 12:43:50 [INFO] [014][004][2504]
+16.07.2023 12:43:50 [INFO] [018][004][8999]
+16.07.2023 12:43:50 [INFO] [022][003][810]
+16.07.2023 12:43:50 [INFO] [037][012][006675924171]
+16.07.2023 12:43:50 [INFO] [041][008][70000826]
+16.07.2023 12:43:50 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:50 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 12:43:50 [INFO] [047][227][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202820230716_124348_1946615267_R]
+16.07.2023 12:43:50 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 12:43:50 [INFO] [049][003][978]
+16.07.2023 12:43:50 [INFO] [090][020][02000277790716124348]
+16.07.2023 12:43:50 [INFO] 
+16.07.2023 12:43:50 [INFO] Transaction [20230716_124348_1946615267_R] was sent 
+16.07.2023 12:43:50 [INFO] 
+16.07.2023 12:43:50 [INFO] [TRANS_ID][20230716_124348_1946615267_R]
+16.07.2023 12:43:50 [INFO] [UTRNNO  ][47719929]
+16.07.2023 12:43:50 [INFO] [MSG_TYPE][0410]
+16.07.2023 12:43:50 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 12:43:50 [INFO] [002][016][548673......8564]
+16.07.2023 12:43:50 [INFO] [003][006][000000]
+16.07.2023 12:43:50 [INFO] [004][012][000000001004]
+16.07.2023 12:43:50 [INFO] [007][010][0716124348]
+16.07.2023 12:43:50 [INFO] [011][006][027779]
+16.07.2023 12:43:50 [INFO] [012][012][230613110417]
+16.07.2023 12:43:50 [INFO] [014][004][2504]
+16.07.2023 12:43:50 [INFO] [018][004][8999]
+16.07.2023 12:43:50 [INFO] [022][003][810]
+16.07.2023 12:43:50 [INFO] [037][012][006675924171]
+16.07.2023 12:43:50 [INFO] [039][002][96]
+16.07.2023 12:43:50 [INFO] [041][008][70000826]
+16.07.2023 12:43:50 [INFO] [042][015][000000010000866]
+16.07.2023 12:43:50 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 12:43:50 [INFO] [047][110][0450010064008477199290670142023071609435107101223061311041707202820230716_124348_1946615267_R1100011113004+000]
+16.07.2023 12:43:50 [INFO] [049][003][978]
+16.07.2023 12:43:50 [INFO] 
+16.07.2023 12:43:50 [INFO] Transaction ID [20230716_124348_1946615267_R] matched, response time seconds: 0.314
+16.07.2023 12:43:52 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:48:14 [INFO] 
+16.07.2023 12:48:14 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:48:14 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:48:14 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:48:14 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:48:14 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:48:14 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:48:14 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:48:14 [INFO]  
+16.07.2023 12:48:14 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:48:14 [INFO]  
+16.07.2023 12:48:14 [INFO] 
+16.07.2023 12:48:14 [INFO] ## Configuration parameters ##
+16.07.2023 12:48:14 [INFO] {
+16.07.2023 12:48:14 [INFO]     "smartvista": {
+16.07.2023 12:48:14 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:48:14 [INFO]         "port": "16677"
+16.07.2023 12:48:14 [INFO]     },
+16.07.2023 12:48:14 [INFO]     "terminal": {
+16.07.2023 12:48:14 [INFO]         "process_default_dump": true,
+16.07.2023 12:48:14 [INFO]         "connect_on_startup": false
+16.07.2023 12:48:14 [INFO]     },
+16.07.2023 12:48:14 [INFO]     "debug": {
+16.07.2023 12:48:14 [INFO]         "level": "INFO",
+16.07.2023 12:48:14 [INFO]         "clear_log": true,
+16.07.2023 12:48:14 [INFO]         "parse_subfields": false
+16.07.2023 12:48:14 [INFO]     },
+16.07.2023 12:48:14 [INFO]     "fields": {
+16.07.2023 12:48:14 [INFO]         "max_amount": "100",
+16.07.2023 12:48:14 [INFO]         "build_fld_90": true,
+16.07.2023 12:48:14 [INFO]         "send_internal_id": true,
+16.07.2023 12:48:14 [INFO]         "validation": true
+16.07.2023 12:48:14 [INFO]     }
+16.07.2023 12:48:14 [INFO] }
+16.07.2023 12:48:14 [INFO] ## End of configuration parameters ##
+16.07.2023 12:48:14 [INFO] 
+16.07.2023 12:48:14 [INFO] Default file parsed
+16.07.2023 12:48:16 [INFO] Processing transaction ID [20230716_124816_5834101235]
+16.07.2023 12:48:16 [WARNING] SmartVista disconnected. Trying to established the connection
+16.07.2023 12:48:16 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:48:16 [INFO] 
+16.07.2023 12:48:16 [INFO] [TRANS_ID][20230716_124816_5834101235]
+16.07.2023 12:48:16 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:48:16 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:48:16 [INFO] [007][010][0716124816]
+16.07.2023 12:48:16 [INFO] [011][006][050798]
+16.07.2023 12:48:16 [INFO] [070][003][301]
+16.07.2023 12:48:16 [INFO] 
+16.07.2023 12:48:16 [INFO] Transaction [20230716_124816_5834101235] was sent 
+16.07.2023 12:48:16 [INFO] 
+16.07.2023 12:48:16 [INFO] [TRANS_ID][20230716_124816_5834101235]
+16.07.2023 12:48:16 [INFO] [MSG_TYPE][0810]
+16.07.2023 12:48:16 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 12:48:16 [INFO] [007][010][0716124816]
+16.07.2023 12:48:16 [INFO] [011][006][050798]
+16.07.2023 12:48:16 [INFO] [039][002][00]
+16.07.2023 12:48:16 [INFO] [070][003][301]
+16.07.2023 12:48:16 [INFO] 
+16.07.2023 12:48:16 [INFO] Transaction ID [20230716_124816_5834101235] matched, response time seconds: 0.336
+16.07.2023 12:48:17 [INFO] Processing transaction ID [20230716_124817_2596545391]
+16.07.2023 12:48:17 [INFO] 
+16.07.2023 12:48:17 [INFO] [TRANS_ID][20230716_124817_2596545391]
+16.07.2023 12:48:17 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:48:17 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:48:17 [INFO] [007][010][0716124817]
+16.07.2023 12:48:17 [INFO] [011][006][964783]
+16.07.2023 12:48:17 [INFO] [070][003][301]
+16.07.2023 12:48:17 [INFO] 
+16.07.2023 12:48:17 [INFO] Transaction [20230716_124817_2596545391] was sent 
+16.07.2023 12:48:17 [INFO] 
+16.07.2023 12:48:17 [INFO] [TRANS_ID][20230716_124817_2596545391]
+16.07.2023 12:48:17 [INFO] [MSG_TYPE][0810]
+16.07.2023 12:48:17 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 12:48:17 [INFO] [007][010][0716124817]
+16.07.2023 12:48:17 [INFO] [011][006][964783]
+16.07.2023 12:48:17 [INFO] [039][002][00]
+16.07.2023 12:48:17 [INFO] [070][003][301]
+16.07.2023 12:48:17 [INFO] 
+16.07.2023 12:48:17 [INFO] Transaction ID [20230716_124817_2596545391] matched, response time seconds: 1.003
+16.07.2023 12:48:17 [INFO] Processing transaction ID [20230716_124817_8213382659]
+16.07.2023 12:48:17 [INFO] 
+16.07.2023 12:48:17 [INFO] [TRANS_ID][20230716_124817_8213382659]
+16.07.2023 12:48:17 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:48:17 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:48:17 [INFO] [007][010][0716124817]
+16.07.2023 12:48:17 [INFO] [011][006][150352]
+16.07.2023 12:48:17 [INFO] [070][003][301]
+16.07.2023 12:48:17 [INFO] 
+16.07.2023 12:48:17 [INFO] Transaction [20230716_124817_8213382659] was sent 
+16.07.2023 12:48:17 [INFO] 
+16.07.2023 12:48:17 [INFO] [TRANS_ID][20230716_124817_8213382659]
+16.07.2023 12:48:17 [INFO] [MSG_TYPE][0810]
+16.07.2023 12:48:17 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 12:48:17 [INFO] [007][010][0716124817]
+16.07.2023 12:48:17 [INFO] [011][006][150352]
+16.07.2023 12:48:17 [INFO] [039][002][00]
+16.07.2023 12:48:17 [INFO] [070][003][301]
+16.07.2023 12:48:17 [INFO] 
+16.07.2023 12:48:17 [INFO] Transaction ID [20230716_124817_8213382659] matched, response time seconds: 0.566
+16.07.2023 12:48:18 [INFO] [Re]connecting...
+16.07.2023 12:48:18 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:48:18 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:48:19 [INFO] [Re]connecting...
+16.07.2023 12:48:19 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:48:19 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 12:48:20 [INFO] Processing transaction ID [20230716_124820_0579971437]
+16.07.2023 12:48:20 [INFO] 
+16.07.2023 12:48:20 [INFO] [TRANS_ID][20230716_124820_0579971437]
+16.07.2023 12:48:20 [INFO] [MSG_TYPE][0800]
+16.07.2023 12:48:20 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 12:48:20 [INFO] [007][010][0716124820]
+16.07.2023 12:48:20 [INFO] [011][006][233216]
+16.07.2023 12:48:20 [INFO] [070][003][301]
+16.07.2023 12:48:20 [INFO] 
+16.07.2023 12:48:20 [INFO] Transaction [20230716_124820_0579971437] was sent 
+16.07.2023 12:48:20 [INFO] 
+16.07.2023 12:48:20 [INFO] [TRANS_ID][20230716_124820_0579971437]
+16.07.2023 12:48:20 [INFO] [MSG_TYPE][0810]
+16.07.2023 12:48:20 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 12:48:20 [INFO] [007][010][0716124820]
+16.07.2023 12:48:20 [INFO] [011][006][233216]
+16.07.2023 12:48:20 [INFO] [039][002][00]
+16.07.2023 12:48:20 [INFO] [070][003][301]
+16.07.2023 12:48:20 [INFO] 
+16.07.2023 12:48:20 [INFO] Transaction ID [20230716_124820_0579971437] matched, response time seconds: 0.802
+16.07.2023 12:48:24 [ERROR] Cannot reverse transaction, lost transaction ID or non-reversible MTI
+16.07.2023 12:48:26 [INFO] Processing transaction ID [20230716_124826_7595498360]
+16.07.2023 12:48:26 [INFO] 
+16.07.2023 12:48:26 [INFO] [TRANS_ID][20230716_124826_7595498360]
+16.07.2023 12:48:26 [INFO] [MSG_TYPE][0200]
+16.07.2023 12:48:26 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49]
+16.07.2023 12:48:26 [INFO] [002][016][548673......8564]
+16.07.2023 12:48:26 [INFO] [003][006][000000]
+16.07.2023 12:48:26 [INFO] [004][012][000000006702]
+16.07.2023 12:48:26 [INFO] [007][010][0716124826]
+16.07.2023 12:48:26 [INFO] [011][006][687494]
+16.07.2023 12:48:26 [INFO] [012][012][230613110417]
+16.07.2023 12:48:26 [INFO] [014][004][2504]
+16.07.2023 12:48:26 [INFO] [018][004][8999]
+16.07.2023 12:48:26 [INFO] [022][003][810]
+16.07.2023 12:48:26 [INFO] [037][012][111219122892]
+16.07.2023 12:48:26 [INFO] [041][008][70000826]
+16.07.2023 12:48:26 [INFO] [042][015][000000010000866]
+16.07.2023 12:48:26 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 12:48:26 [INFO] [047][225][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202620230716_124826_7595498360]
+16.07.2023 12:48:26 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 12:48:26 [INFO] [049][003][978]
+16.07.2023 12:48:26 [INFO] 
+16.07.2023 12:48:26 [INFO] Transaction [20230716_124826_7595498360] was sent 
+16.07.2023 12:48:27 [INFO] 
+16.07.2023 12:48:27 [INFO] [TRANS_ID][20230716_124826_7595498360]
+16.07.2023 12:48:27 [INFO] [UTRNNO  ][47720339]
+16.07.2023 12:48:27 [INFO] [MSG_TYPE][0210]
+16.07.2023 12:48:27 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 12:48:27 [INFO] [002][016][548673......8564]
+16.07.2023 12:48:27 [INFO] [003][006][000000]
+16.07.2023 12:48:27 [INFO] [004][012][000000006702]
+16.07.2023 12:48:27 [INFO] [007][010][0716124826]
+16.07.2023 12:48:27 [INFO] [011][006][687494]
+16.07.2023 12:48:27 [INFO] [012][012][230613110417]
+16.07.2023 12:48:27 [INFO] [014][004][2504]
+16.07.2023 12:48:27 [INFO] [018][004][8999]
+16.07.2023 12:48:27 [INFO] [022][003][810]
+16.07.2023 12:48:27 [INFO] [037][012][111219122892]
+16.07.2023 12:48:27 [INFO] [039][002][96]
+16.07.2023 12:48:27 [INFO] [041][008][70000826]
+16.07.2023 12:48:27 [INFO] [042][015][000000010000866]
+16.07.2023 12:48:27 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 12:48:27 [INFO] [047][122][045001006400847720339065008477203390670142023071609482707101223061311041707202620230716_124826_75954983601100011113004+000]
+16.07.2023 12:48:27 [INFO] [049][003][978]
+16.07.2023 12:48:27 [INFO] 
+16.07.2023 12:48:27 [INFO] Transaction ID [20230716_124826_7595498360] matched, response time seconds: 0.701
+16.07.2023 12:48:28 [INFO] Processing transaction ID [20230716_124826_7595498360_R]
+16.07.2023 12:48:28 [INFO] 
+16.07.2023 12:48:28 [INFO] [TRANS_ID][20230716_124826_7595498360_R]
+16.07.2023 12:48:28 [INFO] [UTRNNO  ][47720339]
+16.07.2023 12:48:28 [INFO] [MSG_TYPE][0400]
+16.07.2023 12:48:28 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49, 90]
+16.07.2023 12:48:28 [INFO] [002][016][548673......8564]
+16.07.2023 12:48:28 [INFO] [003][006][000000]
+16.07.2023 12:48:28 [INFO] [004][012][000000006702]
+16.07.2023 12:48:28 [INFO] [007][010][0716124826]
+16.07.2023 12:48:28 [INFO] [011][006][687494]
+16.07.2023 12:48:28 [INFO] [012][012][230613110417]
+16.07.2023 12:48:28 [INFO] [014][004][2504]
+16.07.2023 12:48:28 [INFO] [018][004][8999]
+16.07.2023 12:48:28 [INFO] [022][003][810]
+16.07.2023 12:48:28 [INFO] [037][012][111219122892]
+16.07.2023 12:48:28 [INFO] [041][008][70000826]
+16.07.2023 12:48:28 [INFO] [042][015][000000010000866]
+16.07.2023 12:48:28 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 12:48:28 [INFO] [047][227][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202820230716_124826_7595498360_R]
+16.07.2023 12:48:28 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 12:48:28 [INFO] [049][003][978]
+16.07.2023 12:48:28 [INFO] [090][020][02006874940716124826]
+16.07.2023 12:48:28 [INFO] 
+16.07.2023 12:48:28 [INFO] Transaction [20230716_124826_7595498360_R] was sent 
+16.07.2023 12:48:28 [INFO] 
+16.07.2023 12:48:28 [INFO] [TRANS_ID][20230716_124826_7595498360_R]
+16.07.2023 12:48:28 [INFO] [UTRNNO  ][47720339]
+16.07.2023 12:48:28 [INFO] [MSG_TYPE][0410]
+16.07.2023 12:48:28 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 12:48:28 [INFO] [002][016][548673......8564]
+16.07.2023 12:48:28 [INFO] [003][006][000000]
+16.07.2023 12:48:28 [INFO] [004][012][000000006702]
+16.07.2023 12:48:28 [INFO] [007][010][0716124826]
+16.07.2023 12:48:28 [INFO] [011][006][687494]
+16.07.2023 12:48:28 [INFO] [012][012][230613110417]
+16.07.2023 12:48:28 [INFO] [014][004][2504]
+16.07.2023 12:48:28 [INFO] [018][004][8999]
+16.07.2023 12:48:28 [INFO] [022][003][810]
+16.07.2023 12:48:28 [INFO] [037][012][000047720339]
+16.07.2023 12:48:28 [INFO] [039][002][96]
+16.07.2023 12:48:28 [INFO] [041][008][70000826]
+16.07.2023 12:48:28 [INFO] [042][015][000000010000866]
+16.07.2023 12:48:28 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 12:48:28 [INFO] [047][122][045001006400847720339065008477203390670142023071609482907101223061311041707202620230716_124826_75954983601100011113004+000]
+16.07.2023 12:48:28 [INFO] [049][003][978]
+16.07.2023 12:48:28 [INFO] 
+16.07.2023 12:48:28 [INFO] Transaction ID [20230716_124826_7595498360_R] matched, response time seconds: 0.853
+16.07.2023 12:48:28 [INFO] Processing transaction ID [20230716_124826_7595498360_R]
+16.07.2023 12:48:28 [INFO] 
+16.07.2023 12:48:28 [INFO] [TRANS_ID][20230716_124826_7595498360_R]
+16.07.2023 12:48:28 [INFO] [UTRNNO  ][47720339]
+16.07.2023 12:48:28 [INFO] [MSG_TYPE][0400]
+16.07.2023 12:48:28 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49, 90]
+16.07.2023 12:48:28 [INFO] [002][016][548673......8564]
+16.07.2023 12:48:28 [INFO] [003][006][000000]
+16.07.2023 12:48:28 [INFO] [004][012][000000006702]
+16.07.2023 12:48:28 [INFO] [007][010][0716124826]
+16.07.2023 12:48:28 [INFO] [011][006][687494]
+16.07.2023 12:48:28 [INFO] [012][012][230613110417]
+16.07.2023 12:48:28 [INFO] [014][004][2504]
+16.07.2023 12:48:28 [INFO] [018][004][8999]
+16.07.2023 12:48:28 [INFO] [022][003][810]
+16.07.2023 12:48:28 [INFO] [037][012][111219122892]
+16.07.2023 12:48:28 [INFO] [041][008][70000826]
+16.07.2023 12:48:28 [INFO] [042][015][000000010000866]
+16.07.2023 12:48:28 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 12:48:28 [INFO] [047][227][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202820230716_124826_7595498360_R]
+16.07.2023 12:48:28 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 12:48:28 [INFO] [049][003][978]
+16.07.2023 12:48:28 [INFO] [090][020][02006874940716124826]
+16.07.2023 12:48:28 [INFO] 
+16.07.2023 12:48:28 [INFO] Transaction [20230716_124826_7595498360_R] was sent 
+16.07.2023 12:48:28 [INFO] 
+16.07.2023 12:48:28 [INFO] [TRANS_ID][20230716_124826_7595498360_R]
+16.07.2023 12:48:28 [INFO] [UTRNNO  ][47720339]
+16.07.2023 12:48:28 [INFO] [MSG_TYPE][0410]
+16.07.2023 12:48:28 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 12:48:28 [INFO] [002][016][548673......8564]
+16.07.2023 12:48:28 [INFO] [003][006][000000]
+16.07.2023 12:48:28 [INFO] [004][012][000000006702]
+16.07.2023 12:48:28 [INFO] [007][010][0716124826]
+16.07.2023 12:48:28 [INFO] [011][006][687494]
+16.07.2023 12:48:28 [INFO] [012][012][230613110417]
+16.07.2023 12:48:28 [INFO] [014][004][2504]
+16.07.2023 12:48:28 [INFO] [018][004][8999]
+16.07.2023 12:48:28 [INFO] [022][003][810]
+16.07.2023 12:48:28 [INFO] [037][012][111219122892]
+16.07.2023 12:48:28 [INFO] [039][002][96]
+16.07.2023 12:48:28 [INFO] [041][008][70000826]
+16.07.2023 12:48:28 [INFO] [042][015][000000010000866]
+16.07.2023 12:48:28 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 12:48:28 [INFO] [047][110][0450010064008477203390670142023071609482907101223061311041707202820230716_124826_7595498360_R1100011113004+000]
+16.07.2023 12:48:28 [INFO] [049][003][978]
+16.07.2023 12:48:28 [INFO] 
+16.07.2023 12:48:28 [INFO] Transaction ID [20230716_124826_7595498360_R] matched, response time seconds: 0.478
+16.07.2023 12:48:29 [INFO] Processing transaction ID [20230716_124826_7595498360_R]
+16.07.2023 12:48:29 [INFO] 
+16.07.2023 12:48:29 [INFO] [TRANS_ID][20230716_124826_7595498360_R]
+16.07.2023 12:48:29 [INFO] [UTRNNO  ][47720339]
+16.07.2023 12:48:29 [INFO] [MSG_TYPE][0400]
+16.07.2023 12:48:29 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49, 90]
+16.07.2023 12:48:29 [INFO] [002][016][548673......8564]
+16.07.2023 12:48:29 [INFO] [003][006][000000]
+16.07.2023 12:48:29 [INFO] [004][012][000000006702]
+16.07.2023 12:48:29 [INFO] [007][010][0716124826]
+16.07.2023 12:48:29 [INFO] [011][006][687494]
+16.07.2023 12:48:29 [INFO] [012][012][230613110417]
+16.07.2023 12:48:29 [INFO] [014][004][2504]
+16.07.2023 12:48:29 [INFO] [018][004][8999]
+16.07.2023 12:48:29 [INFO] [022][003][810]
+16.07.2023 12:48:29 [INFO] [037][012][111219122892]
+16.07.2023 12:48:29 [INFO] [041][008][70000826]
+16.07.2023 12:48:29 [INFO] [042][015][000000010000866]
+16.07.2023 12:48:29 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 12:48:29 [INFO] [047][227][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202820230716_124826_7595498360_R]
+16.07.2023 12:48:29 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 12:48:29 [INFO] [049][003][978]
+16.07.2023 12:48:29 [INFO] [090][020][02006874940716124826]
+16.07.2023 12:48:29 [INFO] 
+16.07.2023 12:48:29 [INFO] Transaction [20230716_124826_7595498360_R] was sent 
+16.07.2023 12:48:29 [INFO] 
+16.07.2023 12:48:29 [INFO] [TRANS_ID][20230716_124826_7595498360_R]
+16.07.2023 12:48:29 [INFO] [UTRNNO  ][47720339]
+16.07.2023 12:48:29 [INFO] [MSG_TYPE][0410]
+16.07.2023 12:48:29 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 12:48:29 [INFO] [002][016][548673......8564]
+16.07.2023 12:48:29 [INFO] [003][006][000000]
+16.07.2023 12:48:29 [INFO] [004][012][000000006702]
+16.07.2023 12:48:29 [INFO] [007][010][0716124826]
+16.07.2023 12:48:29 [INFO] [011][006][687494]
+16.07.2023 12:48:29 [INFO] [012][012][230613110417]
+16.07.2023 12:48:29 [INFO] [014][004][2504]
+16.07.2023 12:48:29 [INFO] [018][004][8999]
+16.07.2023 12:48:29 [INFO] [022][003][810]
+16.07.2023 12:48:29 [INFO] [037][012][111219122892]
+16.07.2023 12:48:29 [INFO] [039][002][96]
+16.07.2023 12:48:29 [INFO] [041][008][70000826]
+16.07.2023 12:48:29 [INFO] [042][015][000000010000866]
+16.07.2023 12:48:29 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 12:48:29 [INFO] [047][110][0450010064008477203390670142023071609483007101223061311041707202820230716_124826_7595498360_R1100011113004+000]
+16.07.2023 12:48:29 [INFO] [049][003][978]
+16.07.2023 12:48:29 [INFO] 
+16.07.2023 12:48:29 [INFO] Transaction ID [20230716_124826_7595498360_R] matched, response time seconds: 0.93
+16.07.2023 12:48:30 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 12:58:51 [INFO] 
+16.07.2023 12:58:51 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 12:58:51 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 12:58:51 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 12:58:51 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 12:58:51 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 12:58:51 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 12:58:51 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 12:58:51 [INFO]  
+16.07.2023 12:58:51 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 12:58:51 [INFO]  
+16.07.2023 12:58:51 [INFO] 
+16.07.2023 12:58:51 [INFO] ## Configuration parameters ##
+16.07.2023 12:58:51 [INFO] {
+16.07.2023 12:58:51 [INFO]     "smartvista": {
+16.07.2023 12:58:51 [INFO]         "host": "172.21.30.5",
+16.07.2023 12:58:51 [INFO]         "port": "16677"
+16.07.2023 12:58:51 [INFO]     },
+16.07.2023 12:58:51 [INFO]     "terminal": {
+16.07.2023 12:58:51 [INFO]         "process_default_dump": true,
+16.07.2023 12:58:51 [INFO]         "connect_on_startup": false
+16.07.2023 12:58:51 [INFO]     },
+16.07.2023 12:58:51 [INFO]     "debug": {
+16.07.2023 12:58:51 [INFO]         "level": "INFO",
+16.07.2023 12:58:51 [INFO]         "clear_log": true,
+16.07.2023 12:58:51 [INFO]         "parse_subfields": false
+16.07.2023 12:58:51 [INFO]     },
+16.07.2023 12:58:51 [INFO]     "fields": {
+16.07.2023 12:58:51 [INFO]         "max_amount": "100",
+16.07.2023 12:58:51 [INFO]         "build_fld_90": true,
+16.07.2023 12:58:51 [INFO]         "send_internal_id": true,
+16.07.2023 12:58:51 [INFO]         "validation": true
+16.07.2023 12:58:51 [INFO]     }
+16.07.2023 12:58:51 [INFO] }
+16.07.2023 12:58:51 [INFO] ## End of configuration parameters ##
+16.07.2023 12:58:51 [INFO] 
+16.07.2023 12:58:51 [INFO] Default file parsed
+16.07.2023 12:58:56 [ERROR] Cannot reverse transaction, lost transaction ID or non-reversible MTI
+16.07.2023 12:59:02 [ERROR] Cannot reverse transaction, lost transaction ID or non-reversible MTI
+16.07.2023 13:01:07 [INFO] 
+16.07.2023 13:01:07 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:01:07 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:01:07 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:01:07 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:01:07 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:01:07 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:01:07 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:01:07 [INFO]  
+16.07.2023 13:01:07 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:01:07 [INFO]  
+16.07.2023 13:01:07 [INFO] 
+16.07.2023 13:01:07 [INFO] ## Configuration parameters ##
+16.07.2023 13:01:07 [INFO] {
+16.07.2023 13:01:07 [INFO]     "smartvista": {
+16.07.2023 13:01:07 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:01:07 [INFO]         "port": "16677"
+16.07.2023 13:01:07 [INFO]     },
+16.07.2023 13:01:07 [INFO]     "terminal": {
+16.07.2023 13:01:07 [INFO]         "process_default_dump": true,
+16.07.2023 13:01:07 [INFO]         "connect_on_startup": false
+16.07.2023 13:01:07 [INFO]     },
+16.07.2023 13:01:07 [INFO]     "debug": {
+16.07.2023 13:01:07 [INFO]         "level": "INFO",
+16.07.2023 13:01:07 [INFO]         "clear_log": true,
+16.07.2023 13:01:07 [INFO]         "parse_subfields": false
+16.07.2023 13:01:07 [INFO]     },
+16.07.2023 13:01:07 [INFO]     "fields": {
+16.07.2023 13:01:07 [INFO]         "max_amount": "100",
+16.07.2023 13:01:07 [INFO]         "build_fld_90": true,
+16.07.2023 13:01:07 [INFO]         "send_internal_id": true,
+16.07.2023 13:01:07 [INFO]         "validation": true
+16.07.2023 13:01:07 [INFO]     }
+16.07.2023 13:01:07 [INFO] }
+16.07.2023 13:01:07 [INFO] ## End of configuration parameters ##
+16.07.2023 13:01:07 [INFO] 
+16.07.2023 13:01:07 [INFO] Default file parsed
+16.07.2023 13:01:09 [INFO] Processing transaction ID [20230716_130109_1921419244]
+16.07.2023 13:01:09 [WARNING] SmartVista disconnected. Trying to established the connection
+16.07.2023 13:01:09 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 13:01:09 [INFO] 
+16.07.2023 13:01:09 [INFO] [TRANS_ID][20230716_130109_1921419244]
+16.07.2023 13:01:09 [INFO] [MSG_TYPE][0800]
+16.07.2023 13:01:09 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 13:01:09 [INFO] [007][010][0716130109]
+16.07.2023 13:01:09 [INFO] [011][006][187407]
+16.07.2023 13:01:09 [INFO] [070][003][301]
+16.07.2023 13:01:09 [INFO] 
+16.07.2023 13:01:09 [INFO] Transaction [20230716_130109_1921419244] was sent 
+16.07.2023 13:01:09 [INFO] 
+16.07.2023 13:01:09 [INFO] [TRANS_ID][20230716_130109_1921419244]
+16.07.2023 13:01:09 [INFO] [MSG_TYPE][0810]
+16.07.2023 13:01:09 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 13:01:09 [INFO] [007][010][0716130109]
+16.07.2023 13:01:09 [INFO] [011][006][187407]
+16.07.2023 13:01:09 [INFO] [039][002][00]
+16.07.2023 13:01:09 [INFO] [070][003][301]
+16.07.2023 13:01:09 [INFO] 
+16.07.2023 13:01:09 [INFO] Transaction ID [20230716_130109_1921419244] matched, response time seconds: 0.95
+16.07.2023 13:01:09 [INFO] Processing transaction ID [20230716_130109_9052789076]
+16.07.2023 13:01:09 [INFO] 
+16.07.2023 13:01:09 [INFO] [TRANS_ID][20230716_130109_9052789076]
+16.07.2023 13:01:09 [INFO] [MSG_TYPE][0800]
+16.07.2023 13:01:09 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 13:01:09 [INFO] [007][010][0716130109]
+16.07.2023 13:01:09 [INFO] [011][006][649783]
+16.07.2023 13:01:09 [INFO] [070][003][301]
+16.07.2023 13:01:09 [INFO] 
+16.07.2023 13:01:09 [INFO] Transaction [20230716_130109_9052789076] was sent 
+16.07.2023 13:01:09 [INFO] 
+16.07.2023 13:01:09 [INFO] [TRANS_ID][20230716_130109_9052789076]
+16.07.2023 13:01:09 [INFO] [MSG_TYPE][0810]
+16.07.2023 13:01:09 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 13:01:09 [INFO] [007][010][0716130109]
+16.07.2023 13:01:09 [INFO] [011][006][649783]
+16.07.2023 13:01:09 [INFO] [039][002][00]
+16.07.2023 13:01:09 [INFO] [070][003][301]
+16.07.2023 13:01:09 [INFO] 
+16.07.2023 13:01:09 [INFO] Transaction ID [20230716_130109_9052789076] matched, response time seconds: 0.649
+16.07.2023 13:01:21 [ERROR] No output filename recognized
+16.07.2023 13:01:24 [ERROR] No output filename recognized
+16.07.2023 13:01:26 [INFO] Processing transaction ID [20230716_130126_4119802810]
+16.07.2023 13:01:26 [INFO] 
+16.07.2023 13:01:26 [INFO] [TRANS_ID][20230716_130126_4119802810]
+16.07.2023 13:01:26 [INFO] [MSG_TYPE][0200]
+16.07.2023 13:01:26 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49]
+16.07.2023 13:01:26 [INFO] [002][016][548673......8564]
+16.07.2023 13:01:26 [INFO] [003][006][000000]
+16.07.2023 13:01:26 [INFO] [004][012][000000006428]
+16.07.2023 13:01:26 [INFO] [007][010][0716130126]
+16.07.2023 13:01:26 [INFO] [011][006][853276]
+16.07.2023 13:01:26 [INFO] [012][012][230613110417]
+16.07.2023 13:01:26 [INFO] [014][004][2504]
+16.07.2023 13:01:26 [INFO] [018][004][8999]
+16.07.2023 13:01:26 [INFO] [022][003][810]
+16.07.2023 13:01:26 [INFO] [037][012][601572325211]
+16.07.2023 13:01:26 [INFO] [041][008][70000826]
+16.07.2023 13:01:26 [INFO] [042][015][000000010000866]
+16.07.2023 13:01:26 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 13:01:26 [INFO] [047][225][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202620230716_130126_4119802810]
+16.07.2023 13:01:26 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 13:01:26 [INFO] [049][003][978]
+16.07.2023 13:01:26 [INFO] 
+16.07.2023 13:01:26 [INFO] Transaction [20230716_130126_4119802810] was sent 
+16.07.2023 13:01:26 [INFO] 
+16.07.2023 13:01:26 [INFO] [TRANS_ID][20230716_130126_4119802810]
+16.07.2023 13:01:26 [INFO] [UTRNNO  ][47721433]
+16.07.2023 13:01:26 [INFO] [MSG_TYPE][0210]
+16.07.2023 13:01:26 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 13:01:26 [INFO] [002][016][548673......8564]
+16.07.2023 13:01:26 [INFO] [003][006][000000]
+16.07.2023 13:01:26 [INFO] [004][012][000000006428]
+16.07.2023 13:01:26 [INFO] [007][010][0716130126]
+16.07.2023 13:01:26 [INFO] [011][006][853276]
+16.07.2023 13:01:26 [INFO] [012][012][230613110417]
+16.07.2023 13:01:26 [INFO] [014][004][2504]
+16.07.2023 13:01:26 [INFO] [018][004][8999]
+16.07.2023 13:01:26 [INFO] [022][003][810]
+16.07.2023 13:01:26 [INFO] [037][012][601572325211]
+16.07.2023 13:01:26 [INFO] [039][002][96]
+16.07.2023 13:01:26 [INFO] [041][008][70000826]
+16.07.2023 13:01:26 [INFO] [042][015][000000010000866]
+16.07.2023 13:01:26 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 13:01:26 [INFO] [047][122][045001006400847721433065008477214330670142023071610012707101223061311041707202620230716_130126_41198028101100011113004+000]
+16.07.2023 13:01:26 [INFO] [049][003][978]
+16.07.2023 13:01:26 [INFO] 
+16.07.2023 13:01:26 [INFO] Transaction ID [20230716_130126_4119802810] matched, response time seconds: 0.308
+16.07.2023 13:01:29 [INFO] Processing transaction ID [20230716_130126_4119802810_R]
+16.07.2023 13:01:30 [INFO] 
+16.07.2023 13:01:30 [INFO] [TRANS_ID][20230716_130126_4119802810_R]
+16.07.2023 13:01:30 [INFO] [UTRNNO  ][47721433]
+16.07.2023 13:01:30 [INFO] [MSG_TYPE][0400]
+16.07.2023 13:01:30 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49, 90]
+16.07.2023 13:01:30 [INFO] [002][016][548673......8564]
+16.07.2023 13:01:30 [INFO] [003][006][000000]
+16.07.2023 13:01:30 [INFO] [004][012][000000006428]
+16.07.2023 13:01:30 [INFO] [007][010][0716130126]
+16.07.2023 13:01:30 [INFO] [011][006][853276]
+16.07.2023 13:01:30 [INFO] [012][012][230613110417]
+16.07.2023 13:01:30 [INFO] [014][004][2504]
+16.07.2023 13:01:30 [INFO] [018][004][8999]
+16.07.2023 13:01:30 [INFO] [022][003][810]
+16.07.2023 13:01:30 [INFO] [037][012][601572325211]
+16.07.2023 13:01:30 [INFO] [041][008][70000826]
+16.07.2023 13:01:30 [INFO] [042][015][000000010000866]
+16.07.2023 13:01:30 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 13:01:30 [INFO] [047][227][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202820230716_130126_4119802810_R]
+16.07.2023 13:01:30 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 13:01:30 [INFO] [049][003][978]
+16.07.2023 13:01:30 [INFO] [090][020][02008532760716130126]
+16.07.2023 13:01:30 [INFO] 
+16.07.2023 13:01:30 [INFO] Transaction [20230716_130126_4119802810_R] was sent 
+16.07.2023 13:01:30 [INFO] 
+16.07.2023 13:01:30 [INFO] [TRANS_ID][20230716_130126_4119802810_R]
+16.07.2023 13:01:30 [INFO] [UTRNNO  ][47721433]
+16.07.2023 13:01:30 [INFO] [MSG_TYPE][0410]
+16.07.2023 13:01:30 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 13:01:30 [INFO] [002][016][548673......8564]
+16.07.2023 13:01:30 [INFO] [003][006][000000]
+16.07.2023 13:01:30 [INFO] [004][012][000000006428]
+16.07.2023 13:01:30 [INFO] [007][010][0716130126]
+16.07.2023 13:01:30 [INFO] [011][006][853276]
+16.07.2023 13:01:30 [INFO] [012][012][230613110417]
+16.07.2023 13:01:30 [INFO] [014][004][2504]
+16.07.2023 13:01:30 [INFO] [018][004][8999]
+16.07.2023 13:01:30 [INFO] [022][003][810]
+16.07.2023 13:01:30 [INFO] [037][012][000047721433]
+16.07.2023 13:01:30 [INFO] [039][002][96]
+16.07.2023 13:01:30 [INFO] [041][008][70000826]
+16.07.2023 13:01:30 [INFO] [042][015][000000010000866]
+16.07.2023 13:01:30 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 13:01:30 [INFO] [047][122][045001006400847721433065008477214330670142023071610013107101223061311041707202620230716_130126_41198028101100011113004+000]
+16.07.2023 13:01:30 [INFO] [049][003][978]
+16.07.2023 13:01:30 [INFO] 
+16.07.2023 13:01:30 [INFO] Transaction ID [20230716_130126_4119802810_R] matched, response time seconds: 0.871
+16.07.2023 13:01:31 [INFO] Processing transaction ID [20230716_130126_4119802810_R]
+16.07.2023 13:01:31 [INFO] 
+16.07.2023 13:01:31 [INFO] [TRANS_ID][20230716_130126_4119802810_R]
+16.07.2023 13:01:31 [INFO] [UTRNNO  ][47721433]
+16.07.2023 13:01:31 [INFO] [MSG_TYPE][0400]
+16.07.2023 13:01:31 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49, 90]
+16.07.2023 13:01:31 [INFO] [002][016][548673......8564]
+16.07.2023 13:01:31 [INFO] [003][006][000000]
+16.07.2023 13:01:31 [INFO] [004][012][000000006428]
+16.07.2023 13:01:31 [INFO] [007][010][0716130126]
+16.07.2023 13:01:31 [INFO] [011][006][853276]
+16.07.2023 13:01:31 [INFO] [012][012][230613110417]
+16.07.2023 13:01:31 [INFO] [014][004][2504]
+16.07.2023 13:01:31 [INFO] [018][004][8999]
+16.07.2023 13:01:31 [INFO] [022][003][810]
+16.07.2023 13:01:31 [INFO] [037][012][601572325211]
+16.07.2023 13:01:31 [INFO] [041][008][70000826]
+16.07.2023 13:01:31 [INFO] [042][015][000000010000866]
+16.07.2023 13:01:31 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+16.07.2023 13:01:31 [INFO] [047][227][03808101110000023962603150000000100003960408Limassol0504310706031960709merch.com0803PSP033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a030001207202820230716_130126_4119802810_R]
+16.07.2023 13:01:31 [INFO] [048][067][5108SOME ONE9611415481%81645411HOW ARE YOU7608100000014202019203000]
+16.07.2023 13:01:31 [INFO] [049][003][978]
+16.07.2023 13:01:31 [INFO] [090][020][02008532760716130126]
+16.07.2023 13:01:31 [INFO] 
+16.07.2023 13:01:31 [INFO] Transaction [20230716_130126_4119802810_R] was sent 
+16.07.2023 13:01:31 [INFO] 
+16.07.2023 13:01:31 [INFO] [TRANS_ID][20230716_130126_4119802810_R]
+16.07.2023 13:01:31 [INFO] [UTRNNO  ][47721433]
+16.07.2023 13:01:31 [INFO] [MSG_TYPE][0410]
+16.07.2023 13:01:31 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 39, 41, 42, 43, 47, 49]
+16.07.2023 13:01:31 [INFO] [002][016][548673......8564]
+16.07.2023 13:01:31 [INFO] [003][006][000000]
+16.07.2023 13:01:31 [INFO] [004][012][000000006428]
+16.07.2023 13:01:31 [INFO] [007][010][0716130126]
+16.07.2023 13:01:31 [INFO] [011][006][853276]
+16.07.2023 13:01:31 [INFO] [012][012][230613110417]
+16.07.2023 13:01:31 [INFO] [014][004][2504]
+16.07.2023 13:01:31 [INFO] [018][004][8999]
+16.07.2023 13:01:31 [INFO] [022][003][810]
+16.07.2023 13:01:31 [INFO] [037][012][601572325211]
+16.07.2023 13:01:31 [INFO] [039][002][96]
+16.07.2023 13:01:31 [INFO] [041][008][70000826]
+16.07.2023 13:01:31 [INFO] [042][015][000000010000866]
+16.07.2023 13:01:31 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+16.07.2023 13:01:31 [INFO] [047][110][0450010064008477214330670142023071610013207101223061311041707202820230716_130126_4119802810_R1100011113004+000]
+16.07.2023 13:01:31 [INFO] [049][003][978]
+16.07.2023 13:01:31 [INFO] 
+16.07.2023 13:01:31 [INFO] Transaction ID [20230716_130126_4119802810_R] matched, response time seconds: 0.915
+16.07.2023 13:01:36 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 13:03:43 [INFO] 
+16.07.2023 13:03:43 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:03:43 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:03:43 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:03:43 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:03:43 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:03:43 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:03:43 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:03:43 [INFO]  
+16.07.2023 13:03:43 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:03:43 [INFO]  
+16.07.2023 13:03:43 [INFO] 
+16.07.2023 13:03:43 [INFO] ## Configuration parameters ##
+16.07.2023 13:03:43 [INFO] {
+16.07.2023 13:03:43 [INFO]     "smartvista": {
+16.07.2023 13:03:43 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:03:43 [INFO]         "port": "16677"
+16.07.2023 13:03:43 [INFO]     },
+16.07.2023 13:03:43 [INFO]     "terminal": {
+16.07.2023 13:03:43 [INFO]         "process_default_dump": true,
+16.07.2023 13:03:43 [INFO]         "connect_on_startup": false
+16.07.2023 13:03:43 [INFO]     },
+16.07.2023 13:03:43 [INFO]     "debug": {
+16.07.2023 13:03:43 [INFO]         "level": "INFO",
+16.07.2023 13:03:43 [INFO]         "clear_log": true,
+16.07.2023 13:03:43 [INFO]         "parse_subfields": false
+16.07.2023 13:03:43 [INFO]     },
+16.07.2023 13:03:43 [INFO]     "fields": {
+16.07.2023 13:03:43 [INFO]         "max_amount": "100",
+16.07.2023 13:03:43 [INFO]         "build_fld_90": true,
+16.07.2023 13:03:43 [INFO]         "send_internal_id": true,
+16.07.2023 13:03:43 [INFO]         "validation": true
+16.07.2023 13:03:43 [INFO]     }
+16.07.2023 13:03:43 [INFO] }
+16.07.2023 13:03:43 [INFO] ## End of configuration parameters ##
+16.07.2023 13:03:43 [INFO] 
+16.07.2023 13:03:43 [INFO] Default file parsed
+16.07.2023 13:03:45 [INFO] Processing transaction ID [20230716_130345_4663036191]
+16.07.2023 13:03:45 [WARNING] SmartVista disconnected. Trying to established the connection
+16.07.2023 13:03:45 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 13:03:45 [INFO] 
+16.07.2023 13:03:45 [INFO] [TRANS_ID][20230716_130345_4663036191]
+16.07.2023 13:03:45 [INFO] [MSG_TYPE][0800]
+16.07.2023 13:03:45 [INFO] [BITMAP  ][7, 11, 70]
+16.07.2023 13:03:45 [INFO] [007][010][0716130345]
+16.07.2023 13:03:45 [INFO] [011][006][567447]
+16.07.2023 13:03:45 [INFO] [070][003][301]
+16.07.2023 13:03:45 [INFO] 
+16.07.2023 13:03:45 [INFO] Transaction [20230716_130345_4663036191] was sent 
+16.07.2023 13:03:45 [INFO] 
+16.07.2023 13:03:45 [INFO] [TRANS_ID][20230716_130345_4663036191]
+16.07.2023 13:03:45 [INFO] [MSG_TYPE][0810]
+16.07.2023 13:03:45 [INFO] [BITMAP  ][7, 11, 39, 70]
+16.07.2023 13:03:45 [INFO] [007][010][0716130345]
+16.07.2023 13:03:45 [INFO] [011][006][567447]
+16.07.2023 13:03:45 [INFO] [039][002][00]
+16.07.2023 13:03:45 [INFO] [070][003][301]
+16.07.2023 13:03:45 [INFO] 
+16.07.2023 13:03:45 [INFO] Transaction ID [20230716_130345_4663036191] matched, response time seconds: 0.253
+16.07.2023 13:03:48 [WARNING] Empty field number in field path: <empty>
+16.07.2023 13:03:50 [WARNING] Empty field number in field path: <empty>
+16.07.2023 13:04:03 [WARNING] Empty field number in field path: <empty>
+16.07.2023 13:04:03 [WARNING] Empty field number in field path: <empty>
+16.07.2023 13:04:03 [WARNING] Empty field number in field path: <empty>.<empty>
+16.07.2023 13:04:03 [WARNING] Empty field number in field path: <empty>.<empty>
+16.07.2023 13:04:06 [WARNING] Empty field number in field path: <empty>.<empty>.<empty>
+16.07.2023 13:04:27 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 13:05:57 [INFO] 
+16.07.2023 13:05:57 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:05:57 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:05:57 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:05:57 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:05:57 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:05:57 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:05:57 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:05:57 [INFO]  
+16.07.2023 13:05:57 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:05:57 [INFO]  
+16.07.2023 13:05:57 [INFO] 
+16.07.2023 13:05:57 [INFO] ## Configuration parameters ##
+16.07.2023 13:05:57 [INFO] {
+16.07.2023 13:05:57 [INFO]     "smartvista": {
+16.07.2023 13:05:57 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:05:57 [INFO]         "port": "16677"
+16.07.2023 13:05:57 [INFO]     },
+16.07.2023 13:05:57 [INFO]     "terminal": {
+16.07.2023 13:05:57 [INFO]         "process_default_dump": true,
+16.07.2023 13:05:57 [INFO]         "connect_on_startup": false
+16.07.2023 13:05:57 [INFO]     },
+16.07.2023 13:05:57 [INFO]     "debug": {
+16.07.2023 13:05:57 [INFO]         "level": "INFO",
+16.07.2023 13:05:57 [INFO]         "clear_log": true,
+16.07.2023 13:05:57 [INFO]         "parse_subfields": false
+16.07.2023 13:05:57 [INFO]     },
+16.07.2023 13:05:57 [INFO]     "fields": {
+16.07.2023 13:05:57 [INFO]         "max_amount": "100",
+16.07.2023 13:05:57 [INFO]         "build_fld_90": true,
+16.07.2023 13:05:57 [INFO]         "send_internal_id": true,
+16.07.2023 13:05:57 [INFO]         "validation": true
+16.07.2023 13:05:57 [INFO]     }
+16.07.2023 13:05:57 [INFO] }
+16.07.2023 13:05:57 [INFO] ## End of configuration parameters ##
+16.07.2023 13:05:57 [INFO] 
+16.07.2023 13:05:57 [INFO] Default file parsed
+16.07.2023 13:06:10 [WARNING] Empty field number in field path: <empty>
+16.07.2023 13:06:20 [WARNING] Field 47.038.01 over MaxLength. Max length: 11 got: 12
+16.07.2023 13:06:20 [WARNING] Alphabetic values not allowed in field 47.038.01 - Payment facilitator ID
+16.07.2023 13:09:53 [INFO] 
+16.07.2023 13:09:53 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:09:53 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:09:53 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:09:53 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:09:53 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:09:53 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:09:53 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:09:53 [INFO]  
+16.07.2023 13:09:53 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:09:53 [INFO]  
+16.07.2023 13:09:53 [INFO] 
+16.07.2023 13:09:53 [INFO] ## Configuration parameters ##
+16.07.2023 13:09:53 [INFO] {
+16.07.2023 13:09:53 [INFO]     "smartvista": {
+16.07.2023 13:09:53 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:09:53 [INFO]         "port": "16677"
+16.07.2023 13:09:53 [INFO]     },
+16.07.2023 13:09:53 [INFO]     "terminal": {
+16.07.2023 13:09:53 [INFO]         "process_default_dump": true,
+16.07.2023 13:09:53 [INFO]         "connect_on_startup": false
+16.07.2023 13:09:53 [INFO]     },
+16.07.2023 13:09:53 [INFO]     "debug": {
+16.07.2023 13:09:53 [INFO]         "level": "INFO",
+16.07.2023 13:09:53 [INFO]         "clear_log": true,
+16.07.2023 13:09:53 [INFO]         "parse_subfields": false
+16.07.2023 13:09:53 [INFO]     },
+16.07.2023 13:09:53 [INFO]     "fields": {
+16.07.2023 13:09:53 [INFO]         "max_amount": "100",
+16.07.2023 13:09:53 [INFO]         "build_fld_90": true,
+16.07.2023 13:09:53 [INFO]         "send_internal_id": true,
+16.07.2023 13:09:53 [INFO]         "validation": true
+16.07.2023 13:09:53 [INFO]     }
+16.07.2023 13:09:53 [INFO] }
+16.07.2023 13:09:53 [INFO] ## End of configuration parameters ##
+16.07.2023 13:09:53 [INFO] 
+16.07.2023 13:09:53 [INFO] Default file parsed
+16.07.2023 13:10:52 [INFO] 
+16.07.2023 13:10:52 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:10:52 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:10:52 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:10:52 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:10:52 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:10:52 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:10:52 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:10:52 [INFO]  
+16.07.2023 13:10:52 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:10:52 [INFO]  
+16.07.2023 13:10:52 [INFO] 
+16.07.2023 13:10:52 [INFO] ## Configuration parameters ##
+16.07.2023 13:10:52 [INFO] {
+16.07.2023 13:10:52 [INFO]     "smartvista": {
+16.07.2023 13:10:52 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:10:52 [INFO]         "port": "16677"
+16.07.2023 13:10:52 [INFO]     },
+16.07.2023 13:10:52 [INFO]     "terminal": {
+16.07.2023 13:10:52 [INFO]         "process_default_dump": true,
+16.07.2023 13:10:52 [INFO]         "connect_on_startup": false
+16.07.2023 13:10:52 [INFO]     },
+16.07.2023 13:10:52 [INFO]     "debug": {
+16.07.2023 13:10:52 [INFO]         "level": "INFO",
+16.07.2023 13:10:52 [INFO]         "clear_log": true,
+16.07.2023 13:10:52 [INFO]         "parse_subfields": false
+16.07.2023 13:10:52 [INFO]     },
+16.07.2023 13:10:52 [INFO]     "fields": {
+16.07.2023 13:10:52 [INFO]         "max_amount": "100",
+16.07.2023 13:10:52 [INFO]         "build_fld_90": true,
+16.07.2023 13:10:52 [INFO]         "send_internal_id": true,
+16.07.2023 13:10:52 [INFO]         "validation": true
+16.07.2023 13:10:52 [INFO]     }
+16.07.2023 13:10:52 [INFO] }
+16.07.2023 13:10:52 [INFO] ## End of configuration parameters ##
+16.07.2023 13:10:52 [INFO] 
+16.07.2023 13:10:52 [INFO] Default file parsed
+16.07.2023 13:11:32 [INFO] 
+16.07.2023 13:11:32 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:11:32 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:11:32 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:11:32 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:11:32 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:11:32 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:11:32 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:11:32 [INFO]  
+16.07.2023 13:11:32 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:11:32 [INFO]  
+16.07.2023 13:11:32 [INFO] 
+16.07.2023 13:11:32 [INFO] ## Configuration parameters ##
+16.07.2023 13:11:32 [INFO] {
+16.07.2023 13:11:32 [INFO]     "smartvista": {
+16.07.2023 13:11:32 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:11:32 [INFO]         "port": "16677"
+16.07.2023 13:11:32 [INFO]     },
+16.07.2023 13:11:32 [INFO]     "terminal": {
+16.07.2023 13:11:32 [INFO]         "process_default_dump": true,
+16.07.2023 13:11:32 [INFO]         "connect_on_startup": false
+16.07.2023 13:11:32 [INFO]     },
+16.07.2023 13:11:32 [INFO]     "debug": {
+16.07.2023 13:11:32 [INFO]         "level": "INFO",
+16.07.2023 13:11:32 [INFO]         "clear_log": true,
+16.07.2023 13:11:32 [INFO]         "parse_subfields": false
+16.07.2023 13:11:32 [INFO]     },
+16.07.2023 13:11:32 [INFO]     "fields": {
+16.07.2023 13:11:32 [INFO]         "max_amount": "100",
+16.07.2023 13:11:32 [INFO]         "build_fld_90": true,
+16.07.2023 13:11:32 [INFO]         "send_internal_id": true,
+16.07.2023 13:11:32 [INFO]         "validation": true
+16.07.2023 13:11:32 [INFO]     }
+16.07.2023 13:11:32 [INFO] }
+16.07.2023 13:11:32 [INFO] ## End of configuration parameters ##
+16.07.2023 13:11:32 [INFO] 
+16.07.2023 13:11:32 [INFO] Default file parsed
+16.07.2023 13:13:08 [INFO] 
+16.07.2023 13:13:08 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:13:08 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:13:08 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:13:08 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:13:08 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:13:08 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:13:08 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:13:08 [INFO]  
+16.07.2023 13:13:08 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:13:08 [INFO]  
+16.07.2023 13:13:08 [INFO] 
+16.07.2023 13:13:08 [INFO] ## Configuration parameters ##
+16.07.2023 13:13:08 [INFO] {
+16.07.2023 13:13:08 [INFO]     "smartvista": {
+16.07.2023 13:13:08 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:13:08 [INFO]         "port": "16677"
+16.07.2023 13:13:08 [INFO]     },
+16.07.2023 13:13:08 [INFO]     "terminal": {
+16.07.2023 13:13:08 [INFO]         "process_default_dump": true,
+16.07.2023 13:13:08 [INFO]         "connect_on_startup": false
+16.07.2023 13:13:08 [INFO]     },
+16.07.2023 13:13:08 [INFO]     "debug": {
+16.07.2023 13:13:08 [INFO]         "level": "INFO",
+16.07.2023 13:13:08 [INFO]         "clear_log": true,
+16.07.2023 13:13:08 [INFO]         "parse_subfields": false
+16.07.2023 13:13:08 [INFO]     },
+16.07.2023 13:13:08 [INFO]     "fields": {
+16.07.2023 13:13:08 [INFO]         "max_amount": "100",
+16.07.2023 13:13:08 [INFO]         "build_fld_90": true,
+16.07.2023 13:13:08 [INFO]         "send_internal_id": true,
+16.07.2023 13:13:08 [INFO]         "validation": true
+16.07.2023 13:13:08 [INFO]     }
+16.07.2023 13:13:08 [INFO] }
+16.07.2023 13:13:08 [INFO] ## End of configuration parameters ##
+16.07.2023 13:13:08 [INFO] 
+16.07.2023 13:13:09 [INFO] Default file parsed
+16.07.2023 13:16:43 [INFO] 
+16.07.2023 13:16:43 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:16:43 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:16:43 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:16:43 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:16:43 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:16:43 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:16:43 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:16:43 [INFO]  
+16.07.2023 13:16:43 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:16:43 [INFO]  
+16.07.2023 13:16:43 [INFO] 
+16.07.2023 13:16:43 [INFO] ## Configuration parameters ##
+16.07.2023 13:16:43 [INFO] {
+16.07.2023 13:16:43 [INFO]     "smartvista": {
+16.07.2023 13:16:43 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:16:43 [INFO]         "port": "16677"
+16.07.2023 13:16:43 [INFO]     },
+16.07.2023 13:16:43 [INFO]     "terminal": {
+16.07.2023 13:16:43 [INFO]         "process_default_dump": true,
+16.07.2023 13:16:43 [INFO]         "connect_on_startup": false
+16.07.2023 13:16:43 [INFO]     },
+16.07.2023 13:16:43 [INFO]     "debug": {
+16.07.2023 13:16:43 [INFO]         "level": "INFO",
+16.07.2023 13:16:43 [INFO]         "clear_log": true,
+16.07.2023 13:16:43 [INFO]         "parse_subfields": false
+16.07.2023 13:16:43 [INFO]     },
+16.07.2023 13:16:43 [INFO]     "fields": {
+16.07.2023 13:16:43 [INFO]         "max_amount": "100",
+16.07.2023 13:16:43 [INFO]         "build_fld_90": true,
+16.07.2023 13:16:43 [INFO]         "send_internal_id": true,
+16.07.2023 13:16:43 [INFO]         "validation": true
+16.07.2023 13:16:43 [INFO]     }
+16.07.2023 13:16:43 [INFO] }
+16.07.2023 13:16:43 [INFO] ## End of configuration parameters ##
+16.07.2023 13:16:43 [INFO] 
+16.07.2023 13:16:43 [INFO] Default file parsed
+16.07.2023 13:19:26 [INFO] 
+16.07.2023 13:19:26 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:19:26 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:19:26 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:19:26 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:19:26 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:19:26 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:19:26 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:19:26 [INFO]  
+16.07.2023 13:19:26 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:19:26 [INFO]  
+16.07.2023 13:19:26 [INFO] 
+16.07.2023 13:19:26 [INFO] ## Configuration parameters ##
+16.07.2023 13:19:26 [INFO] {
+16.07.2023 13:19:26 [INFO]     "smartvista": {
+16.07.2023 13:19:26 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:19:26 [INFO]         "port": "16677"
+16.07.2023 13:19:26 [INFO]     },
+16.07.2023 13:19:26 [INFO]     "terminal": {
+16.07.2023 13:19:26 [INFO]         "process_default_dump": true,
+16.07.2023 13:19:26 [INFO]         "connect_on_startup": false
+16.07.2023 13:19:26 [INFO]     },
+16.07.2023 13:19:26 [INFO]     "debug": {
+16.07.2023 13:19:26 [INFO]         "level": "INFO",
+16.07.2023 13:19:26 [INFO]         "clear_log": true,
+16.07.2023 13:19:26 [INFO]         "parse_subfields": false
+16.07.2023 13:19:26 [INFO]     },
+16.07.2023 13:19:26 [INFO]     "fields": {
+16.07.2023 13:19:26 [INFO]         "max_amount": "100",
+16.07.2023 13:19:26 [INFO]         "build_fld_90": true,
+16.07.2023 13:19:26 [INFO]         "send_internal_id": true,
+16.07.2023 13:19:26 [INFO]         "validation": true
+16.07.2023 13:19:26 [INFO]     }
+16.07.2023 13:19:26 [INFO] }
+16.07.2023 13:19:26 [INFO] ## End of configuration parameters ##
+16.07.2023 13:19:26 [INFO] 
+16.07.2023 13:19:26 [INFO] Default file parsed
+16.07.2023 13:19:49 [WARNING] Field 65 over MaxLength. Max length: 0 got: 3
+16.07.2023 13:19:49 [WARNING] Numeric values not allowed in field 65 - Reserved for future
+16.07.2023 13:20:09 [INFO] 
+16.07.2023 13:20:09 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:20:09 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:20:09 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:20:09 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:20:09 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:20:09 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:20:09 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:20:09 [INFO]  
+16.07.2023 13:20:09 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:20:09 [INFO]  
+16.07.2023 13:20:09 [INFO] 
+16.07.2023 13:20:09 [INFO] ## Configuration parameters ##
+16.07.2023 13:20:09 [INFO] {
+16.07.2023 13:20:09 [INFO]     "smartvista": {
+16.07.2023 13:20:09 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:20:09 [INFO]         "port": "16677"
+16.07.2023 13:20:09 [INFO]     },
+16.07.2023 13:20:09 [INFO]     "terminal": {
+16.07.2023 13:20:09 [INFO]         "process_default_dump": true,
+16.07.2023 13:20:09 [INFO]         "connect_on_startup": false
+16.07.2023 13:20:09 [INFO]     },
+16.07.2023 13:20:09 [INFO]     "debug": {
+16.07.2023 13:20:09 [INFO]         "level": "INFO",
+16.07.2023 13:20:09 [INFO]         "clear_log": true,
+16.07.2023 13:20:09 [INFO]         "parse_subfields": false
+16.07.2023 13:20:09 [INFO]     },
+16.07.2023 13:20:09 [INFO]     "fields": {
+16.07.2023 13:20:09 [INFO]         "max_amount": "100",
+16.07.2023 13:20:09 [INFO]         "build_fld_90": true,
+16.07.2023 13:20:09 [INFO]         "send_internal_id": true,
+16.07.2023 13:20:09 [INFO]         "validation": true
+16.07.2023 13:20:09 [INFO]     }
+16.07.2023 13:20:09 [INFO] }
+16.07.2023 13:20:09 [INFO] ## End of configuration parameters ##
+16.07.2023 13:20:09 [INFO] 
+16.07.2023 13:20:10 [INFO] Default file parsed
+16.07.2023 13:20:53 [INFO] 
+16.07.2023 13:20:53 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:20:53 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:20:53 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:20:53 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:20:53 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:20:53 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:20:53 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:20:53 [INFO]  
+16.07.2023 13:20:53 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:20:53 [INFO]  
+16.07.2023 13:20:53 [INFO] 
+16.07.2023 13:20:53 [INFO] ## Configuration parameters ##
+16.07.2023 13:20:53 [INFO] {
+16.07.2023 13:20:53 [INFO]     "smartvista": {
+16.07.2023 13:20:53 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:20:53 [INFO]         "port": "16677"
+16.07.2023 13:20:53 [INFO]     },
+16.07.2023 13:20:53 [INFO]     "terminal": {
+16.07.2023 13:20:53 [INFO]         "process_default_dump": true,
+16.07.2023 13:20:53 [INFO]         "connect_on_startup": false
+16.07.2023 13:20:53 [INFO]     },
+16.07.2023 13:20:53 [INFO]     "debug": {
+16.07.2023 13:20:53 [INFO]         "level": "INFO",
+16.07.2023 13:20:53 [INFO]         "clear_log": true,
+16.07.2023 13:20:53 [INFO]         "parse_subfields": false
+16.07.2023 13:20:53 [INFO]     },
+16.07.2023 13:20:53 [INFO]     "fields": {
+16.07.2023 13:20:53 [INFO]         "max_amount": "100",
+16.07.2023 13:20:53 [INFO]         "build_fld_90": true,
+16.07.2023 13:20:53 [INFO]         "send_internal_id": true,
+16.07.2023 13:20:53 [INFO]         "validation": true
+16.07.2023 13:20:53 [INFO]     }
+16.07.2023 13:20:53 [INFO] }
+16.07.2023 13:20:53 [INFO] ## End of configuration parameters ##
+16.07.2023 13:20:53 [INFO] 
+16.07.2023 13:20:53 [INFO] Default file parsed
+16.07.2023 13:25:10 [INFO] 
+16.07.2023 13:25:10 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:25:10 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:25:10 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:25:10 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:25:10 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:25:10 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:25:10 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:25:10 [INFO]  
+16.07.2023 13:25:10 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:25:10 [INFO]  
+16.07.2023 13:25:10 [INFO] 
+16.07.2023 13:25:10 [INFO] ## Configuration parameters ##
+16.07.2023 13:25:10 [INFO] {
+16.07.2023 13:25:10 [INFO]     "smartvista": {
+16.07.2023 13:25:10 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:25:10 [INFO]         "port": "16677"
+16.07.2023 13:25:10 [INFO]     },
+16.07.2023 13:25:10 [INFO]     "terminal": {
+16.07.2023 13:25:10 [INFO]         "process_default_dump": true,
+16.07.2023 13:25:10 [INFO]         "connect_on_startup": false
+16.07.2023 13:25:10 [INFO]     },
+16.07.2023 13:25:10 [INFO]     "debug": {
+16.07.2023 13:25:10 [INFO]         "level": "INFO",
+16.07.2023 13:25:10 [INFO]         "clear_log": true,
+16.07.2023 13:25:10 [INFO]         "parse_subfields": false
+16.07.2023 13:25:10 [INFO]     },
+16.07.2023 13:25:10 [INFO]     "fields": {
+16.07.2023 13:25:10 [INFO]         "max_amount": "100",
+16.07.2023 13:25:10 [INFO]         "build_fld_90": true,
+16.07.2023 13:25:10 [INFO]         "send_internal_id": true,
+16.07.2023 13:25:10 [INFO]         "validation": true
+16.07.2023 13:25:10 [INFO]     }
+16.07.2023 13:25:10 [INFO] }
+16.07.2023 13:25:10 [INFO] ## End of configuration parameters ##
+16.07.2023 13:25:10 [INFO] 
+16.07.2023 13:25:11 [INFO] Default file parsed
+16.07.2023 13:25:21 [WARNING] Lost spec for field 11.11
+16.07.2023 13:25:27 [INFO] Default file parsed
+16.07.2023 13:29:09 [INFO] 
+16.07.2023 13:29:09 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:29:09 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:29:09 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:29:09 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:29:09 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:29:09 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:29:09 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:29:09 [INFO]  
+16.07.2023 13:29:09 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:29:09 [INFO]  
+16.07.2023 13:29:09 [INFO] 
+16.07.2023 13:29:09 [INFO] ## Configuration parameters ##
+16.07.2023 13:29:09 [INFO] {
+16.07.2023 13:29:09 [INFO]     "smartvista": {
+16.07.2023 13:29:09 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:29:09 [INFO]         "port": "16677"
+16.07.2023 13:29:09 [INFO]     },
+16.07.2023 13:29:09 [INFO]     "terminal": {
+16.07.2023 13:29:09 [INFO]         "process_default_dump": true,
+16.07.2023 13:29:09 [INFO]         "connect_on_startup": false
+16.07.2023 13:29:09 [INFO]     },
+16.07.2023 13:29:09 [INFO]     "debug": {
+16.07.2023 13:29:09 [INFO]         "level": "INFO",
+16.07.2023 13:29:09 [INFO]         "clear_log": true,
+16.07.2023 13:29:09 [INFO]         "parse_subfields": false
+16.07.2023 13:29:09 [INFO]     },
+16.07.2023 13:29:09 [INFO]     "fields": {
+16.07.2023 13:29:09 [INFO]         "max_amount": "100",
+16.07.2023 13:29:09 [INFO]         "build_fld_90": true,
+16.07.2023 13:29:09 [INFO]         "send_internal_id": true,
+16.07.2023 13:29:09 [INFO]         "validation": true
+16.07.2023 13:29:09 [INFO]     }
+16.07.2023 13:29:09 [INFO] }
+16.07.2023 13:29:09 [INFO] ## End of configuration parameters ##
+16.07.2023 13:29:09 [INFO] 
+16.07.2023 13:29:09 [INFO] Default file parsed
+16.07.2023 13:29:13 [WARNING] Lost field value for field 14
+16.07.2023 13:29:20 [WARNING] Lost spec for field 14.122
+16.07.2023 13:29:25 [WARNING] Field 14 less MinLength. Min length: 4 got: 3
+16.07.2023 13:29:30 [WARNING] Field 68 over MaxLength. Max length: 0 got: 3
+16.07.2023 13:29:30 [WARNING] Numeric values not allowed in field 68 - Reserved for future
+16.07.2023 13:32:07 [INFO] 
+16.07.2023 13:32:07 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:32:07 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:32:07 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:32:07 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:32:07 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:32:07 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:32:07 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:32:07 [INFO]  
+16.07.2023 13:32:07 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:32:07 [INFO]  
+16.07.2023 13:32:07 [INFO] 
+16.07.2023 13:32:07 [INFO] ## Configuration parameters ##
+16.07.2023 13:32:07 [INFO] {
+16.07.2023 13:32:07 [INFO]     "smartvista": {
+16.07.2023 13:32:07 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:32:07 [INFO]         "port": "16677"
+16.07.2023 13:32:07 [INFO]     },
+16.07.2023 13:32:07 [INFO]     "terminal": {
+16.07.2023 13:32:07 [INFO]         "process_default_dump": true,
+16.07.2023 13:32:07 [INFO]         "connect_on_startup": false
+16.07.2023 13:32:07 [INFO]     },
+16.07.2023 13:32:07 [INFO]     "debug": {
+16.07.2023 13:32:07 [INFO]         "level": "INFO",
+16.07.2023 13:32:07 [INFO]         "clear_log": true,
+16.07.2023 13:32:07 [INFO]         "parse_subfields": false
+16.07.2023 13:32:07 [INFO]     },
+16.07.2023 13:32:07 [INFO]     "fields": {
+16.07.2023 13:32:07 [INFO]         "max_amount": "100",
+16.07.2023 13:32:07 [INFO]         "build_fld_90": true,
+16.07.2023 13:32:07 [INFO]         "send_internal_id": true,
+16.07.2023 13:32:07 [INFO]         "validation": true
+16.07.2023 13:32:07 [INFO]     }
+16.07.2023 13:32:07 [INFO] }
+16.07.2023 13:32:07 [INFO] ## End of configuration parameters ##
+16.07.2023 13:32:07 [INFO] 
+16.07.2023 13:32:07 [INFO] File parsed: common/data/settings/default.json
+16.07.2023 13:32:07 [INFO] Default file parsed
+16.07.2023 13:34:21 [INFO] 
+16.07.2023 13:34:21 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:34:21 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:34:21 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:34:21 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:34:21 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:34:21 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:34:21 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:34:21 [INFO]  
+16.07.2023 13:34:21 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:34:21 [INFO]  
+16.07.2023 13:34:21 [INFO] 
+16.07.2023 13:34:21 [INFO] ## Configuration parameters ##
+16.07.2023 13:34:21 [INFO] {
+16.07.2023 13:34:21 [INFO]     "smartvista": {
+16.07.2023 13:34:21 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:34:21 [INFO]         "port": "16677"
+16.07.2023 13:34:21 [INFO]     },
+16.07.2023 13:34:21 [INFO]     "terminal": {
+16.07.2023 13:34:21 [INFO]         "process_default_dump": true,
+16.07.2023 13:34:21 [INFO]         "connect_on_startup": false
+16.07.2023 13:34:21 [INFO]     },
+16.07.2023 13:34:21 [INFO]     "debug": {
+16.07.2023 13:34:21 [INFO]         "level": "INFO",
+16.07.2023 13:34:21 [INFO]         "clear_log": true,
+16.07.2023 13:34:21 [INFO]         "parse_subfields": false
+16.07.2023 13:34:21 [INFO]     },
+16.07.2023 13:34:21 [INFO]     "fields": {
+16.07.2023 13:34:21 [INFO]         "max_amount": "100",
+16.07.2023 13:34:21 [INFO]         "build_fld_90": true,
+16.07.2023 13:34:21 [INFO]         "send_internal_id": true,
+16.07.2023 13:34:21 [INFO]         "validation": true
+16.07.2023 13:34:21 [INFO]     }
+16.07.2023 13:34:21 [INFO] }
+16.07.2023 13:34:21 [INFO] ## End of configuration parameters ##
+16.07.2023 13:34:21 [INFO] 
+16.07.2023 13:34:21 [INFO] Default file parsed
+16.07.2023 13:34:28 [INFO] File parsed: C:/Users/admin/PycharmProjects/sv-terminal/messages/json/example.json
+16.07.2023 13:34:31 [INFO] Default file parsed
+16.07.2023 13:34:33 [INFO] Default file parsed
+16.07.2023 13:34:33 [INFO] Default file parsed
+16.07.2023 13:34:34 [INFO] Default file parsed
+16.07.2023 13:34:37 [INFO] [Re]connecting...
+16.07.2023 13:34:37 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 13:34:37 [INFO] [Re]connecting...
+16.07.2023 13:34:37 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 13:34:38 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 13:34:38 [INFO] [Re]connecting...
+16.07.2023 13:34:38 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 13:34:38 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 13:34:38 [INFO] [Re]connecting...
+16.07.2023 13:34:38 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 13:34:38 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 13:34:40 [INFO] [Re]connecting...
+16.07.2023 13:34:40 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 13:34:41 [INFO] SmartVista host connection ESTABLISHED
+16.07.2023 13:34:44 [INFO] SmartVista host connection DISCONNECTED
+16.07.2023 13:37:36 [INFO] 
+16.07.2023 13:37:36 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+16.07.2023 13:37:36 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+16.07.2023 13:37:36 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+16.07.2023 13:37:36 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+16.07.2023 13:37:36 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+16.07.2023 13:37:36 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+16.07.2023 13:37:36 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+16.07.2023 13:37:36 [INFO]  
+16.07.2023 13:37:36 [INFO]  :: v0.15 Production Beta ::
+16.07.2023 13:37:36 [INFO]  
+16.07.2023 13:37:36 [INFO] 
+16.07.2023 13:37:36 [INFO] ## Configuration parameters ##
+16.07.2023 13:37:36 [INFO] {
+16.07.2023 13:37:36 [INFO]     "smartvista": {
+16.07.2023 13:37:36 [INFO]         "host": "172.21.30.5",
+16.07.2023 13:37:36 [INFO]         "port": "16677"
+16.07.2023 13:37:36 [INFO]     },
+16.07.2023 13:37:36 [INFO]     "terminal": {
+16.07.2023 13:37:36 [INFO]         "process_default_dump": true,
+16.07.2023 13:37:36 [INFO]         "connect_on_startup": false
+16.07.2023 13:37:36 [INFO]     },
+16.07.2023 13:37:36 [INFO]     "debug": {
+16.07.2023 13:37:36 [INFO]         "level": "INFO",
+16.07.2023 13:37:36 [INFO]         "clear_log": true,
+16.07.2023 13:37:36 [INFO]         "parse_subfields": false
+16.07.2023 13:37:36 [INFO]     },
+16.07.2023 13:37:36 [INFO]     "fields": {
+16.07.2023 13:37:36 [INFO]         "max_amount": "100",
+16.07.2023 13:37:36 [INFO]         "build_fld_90": true,
+16.07.2023 13:37:36 [INFO]         "send_internal_id": true,
+16.07.2023 13:37:36 [INFO]         "validation": true
+16.07.2023 13:37:36 [INFO]     }
+16.07.2023 13:37:36 [INFO] }
+16.07.2023 13:37:36 [INFO] ## End of configuration parameters ##
+16.07.2023 13:37:36 [INFO] 
+16.07.2023 13:37:36 [INFO] Default file parsed

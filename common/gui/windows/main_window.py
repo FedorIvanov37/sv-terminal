@@ -7,7 +7,6 @@ from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.ConnectionStatus import ConnectionDefinitions
 from common.gui.core.JsonView import JsonView
-from common.gui.core.FIeldItem import Item
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Config import Config
 from PyQt6.QtGui import QKeySequence, QShortcut
@@ -16,11 +15,27 @@ from sys import exit
 
 
 class MainWindow(Ui_MainWindow, QMainWindow):
-    _window_close: pyqtSignal = pyqtSignal()
-    _menu_button_clicked: pyqtSignal = pyqtSignal(QPushButton, str)
-    _field_changed: pyqtSignal = pyqtSignal(Item, int)
     _json_view: JsonView
+    _window_close: pyqtSignal = pyqtSignal()
+    _print: pyqtSignal = pyqtSignal(str)
+    _save: pyqtSignal = pyqtSignal(str)
+    _reverse: pyqtSignal = pyqtSignal(str)
     _about: pyqtSignal = pyqtSignal()
+    _field_changed: pyqtSignal = pyqtSignal()
+    _field_removed: pyqtSignal = pyqtSignal()
+    _field_added: pyqtSignal = pyqtSignal()
+
+    @property
+    def field_added(self):
+        return self._field_added
+
+    @property
+    def field_removed(self):
+        return self._field_removed
+
+    @property
+    def json_view(self):
+        return self._json_view
 
     @property
     def log_browser(self):
@@ -35,64 +50,64 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         return self.ButtonSend
 
     @property
-    def button_reset(self):
-        return self.ButtonDefault
+    def send(self):
+        return self.ButtonSend.clicked
 
     @property
-    def button_clear_log(self):
-        return self.ButtonClearLog
+    def reset(self):
+        return self.ButtonDefault.clicked
 
     @property
-    def button_settings(self):
-        return self.ButtonSettings
+    def clear_log(self):
+        return self.ButtonClearLog.clicked
 
     @property
-    def button_specification(self):
-        return self.ButtonSpecification
+    def settings(self):
+        return self.ButtonSettings.clicked
 
     @property
-    def button_echo_test(self):
-        return self.ButtonEchoTest
+    def specification(self):
+        return self.ButtonSpecification.clicked
 
     @property
-    def button_clear(self):
-        return self.ButtonClearMessage
+    def echo_test(self):
+        return self.ButtonEchoTest.clicked
 
     @property
-    def button_copy_log(self):
-        return self.ButtonCopyLog
+    def clear(self):
+        return self.ButtonClearMessage.clicked
 
     @property
-    def button_copy_bitmap(self):
-        return self.ButtonCopyBitmap
+    def copy_log(self):
+        return self.ButtonCopyLog.clicked
 
     @property
-    def button_save(self):
-        return self.ButtonSave
+    def copy_bitmap(self):
+        return self.ButtonCopyBitmap.clicked
 
     @property
-    def button_reconnect(self):
-        return self.ButtonReconnect
+    def save(self):
+        return self._save
 
     @property
-    def menu_button_clicked(self):
-        return self._menu_button_clicked
+    def reconnect(self):
+        return self.ButtonReconnect.clicked
 
     @property
-    def button_reverse(self):
-        return self.ButtonReverse
+    def reverse(self):
+        return self._reverse
 
     @property
-    def button_print(self):
-        return self.ButtonPrintData
+    def print(self):
+        return self._print
 
     @property
-    def button_parse_file(self):
-        return self.ButtonParseDump
+    def parse_file(self):
+        return self.ButtonParseDump.clicked
 
     @property
-    def button_hotkeys(self):
-        return self.ButtonHotkeys
+    def hotkeys(self):
+        return self.ButtonHotkeys.clicked
 
     @property
     def field_changed(self):
@@ -107,33 +122,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.config = config
         self._setup()
 
-        QShortcut(QKeySequence('Ctrl+Return'), self).activated.connect(self.button_send.clicked.emit)
-        QShortcut(QKeySequence('Ctrl+R'), self).activated.connect(self.button_reconnect.clicked.emit)
-        QShortcut(QKeySequence('Ctrl+L'), self).activated.connect(self.button_clear_log.clicked.emit)
-        QShortcut(QKeySequence('Ctrl+E'), self).activated.connect(self._json_view.edit_current_item)
-        QShortcut(QKeySequence('Ctrl+Shift+N'), self).activated.connect(self.NextLevelButton.clicked.emit)
-        QShortcut(QKeySequence('Ctrl+Q'), self).activated.connect(exit)
-        QShortcut(QKeySequence(QKeySequence.StandardKey.New), self).activated.connect(self.PlusButton.clicked.emit)
-        QShortcut(QKeySequence(QKeySequence.StandardKey.Delete), self).activated.connect(self.MinusButton.clicked.emit)
-        QShortcut(QKeySequence(QKeySequence.StandardKey.HelpContents), self).activated.connect(self.about.emit)
-        QShortcut(QKeySequence(QKeySequence.StandardKey.Save), self).activated.connect(self.button_save.showMenu)
-        QShortcut(QKeySequence(QKeySequence.StandardKey.Print), self).activated.connect(self.button_print.showMenu)
-        QShortcut(QKeySequence(QKeySequence.StandardKey.Open), self).activated.connect(
-            self.button_parse_file.clicked.emit
-        )
-        QShortcut(QKeySequence('Ctrl+T'), self).activated.connect(
-            lambda: self.menu_button_clicked.emit(self.button_print, DataFormats.TERM)
-        )
-        QShortcut(QKeySequence('Ctrl+Shift+Return'), self).activated.connect(
-            lambda: self.menu_button_clicked.emit(self.button_reverse, ButtonAction.LAST)
-        )
-
     @set_window_icon
     def _setup(self):
         self.setupUi(self)
         self._json_view: JsonView = JsonView(self.config)
-        self._json_view.itemChanged.connect(self.field_changed.emit)
-        self.FieldsTreeLayout.addWidget(self._json_view)
+        self.FieldsTreeLayout.addWidget(self.json_view)
         self.PlusButton = QPushButton(ButtonAction.BUTTON_PLUS_SIGN)
         self.MinusButton = QPushButton(ButtonAction.BUTTON_MINUS_SIGN)
         self.NextLevelButton = QPushButton(ButtonAction.BUTTON_NEXT_LEVEL_SIGN)
@@ -147,50 +140,50 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for layout, button in buttons_layouts_map.items():
             layout.addWidget(button)
 
-        connection_buttons_map = {
-            self.PlusButton: self._json_view.plus,
-            self.MinusButton: self._json_view.minus,
-            self.NextLevelButton: self._json_view.next_level,
+        window_connections_map = {
+            self.PlusButton.clicked: self.json_view.plus,
+            self.MinusButton.clicked: self.json_view.minus,
+            self.NextLevelButton.clicked: self.json_view.next_level,
+            self.json_view.itemChanged: self.field_changed.emit,
+            self.json_view.field_added: self.field_added.emit,
+            self.json_view.field_removed: self.field_removed.emit,
+            QShortcut(QKeySequence('Ctrl+T'), self).activated: lambda: self.print.emit(DataFormats.TERM),
+            QShortcut(QKeySequence('Ctrl+Shift+Return'), self).activated: lambda: self.reverse.emit(ButtonAction.LAST),
+            QShortcut(QKeySequence('Ctrl+Return'), self).activated: self.send.emit,
+            QShortcut(QKeySequence('Ctrl+R'), self).activated: self.reconnect.emit,
+            QShortcut(QKeySequence('Ctrl+L'), self).activated: self.clear_log.emit,
+            QShortcut(QKeySequence('Ctrl+E'), self).activated: self.json_view.edit_current_item,
+            QShortcut(QKeySequence('Ctrl+Shift+N'), self).activated: self.NextLevelButton.clicked.emit,
+            QShortcut(QKeySequence('Ctrl+Q'), self).activated: exit,
+            QShortcut(QKeySequence(QKeySequence.StandardKey.New), self).activated: self.PlusButton.clicked.emit,
+            QShortcut(QKeySequence(QKeySequence.StandardKey.Delete), self).activated: self.MinusButton.clicked.emit,
+            QShortcut(QKeySequence(QKeySequence.StandardKey.HelpContents), self).activated: self.about.emit,
+            QShortcut(QKeySequence(QKeySequence.StandardKey.Save), self).activated: self.ButtonSave.showMenu,
+            QShortcut(QKeySequence(QKeySequence.StandardKey.Print), self).activated: self.ButtonPrintData.showMenu,
+            QShortcut(QKeySequence(QKeySequence.StandardKey.Open), self).activated: self.parse_file.emit,
         }
 
-        for button, action in connection_buttons_map.items():
-            button.clicked.connect(action)
+        for signal, slot in window_connections_map.items():
+            signal.connect(slot)
 
-        #
-        # Why it does not work?
-        #
-        # button_actions_map = {
-        #     self.ButtonSave: DataFormats.get_output_file_formats(),
-        #     self.ButtonReverse: ButtonAction.get_reversal_actions(),
-        #     self.ButtonPrintData: DataFormats.get_print_data_formats(),
-        # }
-        #
-        # for button, formats in button_actions_map.items():
-        #     button.setMenu(QMenu())
-        #
-        #     for action in formats:
-        #         button.menu().addAction(action, lambda: self.menu_button_clicked.emit(button, action))
-        #         button.menu().addSeparator()
-        #
-
-        buttons_menu_structure = {  # And why it works instead?
+        buttons_menu_structure = {
             self.ButtonReverse: {
-                ButtonAction.LAST: lambda: self.menu_button_clicked.emit(self.ButtonReverse, ButtonAction.LAST),
-                ButtonAction.OTHER: lambda: self.menu_button_clicked.emit(self.ButtonReverse, ButtonAction.OTHER),
+                ButtonAction.LAST: lambda: self.reverse.emit(ButtonAction.LAST),
+                ButtonAction.OTHER: lambda: self.reverse.emit(ButtonAction.OTHER),
             },
 
             self.ButtonPrintData: {
-                DataFormats.DUMP: lambda: self.menu_button_clicked.emit(self.ButtonPrintData, DataFormats.DUMP),
-                DataFormats.JSON: lambda: self.menu_button_clicked.emit(self.ButtonPrintData, DataFormats.JSON),
-                DataFormats.INI: lambda: self.menu_button_clicked.emit(self.ButtonPrintData, DataFormats.INI),
-                DataFormats.SPEC: lambda: self.menu_button_clicked.emit(self.ButtonPrintData, DataFormats.SPEC),
-                DataFormats.TERM: lambda: self.menu_button_clicked.emit(self.ButtonPrintData, DataFormats.TERM),
+                DataFormats.DUMP: lambda: self.print.emit(DataFormats.DUMP),
+                DataFormats.JSON: lambda: self.print.emit(DataFormats.JSON),
+                DataFormats.INI: lambda: self.print.emit(DataFormats.INI),
+                DataFormats.SPEC: lambda: self.print.emit(DataFormats.SPEC),
+                DataFormats.TERM: lambda: self.print.emit(DataFormats.TERM),
             },
 
             self.ButtonSave: {
-                DataFormats.JSON: lambda: self.menu_button_clicked.emit(self.ButtonSave, DataFormats.JSON),
-                DataFormats.INI: lambda: self.menu_button_clicked.emit(self.ButtonSave, DataFormats.INI),
-                DataFormats.DUMP: lambda: self.menu_button_clicked.emit(self.ButtonSave, DataFormats.DUMP),
+                DataFormats.JSON: lambda: self.save.emit(DataFormats.JSON),
+                DataFormats.INI: lambda: self.save.emit(DataFormats.INI),
+                DataFormats.DUMP: lambda: self.save.emit(DataFormats.DUMP),
             }
         }
 
@@ -203,22 +196,21 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow.py")
 
-    def clear_log(self):
+    def clean_window_log(self):
         self.LogArea.setText(str())
 
     def get_fields(self) -> TypeFields:
-        return self._json_view.generate_fields()
+        return self.json_view.generate_fields()
 
     def get_top_level_field_numbers(self):
-        return self._json_view.get_top_level_field_numbers()
+        return self.json_view.get_top_level_field_numbers()
 
     def get_fields_to_generate(self):
-        return self._json_view.get_checkboxes()
+        return self.json_view.get_checkboxes()
 
     def get_mti(self, length=4):
         message_type = self.msgtype.currentText()
         message_type = message_type[:length]
-
         return message_type
 
     def set_log_data(self, data: str = str()):
@@ -245,7 +237,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.msgtype.addItem(mti)
 
     def get_field_data(self, field_number: str):
-        return self._json_view.get_field_data(field_number)
+        return self.json_view.get_field_data(field_number)
 
     def set_mti_value(self, mti: str):
         index = self.msgtype.findText(mti, flags=Qt.MatchFlag.MatchContains)
@@ -256,15 +248,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.msgtype.setCurrentIndex(index)
 
     def set_fields(self, transaction: Transaction):
-        self._json_view.parse_transaction(transaction)
+        self.json_view.parse_transaction(transaction)
         self.set_bitmap()
 
     def set_field_value(self, field, field_data):
-        self._json_view.set_field_value(field, field_data)
+        self.json_view.set_field_value(field, field_data)
 
     def clear_message(self):
         self.msgtype.setCurrentIndex(-1)
-        self._json_view.clean()
+        self.json_view.clean()
 
     def set_connection_status(self, status):
         self.ConnectionStatus.setText(ConnectionDefinitions.get_state_description(status))

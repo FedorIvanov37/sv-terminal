@@ -10,9 +10,14 @@ from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
 from common.lib.core.FieldsGenerator import FieldsGenerator
+from PyQt6.QtCore import pyqtSignal
 
 
 class JsonView(QTreeWidget):
+    field_removed: pyqtSignal = pyqtSignal()
+    field_changed: pyqtSignal = pyqtSignal()
+    field_added: pyqtSignal = pyqtSignal()
+
     root: Item = Item(["Message"])
     spec: EpaySpecification = EpaySpecification()
 
@@ -131,6 +136,7 @@ class JsonView(QTreeWidget):
         index = parent.indexOfChild(current_item) + 1
         parent.insertChild(index, item)
         self.set_new_item(item)
+        self.field_added.emit()
 
     @void_qt_signals
     def minus(self, checked):
@@ -155,6 +161,7 @@ class JsonView(QTreeWidget):
         self.setCurrentItem(new_position_item)
         self.check_duplicates_after_remove(removed_item, parent)
         self.setFocus()
+        self.field_removed.emit()
 
     def next_level(self, checked):
         item = Item([])

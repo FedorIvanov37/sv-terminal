@@ -48,27 +48,29 @@ class SvTerminalGui(SvTerminal):
 
     def connect_widgets(self):
         window = self.window
-        connector = self.connector
 
         terminal_connections_map = {
-            window.button_clear_log.clicked: self.window.clear_log,
-            window.button_send.clicked: self.send,
-            window.button_reset.clicked: self.set_default_values,
-            window.button_echo_test.clicked: self.echo_test,
-            window.button_clear.clicked: self.clear_message,
-            window.button_copy_log.clicked: self.copy_log,
-            window.button_copy_bitmap.clicked: self.copy_bitmap,
-            window.button_reconnect.clicked: self.reconnect,
-            window.button_parse_file.clicked: self.parse_file,
-            window.button_settings.clicked: lambda: self.run_child_window(SettingsWindow, self.config),
-            window.button_hotkeys.clicked: lambda: self.run_child_window(HotKeysHintWindow),
-            window.button_specification.clicked: lambda: self.run_child_window(SpecWindow),
+            window.clear_log: window.clean_window_log,
+            window.send: self.send,
+            window.reset: self.set_default_values,
+            window.echo_test: self.echo_test,
+            window.clear: self.clear_message,
+            window.copy_log: self.copy_log,
+            window.copy_bitmap: self.copy_bitmap,
+            window.reconnect: self.reconnect,
+            window.parse_file: self.parse_file,
+            window.settings: lambda: self.run_child_window(SettingsWindow, self.config),
+            window.hotkeys: lambda: self.run_child_window(HotKeysHintWindow),
+            window.specification: lambda: self.run_child_window(SpecWindow),
             window.about: lambda: self.run_child_window(AboutWindow),
             window.window_close: self.stop_sv_terminal,
-            window.menu_button_clicked: self.proces_button_menu,
+            window.reverse: self.perform_reversal,
+            window.print: self.print_data,
+            window.save: self.save_transaction_to_file,
             window.field_changed: self.set_bitmap,
-            connector.stateChanged: self.set_connection_status,
-            connector.errorOccurred: self.process_connection_error,
+            window.field_removed: self.set_bitmap,
+            window.field_added: self.set_bitmap,
+            self.connector.stateChanged: self.set_connection_status,
         }
 
         for signal, slot in terminal_connections_map.items():
@@ -81,23 +83,17 @@ class SvTerminalGui(SvTerminal):
     def stop_sv_terminal(self):
         self.connector.stop_thread()
 
-    def process_connection_error(self):
-        self.set_connection_status()
-        self.window.unblock_connection_buttons()
-
     def reconnect(self):
         SvTerminal.reconnect(self)
 
     def set_connection_status(self):
-        status = self.connector.state()
+        self.window.set_connection_status(self.connector.state())
 
-        match self.connector.state():
-            case QTcpSocket.SocketState.ConnectingState:
-                self.window.block_connection_buttons()
-            case _:
-                self.window.unblock_connection_buttons()
+        if self.connector.state() is QTcpSocket.SocketState.ConnectingState:
+            self.window.block_connection_buttons()
+            return
 
-        self.window.set_connection_status(status)
+        self.window.unblock_connection_buttons()
 
     def create_window_logger(self):
         formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
@@ -153,7 +149,7 @@ class SvTerminalGui(SvTerminal):
 
     def send(self, transaction: Transaction | None = None):
         if self.config.debug.clear_log:
-            self.window.clear_log()
+            self.window.clean_window_log()
 
         if not transaction:
             try:
@@ -238,9 +234,14 @@ class SvTerminalGui(SvTerminal):
             error("Default file parsing error! Exception: %s" % parsing_error)
 
     def parse_file(self, filename: str | None = None) -> None:
-        if not filename and not (filename := QFileDialog.getOpenFileName()[0]):
-            info("No input filename recognized")
-            return
+        filename_found = ""
+
+        if not filename:
+            if not (filename := QFileDialog.getOpenFileName()[0]):
+                info("No input filename recognized")
+                return
+
+            filename_found: str = filename
 
         try:
             transaction: Transaction = self.parser.parse_file(filename)
@@ -261,8 +262,10 @@ class SvTerminalGui(SvTerminal):
             error(fields_settings_error)
             return
 
-        if self.sender() is self.window.button_parse_file:
-            info(f"File parsed: {filename}")
+        if not filename_found:
+            return
+
+        info(f"File parsed: {filename}")
 
     def set_bitmap(self):
         bitmap: set[str] = set()
@@ -283,18 +286,6 @@ class SvTerminalGui(SvTerminal):
             bitmap.add(bit)
 
         self.window.set_bitmap(", ".join(sorted(bitmap, key=int)))
-
-    def proces_button_menu(self, button, action: str):
-        data_processing_map = {
-            self.window.button_save: lambda _action: self.save_transaction_to_file(_action),
-            self.window.button_reverse: lambda _action: self.perform_reversal(_action),
-            self.window.button_print: lambda _action: self.print_data(_action)
-        }
-
-        if not (function := data_processing_map.get(button)):
-            return
-
-        function(action)
 
     def clear_message(self):
         self.window.clear_message()
