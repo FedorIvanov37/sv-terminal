@@ -1,9 +1,7 @@
 from traceback import format_exc
 from PyQt6.QtWidgets import QDialog
-from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import Qt
 from common.gui.forms.error import Ui_Error
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.lib.decorators.window_settings import set_window_icon, has_close_button_only
 
 
 class ErrorWindow(Ui_Error, QDialog):
@@ -14,14 +12,17 @@ class ErrorWindow(Ui_Error, QDialog):
 
         try:
             self.setupUi(self)
-            self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
-            self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
-            self.accepted.connect(self.exit)
-            self.rejected.connect(self.exit)
-            self.TextField.append(format_exc())
+            self.setup()
 
         except Exception as exc:
             self.exit(exc)
+
+    @set_window_icon
+    @has_close_button_only
+    def setup(self):
+        self.accepted.connect(self.exit)
+        self.rejected.connect(self.exit)
+        self.TextField.append(format_exc())
 
     def exit(self, exception=None, error_code=100):
         print(f"Finished with error: {exception if exception else self.exception}")

@@ -1,9 +1,9 @@
-from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QCheckBox, QHBoxLayout, QWidget, QHeaderView
-from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.forms.mti_spec import Ui_MtiSpecWindow
 from common.lib.core.EpaySpecification import EpaySpecification, Mti
+from common.gui.constants.ButtonActions import ButtonAction
+from common.lib.decorators.window_settings import set_window_icon, has_close_button_only
 
 
 class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):
@@ -28,9 +28,11 @@ class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):
         self.setupUi(self)
         self.setup()
 
+    @set_window_icon
+    @has_close_button_only
     def setup(self):
-        self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
-        self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
+        self.ButtonPlus.setText(ButtonAction.BUTTON_PLUS_SIGN)
+        self.ButtonMinus.setText(ButtonAction.BUTTON_MINUS_SIGN)
         self.ButtonPlus.clicked.connect(self.plus)
         self.ButtonMinus.clicked.connect(self.minus)
         self.ButtonSave.clicked.connect(self.ok)

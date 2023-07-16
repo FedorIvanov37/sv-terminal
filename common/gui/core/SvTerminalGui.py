@@ -4,7 +4,6 @@ from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QFileDialog
-from PyQt6.QtGui import QIcon
 from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
@@ -41,7 +40,6 @@ class SvTerminalGui(SvTerminal):
         self.log_printer.print_startup_info(self.config)
         self.connect_widgets()
         self.window.set_mti_values(self.spec.get_mti_list())
-        self.window.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
         self.print_data(DataFormats.TERM)
 

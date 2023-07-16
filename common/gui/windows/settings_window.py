@@ -8,6 +8,7 @@ from common.lib.constants.LogDefinition import LogDefinition
 from logging import info, warning, getLogger, getLevelName
 from common.gui.windows.about_window import AboutWindow
 from common.lib.data_models.Config import Config
+from common.lib.decorators.window_settings import set_window_icon, has_close_button_only
 
 
 class SettingsWindow(Ui_SettingsWindow, QDialog):
@@ -17,8 +18,9 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.config: Config = config
         self.setup()
 
+    @set_window_icon
+    @has_close_button_only
     def setup(self):
-        self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.ButtonAbout.setIcon(QIcon(QPixmap(TermFilesPath.MAIN_LOGO)))
         self.SvPort.setValidator(QIntValidator(1, 65535))
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){3}\d+")))

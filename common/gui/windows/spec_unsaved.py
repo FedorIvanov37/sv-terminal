@@ -1,8 +1,8 @@
 from common.gui.forms.spec_unsaved import Ui_SpecUnsaved
 from PyQt6.QtWidgets import QDialog, QMenu
-from PyQt6.QtGui import QIcon, QCloseEvent, QKeyEvent
+from PyQt6.QtGui import QCloseEvent, QKeyEvent
 from PyQt6.QtCore import Qt, pyqtSignal
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.lib.decorators.window_settings import set_window_icon, has_close_button_only
 
 
 class SpecUnsaved(Ui_SpecUnsaved, QDialog):
@@ -20,9 +20,10 @@ class SpecUnsaved(Ui_SpecUnsaved, QDialog):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.setup()
 
+    @set_window_icon
+    @has_close_button_only
     def setup(self):
         apply_menu = QMenu()
 

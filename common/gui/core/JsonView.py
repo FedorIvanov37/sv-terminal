@@ -87,7 +87,18 @@ class JsonView(QTreeWidget):
         except ValueError as validation_error:
             item.set_item_color(red=True)
             [warning(err) for err in str(validation_error).splitlines()]
-    
+
+    def edit_current_item(self):
+        if not self.hasFocus():
+            self.setFocus()
+
+        item: Item | QTreeWidgetItem
+
+        if not (item := self.currentItem()):
+            return
+
+        self.edit_item(item, FieldsSpec.ColumnsOrder.VALUE)
+
     def validate(self, item, column=None):
         if not self.config.fields.validation:
             return
@@ -169,6 +180,7 @@ class JsonView(QTreeWidget):
             try:
                 self.validate(item)
             except ValueError:
+                item.set_item_color(red=True)
                 return
 
             item.set_item_color(red=False)

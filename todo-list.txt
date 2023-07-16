@@ -53,7 +53,6 @@
 + Add hotkeys button
 + Zero max amount possible
 + Max Amount from config field changes nothing
-+ Generated amount can be zero
 + InputMethodHints
 + Remove "Press F1 to get SvTerminal Hotkeys info"
 + Add hotkeys to release info
@@ -65,6 +64,10 @@
 + Ctrl + E removes the card number
 + Socket error returns twice
 + Spec disappear after close
++ Window type decorators
+
+
+• Spec window different colors
 
 
 
