@@ -237,7 +237,7 @@ class SvTerminalGui(SvTerminal):
 
         if not filename:
             if not (filename := QFileDialog.getOpenFileName()[0]):
-                info("No input filename recognized")
+                warning("No input filename recognized")
                 return
 
             filename_found: str = filename

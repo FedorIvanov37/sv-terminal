@@ -136,6 +136,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     @set_window_icon
     def _setup(self):
         self.setupUi(self)
+
         self.FieldsTreeLayout.addWidget(self.json_view)
         self.PlusButton = QPushButton(ButtonAction.BUTTON_PLUS_SIGN)
         self.MinusButton = QPushButton(ButtonAction.BUTTON_MINUS_SIGN)
@@ -150,16 +151,18 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for layout, button in buttons_layouts_map.items():
             layout.addWidget(button)
 
-        view: JsonView = self.json_view
+        self.connect_all()
 
-        window_connections_map = {
-            self.PlusButton.clicked: view.plus,
-            self.MinusButton.clicked: view.minus,
-            self.NextLevelButton.clicked: view.next_level,
+        windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
+
+    def connect_all(self):
+        buttons_connection_map = {
+            self.PlusButton.clicked: self.json_view.plus,
+            self.MinusButton.clicked: self.json_view.minus,
+            self.NextLevelButton.clicked: self.json_view.next_level,
             self.json_view.itemChanged: self.field_changed,
             self.json_view.field_added: self.field_added,
             self.json_view.field_removed: self.field_removed,
-            #
             self.ButtonSend.clicked: self.send,
             self.ButtonClearLog.clicked: self.clear_log,
             self.ButtonCopyLog.clicked: self.copy_log,
@@ -172,27 +175,26 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonHotkeys.clicked: self.hotkeys,
             self.ButtonSettings.clicked: self.settings,
             self.ButtonCopyBitmap.clicked: self.copy_bitmap,
-            #
-            QShortcut(QKeySequence('Ctrl+T'), self).activated: lambda: self.print.emit(DataFormats.TERM),
-            QShortcut(QKeySequence('Ctrl+Shift+Return'), self).activated: lambda: self.reverse.emit(ButtonAction.LAST),
-            QShortcut(QKeySequence('Ctrl+Return'), self).activated: self.send,
-            QShortcut(QKeySequence('Ctrl+R'), self).activated: self.reconnect,
-            QShortcut(QKeySequence('Ctrl+L'), self).activated: self.clear_log,
-            QShortcut(QKeySequence('Ctrl+E'), self).activated: lambda: view.edit_column(FieldsSpec.ColumnsOrder.VALUE),
-            QShortcut(QKeySequence('Ctrl+W'), self).activated: lambda: view.edit_column(FieldsSpec.ColumnsOrder.FIELD),
-            QShortcut(QKeySequence('Ctrl+Shift+N'), self).activated: view.next_level,
-            QShortcut(QKeySequence('Ctrl+Alt+Q'), self).activated: exit,
-            QShortcut(QKeySequence('Ctrl+Alt+Return'), self).activated: self.echo_test,
-            QShortcut(QKeySequence(QKeySequence.StandardKey.New), self).activated: view.plus,
-            QShortcut(QKeySequence(QKeySequence.StandardKey.Delete), self).activated: view.minus,
-            QShortcut(QKeySequence(QKeySequence.StandardKey.HelpContents), self).activated: self.about,
-            QShortcut(QKeySequence(QKeySequence.StandardKey.Save), self).activated: self.ButtonSave.showMenu,
-            QShortcut(QKeySequence(QKeySequence.StandardKey.Print), self).activated: self.ButtonPrintData.showMenu,
-            QShortcut(QKeySequence(QKeySequence.StandardKey.Open), self).activated: self.parse_file,
         }
 
-        for signal, slot in window_connections_map.items():
-            signal.connect(slot)
+        keys_connection_map = {
+            'Ctrl+T': lambda: self.print.emit(DataFormats.TERM),
+            'Ctrl+Shift+Return': lambda: self.reverse.emit(ButtonAction.LAST),
+            'Ctrl+Return': self.send,
+            'Ctrl+R': self.reconnect,
+            'Ctrl+L': self.clear_log,
+            'Ctrl+E': lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.VALUE),
+            'Ctrl+W': lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.FIELD),
+            'Ctrl+Shift+N': self.json_view.next_level,
+            'Ctrl+Alt+Q': exit,
+            'Ctrl+Alt+Return': self.echo_test,
+            QKeySequence.StandardKey.New: self.json_view.plus,
+            QKeySequence.StandardKey.Delete: self.json_view.minus,
+            QKeySequence.StandardKey.HelpContents: self.about,
+            QKeySequence.StandardKey.Save: self.ButtonSave.showMenu,
+            QKeySequence.StandardKey.Print: self.ButtonPrintData.showMenu,
+            QKeySequence.StandardKey.Open: self.parse_file,
+        }
 
         buttons_menu_structure = {
             self.ButtonReverse: {
@@ -215,14 +217,18 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             }
         }
 
+        for signal, slot in buttons_connection_map.items():
+            signal.connect(slot)
+
+        for combination, function in keys_connection_map.items():
+            QShortcut(QKeySequence(combination), self).activated.connect(function)
+
         for button, actions in buttons_menu_structure.items():
             button.setMenu(QMenu())
 
             for action, function in actions.items():
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
-
-        windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow.py")
 
     def clean_window_log(self):
         self.LogArea.setText(str())
