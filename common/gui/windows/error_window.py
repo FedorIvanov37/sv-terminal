@@ -1,7 +1,7 @@
 from traceback import format_exc
 from PyQt6.QtWidgets import QDialog
 from common.gui.forms.error import Ui_Error
-from common.lib.decorators.window_settings import set_window_icon, has_close_button_only
+from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 
 
 class ErrorWindow(Ui_Error, QDialog):

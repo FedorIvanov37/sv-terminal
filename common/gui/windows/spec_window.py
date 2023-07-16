@@ -13,7 +13,7 @@ from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.core.SpecView import SpecView
 from common.gui.windows.mti_spec_window import MtiSpecWindow
 from common.gui.constants.ButtonActions import ButtonAction
-from common.lib.decorators.window_settings import set_window_icon, has_close_button_only
+from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):

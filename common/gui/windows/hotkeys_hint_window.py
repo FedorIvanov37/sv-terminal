@@ -1,5 +1,5 @@
 from common.gui.forms.hotkeys import Ui_HotKeysHint
-from common.lib.decorators.window_settings import frameless_window
+from common.gui.decorators.window_settings import frameless_window
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
 

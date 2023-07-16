@@ -6,7 +6,7 @@ from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
 from common.gui.forms.about import Ui_AboutWindow
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.constants.ReleaseDefinitoin import ReleaseDefinition
-from common.lib.decorators.window_settings import frameless_window
+from common.gui.decorators.window_settings import frameless_window
 
 
 class AboutWindow(Ui_AboutWindow, QDialog):
