@@ -1,12 +1,19 @@
 from os import getcwd, path
-from PyQt6.QtGui import QPixmap, QIcon, QDesktopServices, QCloseEvent, QKeyEvent, QMovie
-from PyQt6.QtCore import Qt, QUrl
-from PyQt6.QtWidgets import QDialog
-from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
 from common.gui.forms.about import Ui_AboutWindow
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.constants.ReleaseDefinitoin import ReleaseDefinition
 from common.gui.decorators.window_settings import frameless_window
+from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
+from PyQt6.QtCore import Qt, QUrl
+from PyQt6.QtWidgets import QDialog
+from PyQt6.QtGui import (
+    QPixmap,
+    QIcon,
+    QDesktopServices,
+    QCloseEvent,
+    QKeyEvent,
+    QMovie,
+)
 
 
 class AboutWindow(Ui_AboutWindow, QDialog):

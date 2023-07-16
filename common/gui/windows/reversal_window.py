@@ -1,8 +1,8 @@
-from PyQt6.QtWidgets import QDialog
 from re import search
 from typing import Optional
-from common.gui.forms.reversal import Ui_ReversalWindow
+from PyQt6.QtWidgets import QDialog
 from common.lib.data_models.Transaction import Transaction
+from common.gui.forms.reversal import Ui_ReversalWindow
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 
 

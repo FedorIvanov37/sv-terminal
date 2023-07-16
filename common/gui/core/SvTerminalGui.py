@@ -4,7 +4,6 @@ from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QFileDialog
-from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
@@ -15,13 +14,35 @@ from common.gui.constants.TextConstants import TextConstants
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.constants.ButtonActions import ButtonAction
-from common.lib.constants.LogDefinition import LogDefinition
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread
+from common.lib.core.Logger import LogStream, getLogger, Formatter
+from common.lib.constants.LogDefinition import LogDefinition
 from common.lib.core.LogPrinter import LogPrinter
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.core.Terminal import SvTerminal
+
+
+"""
+ 
+ The core of the GUI backend
+ 
+ Performs all the management and control. The main purpose is to receive a validated data-processing request from 
+ MainWindow or TransactionQueue and manage this using the other low-level modules such as Parser for data transformation
+ TransactionQueue for interaction with the target system, Connector for TCP integration, and so on. 
+ 
+ Always tries not to do the work itself, managing corresponding modules instead
+
+ SvTerminalGui is a basic executor for all user requests. Inherited from SvTerminal class, which does not interact 
+ with GUI anyhow. Low-level data processing performs using the basic SvTerminal class.
+
+ Usually get data in the Transaction format. In any other case targeting to transform data into the Transaction and 
+ proceed to work with this. The Transaction is a common I/O format for SvTerminalGui. 
+ 
+ Starts MainWindow when starting its work, being a kind of low-level adapter between the GUI and the system's core
+ 
+"""
 
 
 class SvTerminalGui(SvTerminal):
@@ -50,6 +71,9 @@ class SvTerminalGui(SvTerminal):
         window = self.window
 
         terminal_connections_map = {
+
+            # Data processing request channels. Usually get the tasks from MainWindow or low-level SvTerminal
+
             window.clear_log: window.clean_window_log,
             window.send: self.send,
             window.reset: self.set_default_values,
@@ -159,7 +183,7 @@ class SvTerminalGui(SvTerminal):
 
         info(f"Processing transaction ID [{transaction.trans_id}]")
 
-        SvTerminal.send(self, transaction)
+        SvTerminal.send(self, transaction)  # SvTerminal always used to real data processing
 
         if sender is not self.window:
             return
@@ -237,7 +261,7 @@ class SvTerminalGui(SvTerminal):
 
         if not filename:
             if not (filename := QFileDialog.getOpenFileName()[0]):
-                info("No input filename recognized")
+                warning("No input filename recognized")
                 return
 
             filename_found: str = filename

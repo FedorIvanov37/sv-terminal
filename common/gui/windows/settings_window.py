@@ -1,13 +1,13 @@
 from json import dumps
-from common.gui.forms.settings import Ui_SettingsWindow
-from common.gui.constants.TermFilesPath import TermFilesPath
+from logging import info, warning, getLogger, getLevelName
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QIntValidator, QRegularExpressionValidator, QIcon, QPixmap
 from PyQt6.QtCore import QRegularExpression
 from common.lib.constants.LogDefinition import LogDefinition
-from logging import info, warning, getLogger, getLevelName
-from common.gui.windows.about_window import AboutWindow
 from common.lib.data_models.Config import Config
+from common.gui.forms.settings import Ui_SettingsWindow
+from common.gui.constants.TermFilesPath import TermFilesPath
+from common.gui.windows.about_window import AboutWindow
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 
 

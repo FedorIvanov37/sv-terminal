@@ -69,8 +69,10 @@
 + Card disappears while editing
 + Cancel save the config
 + Don't hide card in log on debug
-• Window signals isolated
++ Window signals isolated
 
+
+• Cannot parse own dump
 
 
 • Check the old files processing
