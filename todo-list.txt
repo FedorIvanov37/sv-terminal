@@ -25,7 +25,6 @@
 + Validate 1-128 for top-level items only
 + Spec window does not save spec even if error happens
 + Check the field duplicates before sent transaction
-
 #
 + Change ascii logo
 + Add traceback to ErrorWindow
@@ -47,6 +46,32 @@
 + Work with empty fields
 + PAN mask in fields
 + Checkboxes generate fields when activate
+
+#
++ Add hotkeys
++ Add hotkeys window
++ Add hotkeys button
++ Zero max amount possible
++ Max Amount from config field changes nothing
++ Generated amount can be zero
++ InputMethodHints
++ Remove "Press F1 to get SvTerminal Hotkeys info"
++ Add hotkeys to release info
++ Add Ctrl + v
++ Ctrl + C copies field data without focus
++ MainWindow fonts
++ Set item style
++ UnicodeError when unicode in field_number - add item validators
++ Ctrl + E removes the card number
+
+
+
+• Spec disappear after close
+• Socket error returns twice
+
+
+
+
 
 
 • Check the old files processing

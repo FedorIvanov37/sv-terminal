@@ -1,11 +1,9 @@
 from json import dumps
 from common.gui.forms.settings import Ui_SettingsWindow
 from common.gui.constants.TermFilesPath import TermFilesPath
-from common.gui.forms.help_window import Croak
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QIntValidator, QRegularExpressionValidator, QIcon, QPixmap
 from PyQt6.QtCore import QRegularExpression
-from common.gui.constants.TextConstants import TextConstants
 from common.lib.constants.LogDefinition import LogDefinition
 from logging import info, warning, getLogger, getLevelName
 from common.gui.windows.about_window import AboutWindow
@@ -24,7 +22,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.ButtonAbout.setIcon(QIcon(QPixmap(TermFilesPath.MAIN_LOGO)))
         self.SvPort.setValidator(QIntValidator(1, 65535))
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){3}\d+")))
-        self.MaxAmount.setValidator(QRegularExpressionValidator(QRegularExpression(r"\d{1,12}")))  # |" + self.easter
+        self.MaxAmount.setValidator(QIntValidator(1, 2000000000))
         self.DebugLevel.addItems(LogDefinition.LOG_LEVEL)
         self.ParseSubfields.setHidden(True)  # TODO
         self.buttonBox.accepted.connect(self.ok)
@@ -42,7 +40,6 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.SvAddress.setText(self.config.smartvista.host)
         self.SvPort.setText(self.config.smartvista.port)
         self.MaxAmount.setText(str(self.config.fields.max_amount))
-        # self.MaxAmount.textEdited.connect(self.croak)  # Bye, Toad
         self.ProcessDefaultDump.setChecked(self.config.terminal.process_default_dump)
         self.ConnectOnStartup.setChecked(self.config.terminal.connect_on_startup)
         self.ClearLog.setChecked(self.config.debug.clear_log)
@@ -65,10 +62,15 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
     def ok(self):
         getLogger().setLevel(getLevelName(self.DebugLevel.currentText()))
 
-        if not self.MaxAmount.text().isdigit():  # croak
-            self.MaxAmount.setText("100")
+        try:
+            # raise ValueError when max_amount is zero or has non-int value
+            if not (max_amount := int(self.MaxAmount.text())):
+                raise ValueError
 
-        self.MaxAmount.setText(str(int(self.MaxAmount.text())))
+        except ValueError:
+            max_amount: int = 100  # When max_amount is zero or has non-int value
+
+        self.MaxAmount.setText(str(max_amount))
         self.config.smartvista.host = self.SvAddress.text()
         self.config.smartvista.port = self.SvPort.text()
         self.config.terminal.process_default_dump = self.ProcessDefaultDump.isChecked()
@@ -95,10 +97,3 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
     def cancel(self):
         info("Settings applying was canceled")
         self.close()
-
-    def croak(self):
-        if self.MaxAmount.text() == self.easter:
-            self.MaxAmount.setText(self.config.fields.max_amount)
-            Croak()
-
-    easter = "".join(map(chr, TextConstants.EASTER))

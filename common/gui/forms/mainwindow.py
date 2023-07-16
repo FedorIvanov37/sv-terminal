@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file '.\common\gui\forms\mainwindow.ui'
+# Form implementation generated from reading ui file '.\mainwindow.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1404, 954)
+        MainWindow.resize(1404, 959)
         MainWindow.setMouseTracking(False)
         MainWindow.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
@@ -80,7 +80,7 @@ class Ui_MainWindow(object):
         self.Bitmap = QtWidgets.QLineEdit(parent=self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Calibri")
-        font.setPointSize(11)
+        font.setPointSize(12)
         self.Bitmap.setFont(font)
         self.Bitmap.setMouseTracking(True)
         self.Bitmap.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
@@ -280,6 +280,18 @@ class Ui_MainWindow(object):
         self.ButtonSpecification.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.ButtonSpecification.setObjectName("ButtonSpecification")
         self.horizontalLayout_2.addWidget(self.ButtonSpecification)
+        self.ButtonHotkeys = QtWidgets.QPushButton(parent=self.centralwidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ButtonHotkeys.sizePolicy().hasHeightForWidth())
+        self.ButtonHotkeys.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.ButtonHotkeys.setFont(font)
+        self.ButtonHotkeys.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.ButtonHotkeys.setObjectName("ButtonHotkeys")
+        self.horizontalLayout_2.addWidget(self.ButtonHotkeys)
         self.ButtonSettings = QtWidgets.QPushButton(parent=self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -324,6 +336,7 @@ class Ui_MainWindow(object):
         self.ButtonEchoTest.setText(_translate("MainWindow", "Echo-Test"))
         self.ButtonReconnect.setText(_translate("MainWindow", "[Re]connect"))
         self.ButtonSpecification.setText(_translate("MainWindow", "Specification"))
+        self.ButtonHotkeys.setText(_translate("MainWindow", "Hotkeys Info"))
         self.ButtonSettings.setText(_translate("MainWindow", "Configuration"))
 
 

@@ -26,6 +26,7 @@
 # NEW: Added possibility to set MTI map in GUI. See specification window
 # NEW: Added warning when Specification was changed but not saved
 # NEW: Added specification fields validation
+# NEW: Added hotkeys combinations, hotkeys hint window, and button to call the window
 #
 # UPD: Updated requirements - framework changed to PyQt6, SvTerminal does not support PyQt5 since v0.15
 # UPD: Since v0.15 Specification settings are required for any field

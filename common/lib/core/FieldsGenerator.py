@@ -5,7 +5,7 @@ from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
 
 
-class FieldsGenerator(object):
+class FieldsGenerator:
     _spec: EpaySpecification = EpaySpecification()
 
     @property
@@ -53,7 +53,7 @@ class FieldsGenerator(object):
         spec = EpaySpecification()
 
         if field == spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT:
-            max_amount = str(randint(0, int(max_amount) * 100))
+            max_amount = str(randint(1, int(max_amount) * 100))
             field_length = spec.get_field_length(spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT)
             max_amount = max_amount.zfill(field_length)
 

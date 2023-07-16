@@ -11,15 +11,12 @@ class ItemsValidator(Validator):
         self.config: Config = config
 
     def validate_item(self, item: Item):
-        if not any((item.field_number, item.field_data)):
-            return
-
         field_path: list[str] = item.get_field_path()
 
         self.validate_field_path(field_path)
         self.validate_duplicates(item)
 
-        if self.spec.is_field_complex(field_path) and not item.field_data:
+        if self.spec.is_field_complex(field_path):
             return
 
         self.validate_field_data(field_path, item.field_data)

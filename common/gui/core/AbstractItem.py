@@ -17,7 +17,13 @@ class AbstractItem(QTreeWidgetItem):
 
     def __init__(self, item_data: list[str]):
         super(AbstractItem, self).__init__(item_data)
-        self.setFlags(Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsUserCheckable)
+
+        self.setFlags(
+             Qt.ItemFlag.ItemIsEditable |
+             Qt.ItemFlag.ItemIsEnabled |
+             Qt.ItemFlag.ItemIsUserCheckable |
+             Qt.ItemFlag.ItemIsSelectable
+        )
 
     def get_field_depth(self):
         return len(self.get_field_path())
@@ -27,9 +33,6 @@ class AbstractItem(QTreeWidgetItem):
         item = self
 
         while item.parent() is not None:
-            if not item.field_number:
-                return list()
-
             path.insert(int(), item.field_number)
             item = item.parent()
 
