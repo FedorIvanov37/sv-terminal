@@ -19,6 +19,9 @@ class SpecView(QObject):
 
     def __init__(self, tree: QTreeWidget, window):
         super(SpecView, self).__init__()
+
+        print("INIT SPEC")
+
         self.root: SpecItem = SpecItem(["Specification"])
         self.tree: QTreeWidget = tree
         self.window = window

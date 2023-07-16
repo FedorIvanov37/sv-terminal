@@ -63,13 +63,8 @@
 + Set item style
 + UnicodeError when unicode in field_number - add item validators
 + Ctrl + E removes the card number
-
-
-
-• Spec disappear after close
-• Socket error returns twice
-
-
++ Socket error returns twice
++ Spec disappear after close
 
 
 

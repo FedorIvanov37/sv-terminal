@@ -31,6 +31,8 @@ class SvTerminalGui(SvTerminal):
     def __init__(self, config: Config):
         super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
         self.window: MainWindow = MainWindow(self.config)
+        self.spec_window: SpecWindow = SpecWindow(self.window)
+        self.settings_window = SettingsWindow(self.config)
         self.log_printer = LogPrinter()
         self.setup()
 
@@ -76,6 +78,7 @@ class SvTerminalGui(SvTerminal):
         self.connector.stateChanged.connect(self.set_connection_status)
         self.connector.errorOccurred.connect(self.set_connection_status)
         self.connector.errorOccurred.connect(self.window.unblock_connection_buttons)
+        self.spec_window.spec_accepted.connect(lambda name: info(f"Specification applied: {name}"))
 
     @staticmethod
     def hotkeys_hint():
@@ -175,12 +178,10 @@ class SvTerminalGui(SvTerminal):
             self.set_generated_fields(transaction)
 
     def settings(self):
-        SettingsWindow(self.config).exec()
+        self.settings_window.exec()
 
     def specification(self):
-        spec_window: SpecWindow = SpecWindow(self.window)
-        spec_window.spec_accepted.connect(lambda name: info(f"Specification applied: {name}"))
-        spec_window.exec()
+        self.spec_window.exec()
 
     @staticmethod
     def get_output_filename():

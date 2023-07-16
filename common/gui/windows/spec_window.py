@@ -59,13 +59,15 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def setup(self):
         self.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
         self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
-        self.PlusButton = QPushButton("+")
-        self.MinusButton = QPushButton("-")
-        self.NextLevelButton = QPushButton("↵")
+        self.PlusButton = QPushButton("✚")
+        self.MinusButton = QPushButton("━")
+        self.NextLevelButton = QPushButton("🡾")
         self.PlusLayout.addWidget(self.PlusButton)
         self.MinusLayout.addWidget(self.MinusButton)
         self.NextLevelLayout.addWidget(self.NextLevelButton)
+
         self.SpecView: SpecView = SpecView(self.SpecTree, self)
+
         self.StatusLabel.setText(str())
         self.SpecTree.itemChanged.connect(self.item_changed)
         self.PlusButton.clicked.connect(self.SpecView.plus)
@@ -140,12 +142,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         self.process_close(a0)
-
-        # a0.ignore()
-            # a0.accept()
-            # return
-        #
-        # a0.ignore()
 
     def item_changed(self, item, column):
         self.changed = True
