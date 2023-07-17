@@ -1,6 +1,5 @@
 from datetime import datetime
 from random import randint, choice
-from common.lib.exceptions.exceptions import ParsingError
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
 
@@ -22,7 +21,7 @@ class FieldsGenerator:
             stan: str = transaction.data_fields[self.spec.FIELD_SET.FIELD_011_SYSTEM_TRACE_AUDIT_NUMBER]
             date: str = transaction.data_fields[self.spec.FIELD_SET.FIELD_007_TRANSMISSION_DATE_AND_TIME]
         except KeyError:
-            raise ParsingError("Original data elements generating error!")
+            raise ValueError("Original data elements generating error!")
 
         return f"{mti}{stan}{date}"
 

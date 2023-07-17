@@ -28,6 +28,7 @@
 # NEW: Added specification fields validation
 # NEW: Added hotkeys combinations, hotkeys hint window, and button to call the window
 #
+# UPD: Compiled binary file, no any dependencies anymore
 # UPD: Updated requirements - framework changed to PyQt6, SvTerminal does not support PyQt5 since v0.15
 # UPD: Since v0.15 Specification settings are required for any field
 # UPD: SvTerminal library is separated, and the GUI runs as a specific implementation of the library

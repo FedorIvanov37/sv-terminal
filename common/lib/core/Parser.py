@@ -4,7 +4,6 @@ from logging import error, warning, info
 from pydantic import FilePath
 from binascii import hexlify, unhexlify
 from configparser import ConfigParser, NoSectionError, NoOptionError
-from common.lib.exceptions.exceptions import DumpFileParsingError
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Bitmap import Bitmap
 from common.lib.core.FieldsGenerator import FieldsGenerator
@@ -339,7 +338,7 @@ class Parser:
                 try:
                     line = line.split()[0]
                 except IndexError:
-                    raise DumpFileParsingError("Unexpected result of data parsing - no data")
+                    raise ValueError("Unexpected result of data parsing - no data")
 
                 line = line.replace(DumpDefinition.SEPARATOR, "")
                 string += line

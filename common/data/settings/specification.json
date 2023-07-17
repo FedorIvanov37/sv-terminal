@@ -6679,6 +6679,27 @@
                         }
                     }
                 },
+                "226": {
+                    "field_number": "226",
+                    "field_path": [
+                        "47",
+                        "226"
+                    ],
+                    "min_length": 1,
+                    "max_length": 99,
+                    "var_length": 3,
+                    "tag_length": 0,
+                    "generate": false,
+                    "reversal": false,
+                    "matching": false,
+                    "alpha": true,
+                    "numeric": true,
+                    "special": true,
+                    "reserved_for_future": false,
+                    "description": "Merchant URL",
+                    "is_secret": null,
+                    "fields": null
+                },
                 "802": {
                     "field_number": "802",
                     "field_path": [
