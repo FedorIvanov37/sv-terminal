@@ -1,7 +1,7 @@
 from typing import Callable
 from logging import warning
 from collections import OrderedDict
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QUndoStack
 from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget, QItemDelegate
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.gui.core.FIeldItem import Item
@@ -11,6 +11,7 @@ from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
 from common.lib.core.FieldsGenerator import FieldsGenerator
 from PyQt6.QtCore import pyqtSignal
+from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
 
 
 class JsonView(QTreeWidget):
@@ -39,6 +40,13 @@ class JsonView(QTreeWidget):
         self.delegate = QItemDelegate()
         self.delegate.closeEditor.connect(self.hide_pan_after_edit)
         self.setItemDelegate(self.delegate)
+        self.undo_stack = QUndoStack()
+
+    def undo(self):
+        self.undo_stack.undo()
+
+    def redo(self):
+        self.undo_stack.redo()
 
     def hide_pan_after_edit(self):  # TODO
         child: Item
@@ -91,6 +99,7 @@ class JsonView(QTreeWidget):
 
         if column in (FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.FIELD):
             item.hide_pan(True)
+            # self.undo_stack.push(UndoItemEditCommand(item, column, new_text=item.text(column)))
 
         try:
             self.validate(item, column)
@@ -154,8 +163,10 @@ class JsonView(QTreeWidget):
 
         index = parent.indexOfChild(current_item) + 1
         parent.insertChild(index, item)
+
         self.set_new_item(item)
         self.field_added.emit()
+        self.undo_stack.push(UndoAddChildCommand(item, parent))
 
     @void_qt_signals
     def minus(self, checked=None):
@@ -170,7 +181,10 @@ class JsonView(QTreeWidget):
 
         parent: Item = item.parent()
         removed_item_index = parent.indexOfChild(item)
-        removed_item: Item = parent.takeChild(removed_item_index)
+
+        self.undo_stack.push(UndoRemoveChildCommand(item, parent))
+
+        parent.removeChild(item)
         cursor_position = removed_item_index if removed_item_index == 0 else removed_item_index - 1
         parent.set_length()
 
@@ -178,7 +192,7 @@ class JsonView(QTreeWidget):
             new_position_item = parent
 
         self.setCurrentItem(new_position_item)
-        self.check_duplicates_after_remove(removed_item, parent)
+        self.check_duplicates_after_remove(item, parent)
         self.setFocus()
         self.field_removed.emit()
 
@@ -189,9 +203,10 @@ class JsonView(QTreeWidget):
         if current_item is None:
             return
 
-        self.currentItem().setText(FieldsSpec.ColumnsOrder.VALUE, str())
-        self.currentItem().insertChild(int(), item)
+        current_item.setText(FieldsSpec.ColumnsOrder.VALUE, str())
+        current_item.insertChild(int(), item)
         self.set_new_item(item)
+        self.undo_stack.push(UndoAddChildCommand(item, current_item))
 
     def set_new_item(self, item: Item):
         self.setCurrentItem(item)
@@ -246,6 +261,7 @@ class JsonView(QTreeWidget):
 
         self.editItem(item, column)
 
+
     def parse_transaction(self, transaction: Transaction) -> None:
         self.clean()
         self._parse_fields(transaction.data_fields)
@@ -288,8 +304,6 @@ class JsonView(QTreeWidget):
 
             if parent is self.root:
                 continue
-
-
 
     def resize_all(self):
         for column in range(self.columnCount()):
