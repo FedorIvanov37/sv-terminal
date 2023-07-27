@@ -165,7 +165,10 @@ class Parser:
 
         for field in fields:
             if spec.is_field_complex([field]):
-                fields[field]: RawFieldSet = Parser.split_complex_field(field, fields[field])
+                try:
+                    fields[field]: RawFieldSet = Parser.split_complex_field(field, fields[field])
+                except ValueError:
+                    raise ValueError("Incorrect transaction message or wrong Specification settings")
 
         transaction: Transaction = Transaction(
             trans_id=FieldsGenerator.generate_trans_id(),

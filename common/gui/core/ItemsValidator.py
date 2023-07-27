@@ -22,9 +22,11 @@ class ItemsValidator(Validator):
         self.validate_field_data(field_path, item.field_data)
 
     def validate_duplicates(self, item: Item, parent: Item = None):
-        if parent is None:
-            if not (parent := item.parent()):
-                return
+        if item is None:
+            return
+
+        if parent is None and not (parent := item.parent()):
+            return
 
         for child in item.get_children():
             self.validate_duplicates(child)

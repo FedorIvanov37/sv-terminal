@@ -224,6 +224,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             QKeySequence.StandardKey.Save: self.ButtonSave.showMenu,
             QKeySequence.StandardKey.Print: self.ButtonPrintData.showMenu,
             QKeySequence.StandardKey.Open: self.parse_file,
+            QKeySequence.StandardKey.Undo: self.json_view.undo,
+            QKeySequence.StandardKey.Redo: self.json_view.redo,
         }
 
         buttons_menu_structure = {

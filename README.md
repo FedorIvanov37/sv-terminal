@@ -42,7 +42,7 @@ In case of any questions about SvTerminal [contact author](#author). Your feedba
   * ISO8583 Message Type Indicators (MTI) setting window. Opens by the button "Set MTI" in the Specification window
   * Small warning window in case when Specification was changed but not saved 
   * Hotkeys combinations, hotkeys hint window, and button to call the window
-
+  * Undo / redo of transaction fields 
 
 * Updates
   * Full renovation of Window About

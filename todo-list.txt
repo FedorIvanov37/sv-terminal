@@ -25,7 +25,6 @@
 + Validate 1-128 for top-level items only
 + Spec window does not save spec even if error happens
 + Check the field duplicates before sent transaction
-#
 + Change ascii logo
 + Add traceback to ErrorWindow
 + Remove window parsing from the parser
@@ -71,6 +70,7 @@
 + Don't hide card in log on debug
 + Window signals isolated
 + Cannot parse own dump
+#
 + Try to compile .exe
 + Beatify card mask
 + Fix response message parsing for incoming transactions
@@ -78,6 +78,9 @@
 + ADd validation after set validation flag in settings
 + "No data to send" while printing
 + Correct default message to avoid 96 code
++ Cannot parse own dump again // wrong spe settings
++ Add basic Undo / redo
+
 
 
 • Change approach to fields path
@@ -85,7 +88,6 @@
 • Unknown fields in incoming files and messages - what are you going to do
 • No data in socket if delete field in spec
 • Exceptions policy
-• Correct the default message
 • Correct and publish the Specification
 • Publish on confluence
 • Prepare document
