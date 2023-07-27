@@ -90,7 +90,7 @@ class SvTerminalGui(SvTerminal):
             window.field_changed: self.set_bitmap,
             window.field_removed: self.set_bitmap,
             window.field_added: self.set_bitmap,
-            window.settings: lambda: SettingsWindow(self.config).exec(),
+            window.settings: self.settings,
             window.hotkeys: lambda: HotKeysHintWindow().exec(),
             window.specification: lambda: SpecWindow().exec(),
             window.about: lambda: AboutWindow(),
@@ -99,6 +99,18 @@ class SvTerminalGui(SvTerminal):
 
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
+
+    def settings(self):
+        def validate_all(validation):
+            if not validation:
+                return
+
+            self.window.validate_fields()
+
+        fields_validation = self.config.fields.validation
+        settings_window: SettingsWindow = SettingsWindow(self.config)
+        settings_window.accepted.connect(lambda: validate_all(fields_validation != self.config.fields.validation))
+        settings_window.exec()
 
     def stop_sv_terminal(self):
         self.connector.stop_thread()
@@ -150,7 +162,7 @@ class SvTerminalGui(SvTerminal):
         data_fields: TypeFields = self.window.get_fields()
 
         if not data_fields:
-            raise ValueError("No data to send")
+            raise ValueError("No transaction data found")
 
         if not (message_type := self.window.get_mti(self.spec.MessageLength.message_type_length)):
             raise ValueError("Invalid MTI")
@@ -175,6 +187,10 @@ class SvTerminalGui(SvTerminal):
             try:
                 transaction: Transaction = self.parse_main_window()
                 sender = self.window
+            #     print(transaction)
+            #
+            # except ValueError:
+            #     pass
 
             except Exception as building_error:
                 error(f"Transaction building error")

@@ -117,8 +117,13 @@ class SvTerminal(QObject):
             'WARNING': warning
         }
 
-        self.log_printer.print_dump(request)
-        self.log_printer.print_transaction(request, level=levels.get(self.config.debug.level))
+        try:
+            self.log_printer.print_dump(request)
+        except Exception as parsing_error:
+            error(f"Data parsing error: {parsing_error}")
+            return
+
+        self.log_printer.print_transaction(request, level=levels.get(self.config.debug.level, info))
         info(f"Transaction [{request.trans_id}] was sent ")
 
     def transaction_received(self, response: Transaction):
@@ -129,8 +134,15 @@ class SvTerminal(QObject):
             'WARNING': warning
         }
 
-        self.log_printer.print_dump(response)
-        self.log_printer.print_transaction(response, level=levels.get(self.config.debug.level))
+        try:
+            self.log_printer.print_dump(response)
+        except Exception as parsing_error:
+            debug(f"Cannot print transaction dump, data parsing error: {parsing_error}")
+
+        try:
+            self.log_printer.print_transaction(response, level=levels.get(self.config.debug.level, info))
+        except Exception as parsing_error:
+            error(f"Cannot print transaction, data parsing error: {parsing_error}")
 
         if response.matched and response.resp_time_seconds:
             info(f"Transaction ID [{response.match_id}] matched, response time seconds: {response.resp_time_seconds}")
@@ -159,8 +171,13 @@ class SvTerminal(QObject):
             error("Unknown output file format")
             return
 
-        if not (file_data := data_processing_function(transaction)):
-            error("No data to save")
+        try:
+            if not (file_data := data_processing_function(transaction)):
+                error("No data to save")
+                return
+
+        except Exception as data_processing_error:
+            error(f"Cannot save transaction: {data_processing_error}")
             return
 
         with open(file_name, "w") as file:

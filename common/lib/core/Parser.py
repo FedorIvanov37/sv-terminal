@@ -61,12 +61,13 @@ class Parser:
         mti: str = transaction.message_type
         bitmap: hex = Bitmap(transaction.data_fields)
         bitmap: hex = bitmap.get_bitmap(hex)
+        body: str = Parser.create_dump(transaction, body=True)
 
-        try:
-            body: str = Parser.create_dump(transaction, body=True)
-        except Exception as exc:
-            error("Dump generating error: %s", exc)
-            return
+        # try:
+        #     body: str = Parser.create_dump(transaction, body=True)
+        # except Exception as exc:
+        #     error("Dump generating error: %s", exc)
+        #     return
 
         dump = "\n"
         ascii_dump = mti + DumpDefinition.ASCII_BITMAP + body

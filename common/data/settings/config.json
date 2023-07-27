@@ -5,17 +5,17 @@
     },
     "terminal": {
         "process_default_dump": true,
-        "connect_on_startup": false
+        "connect_on_startup": true
     },
     "debug": {
-        "level": "DEBUG",
-        "clear_log": false,
+        "level": "INFO",
+        "clear_log": true,
         "parse_subfields": false
     },
     "fields": {
         "max_amount": "100",
         "build_fld_90": true,
         "send_internal_id": true,
-        "validation": true
+        "validation": false
     }
 }

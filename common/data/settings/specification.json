@@ -6700,6 +6700,116 @@
                     "is_secret": null,
                     "fields": null
                 },
+                "227": {
+                    "field_number": "227",
+                    "field_path": [
+                        "47",
+                        "227"
+                    ],
+                    "min_length": 1,
+                    "max_length": 999,
+                    "var_length": 3,
+                    "tag_length": 3,
+                    "generate": false,
+                    "reversal": false,
+                    "matching": false,
+                    "alpha": true,
+                    "numeric": true,
+                    "special": true,
+                    "reserved_for_future": false,
+                    "description": "Service Location",
+                    "is_secret": null,
+                    "fields": {
+                        "01": {
+                            "field_number": "01",
+                            "field_path": [
+                                "47",
+                                "227",
+                                "01"
+                            ],
+                            "min_length": 1,
+                            "max_length": 99,
+                            "var_length": 3,
+                            "tag_length": 0,
+                            "generate": false,
+                            "reversal": false,
+                            "matching": false,
+                            "alpha": true,
+                            "numeric": true,
+                            "special": true,
+                            "reserved_for_future": false,
+                            "description": "Service Location City Name",
+                            "is_secret": null,
+                            "fields": null
+                        },
+                        "02": {
+                            "field_number": "02",
+                            "field_path": [
+                                "47",
+                                "227",
+                                "02"
+                            ],
+                            "min_length": 6,
+                            "max_length": 6,
+                            "var_length": 3,
+                            "tag_length": 0,
+                            "generate": false,
+                            "reversal": false,
+                            "matching": false,
+                            "alpha": true,
+                            "numeric": false,
+                            "special": true,
+                            "reserved_for_future": false,
+                            "description": "Service Location Country Subdivision",
+                            "is_secret": null,
+                            "fields": null
+                        },
+                        "03": {
+                            "field_number": "03",
+                            "field_path": [
+                                "47",
+                                "227",
+                                "03"
+                            ],
+                            "min_length": 3,
+                            "max_length": 3,
+                            "var_length": 3,
+                            "tag_length": 0,
+                            "generate": false,
+                            "reversal": false,
+                            "matching": false,
+                            "alpha": false,
+                            "numeric": true,
+                            "special": false,
+                            "reserved_for_future": false,
+                            "description": "Service Location Country",
+                            "is_secret": null,
+                            "fields": null
+                        },
+                        "04": {
+                            "field_number": "04",
+                            "field_path": [
+                                "47",
+                                "227",
+                                "04"
+                            ],
+                            "min_length": 1,
+                            "max_length": 99,
+                            "var_length": 3,
+                            "tag_length": 0,
+                            "generate": false,
+                            "reversal": false,
+                            "matching": false,
+                            "alpha": true,
+                            "numeric": true,
+                            "special": true,
+                            "reserved_for_future": false,
+                            "description": "Service Location Postal Code",
+                            "is_secret": null,
+                            "fields": null
+                        }
+                    }
+                },
                 "802": {
                     "field_number": "802",
                     "field_path": [
