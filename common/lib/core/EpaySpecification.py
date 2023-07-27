@@ -56,6 +56,9 @@ class EpaySpecification(EpaySpecificationData):
             if mti.request == original_mti:
                 return mti.reversal_mti
 
+    def get_fields_to_generate(self):
+        return [field for field in self.spec.fields if self.spec.fields.get(field).generate]
+
     def can_be_generated(self, field_path: type_field_path):
         if not (field_spec := self.get_field_spec(field_path)):
             return False

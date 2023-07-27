@@ -110,6 +110,7 @@ class SvTerminalGui(SvTerminal):
         fields_validation = self.config.fields.validation
         settings_window: SettingsWindow = SettingsWindow(self.config)
         settings_window.accepted.connect(lambda: validate_all(fields_validation != self.config.fields.validation))
+        settings_window.accepted.connect(lambda: self.window.set_json_mode(self.config.fields.json_mode))
         settings_window.exec()
 
     def stop_sv_terminal(self):
@@ -187,10 +188,6 @@ class SvTerminalGui(SvTerminal):
             try:
                 transaction: Transaction = self.parse_main_window()
                 sender = self.window
-            #     print(transaction)
-            #
-            # except ValueError:
-            #     pass
 
             except Exception as building_error:
                 error(f"Transaction building error")

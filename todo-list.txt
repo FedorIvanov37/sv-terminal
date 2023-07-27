@@ -45,8 +45,6 @@
 + Work with empty fields
 + PAN mask in fields
 + Checkboxes generate fields when activate
-
-#
 + Add hotkeys
 + Add hotkeys window
 + Add hotkeys button
@@ -75,17 +73,19 @@
 + Beatify card mask
 + Fix response message parsing for incoming transactions
 + Add validation after parse file
-+ ADd validation after set validation flag in settings
++ Add validation after set validation flag in settings
 + "No data to send" while printing
 + Correct default message to avoid 96 code
 + Cannot parse own dump again // wrong spe settings
 + Add basic Undo / redo
-
++ Check the old files processing
++ Unknown fields in incoming files and messages - what are you going to do
++ Flat mode
++ try / except around flat mode
++ Remove ErrorWindow
 
 
 • Change approach to fields path
-• Check the old files processing
-• Unknown fields in incoming files and messages - what are you going to do
 • No data in socket if delete field in spec
 • Exceptions policy
 • Correct and publish the Specification

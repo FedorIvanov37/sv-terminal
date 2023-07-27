@@ -19,9 +19,10 @@ class Debug(BaseModel):
 
 class Fields(BaseModel):
     max_amount: str = "1000"
-    build_fld_90: bool = False
-    send_internal_id: bool = False
-    validation: bool = False
+    build_fld_90: bool = True
+    send_internal_id: bool = True
+    validation: bool = True
+    json_mode: bool = True
 
     @validator("max_amount")
     def amount_should_be_digit(cls, max_amount: str):

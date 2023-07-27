@@ -188,8 +188,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.MinusButton.clicked: self.json_view.minus,
             self.NextLevelButton.clicked: self.json_view.next_level,
             self.json_view.itemChanged: self.field_changed,
+            self.json_view.field_changed: self.field_changed,
             self.json_view.field_added: self.field_added,
             self.json_view.field_removed: self.field_removed,
+            self.json_view.need_disable_next_level: self.disable_next_level_button,
             self.ButtonSend.clicked: self.send,
             self.ButtonClearLog.clicked: self.clear_log,
             self.ButtonCopyLog.clicked: self.copy_log,
@@ -267,6 +269,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             for action, function in actions.items():
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
+
+    def disable_next_level_button(self, disable: bool):
+        self.NextLevelButton.setDisabled(disable)
+
+    def set_json_mode(self, json_mode):
+        self.json_view.switch_json_mode(json_mode)
 
     def validate_fields(self):
         self.json_view.validate_all()

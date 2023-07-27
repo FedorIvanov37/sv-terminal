@@ -49,6 +49,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.BuildFld90.setChecked(self.config.fields.build_fld_90)
         self.SendInternalId.setChecked(self.config.fields.send_internal_id)
         self.ValidationEnabled.setChecked(self.config.fields.validation)
+        self.JsonMode.setChecked(self.config.fields.json_mode)
 
     def process_debug_level_change(self):
         disabled = False
@@ -84,6 +85,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.config.fields.build_fld_90 = self.BuildFld90.isChecked()
         self.config.fields.send_internal_id = self.SendInternalId.isChecked()
         self.config.fields.validation = self.ValidationEnabled.isChecked()
+        self.config.fields.json_mode = self.JsonMode.isChecked()
 
         with open(TermFilesPath.CONFIG, "w") as file:
             file.write(dumps(self.config.dict(), indent=4))

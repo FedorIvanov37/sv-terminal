@@ -43,6 +43,8 @@ In case of any questions about SvTerminal [contact author](#author). Your feedba
   * Small warning window in case when Specification was changed but not saved 
   * Hotkeys combinations, hotkeys hint window, and button to call the window
   * Undo / redo of transaction fields 
+  * Complex fields flat mode aka INI style
+
 
 * Updates
   * Full renovation of Window About
