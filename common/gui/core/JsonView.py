@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Callable
 from logging import warning
 from collections import OrderedDict
@@ -12,12 +13,15 @@ from common.lib.data_models.Config import Config
 from common.lib.core.FieldsGenerator import FieldsGenerator
 from PyQt6.QtCore import pyqtSignal
 from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
+from common.lib.core.Parser import Parser
+from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
 
 
 class JsonView(QTreeWidget):
     field_removed: pyqtSignal = pyqtSignal()
     field_changed: pyqtSignal = pyqtSignal()
     field_added: pyqtSignal = pyqtSignal()
+    need_disable_next_level: pyqtSignal = pyqtSignal(bool)
 
     root: Item = Item(["Message"])
     spec: EpaySpecification = EpaySpecification()
@@ -44,9 +48,11 @@ class JsonView(QTreeWidget):
 
     def undo(self):
         self.undo_stack.undo()
+        self.field_changed.emit()
 
     def redo(self):
         self.undo_stack.redo()
+        self.field_changed.emit()
 
     def hide_pan_after_edit(self):  # TODO
         child: Item
@@ -63,9 +69,11 @@ class JsonView(QTreeWidget):
         for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
             action.connect(self.resize_all)
 
+        self.header().setMaximumSectionSize(500)
         self.validator = ItemsValidator(self.config)
         self.itemDoubleClicked.connect(self.edit_item)
         self.itemChanged.connect(self.process_change_item)
+        self.itemClicked.connect(self.disable_next_level)
         self.setFont(QFont("Calibri", 12))
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
@@ -73,6 +81,14 @@ class JsonView(QTreeWidget):
         self.setEditTriggers(self.EditTrigger.NoEditTriggers)
         self.addTopLevelItem(self.root)
         self.make_order()
+
+    def disable_next_level(self, item, column):
+        disable = False
+
+        if item.flat_mode_checkbox_checked():
+            disable = True
+
+        self.need_disable_next_level.emit(disable)
 
     @void_qt_signals
     def process_change_item(self, item: Item, column=None):
@@ -86,6 +102,9 @@ class JsonView(QTreeWidget):
         if column in (FieldsSpec.ColumnsOrder.PROPERTY, FieldsSpec.ColumnsOrder.VALUE):
             if item.generate_checkbox_checked():
                 item.field_data = FieldsGenerator.generate_field(item.field_number, self.config.fields.max_amount)
+
+        if column == FieldsSpec.ColumnsOrder.PROPERTY and item.text(column) == CheckBoxesDefinition.FLAT_MODE:
+            self.set_flat_mode(item)
 
         try:
             item.process_change_item()
@@ -261,10 +280,24 @@ class JsonView(QTreeWidget):
 
         self.editItem(item, column)
 
-
     def parse_transaction(self, transaction: Transaction) -> None:
         self.clean()
-        self._parse_fields(transaction.data_fields)
+
+        fields = deepcopy(transaction.data_fields)
+
+        for field, field_data in fields.items():
+            if not self.config.fields.flat_mode:
+                continue
+
+            if not self.spec.is_field_complex([field]):
+                continue
+
+            if not isinstance(field_data, dict):
+                continue
+
+            fields[field] = Parser.join_complex_field(field, field_data)
+
+        self._parse_fields(fields)
         self.set_checkboxes(transaction)
 
         if self.config.fields.validation:
@@ -272,13 +305,56 @@ class JsonView(QTreeWidget):
 
         self.make_order()
 
-    @void_qt_signals
-    def set_checkboxes(self, transaction: Transaction):
+    def switch_flat_mode(self, flat_mode):
         for item in self.root.get_children():
-            if item.field_number not in FieldsSpec.generated_fields:
+            if not self.spec.is_field_complex(item.get_field_path()):
                 continue
 
-            item.set_checkbox(item.field_number in transaction.generate_fields)
+            item.set_checkbox(flat_mode)
+
+            self.set_flat_mode(item)
+
+    def set_flat_mode(self, item):
+        if not self.spec.is_field_complex(item.get_field_path()):
+            return
+
+        if item.flat_mode_checkbox_checked():  # Set flat mode
+
+            if not item.get_children():
+                return
+
+            fields = self.generate_fields(parent=item)
+            field_data = Parser.join_complex_field(item.field_number, fields)
+            item.takeChildren()
+            item.field_data = field_data
+            return
+
+        # Set non-flat mode
+
+        if item.get_children():
+            return
+
+        if not isinstance(item.field_data, str):
+            return
+
+        fields = Parser.split_complex_field(item.field_number, item.field_data)
+        self._parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
+        item.field_data = ""
+
+    @void_qt_signals
+    def set_checkboxes(self, transaction: Transaction):
+        generate_fields = self.spec.get_fields_to_generate()
+
+        for item in self.root.get_children():
+            is_checked = False
+
+            if item.field_number in generate_fields:
+                is_checked = item.field_number in transaction.generate_fields
+
+            if self.spec.is_field_complex(item.get_field_path()):
+                is_checked = self.config.fields.flat_mode
+
+            item.set_checkbox(is_checked)
 
     def _parse_fields(self, input_json: dict, parent: QTreeWidgetItem = None, specification=None):
         if parent is None:
@@ -293,7 +369,7 @@ class JsonView(QTreeWidget):
 
             if isinstance(field_data, dict):
                 child = Item([field])
-                child.setText(3, description)  # TODO
+                child.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, description)
                 self._parse_fields(field_data, parent=child, specification=specification.fields.get(field))
 
             else:

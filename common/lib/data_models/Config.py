@@ -22,6 +22,7 @@ class Fields(BaseModel):
     build_fld_90: bool = False
     send_internal_id: bool = False
     validation: bool = False
+    flat_mode: bool = False
 
     @validator("max_amount")
     def amount_should_be_digit(cls, max_amount: str):

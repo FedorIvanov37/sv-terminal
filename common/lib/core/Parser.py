@@ -105,7 +105,7 @@ class Parser:
             path.append(subfield)
 
             if not (subfield_spec := spec.get_field_spec(path)):
-                raise ValueError(f"Lost specification for field {'.'.join(path)}! " 
+                raise ValueError(f"Lost specification for field {'.'.join(path)}. " 
                                  "Set parameters in the Specification tool. ")
 
             if subfield_spec.fields:

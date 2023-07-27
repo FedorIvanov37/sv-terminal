@@ -1,9 +1,9 @@
 from PyQt6 import QtGui
 from PyQt6.QtWidgets import QTreeWidgetItem
-from PyQt6.QtCore import Qt, QVariant
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.gui.core.AbstractItem import AbstractItem
+from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.toolkit.toolkit import mask_pan
 from typing import Callable
@@ -80,22 +80,32 @@ class Item(AbstractItem):
         self.pan = pan
 
     def generate_checkbox_checked(self):
+        if self.field_number not in FieldsSpec.generated_fields:
+            return False
+
+        return bool(self.checkState(FieldsSpec.ColumnsOrder.PROPERTY).value)
+
+    def flat_mode_checkbox_checked(self):
+        if not self.epay_spec.is_field_complex(self.get_field_path()):
+            return False
+
         return bool(self.checkState(FieldsSpec.ColumnsOrder.PROPERTY).value)
 
     @void_tree_signals
     def set_checkbox(self, checked=True):
-        column_number = FieldsSpec.ColumnsOrder.PROPERTY
-
-        if self.field_number not in FieldsSpec.generated_fields:
-            self.setData(column_number, Qt.ItemDataRole.CheckStateRole, QVariant())
-            self.setText(column_number, str())
-            return
-
         if self.get_field_depth() != 1:
             return
 
-        self.setCheckState(column_number, Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked)
-        self.setText(column_number, "Generate")
+        column_number = FieldsSpec.ColumnsOrder.PROPERTY
+        state = CheckBoxesDefinition.CHECKED if checked else CheckBoxesDefinition.UNCHECKED
+
+        if self.field_number in FieldsSpec.generated_fields:
+            self.setCheckState(column_number, state)
+            self.setText(column_number, CheckBoxesDefinition.GENERATE)
+
+        if self.epay_spec.is_field_complex(self.get_field_path()):
+            self.setCheckState(column_number, state)
+            self.setText(column_number, CheckBoxesDefinition.FLAT_MODE)
 
     def process_change_item(self):
         self.set_spec()

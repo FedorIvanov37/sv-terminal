@@ -224,6 +224,20 @@
       <string>Fields</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="SendInternalId">
+        <property name="text">
+         <string>Send internal transaction ID to SV</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="ValidationEnabled">
+        <property name="text">
+         <string>Fields validation enabled</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
@@ -261,21 +275,14 @@
       <item row="2" column="0">
        <widget class="QCheckBox" name="BuildFld90">
         <property name="text">
-         <string>Build Field 90 in reversal</string>
+         <string>Build field 90 in reversal</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="SendInternalId">
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="FaltMode">
         <property name="text">
-         <string>Send internal transaction ID to SV</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="ValidationEnabled">
-        <property name="text">
-         <string>Fields validation enabled</string>
+         <string>Flat fields mode</string>
         </property>
        </widget>
       </item>
