@@ -121,9 +121,9 @@ class Ui_SettingsWindow(object):
         self.BuildFld90 = QtWidgets.QCheckBox(parent=self.groupBox_4)
         self.BuildFld90.setObjectName("BuildFld90")
         self.gridLayout_3.addWidget(self.BuildFld90, 2, 0, 1, 1)
-        self.FaltMode = QtWidgets.QCheckBox(parent=self.groupBox_4)
-        self.FaltMode.setObjectName("FaltMode")
-        self.gridLayout_3.addWidget(self.FaltMode, 4, 0, 1, 1)
+        self.JsonMode = QtWidgets.QCheckBox(parent=self.groupBox_4)
+        self.JsonMode.setObjectName("JsonMode")
+        self.gridLayout_3.addWidget(self.JsonMode, 4, 0, 1, 1)
         self.gridLayout_2.addWidget(self.groupBox_4, 3, 0, 1, 1)
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
@@ -164,7 +164,7 @@ class Ui_SettingsWindow(object):
         self.label.setText(_translate("SettingsWindow", "Max amount"))
         self.MaxAmount.setPlaceholderText(_translate("SettingsWindow", "Amount"))
         self.BuildFld90.setText(_translate("SettingsWindow", "Build field 90 in reversal"))
-        self.FaltMode.setText(_translate("SettingsWindow", "Flat fields mode"))
+        self.JsonMode.setText(_translate("SettingsWindow", "JSON-like fields representation "))
 
 
 if __name__ == "__main__":

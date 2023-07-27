@@ -83,10 +83,10 @@ class JsonView(QTreeWidget):
         self.make_order()
 
     def disable_next_level(self, item, column):
-        disable = False
+        disable = True
 
-        if item.flat_mode_checkbox_checked():
-            disable = True
+        if item.json_mode_checkbox_checked():
+            disable = False
 
         self.need_disable_next_level.emit(disable)
 
@@ -103,8 +103,8 @@ class JsonView(QTreeWidget):
             if item.generate_checkbox_checked():
                 item.field_data = FieldsGenerator.generate_field(item.field_number, self.config.fields.max_amount)
 
-        if column == FieldsSpec.ColumnsOrder.PROPERTY and item.text(column) == CheckBoxesDefinition.FLAT_MODE:
-            self.set_flat_mode(item)
+        if column == FieldsSpec.ColumnsOrder.PROPERTY and item.text(column) == CheckBoxesDefinition.JSON_MODE:
+            self.set_json_mode(item)
 
         try:
             item.process_change_item()
@@ -286,8 +286,8 @@ class JsonView(QTreeWidget):
         fields = deepcopy(transaction.data_fields)
 
         for field, field_data in fields.items():
-            if not self.config.fields.flat_mode:
-                continue
+            if self.config.fields.json_mode:
+                break
 
             if not self.spec.is_field_complex([field]):
                 continue
@@ -305,41 +305,40 @@ class JsonView(QTreeWidget):
 
         self.make_order()
 
-    def switch_flat_mode(self, flat_mode):
+    def switch_json_mode(self, json_mode):
         for item in self.root.get_children():
             if not self.spec.is_field_complex(item.get_field_path()):
                 continue
 
-            item.set_checkbox(flat_mode)
+            item.set_checkbox(json_mode)
 
-            self.set_flat_mode(item)
+            self.set_json_mode(item)
 
-    def set_flat_mode(self, item):
+    def set_json_mode(self, item):
         if not self.spec.is_field_complex(item.get_field_path()):
             return
 
-        if item.flat_mode_checkbox_checked():  # Set flat mode
-
-            if not item.get_children():
+        if item.json_mode_checkbox_checked():  # Set json mode
+            if item.get_children():
                 return
 
-            fields = self.generate_fields(parent=item)
-            field_data = Parser.join_complex_field(item.field_number, fields)
-            item.takeChildren()
-            item.field_data = field_data
+            if not isinstance(item.field_data, str):
+                return
+
+            fields = Parser.split_complex_field(item.field_number, item.field_data)
+            self._parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
+            item.field_data = ""
             return
 
-        # Set non-flat mode
+        # Set flat mode
 
-        if item.get_children():
+        if not item.get_children():
             return
 
-        if not isinstance(item.field_data, str):
-            return
-
-        fields = Parser.split_complex_field(item.field_number, item.field_data)
-        self._parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
-        item.field_data = ""
+        fields = self.generate_fields(parent=item)
+        field_data = Parser.join_complex_field(item.field_number, fields)
+        item.takeChildren()
+        item.field_data = field_data
 
     @void_qt_signals
     def set_checkboxes(self, transaction: Transaction):
@@ -352,7 +351,7 @@ class JsonView(QTreeWidget):
                 is_checked = item.field_number in transaction.generate_fields
 
             if self.spec.is_field_complex(item.get_field_path()):
-                is_checked = self.config.fields.flat_mode
+                is_checked = self.config.fields.json_mode
 
             item.set_checkbox(is_checked)
 

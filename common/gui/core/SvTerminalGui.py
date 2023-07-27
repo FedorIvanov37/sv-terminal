@@ -110,7 +110,7 @@ class SvTerminalGui(SvTerminal):
         fields_validation = self.config.fields.validation
         settings_window: SettingsWindow = SettingsWindow(self.config)
         settings_window.accepted.connect(lambda: validate_all(fields_validation != self.config.fields.validation))
-        settings_window.accepted.connect(lambda: self.window.set_flat_mode(self.config.fields.flat_mode))
+        settings_window.accepted.connect(lambda: self.window.set_json_mode(self.config.fields.json_mode))
         settings_window.exec()
 
     def stop_sv_terminal(self):

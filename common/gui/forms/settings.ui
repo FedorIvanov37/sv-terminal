@@ -231,10 +231,10 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QCheckBox" name="ValidationEnabled">
         <property name="text">
-         <string>Fields validation enabled</string>
+         <string>Fields validation</string>
         </property>
        </widget>
       </item>
@@ -279,10 +279,10 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="FaltMode">
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="JsonMode">
         <property name="text">
-         <string>Flat fields mode</string>
+         <string>JSON-like fields representation </string>
         </property>
        </widget>
       </item>

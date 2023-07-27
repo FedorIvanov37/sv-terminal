@@ -85,7 +85,7 @@ class Item(AbstractItem):
 
         return bool(self.checkState(FieldsSpec.ColumnsOrder.PROPERTY).value)
 
-    def flat_mode_checkbox_checked(self):
+    def json_mode_checkbox_checked(self):
         if not self.epay_spec.is_field_complex(self.get_field_path()):
             return False
 
@@ -105,7 +105,7 @@ class Item(AbstractItem):
 
         if self.epay_spec.is_field_complex(self.get_field_path()):
             self.setCheckState(column_number, state)
-            self.setText(column_number, CheckBoxesDefinition.FLAT_MODE)
+            self.setText(column_number, CheckBoxesDefinition.JSON_MODE)
 
     def process_change_item(self):
         self.set_spec()

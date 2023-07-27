@@ -273,8 +273,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def disable_next_level_button(self, disable: bool):
         self.NextLevelButton.setDisabled(disable)
 
-    def set_flat_mode(self, flat_mode):
-        self.json_view.switch_flat_mode(flat_mode)
+    def set_json_mode(self, json_mode):
+        self.json_view.switch_json_mode(json_mode)
 
     def validate_fields(self):
         self.json_view.validate_all()
