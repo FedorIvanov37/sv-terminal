@@ -128,6 +128,22 @@ class JsonView(QTreeWidget):
 
         self.validator.validate_item(item)
 
+    def validate_all(self, parent_item: Item | None = None):
+        if parent_item is None:
+            parent_item = self.root
+
+        for child_item in parent_item.get_children():
+            child_item.set_item_color(red=False)
+
+            try:
+                self.validate(child_item)
+
+            except ValueError as validation_error:
+                child_item.set_item_color(red=True)
+                warning(validation_error)
+
+            self.validate_all(parent_item=child_item)
+
     def plus(self):
         item = Item([])
         parent = None
@@ -234,6 +250,10 @@ class JsonView(QTreeWidget):
         self.clean()
         self._parse_fields(transaction.data_fields)
         self.set_checkboxes(transaction)
+
+        if self.config.fields.validation:
+            self.validate_all()
+
         self.make_order()
 
     @void_qt_signals
@@ -266,6 +286,11 @@ class JsonView(QTreeWidget):
 
             parent.addChild(child)
 
+            if parent is self.root:
+                continue
+
+
+
     def resize_all(self):
         for column in range(self.columnCount()):
             self.resizeColumnToContents(column)
@@ -291,13 +316,18 @@ class JsonView(QTreeWidget):
             parent = self.root
 
         for row in parent.get_children():
-            self.validator.validate_item(row)
             result[row.field_number] = self.generate_fields(row) if row.childCount() else row.field_data
+
+            if self.config.fields.validation:
+                self.validator.validate_item(row)
 
         if parent is self.root:
             fields = OrderedDict({k: result[k] for k in sorted(result.keys(), key=int)})
+
+            if not self.config.fields.validation:
+                return fields
+
             self.validator.validate_fields(fields)
-            return fields
 
         return result
 

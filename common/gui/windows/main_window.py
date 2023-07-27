@@ -266,6 +266,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
 
+    def validate_fields(self):
+        self.json_view.validate_all()
+
     def clean_window_log(self):
         self.LogArea.setText(str())
 

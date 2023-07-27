@@ -71,11 +71,16 @@
 + Don't hide card in log on debug
 + Window signals isolated
 + Cannot parse own dump
++ Try to compile .exe
++ Beatify card mask
++ Fix response message parsing for incoming transactions
++ Add validation after parse file
++ ADd validation after set validation flag in settings
++ "No data to send" while printing
++ Correct default message to avoid 96 code
 
 
 • Change approach to fields path
-
-
 • Check the old files processing
 • Unknown fields in incoming files and messages - what are you going to do
 • No data in socket if delete field in spec
@@ -83,7 +88,6 @@
 • Correct the default message
 • Correct and publish the Specification
 • Publish on confluence
-• Try to compile .exe
 • Prepare document
 • Complex field parser
 • Spec explanation

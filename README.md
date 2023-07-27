@@ -5,7 +5,7 @@
 SmartVista Electronic Commerce Terminal v0.15 July 2023 | Powered by <a href="https://www.unlimit.com">Unlimit</a></p> 
 
 
-## Description
+# Description
 
 
 SV-Terminal simplifies sending of banking card e-commerce transactions to SmartVista using a useful visual interface making simple things simple to achieve.
