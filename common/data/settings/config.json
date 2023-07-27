@@ -17,6 +17,6 @@
         "build_fld_90": true,
         "send_internal_id": true,
         "validation": true,
-        "json_mode": false
+        "json_mode": true
     }
 }
