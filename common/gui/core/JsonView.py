@@ -1,4 +1,5 @@
 from copy import deepcopy
+from logging import error
 from typing import Callable
 from logging import warning
 from collections import OrderedDict
@@ -11,6 +12,7 @@ from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
 from common.lib.core.FieldsGenerator import FieldsGenerator
+from common.lib.data_models.EpaySpecificationModel import RawFieldSet
 from PyQt6.QtCore import pyqtSignal
 from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
 from common.lib.core.Parser import Parser
@@ -91,23 +93,21 @@ class JsonView(QTreeWidget):
         self.need_disable_next_level.emit(disable)
 
     @void_qt_signals
-    def process_change_item(self, item: Item, column=None):
+    def process_change_item(self, item: Item, column):
         if item is self.root:
-            return
-
-        if column is None:
-            item.hide_pan()
             return
 
         if column in (FieldsSpec.ColumnsOrder.PROPERTY, FieldsSpec.ColumnsOrder.VALUE):
             if item.generate_checkbox_checked():
                 item.field_data = FieldsGenerator.generate_field(item.field_number, self.config.fields.max_amount)
 
-        if column == FieldsSpec.ColumnsOrder.PROPERTY and item.text(column) == CheckBoxesDefinition.JSON_MODE:
-            self.set_json_mode(item)
+        if column == FieldsSpec.ColumnsOrder.PROPERTY:
+            if item.text(column) == CheckBoxesDefinition.JSON_MODE:
+                self.set_json_mode(item)
 
         try:
             item.process_change_item()
+
         except LookupError as spec_error:
             item.set_item_color(red=True)
             warning(spec_error)
@@ -314,19 +314,30 @@ class JsonView(QTreeWidget):
 
             self.set_json_mode(item)
 
-    def set_json_mode(self, item):
+    def set_json_mode(self, item: Item) -> None:
         if not self.spec.is_field_complex(item.get_field_path()):
             return
 
-        if item.json_mode_checkbox_checked():  # Set json mode
+        parsing_error_text: str = "Cannot change JSON mode due to parsing error(s)"
+
+        # Set json mode
+
+        if item.json_mode_checkbox_checked():
             if item.get_children():
                 return
 
             if not isinstance(item.field_data, str):
                 return
 
-            fields = Parser.split_complex_field(item.field_number, item.field_data)
-            self._parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
+            try:
+                fields: RawFieldSet= Parser.split_complex_field(item.field_number, item.field_data)
+                self._parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
+
+            except Exception as parsing_error:
+                error(f"{parsing_error_text}: {parsing_error}")
+                item.set_checkbox(False)
+                return
+
             item.field_data = ""
             return
 
@@ -335,8 +346,16 @@ class JsonView(QTreeWidget):
         if not item.get_children():
             return
 
-        fields = self.generate_fields(parent=item)
-        field_data = Parser.join_complex_field(item.field_number, fields)
+        try:
+            fields: RawFieldSet = self.generate_fields(parent=item)
+            field_data: str = Parser.join_complex_field(item.field_number, fields)
+
+        except Exception as parsing_error:
+            error(parsing_error_text)
+            [error(line) for line in str(parsing_error).splitlines()]
+            item.set_checkbox()
+            return
+
         item.takeChildren()
         item.field_data = field_data
 

@@ -81,8 +81,10 @@
 + Check the old files processing
 + Unknown fields in incoming files and messages - what are you going to do
 + Flat mode
++ try / except around flat mode
++ Remove ErrorWindow
 
-• try / except around flat mode
+
 • Change approach to fields path
 • No data in socket if delete field in spec
 • Exceptions policy

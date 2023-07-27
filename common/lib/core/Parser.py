@@ -91,7 +91,7 @@ class Parser:
         return dump
 
     @staticmethod
-    def join_complex_field(field, field_data, path=None):
+    def join_complex_field(field, field_data, path=None) -> str:
         spec: EpaySpecification = EpaySpecification()
 
         if path is None:

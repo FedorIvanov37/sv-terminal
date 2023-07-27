@@ -14524,3 +14524,690 @@ file: 'C:/Users/admin/PycharmProjects/sv-terminal/sv_terminal.pyw', line: 48
 27.07.2023 23:48:36 [INFO] ## End of configuration parameters ##
 27.07.2023 23:48:36 [INFO] 
 27.07.2023 23:48:36 [INFO] Default file parsed
+28.07.2023 00:37:35 [INFO] 
+28.07.2023 00:37:35 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 00:37:35 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 00:37:35 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 00:37:35 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 00:37:35 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 00:37:35 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 00:37:35 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 00:37:35 [INFO]  
+28.07.2023 00:37:35 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 00:37:35 [INFO]  
+28.07.2023 00:37:35 [INFO] 
+28.07.2023 00:37:35 [INFO] ## Configuration parameters ##
+28.07.2023 00:37:35 [INFO] {
+28.07.2023 00:37:35 [INFO]     "smartvista": {
+28.07.2023 00:37:35 [INFO]         "host": "172.21.30.5",
+28.07.2023 00:37:35 [INFO]         "port": "16677"
+28.07.2023 00:37:35 [INFO]     },
+28.07.2023 00:37:35 [INFO]     "terminal": {
+28.07.2023 00:37:35 [INFO]         "process_default_dump": true,
+28.07.2023 00:37:35 [INFO]         "connect_on_startup": false
+28.07.2023 00:37:35 [INFO]     },
+28.07.2023 00:37:35 [INFO]     "debug": {
+28.07.2023 00:37:35 [INFO]         "level": "INFO",
+28.07.2023 00:37:35 [INFO]         "clear_log": true,
+28.07.2023 00:37:35 [INFO]         "parse_subfields": false
+28.07.2023 00:37:35 [INFO]     },
+28.07.2023 00:37:35 [INFO]     "fields": {
+28.07.2023 00:37:35 [INFO]         "max_amount": "100",
+28.07.2023 00:37:35 [INFO]         "build_fld_90": true,
+28.07.2023 00:37:35 [INFO]         "send_internal_id": true,
+28.07.2023 00:37:35 [INFO]         "validation": true,
+28.07.2023 00:37:35 [INFO]         "json_mode": true
+28.07.2023 00:37:35 [INFO]     }
+28.07.2023 00:37:35 [INFO] }
+28.07.2023 00:37:35 [INFO] ## End of configuration parameters ##
+28.07.2023 00:37:35 [INFO] 
+28.07.2023 00:37:35 [INFO] Default file parsed
+28.07.2023 00:38:57 [INFO] Settings applying was canceled
+28.07.2023 00:45:04 [INFO] 
+28.07.2023 00:45:04 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 00:45:04 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 00:45:04 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 00:45:04 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 00:45:04 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 00:45:04 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 00:45:04 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 00:45:04 [INFO]  
+28.07.2023 00:45:04 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 00:45:04 [INFO]  
+28.07.2023 00:45:04 [INFO] 
+28.07.2023 00:45:04 [INFO] ## Configuration parameters ##
+28.07.2023 00:45:04 [INFO] {
+28.07.2023 00:45:04 [INFO]     "smartvista": {
+28.07.2023 00:45:04 [INFO]         "host": "172.21.30.5",
+28.07.2023 00:45:04 [INFO]         "port": "16677"
+28.07.2023 00:45:04 [INFO]     },
+28.07.2023 00:45:04 [INFO]     "terminal": {
+28.07.2023 00:45:04 [INFO]         "process_default_dump": true,
+28.07.2023 00:45:04 [INFO]         "connect_on_startup": false
+28.07.2023 00:45:04 [INFO]     },
+28.07.2023 00:45:04 [INFO]     "debug": {
+28.07.2023 00:45:04 [INFO]         "level": "INFO",
+28.07.2023 00:45:04 [INFO]         "clear_log": true,
+28.07.2023 00:45:04 [INFO]         "parse_subfields": false
+28.07.2023 00:45:04 [INFO]     },
+28.07.2023 00:45:04 [INFO]     "fields": {
+28.07.2023 00:45:04 [INFO]         "max_amount": "100",
+28.07.2023 00:45:04 [INFO]         "build_fld_90": true,
+28.07.2023 00:45:04 [INFO]         "send_internal_id": true,
+28.07.2023 00:45:04 [INFO]         "validation": true,
+28.07.2023 00:45:04 [INFO]         "json_mode": true
+28.07.2023 00:45:04 [INFO]     }
+28.07.2023 00:45:04 [INFO] }
+28.07.2023 00:45:04 [INFO] ## End of configuration parameters ##
+28.07.2023 00:45:04 [INFO] 
+28.07.2023 00:45:04 [INFO] Default file parsed
+28.07.2023 00:45:48 [WARNING] Field 3 less MinLength. Min length: 6 got: 3
+28.07.2023 00:46:00 [INFO] [Re]connecting...
+28.07.2023 00:46:10 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+28.07.2023 00:46:10 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+28.07.2023 00:46:12 [WARNING] No input filename recognized
+28.07.2023 00:50:27 [INFO] 
+28.07.2023 00:50:27 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 00:50:27 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 00:50:27 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 00:50:27 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 00:50:27 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 00:50:27 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 00:50:27 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 00:50:27 [INFO]  
+28.07.2023 00:50:27 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 00:50:27 [INFO]  
+28.07.2023 00:50:27 [INFO] 
+28.07.2023 00:50:27 [INFO] ## Configuration parameters ##
+28.07.2023 00:50:27 [INFO] {
+28.07.2023 00:50:27 [INFO]     "smartvista": {
+28.07.2023 00:50:27 [INFO]         "host": "172.21.30.5",
+28.07.2023 00:50:27 [INFO]         "port": "16677"
+28.07.2023 00:50:27 [INFO]     },
+28.07.2023 00:50:27 [INFO]     "terminal": {
+28.07.2023 00:50:27 [INFO]         "process_default_dump": true,
+28.07.2023 00:50:27 [INFO]         "connect_on_startup": false
+28.07.2023 00:50:27 [INFO]     },
+28.07.2023 00:50:27 [INFO]     "debug": {
+28.07.2023 00:50:27 [INFO]         "level": "INFO",
+28.07.2023 00:50:27 [INFO]         "clear_log": true,
+28.07.2023 00:50:27 [INFO]         "parse_subfields": false
+28.07.2023 00:50:27 [INFO]     },
+28.07.2023 00:50:27 [INFO]     "fields": {
+28.07.2023 00:50:27 [INFO]         "max_amount": "100",
+28.07.2023 00:50:27 [INFO]         "build_fld_90": true,
+28.07.2023 00:50:27 [INFO]         "send_internal_id": true,
+28.07.2023 00:50:27 [INFO]         "validation": true,
+28.07.2023 00:50:27 [INFO]         "json_mode": true
+28.07.2023 00:50:27 [INFO]     }
+28.07.2023 00:50:27 [INFO] }
+28.07.2023 00:50:27 [INFO] ## End of configuration parameters ##
+28.07.2023 00:50:27 [INFO] 
+28.07.2023 00:50:27 [INFO] Default file parsed
+28.07.2023 00:51:12 [INFO] 
+28.07.2023 00:51:12 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 00:51:12 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 00:51:12 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 00:51:12 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 00:51:12 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 00:51:12 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 00:51:12 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 00:51:12 [INFO]  
+28.07.2023 00:51:12 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 00:51:12 [INFO]  
+28.07.2023 00:51:12 [INFO] 
+28.07.2023 00:51:12 [INFO] ## Configuration parameters ##
+28.07.2023 00:51:12 [INFO] {
+28.07.2023 00:51:12 [INFO]     "smartvista": {
+28.07.2023 00:51:12 [INFO]         "host": "172.21.30.5",
+28.07.2023 00:51:12 [INFO]         "port": "16677"
+28.07.2023 00:51:12 [INFO]     },
+28.07.2023 00:51:12 [INFO]     "terminal": {
+28.07.2023 00:51:12 [INFO]         "process_default_dump": true,
+28.07.2023 00:51:12 [INFO]         "connect_on_startup": false
+28.07.2023 00:51:12 [INFO]     },
+28.07.2023 00:51:12 [INFO]     "debug": {
+28.07.2023 00:51:12 [INFO]         "level": "INFO",
+28.07.2023 00:51:12 [INFO]         "clear_log": true,
+28.07.2023 00:51:12 [INFO]         "parse_subfields": false
+28.07.2023 00:51:12 [INFO]     },
+28.07.2023 00:51:12 [INFO]     "fields": {
+28.07.2023 00:51:12 [INFO]         "max_amount": "100",
+28.07.2023 00:51:12 [INFO]         "build_fld_90": true,
+28.07.2023 00:51:12 [INFO]         "send_internal_id": true,
+28.07.2023 00:51:12 [INFO]         "validation": true,
+28.07.2023 00:51:12 [INFO]         "json_mode": true
+28.07.2023 00:51:12 [INFO]     }
+28.07.2023 00:51:12 [INFO] }
+28.07.2023 00:51:12 [INFO] ## End of configuration parameters ##
+28.07.2023 00:51:12 [INFO] 
+28.07.2023 00:51:12 [INFO] Default file parsed
+28.07.2023 00:51:57 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:04 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:05 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:13 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:14 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:14 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:21 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:22 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:22 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:23 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:24 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:24 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:25 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:25 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:25 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:25 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:25 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:30 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:30 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:31 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:31 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:31 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:31 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:31 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:32 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:32 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:33 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:33 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:33 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 00:52:34 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '0R'
+28.07.2023 01:00:59 [INFO] 
+28.07.2023 01:00:59 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 01:00:59 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 01:00:59 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 01:00:59 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 01:00:59 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 01:00:59 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 01:00:59 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 01:00:59 [INFO]  
+28.07.2023 01:00:59 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 01:00:59 [INFO]  
+28.07.2023 01:00:59 [INFO] 
+28.07.2023 01:00:59 [INFO] ## Configuration parameters ##
+28.07.2023 01:00:59 [INFO] {
+28.07.2023 01:00:59 [INFO]     "smartvista": {
+28.07.2023 01:00:59 [INFO]         "host": "172.21.30.5",
+28.07.2023 01:00:59 [INFO]         "port": "16677"
+28.07.2023 01:00:59 [INFO]     },
+28.07.2023 01:00:59 [INFO]     "terminal": {
+28.07.2023 01:00:59 [INFO]         "process_default_dump": true,
+28.07.2023 01:00:59 [INFO]         "connect_on_startup": false
+28.07.2023 01:00:59 [INFO]     },
+28.07.2023 01:00:59 [INFO]     "debug": {
+28.07.2023 01:00:59 [INFO]         "level": "INFO",
+28.07.2023 01:00:59 [INFO]         "clear_log": true,
+28.07.2023 01:00:59 [INFO]         "parse_subfields": false
+28.07.2023 01:00:59 [INFO]     },
+28.07.2023 01:00:59 [INFO]     "fields": {
+28.07.2023 01:00:59 [INFO]         "max_amount": "100",
+28.07.2023 01:00:59 [INFO]         "build_fld_90": true,
+28.07.2023 01:00:59 [INFO]         "send_internal_id": true,
+28.07.2023 01:00:59 [INFO]         "validation": true,
+28.07.2023 01:00:59 [INFO]         "json_mode": true
+28.07.2023 01:00:59 [INFO]     }
+28.07.2023 01:00:59 [INFO] }
+28.07.2023 01:00:59 [INFO] ## End of configuration parameters ##
+28.07.2023 01:00:59 [INFO] 
+28.07.2023 01:00:59 [INFO] Default file parsed
+28.07.2023 01:01:05 [WARNING] Alphabetic values not allowed in field 48.99 - Service Object Type
+28.07.2023 01:01:05 [WARNING] Special values not allowed in field 48.99 - Service Object Type
+28.07.2023 01:01:05 [WARNING] Field 48.99 over MaxLength. Max length: 3 got: 11
+28.07.2023 01:01:12 [ERROR] Cannot change JSON mode due to parsing error: Alphabetic values not allowed in field 48.99 - Service Object Type
+Special values not allowed in field 48.99 - Service Object Type
+Field 48.99 over MaxLength. Max length: 3 got: 11
+28.07.2023 01:01:48 [WARNING] Lost spec for field 48.999
+28.07.2023 01:01:54 [ERROR] Cannot change JSON mode due to parsing error: Lost spec for field 48.999
+28.07.2023 01:01:58 [WARNING] Lost spec for field 48.9
+28.07.2023 01:02:03 [WARNING] Alphabetic values not allowed in field 48.99 - Service Object Type
+28.07.2023 01:02:03 [WARNING] Special values not allowed in field 48.99 - Service Object Type
+28.07.2023 01:02:03 [WARNING] Field 48.99 over MaxLength. Max length: 3 got: 11
+28.07.2023 01:02:18 [WARNING] Alphabetic values not allowed in field 48.42 - Security level indicator
+28.07.2023 01:02:18 [WARNING] Special values not allowed in field 48.42 - Security level indicator
+28.07.2023 01:02:18 [WARNING] Field 48.42 over MaxLength. Max length: 2 got: 11
+28.07.2023 01:02:30 [WARNING] Alphabetic values not allowed in field 48.42 - Security level indicator
+28.07.2023 01:02:30 [WARNING] Special values not allowed in field 48.42 - Security level indicator
+28.07.2023 01:02:30 [WARNING] Field 48.42 over MaxLength. Max length: 2 got: 12
+28.07.2023 01:02:32 [ERROR] Cannot change JSON mode due to parsing error: Alphabetic values not allowed in field 48.42 - Security level indicator
+Special values not allowed in field 48.42 - Security level indicator
+Field 48.42 over MaxLength. Max length: 2 got: 12
+28.07.2023 01:02:37 [ERROR] Cannot change JSON mode due to parsing error: Alphabetic values not allowed in field 48.42 - Security level indicator
+Special values not allowed in field 48.42 - Security level indicator
+Field 48.42 over MaxLength. Max length: 2 got: 12
+28.07.2023 01:03:09 [ERROR] Cannot change JSON mode due to parsing error: Alphabetic values not allowed in field 48.42 - Security level indicator
+Special values not allowed in field 48.42 - Security level indicator
+Field 48.42 over MaxLength. Max length: 2 got: 12
+28.07.2023 01:05:21 [INFO] 
+28.07.2023 01:05:21 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 01:05:21 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 01:05:21 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 01:05:21 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 01:05:21 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 01:05:21 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 01:05:21 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 01:05:21 [INFO]  
+28.07.2023 01:05:21 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 01:05:21 [INFO]  
+28.07.2023 01:05:21 [INFO] 
+28.07.2023 01:05:21 [INFO] ## Configuration parameters ##
+28.07.2023 01:05:21 [INFO] {
+28.07.2023 01:05:21 [INFO]     "smartvista": {
+28.07.2023 01:05:21 [INFO]         "host": "172.21.30.5",
+28.07.2023 01:05:21 [INFO]         "port": "16677"
+28.07.2023 01:05:21 [INFO]     },
+28.07.2023 01:05:21 [INFO]     "terminal": {
+28.07.2023 01:05:21 [INFO]         "process_default_dump": true,
+28.07.2023 01:05:21 [INFO]         "connect_on_startup": false
+28.07.2023 01:05:21 [INFO]     },
+28.07.2023 01:05:21 [INFO]     "debug": {
+28.07.2023 01:05:21 [INFO]         "level": "INFO",
+28.07.2023 01:05:21 [INFO]         "clear_log": true,
+28.07.2023 01:05:21 [INFO]         "parse_subfields": false
+28.07.2023 01:05:21 [INFO]     },
+28.07.2023 01:05:21 [INFO]     "fields": {
+28.07.2023 01:05:21 [INFO]         "max_amount": "100",
+28.07.2023 01:05:21 [INFO]         "build_fld_90": true,
+28.07.2023 01:05:21 [INFO]         "send_internal_id": true,
+28.07.2023 01:05:21 [INFO]         "validation": true,
+28.07.2023 01:05:21 [INFO]         "json_mode": true
+28.07.2023 01:05:21 [INFO]     }
+28.07.2023 01:05:21 [INFO] }
+28.07.2023 01:05:21 [INFO] ## End of configuration parameters ##
+28.07.2023 01:05:21 [INFO] 
+28.07.2023 01:05:21 [INFO] Default file parsed
+28.07.2023 01:05:26 [WARNING] Lost spec for field 48.999
+28.07.2023 01:05:32 [ERROR] Cannot change JSON mode due to parsing error
+28.07.2023 01:05:32 [ERROR] Lost spec for field 48.999
+28.07.2023 01:05:46 [WARNING] Alphabetic values not allowed in field 48.99 - Service Object Type
+28.07.2023 01:05:46 [WARNING] Special values not allowed in field 48.99 - Service Object Type
+28.07.2023 01:05:46 [WARNING] Field 48.99 over MaxLength. Max length: 3 got: 11
+28.07.2023 01:05:54 [ERROR] Cannot change JSON mode due to parsing error
+28.07.2023 01:05:54 [ERROR] Alphabetic values not allowed in field 48.99 - Service Object Type
+28.07.2023 01:05:54 [ERROR] Special values not allowed in field 48.99 - Service Object Type
+28.07.2023 01:05:54 [ERROR] Field 48.99 over MaxLength. Max length: 3 got: 11
+28.07.2023 01:06:40 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:44 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:44 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:45 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:45 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:46 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:46 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:46 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:47 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:47 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:47 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:48 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:48 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:48 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:48 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:48 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:48 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:48 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:49 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:49 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:49 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:49 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:49 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:49 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:49 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:50 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:50 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:50 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:50 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:50 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:50 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:50 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:51 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:56 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:57 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:06:57 [ERROR] Cannot change JSON mode due to parsing error: invalid literal for int() with base 10: '___'
+28.07.2023 01:07:16 [INFO] 
+28.07.2023 01:07:16 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 01:07:16 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 01:07:16 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 01:07:16 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 01:07:16 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 01:07:16 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 01:07:16 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 01:07:16 [INFO]  
+28.07.2023 01:07:16 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 01:07:16 [INFO]  
+28.07.2023 01:07:16 [INFO] 
+28.07.2023 01:07:16 [INFO] ## Configuration parameters ##
+28.07.2023 01:07:16 [INFO] {
+28.07.2023 01:07:16 [INFO]     "smartvista": {
+28.07.2023 01:07:16 [INFO]         "host": "172.21.30.5",
+28.07.2023 01:07:16 [INFO]         "port": "16677"
+28.07.2023 01:07:16 [INFO]     },
+28.07.2023 01:07:16 [INFO]     "terminal": {
+28.07.2023 01:07:16 [INFO]         "process_default_dump": true,
+28.07.2023 01:07:16 [INFO]         "connect_on_startup": false
+28.07.2023 01:07:16 [INFO]     },
+28.07.2023 01:07:16 [INFO]     "debug": {
+28.07.2023 01:07:16 [INFO]         "level": "INFO",
+28.07.2023 01:07:16 [INFO]         "clear_log": true,
+28.07.2023 01:07:16 [INFO]         "parse_subfields": false
+28.07.2023 01:07:16 [INFO]     },
+28.07.2023 01:07:16 [INFO]     "fields": {
+28.07.2023 01:07:16 [INFO]         "max_amount": "100",
+28.07.2023 01:07:16 [INFO]         "build_fld_90": true,
+28.07.2023 01:07:16 [INFO]         "send_internal_id": true,
+28.07.2023 01:07:16 [INFO]         "validation": true,
+28.07.2023 01:07:16 [INFO]         "json_mode": true
+28.07.2023 01:07:16 [INFO]     }
+28.07.2023 01:07:16 [INFO] }
+28.07.2023 01:07:16 [INFO] ## End of configuration parameters ##
+28.07.2023 01:07:16 [INFO] 
+28.07.2023 01:07:16 [INFO] Default file parsed
+28.07.2023 01:07:56 [INFO] Processing transaction ID [20230728_010756_4107291213]
+28.07.2023 01:07:56 [WARNING] SmartVista disconnected. Trying to established the connection
+28.07.2023 01:08:06 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+28.07.2023 01:08:06 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+28.07.2023 01:08:15 [INFO] [Re]connecting...
+28.07.2023 01:08:25 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+28.07.2023 01:08:29 [INFO] [Re]connecting...
+28.07.2023 01:08:39 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+28.07.2023 01:08:43 [INFO] Processing transaction ID [20230728_010843_7193935929]
+28.07.2023 01:08:43 [WARNING] SmartVista disconnected. Trying to established the connection
+28.07.2023 01:08:53 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+28.07.2023 01:10:10 [INFO] 
+28.07.2023 01:10:10 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 01:10:10 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 01:10:10 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 01:10:10 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 01:10:10 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 01:10:10 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 01:10:10 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 01:10:10 [INFO]  
+28.07.2023 01:10:10 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 01:10:10 [INFO]  
+28.07.2023 01:10:10 [INFO] 
+28.07.2023 01:10:10 [INFO] ## Configuration parameters ##
+28.07.2023 01:10:10 [INFO] {
+28.07.2023 01:10:10 [INFO]     "smartvista": {
+28.07.2023 01:10:10 [INFO]         "host": "172.21.30.5",
+28.07.2023 01:10:10 [INFO]         "port": "16677"
+28.07.2023 01:10:10 [INFO]     },
+28.07.2023 01:10:10 [INFO]     "terminal": {
+28.07.2023 01:10:10 [INFO]         "process_default_dump": true,
+28.07.2023 01:10:10 [INFO]         "connect_on_startup": false
+28.07.2023 01:10:10 [INFO]     },
+28.07.2023 01:10:10 [INFO]     "debug": {
+28.07.2023 01:10:10 [INFO]         "level": "INFO",
+28.07.2023 01:10:10 [INFO]         "clear_log": true,
+28.07.2023 01:10:10 [INFO]         "parse_subfields": false
+28.07.2023 01:10:10 [INFO]     },
+28.07.2023 01:10:10 [INFO]     "fields": {
+28.07.2023 01:10:10 [INFO]         "max_amount": "100",
+28.07.2023 01:10:10 [INFO]         "build_fld_90": true,
+28.07.2023 01:10:10 [INFO]         "send_internal_id": true,
+28.07.2023 01:10:10 [INFO]         "validation": true,
+28.07.2023 01:10:10 [INFO]         "json_mode": true
+28.07.2023 01:10:10 [INFO]     }
+28.07.2023 01:10:10 [INFO] }
+28.07.2023 01:10:10 [INFO] ## End of configuration parameters ##
+28.07.2023 01:10:10 [INFO] 
+28.07.2023 01:10:10 [INFO] Default file parsed
+28.07.2023 01:10:48 [INFO] Processing transaction ID [20230728_011048_8995972672]
+28.07.2023 01:10:48 [WARNING] SmartVista disconnected. Trying to established the connection
+28.07.2023 01:11:50 [INFO] 
+28.07.2023 01:11:50 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 01:11:50 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 01:11:50 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 01:11:50 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 01:11:50 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 01:11:50 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 01:11:50 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 01:11:50 [INFO]  
+28.07.2023 01:11:50 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 01:11:50 [INFO]  
+28.07.2023 01:11:50 [INFO] 
+28.07.2023 01:11:50 [INFO] ## Configuration parameters ##
+28.07.2023 01:11:50 [INFO] {
+28.07.2023 01:11:50 [INFO]     "smartvista": {
+28.07.2023 01:11:50 [INFO]         "host": "172.21.30.5",
+28.07.2023 01:11:50 [INFO]         "port": "16677"
+28.07.2023 01:11:50 [INFO]     },
+28.07.2023 01:11:50 [INFO]     "terminal": {
+28.07.2023 01:11:50 [INFO]         "process_default_dump": true,
+28.07.2023 01:11:50 [INFO]         "connect_on_startup": false
+28.07.2023 01:11:50 [INFO]     },
+28.07.2023 01:11:50 [INFO]     "debug": {
+28.07.2023 01:11:50 [INFO]         "level": "INFO",
+28.07.2023 01:11:50 [INFO]         "clear_log": true,
+28.07.2023 01:11:50 [INFO]         "parse_subfields": false
+28.07.2023 01:11:50 [INFO]     },
+28.07.2023 01:11:50 [INFO]     "fields": {
+28.07.2023 01:11:50 [INFO]         "max_amount": "100",
+28.07.2023 01:11:50 [INFO]         "build_fld_90": true,
+28.07.2023 01:11:50 [INFO]         "send_internal_id": true,
+28.07.2023 01:11:50 [INFO]         "validation": true,
+28.07.2023 01:11:50 [INFO]         "json_mode": true
+28.07.2023 01:11:50 [INFO]     }
+28.07.2023 01:11:50 [INFO] }
+28.07.2023 01:11:50 [INFO] ## End of configuration parameters ##
+28.07.2023 01:11:50 [INFO] 
+28.07.2023 01:11:50 [INFO] Default file parsed
+28.07.2023 01:13:10 [INFO] Processing transaction ID [20230728_011310_5423343641]
+28.07.2023 01:13:10 [WARNING] SmartVista disconnected. Trying to established the connection
+28.07.2023 01:13:20 [ERROR] Received a socket error from SmartVista host: Socket operation timed out
+28.07.2023 01:35:38 [INFO] 
+28.07.2023 01:35:38 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 01:35:38 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 01:35:38 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 01:35:38 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 01:35:38 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 01:35:38 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 01:35:38 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 01:35:38 [INFO]  
+28.07.2023 01:35:38 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 01:35:38 [INFO]  
+28.07.2023 01:35:38 [INFO] 
+28.07.2023 01:35:38 [INFO] ## Configuration parameters ##
+28.07.2023 01:35:38 [INFO] {
+28.07.2023 01:35:38 [INFO]     "smartvista": {
+28.07.2023 01:35:38 [INFO]         "host": "172.21.30.5",
+28.07.2023 01:35:38 [INFO]         "port": "16677"
+28.07.2023 01:35:38 [INFO]     },
+28.07.2023 01:35:38 [INFO]     "terminal": {
+28.07.2023 01:35:38 [INFO]         "process_default_dump": true,
+28.07.2023 01:35:38 [INFO]         "connect_on_startup": false
+28.07.2023 01:35:38 [INFO]     },
+28.07.2023 01:35:38 [INFO]     "debug": {
+28.07.2023 01:35:38 [INFO]         "level": "INFO",
+28.07.2023 01:35:38 [INFO]         "clear_log": true,
+28.07.2023 01:35:38 [INFO]         "parse_subfields": false
+28.07.2023 01:35:38 [INFO]     },
+28.07.2023 01:35:38 [INFO]     "fields": {
+28.07.2023 01:35:38 [INFO]         "max_amount": "100",
+28.07.2023 01:35:38 [INFO]         "build_fld_90": true,
+28.07.2023 01:35:38 [INFO]         "send_internal_id": true,
+28.07.2023 01:35:38 [INFO]         "validation": true,
+28.07.2023 01:35:38 [INFO]         "json_mode": true
+28.07.2023 01:35:38 [INFO]     }
+28.07.2023 01:35:38 [INFO] }
+28.07.2023 01:35:38 [INFO] ## End of configuration parameters ##
+28.07.2023 01:35:38 [INFO] 
+28.07.2023 01:35:38 [INFO] Default file parsed
+28.07.2023 01:36:07 [INFO] Processing transaction ID [20230728_013607_4247921528]
+28.07.2023 01:36:07 [WARNING] According to specification Field 48 cannot be generated
+28.07.2023 01:36:07 [WARNING] SmartVista disconnected. Trying to established the connection
+28.07.2023 01:36:07 [INFO] SmartVista host connection ESTABLISHED
+28.07.2023 01:36:07 [INFO] 
+28.07.2023 01:36:07 [INFO] [TRANS_ID][20230728_013607_4247921528]
+28.07.2023 01:36:07 [INFO] [MSG_TYPE][0200]
+28.07.2023 01:36:07 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 18, 22, 37, 41, 42, 43, 47, 48, 49]
+28.07.2023 01:36:07 [INFO] [002][016][548673••••••8564]
+28.07.2023 01:36:07 [INFO] [003][006][000000]
+28.07.2023 01:36:07 [INFO] [004][012][000000009852]
+28.07.2023 01:36:07 [INFO] [007][010][0728013607]
+28.07.2023 01:36:07 [INFO] [011][006][318342]
+28.07.2023 01:36:07 [INFO] [012][012][230728013607]
+28.07.2023 01:36:07 [INFO] [014][004][2504]
+28.07.2023 01:36:07 [INFO] [018][004][8999]
+28.07.2023 01:36:07 [INFO] [022][003][810]
+28.07.2023 01:36:07 [INFO] [037][012][327904541071]
+28.07.2023 01:36:07 [INFO] [041][008][70000826]
+28.07.2023 01:36:07 [INFO] [042][015][000000010000866]
+28.07.2023 01:36:07 [INFO] [043][040][PSP*merch.com               >Limassol>CY]
+28.07.2023 01:36:07 [INFO] [047][156][2270270108Limassol030319604043101033001502704030303030433032445531325350334c48474b564c02804000000308254236854496634394423610b892eb6a0300012226011unlimit.com]
+28.07.2023 01:36:07 [INFO] [048][055][5108SOME ONE9611415481%81645411HOW ARE YOU4202019203000]
+28.07.2023 01:36:07 [INFO] [049][003][978]
+28.07.2023 01:36:07 [INFO] 
+28.07.2023 01:36:07 [INFO] Transaction [20230728_013607_4247921528] was sent 
+28.07.2023 01:36:08 [INFO] 
+28.07.2023 01:36:08 [INFO] [TRANS_ID][20230728_013607_4247921528]
+28.07.2023 01:36:08 [INFO] [UTRNNO  ][49144252]
+28.07.2023 01:36:08 [INFO] [MSG_TYPE][0210]
+28.07.2023 01:36:08 [INFO] [BITMAP  ][2, 3, 4, 7, 11, 12, 14, 15, 18, 22, 37, 38, 39, 41, 42, 43, 47, 48, 49]
+28.07.2023 01:36:08 [INFO] [002][016][548673••••••8564]
+28.07.2023 01:36:08 [INFO] [003][006][000000]
+28.07.2023 01:36:08 [INFO] [004][012][000000009852]
+28.07.2023 01:36:08 [INFO] [007][010][0728013607]
+28.07.2023 01:36:08 [INFO] [011][006][318342]
+28.07.2023 01:36:08 [INFO] [012][012][230728013607]
+28.07.2023 01:36:08 [INFO] [014][004][2504]
+28.07.2023 01:36:08 [INFO] [015][006][230727]
+28.07.2023 01:36:08 [INFO] [018][004][8999]
+28.07.2023 01:36:08 [INFO] [022][003][810]
+28.07.2023 01:36:08 [INFO] [037][012][000049144252]
+28.07.2023 01:36:08 [INFO] [038][006][177738]
+28.07.2023 01:36:08 [INFO] [039][002][00]
+28.07.2023 01:36:08 [INFO] [041][008][70000826]
+28.07.2023 01:36:08 [INFO] [042][015][000000010000866]
+28.07.2023 01:36:08 [INFO] [043][040][PSP*merch.com   >Limassol            >CY]
+28.07.2023 01:36:08 [INFO] [047][114][04500100640084914425206500849144252066009MCC00039J067014202307272236070710122307280136071100011113004+000802003212]
+28.07.2023 01:36:08 [INFO] [048][006][040200]
+28.07.2023 01:36:08 [INFO] [049][003][978]
+28.07.2023 01:36:08 [INFO] 
+28.07.2023 01:36:08 [INFO] Transaction ID [20230728_013607_4247921528] matched, response time seconds: 1.17
+28.07.2023 01:36:25 [WARNING] Alphabetic values not allowed in field 48.03 - Wallet Number
+28.07.2023 01:36:25 [WARNING] Special values not allowed in field 48.03 - Wallet Number
+28.07.2023 01:36:32 [ERROR] Cannot change JSON mode due to parsing error(s)
+28.07.2023 01:36:32 [ERROR] Alphabetic values not allowed in field 48.03 - Wallet Number
+28.07.2023 01:36:32 [ERROR] Special values not allowed in field 48.03 - Wallet Number
+28.07.2023 01:36:36 [ERROR] Cannot change JSON mode due to parsing error(s)
+28.07.2023 01:36:36 [ERROR] Alphabetic values not allowed in field 48.03 - Wallet Number
+28.07.2023 01:36:36 [ERROR] Special values not allowed in field 48.03 - Wallet Number
+28.07.2023 01:36:39 [ERROR] Cannot change JSON mode due to parsing error(s)
+28.07.2023 01:36:39 [ERROR] Alphabetic values not allowed in field 48.03 - Wallet Number
+28.07.2023 01:36:39 [ERROR] Special values not allowed in field 48.03 - Wallet Number
+28.07.2023 01:36:46 [INFO] SmartVista host connection DISCONNECTED
+28.07.2023 01:36:54 [INFO] 
+28.07.2023 01:36:54 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 01:36:54 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 01:36:54 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 01:36:54 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 01:36:54 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 01:36:54 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 01:36:54 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 01:36:54 [INFO]  
+28.07.2023 01:36:54 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 01:36:54 [INFO]  
+28.07.2023 01:36:54 [INFO] 
+28.07.2023 01:36:54 [INFO] ## Configuration parameters ##
+28.07.2023 01:36:54 [INFO] {
+28.07.2023 01:36:54 [INFO]     "smartvista": {
+28.07.2023 01:36:54 [INFO]         "host": "172.21.30.5",
+28.07.2023 01:36:54 [INFO]         "port": "16677"
+28.07.2023 01:36:54 [INFO]     },
+28.07.2023 01:36:54 [INFO]     "terminal": {
+28.07.2023 01:36:54 [INFO]         "process_default_dump": true,
+28.07.2023 01:36:54 [INFO]         "connect_on_startup": false
+28.07.2023 01:36:54 [INFO]     },
+28.07.2023 01:36:54 [INFO]     "debug": {
+28.07.2023 01:36:54 [INFO]         "level": "INFO",
+28.07.2023 01:36:54 [INFO]         "clear_log": true,
+28.07.2023 01:36:54 [INFO]         "parse_subfields": false
+28.07.2023 01:36:54 [INFO]     },
+28.07.2023 01:36:54 [INFO]     "fields": {
+28.07.2023 01:36:54 [INFO]         "max_amount": "100",
+28.07.2023 01:36:54 [INFO]         "build_fld_90": true,
+28.07.2023 01:36:54 [INFO]         "send_internal_id": true,
+28.07.2023 01:36:54 [INFO]         "validation": true,
+28.07.2023 01:36:54 [INFO]         "json_mode": true
+28.07.2023 01:36:54 [INFO]     }
+28.07.2023 01:36:54 [INFO] }
+28.07.2023 01:36:54 [INFO] ## End of configuration parameters ##
+28.07.2023 01:36:54 [INFO] 
+28.07.2023 01:36:54 [INFO] Default file parsed
+28.07.2023 01:38:41 [INFO] 
+28.07.2023 01:38:41 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 01:38:41 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 01:38:41 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 01:38:41 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 01:38:41 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 01:38:41 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 01:38:41 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 01:38:41 [INFO]  
+28.07.2023 01:38:41 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 01:38:41 [INFO]  
+28.07.2023 01:38:41 [INFO] 
+28.07.2023 01:38:41 [INFO] ## Configuration parameters ##
+28.07.2023 01:38:41 [INFO] {
+28.07.2023 01:38:41 [INFO]     "smartvista": {
+28.07.2023 01:38:41 [INFO]         "host": "172.21.30.5",
+28.07.2023 01:38:41 [INFO]         "port": "16677"
+28.07.2023 01:38:41 [INFO]     },
+28.07.2023 01:38:41 [INFO]     "terminal": {
+28.07.2023 01:38:41 [INFO]         "process_default_dump": true,
+28.07.2023 01:38:41 [INFO]         "connect_on_startup": false
+28.07.2023 01:38:41 [INFO]     },
+28.07.2023 01:38:41 [INFO]     "debug": {
+28.07.2023 01:38:41 [INFO]         "level": "INFO",
+28.07.2023 01:38:41 [INFO]         "clear_log": true,
+28.07.2023 01:38:41 [INFO]         "parse_subfields": false
+28.07.2023 01:38:41 [INFO]     },
+28.07.2023 01:38:41 [INFO]     "fields": {
+28.07.2023 01:38:41 [INFO]         "max_amount": "100",
+28.07.2023 01:38:41 [INFO]         "build_fld_90": true,
+28.07.2023 01:38:41 [INFO]         "send_internal_id": true,
+28.07.2023 01:38:41 [INFO]         "validation": true,
+28.07.2023 01:38:41 [INFO]         "json_mode": true
+28.07.2023 01:38:41 [INFO]     }
+28.07.2023 01:38:41 [INFO] }
+28.07.2023 01:38:41 [INFO] ## End of configuration parameters ##
+28.07.2023 01:38:41 [INFO] 
+28.07.2023 01:38:41 [INFO] Default file parsed
+28.07.2023 01:38:51 [INFO] Settings applying was canceled
+28.07.2023 01:38:55 [INFO] Settings applied
+28.07.2023 01:38:57 [INFO] Default file parsed
+28.07.2023 01:40:51 [INFO] 
+28.07.2023 01:40:51 [INFO]   ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::        
+28.07.2023 01:40:51 [INFO]  :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:        
+28.07.2023 01:40:51 [INFO]  +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+        
+28.07.2023 01:40:51 [INFO]  +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+        
+28.07.2023 01:40:51 [INFO]         +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+        
+28.07.2023 01:40:51 [INFO]  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#        
+28.07.2023 01:40:51 [INFO]   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ########## 
+28.07.2023 01:40:51 [INFO]  
+28.07.2023 01:40:51 [INFO]  :: v0.15 Production Beta ::
+28.07.2023 01:40:51 [INFO]  
+28.07.2023 01:40:51 [INFO] 
+28.07.2023 01:40:51 [INFO] ## Configuration parameters ##
+28.07.2023 01:40:51 [INFO] {
+28.07.2023 01:40:51 [INFO]     "smartvista": {
+28.07.2023 01:40:51 [INFO]         "host": "172.21.30.5",
+28.07.2023 01:40:51 [INFO]         "port": "16677"
+28.07.2023 01:40:51 [INFO]     },
+28.07.2023 01:40:51 [INFO]     "terminal": {
+28.07.2023 01:40:51 [INFO]         "process_default_dump": true,
+28.07.2023 01:40:51 [INFO]         "connect_on_startup": false
+28.07.2023 01:40:51 [INFO]     },
+28.07.2023 01:40:51 [INFO]     "debug": {
+28.07.2023 01:40:51 [INFO]         "level": "INFO",
+28.07.2023 01:40:51 [INFO]         "clear_log": true,
+28.07.2023 01:40:51 [INFO]         "parse_subfields": false
+28.07.2023 01:40:51 [INFO]     },
+28.07.2023 01:40:51 [INFO]     "fields": {
+28.07.2023 01:40:51 [INFO]         "max_amount": "100",
+28.07.2023 01:40:51 [INFO]         "build_fld_90": true,
+28.07.2023 01:40:51 [INFO]         "send_internal_id": true,
+28.07.2023 01:40:51 [INFO]         "validation": true,
+28.07.2023 01:40:51 [INFO]         "json_mode": false
+28.07.2023 01:40:51 [INFO]     }
+28.07.2023 01:40:51 [INFO] }
+28.07.2023 01:40:51 [INFO] ## End of configuration parameters ##
+28.07.2023 01:40:51 [INFO] 
+28.07.2023 01:40:51 [INFO] Default file parsed
+28.07.2023 01:40:57 [INFO] Settings applied
