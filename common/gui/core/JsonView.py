@@ -1,21 +1,20 @@
 from copy import deepcopy
-from logging import error
 from typing import Callable
-from logging import warning
+from logging import error, warning
 from collections import OrderedDict
 from PyQt6.QtGui import QFont, QUndoStack
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget, QItemDelegate
-from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
-from common.gui.core.FIeldItem import Item
-from common.gui.core.ItemsValidator import ItemsValidator
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
 from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.data_models.EpaySpecificationModel import RawFieldSet
-from PyQt6.QtCore import pyqtSignal
-from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
 from common.lib.core.Parser import Parser
+from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
+from common.gui.core.FIeldItem import Item
+from common.gui.core.ItemsValidator import ItemsValidator
+from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
 from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
 
 

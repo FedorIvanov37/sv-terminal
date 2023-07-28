@@ -1,7 +1,7 @@
 from common.lib.core.Validator import Validator
-from common.gui.core.FIeldItem import Item
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Config import Config
+from common.gui.core.FIeldItem import Item
 
 
 class ItemsValidator(Validator):

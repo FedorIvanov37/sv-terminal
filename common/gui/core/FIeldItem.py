@@ -1,12 +1,12 @@
+from typing import Callable
 from PyQt6 import QtGui
 from PyQt6.QtWidgets import QTreeWidgetItem
-from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.lib.data_models.EpaySpecificationModel import IsoField
+from common.lib.toolkit.toolkit import mask_pan
+from common.lib.core.EpaySpecification import EpaySpecification
+from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.gui.core.AbstractItem import AbstractItem
 from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
-from common.lib.core.EpaySpecification import EpaySpecification
-from common.lib.toolkit.toolkit import mask_pan
-from typing import Callable
 
 
 class Item(AbstractItem):
