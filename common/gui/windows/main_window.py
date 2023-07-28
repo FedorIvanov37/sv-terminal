@@ -1,6 +1,7 @@
+from sys import exit
 from ctypes import windll
+from PyQt6.QtGui import QPalette, QColor, QCloseEvent, QKeySequence, QShortcut
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QPalette, QColor, QCloseEvent
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.constants.ButtonActions import ButtonAction
@@ -8,11 +9,9 @@ from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.ConnectionStatus import ConnectionDefinitions
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.gui.core.JsonView import JsonView
+from common.gui.decorators.window_settings import set_window_icon
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Config import Config
-from PyQt6.QtGui import QKeySequence, QShortcut
-from common.gui.decorators.window_settings import set_window_icon
-from sys import exit
 
 
 """
