@@ -83,6 +83,9 @@
 + Flat mode
 + try / except around flat mode
 + Remove ErrorWindow
++ Remove config duplicate from lib
++ CTRL + ALT + ENTER added subfield even in flat mode
+
 
 
 • Change approach to fields path

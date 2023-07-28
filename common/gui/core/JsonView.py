@@ -48,6 +48,27 @@ class JsonView(QTreeWidget):
         self.setItemDelegate(self.delegate)
         self.undo_stack = QUndoStack()
 
+
+    def _setup(self):
+        self.setTabKeyNavigation(True)
+
+        for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
+            action.connect(self.resize_all)
+
+        self.header().setMaximumSectionSize(500)
+        self.validator = ItemsValidator(self.config)
+        self.itemDoubleClicked.connect(self.edit_item)
+        self.itemChanged.connect(self.process_change_item)
+        self.itemChanged.connect(self.disable_next_level)
+        self.currentItemChanged.connect(self.disable_next_level)
+        self.setFont(QFont("Calibri", 12))
+        self.setAllColumnsShowFocus(True)
+        self.setAlternatingRowColors(True)
+        self.setHeaderLabels(FieldsSpec.columns)
+        self.setEditTriggers(self.EditTrigger.NoEditTriggers)
+        self.addTopLevelItem(self.root)
+        self.make_order()
+
     def undo(self):
         self.undo_stack.undo()
         self.field_changed.emit()
@@ -65,32 +86,20 @@ class JsonView(QTreeWidget):
 
             child.hide_pan(True)
 
-    def _setup(self):
-        self.setTabKeyNavigation(True)
+    def disable_next_level(self, item, column=None):
+        if item.get_field_depth() != 1:
+            self.need_disable_next_level.emit(False)
+            return
 
-        for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
-            action.connect(self.resize_all)
-
-        self.header().setMaximumSectionSize(500)
-        self.validator = ItemsValidator(self.config)
-        self.itemDoubleClicked.connect(self.edit_item)
-        self.itemChanged.connect(self.process_change_item)
-        self.itemClicked.connect(self.disable_next_level)
-        self.setFont(QFont("Calibri", 12))
-        self.setAllColumnsShowFocus(True)
-        self.setAlternatingRowColors(True)
-        self.setHeaderLabels(FieldsSpec.columns)
-        self.setEditTriggers(self.EditTrigger.NoEditTriggers)
-        self.addTopLevelItem(self.root)
-        self.make_order()
-
-    def disable_next_level(self, item, column):
-        disable = True
+        if not self.spec.is_field_complex(item.get_field_path()):
+            self.need_disable_next_level.emit(False)
+            return
 
         if item.json_mode_checkbox_checked():
-            disable = False
+            self.need_disable_next_level.emit(False)
+            return
 
-        self.need_disable_next_level.emit(disable)
+        self.need_disable_next_level.emit(True)
 
     @void_qt_signals
     def process_change_item(self, item: Item, column):
@@ -216,8 +225,18 @@ class JsonView(QTreeWidget):
         self.field_removed.emit()
 
     def next_level(self, checked=None):
-        item = Item([])
         current_item: Item | None = self.currentItem()
+
+        if not current_item:
+            return
+
+        if current_item.get_field_depth() == 1:
+            is_field_complex = self.spec.is_field_complex(current_item.get_field_path())
+
+            if is_field_complex and not current_item.json_mode_checkbox_checked():
+                return
+
+        item = Item([])
 
         if current_item is None:
             return
@@ -339,6 +358,7 @@ class JsonView(QTreeWidget):
                 return
 
             item.field_data = ""
+            self.expandToDepth(-10)
             return
 
         # Set flat mode
@@ -358,6 +378,7 @@ class JsonView(QTreeWidget):
 
         item.takeChildren()
         item.field_data = field_data
+        self.expandToDepth(-10)
 
     @void_qt_signals
     def set_checkboxes(self, transaction: Transaction):
@@ -405,7 +426,8 @@ class JsonView(QTreeWidget):
 
     def make_order(self):
         self.collapseAll()
-        self.expandToDepth(-1)
+        self.expandToDepth(-10)
+        self.expandAll()
         self.resize_all()
 
     def get_top_level_field_numbers(self) -> list[str]:
