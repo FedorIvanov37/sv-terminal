@@ -384,7 +384,6 @@ class SvTerminalGui(SvTerminal):
         for field in transaction.generate_fields:
 
             if not self.spec.can_be_generated([field]):
-                warning(f"According to specification Field {field} cannot be generated")
                 continue
 
             if not transaction.data_fields.get(field):

@@ -50,6 +50,7 @@ class JsonView(QTreeWidget):
 
     def _setup(self):
         self.setTabKeyNavigation(True)
+        self.setAnimated(True)
 
         for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
             action.connect(self.resize_all)
@@ -86,14 +87,11 @@ class JsonView(QTreeWidget):
             child.hide_pan(True)
 
     def disable_next_level(self, item, column=None):
-        if not (current_item := self.currentItem()):
-            current_item = item
-
         exemptions = [
             item.get_field_depth() != 1,
             not self.spec.is_field_complex(item.get_field_path()),
-            not self.spec.is_field_complex(current_item.get_field_path()),
-            item.json_mode_checkbox_checked() and item is current_item,
+            item.json_mode_checkbox_checked(),
+            item is not self.currentItem()
         ]
 
         signal = self.need_enable_next_level if any(exemptions) else self.need_disable_next_level
@@ -116,9 +114,6 @@ class JsonView(QTreeWidget):
         if column == FieldsSpec.ColumnsOrder.PROPERTY:
             if item.text(column) == CheckBoxesDefinition.JSON_MODE:
                 self.set_json_mode(item)
-
-            if not self.currentItem():
-                self.setCurrentItem(item)
 
         try:
             item.process_change_item()
@@ -328,6 +323,7 @@ class JsonView(QTreeWidget):
         if self.config.fields.validation:
             self.validate_all()
 
+        # self.expandAll()
         self.make_order()
 
     def switch_json_mode(self, json_mode):
@@ -355,7 +351,7 @@ class JsonView(QTreeWidget):
                 return
 
             try:
-                fields: RawFieldSet = Parser.split_complex_field(item.field_number, item.field_data)
+                fields: RawFieldSet= Parser.split_complex_field(item.field_number, item.field_data)
                 self._parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
 
             except Exception as parsing_error:
@@ -364,7 +360,8 @@ class JsonView(QTreeWidget):
                 return
 
             item.field_data = ""
-            self.expandToDepth(-10)
+
+            self.expandToDepth(-1)
             return
 
         # Set flat mode
@@ -432,7 +429,7 @@ class JsonView(QTreeWidget):
 
     def make_order(self):
         self.collapseAll()
-        self.expandToDepth(-10)
+        self.expandToDepth(-1)
         self.expandAll()
         self.resize_all()
 
