@@ -1,8 +1,8 @@
 from sys import exit
 from ctypes import windll
 from copy import deepcopy
-from PyQt6.QtGui import QPalette, QColor, QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QPalette, QColor, QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.constants.ButtonActions import ButtonAction
@@ -291,12 +291,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 button.menu().addSeparator()
 
     def process_keep_alive_change(self, interval_name):
-        if interval_name == ButtonAction.KEEP_ALIVE_STOP:
-            icon = QIcon(QPixmap(TermFilesPath.GREY_CIRCLE))
-        else:
-            icon = QIcon(QPixmap(TermFilesPath.GREEN_CIRCLE))
+        icon_file = TermFilesPath.GREEN_CIRCLE
 
-        self.ButtonKeepAlive.setIcon(icon)
+        if interval_name == ButtonAction.KEEP_ALIVE_STOP:
+            icon_file = TermFilesPath.GREY_CIRCLE
+
+        self.ButtonKeepAlive.setIcon(QIcon(QPixmap(icon_file)))
         self.ButtonKeepAlive.menu().clear()
 
         button_action_menu = deepcopy(self.buttons_menu_structure.get(self.ButtonKeepAlive))
@@ -311,7 +311,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
             self.ButtonKeepAlive.menu().addAction(action, function)
             self.ButtonKeepAlive.menu().addSeparator()
-        
+
         # for action in self.ButtonKeepAlive.menu().actions():
         #     if not action.text() == ButtonAction.KEEP_ALIVE_ONCE:
         #         continue
