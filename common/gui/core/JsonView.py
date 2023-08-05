@@ -113,6 +113,9 @@ class JsonView(QTreeWidget):
             if item.text(column) == CheckBoxesDefinition.JSON_MODE:
                 self.set_json_mode(item)
 
+            if not self.currentItem():
+                self.setCurrentItem(item)
+
         try:
             item.process_change_item()
 
@@ -348,7 +351,7 @@ class JsonView(QTreeWidget):
                 return
 
             try:
-                fields: RawFieldSet= Parser.split_complex_field(item.field_number, item.field_data)
+                fields: RawFieldSet = Parser.split_complex_field(item.field_number, item.field_data)
                 self._parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
 
             except Exception as parsing_error:

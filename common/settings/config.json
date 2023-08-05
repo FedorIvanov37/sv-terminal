@@ -1,11 +1,13 @@
 {
     "smartvista": {
         "host": "172.21.30.5",
-        "port": "16677"
+        "port": "16677",
+        "keep_alive_mode": false,
+        "keep_alive_interval": "500"
     },
     "terminal": {
         "process_default_dump": true,
-        "connect_on_startup": true
+        "connect_on_startup": false
     },
     "debug": {
         "level": "INFO",

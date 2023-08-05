@@ -32,7 +32,7 @@ class SvTerminal(QObject):
         if connector is None:
             connector: Connector = Connector(self.config)
 
-        self.log_printer: LogPrinter = LogPrinter()
+        self.log_printer: LogPrinter = LogPrinter(self.config)
         self.connector: Connector = connector
         self.parser: Parser = Parser(self.config)
         self.generator = FieldsGenerator()
@@ -124,7 +124,9 @@ class SvTerminal(QObject):
             return
 
         self.log_printer.print_transaction(request, level=levels.get(self.config.debug.level, info))
-        info(f"Transaction [{request.trans_id}] was sent ")
+
+        if not request.is_keep_alive:
+            info(f"Transaction [{request.trans_id}] was sent ")
 
     def transaction_received(self, response: Transaction):
         levels = {  # TODO
@@ -145,8 +147,14 @@ class SvTerminal(QObject):
             error(f"Cannot print transaction, data parsing error: {parsing_error}")
 
         if response.matched and response.resp_time_seconds:
-            info(f"Transaction ID [{response.match_id}] matched, response time seconds: {response.resp_time_seconds}")
-            return
+            if response.is_keep_alive:
+                message = f"Keep Alive transaction [{response.match_id}] successfully matched"
+            else:
+                message = f"Transaction ID [{response.match_id}] matched"
+
+            message = f"{message} response time seconds: {response.resp_time_seconds}"
+
+            info(message)
 
         if not response.matched:
             match_fields = [field for field in self.spec.get_match_fields() if field in response.data_fields]
@@ -159,6 +167,30 @@ class SvTerminal(QObject):
         if not response.resp_time_seconds:
             warning(f"Transaction ID [{response.match_id}] received and matched after timeout 60 seconds")
             return
+
+    def keep_alive(self):
+        if self.connector.state() == self.connector.SocketState.ConnectingState:
+            return
+
+        try:
+            transaction: Transaction = self.parser.parse_file(TermFilesPath.KEEP_ALIVE)
+            transaction: Transaction = self.generator.set_generated_fields(transaction)
+
+        except Exception as transaction_building_error:
+            error(f"Keep alive transaction building error: {transaction_building_error}")
+            return
+
+        transaction.generate_fields = []
+        transaction.is_keep_alive = True
+
+        message = f"Trans ID: [{transaction.trans_id}], "\
+                  f"STAN: [{transaction.data_fields.get(self.spec.FIELD_SET.FIELD_011_SYSTEM_TRACE_AUDIT_NUMBER)}], "\
+                  f"Network management code: "\
+                  f"[{transaction.data_fields.get(self.spec.FIELD_SET.FIELD_070_NETWORK_MANAGEMENT_CODE)}]"
+
+        info(f"Sending Keep Alive message to SmartVista - {message}")
+
+        self.send(transaction)
 
     def save_transaction(self, transaction: Transaction, file_format: str, file_name) -> None:
         data_processing_map = {
