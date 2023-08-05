@@ -87,11 +87,14 @@ class JsonView(QTreeWidget):
             child.hide_pan(True)
 
     def disable_next_level(self, item, column=None):
+        if not (current_item := self.currentItem()):
+            current_item = item
+
         exemptions = [
             item.get_field_depth() != 1,
             not self.spec.is_field_complex(item.get_field_path()),
-            item.json_mode_checkbox_checked(),
-            item is not self.currentItem()
+            item.json_mode_checkbox_checked() and item is current_item,
+            current_item.json_mode_checkbox_checked()
         ]
 
         signal = self.need_enable_next_level if any(exemptions) else self.need_disable_next_level
