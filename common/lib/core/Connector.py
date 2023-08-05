@@ -16,6 +16,9 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QobjecAbcMeta):
         self.config = config
         self.readyRead.connect(self.read_transaction_data)
 
+    def connection_in_progress(self):
+        return self.state() == self.SocketState.ConnectingState
+
     def send_transaction_data(self, trans_id: str, transaction_data: bytes):
         if not self.state() == self.SocketState.ConnectedState:
             warning("SmartVista disconnected. Trying to established the connection")

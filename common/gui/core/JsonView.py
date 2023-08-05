@@ -22,7 +22,8 @@ class JsonView(QTreeWidget):
     field_removed: pyqtSignal = pyqtSignal()
     field_changed: pyqtSignal = pyqtSignal()
     field_added: pyqtSignal = pyqtSignal()
-    need_disable_next_level: pyqtSignal = pyqtSignal(bool)
+    need_disable_next_level: pyqtSignal = pyqtSignal()
+    need_enable_next_level: pyqtSignal = pyqtSignal()
 
     root: Item = Item(["Message"])
     spec: EpaySpecification = EpaySpecification()
@@ -46,7 +47,6 @@ class JsonView(QTreeWidget):
         self.delegate.closeEditor.connect(self.hide_pan_after_edit)
         self.setItemDelegate(self.delegate)
         self.undo_stack = QUndoStack()
-
 
     def _setup(self):
         self.setTabKeyNavigation(True)
@@ -86,19 +86,23 @@ class JsonView(QTreeWidget):
             child.hide_pan(True)
 
     def disable_next_level(self, item, column=None):
-        if item.get_field_depth() != 1:
-            self.need_disable_next_level.emit(False)
+        if not (current_item := self.currentItem()):
+            current_item = item
+
+        exemptions = [
+            item.get_field_depth() != 1,
+            not self.spec.is_field_complex(item.get_field_path()),
+            not self.spec.is_field_complex(current_item.get_field_path()),
+            item.json_mode_checkbox_checked() and item is current_item,
+        ]
+
+        signal = self.need_enable_next_level if any(exemptions) else self.need_disable_next_level
+        signal.emit()
+
+        if self.currentItem():
             return
 
-        if not self.spec.is_field_complex(item.get_field_path()):
-            self.need_disable_next_level.emit(False)
-            return
-
-        if item.json_mode_checkbox_checked():
-            self.need_disable_next_level.emit(False)
-            return
-
-        self.need_disable_next_level.emit(True)
+        self.setCurrentItem(item)
 
     @void_qt_signals
     def process_change_item(self, item: Item, column):

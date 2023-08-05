@@ -1,5 +1,4 @@
 from json import dumps
-from copy import deepcopy
 from logging import error, info, warning
 from pydantic import ValidationError
 from PyQt6.QtCore import QTimer
@@ -107,13 +106,16 @@ class SvTerminalGui(SvTerminal):
             signal.connect(slot)
 
     def settings(self):
-        def validate_all(validation):
-            if not validation:
+        def validate_all(validation: bool):
+            if not validation:  # Return when no changes detected
                 return
 
             self.window.validate_fields()
 
-        def set_keep_alive():
+        def set_keep_alive(keep_alive_mode_changed: bool):
+            if not keep_alive_mode_changed:  # Return when no changes detected
+                return
+
             interval_name = ButtonAction.KEEP_ALIVE_STOP
 
             if self.config.smartvista.keep_alive_mode:
@@ -121,12 +123,15 @@ class SvTerminalGui(SvTerminal):
 
             self.switch_keep_alive_mode(interval_name)
 
+        # Save configuration to local variables for future compare to track changes
         fields_validation = self.config.fields.validation
+        keep_alive = self.config.smartvista.keep_alive_mode
+
         settings_window: SettingsWindow = SettingsWindow(self.config)
         settings_window.accepted.connect(self.read_config)
         settings_window.accepted.connect(lambda: validate_all(fields_validation != self.config.fields.validation))
+        settings_window.accepted.connect(lambda: set_keep_alive(keep_alive != self.config.smartvista.keep_alive_mode))
         settings_window.accepted.connect(lambda: self.window.set_json_mode(self.config.fields.json_mode))
-        settings_window.accepted.connect(set_keep_alive)
         settings_window.exec()
 
     def read_config(self):

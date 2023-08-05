@@ -85,7 +85,7 @@ class SvTerminal(QObject):
         self.connector.disconnect_sv()
 
     def reconnect(self):
-        if self.connector.state() == self.connector.state().ConnectingState:
+        if self.connector.connection_in_progress():
             warning("Unable to reconnect while connection in progress")
             return
 
@@ -169,7 +169,7 @@ class SvTerminal(QObject):
             return
 
     def keep_alive(self):
-        if self.connector.state() == self.connector.SocketState.ConnectingState:
+        if self.connector.connection_in_progress():
             return
 
         try:
