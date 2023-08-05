@@ -8,7 +8,7 @@
  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#
   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ##########
 
- SmartVista Electronic Commerce Terminal | v0.15 Production Beta | Released in Jun 2023
+ SmartVista Electronic Commerce Terminal | v0.15.1 Production Beta | Released in Aug 2023
 
  For test environment only! See README.md for details
 

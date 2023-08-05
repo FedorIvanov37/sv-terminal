@@ -63,9 +63,6 @@
        <property name="text">
         <string/>
        </property>
-       <property name="pixmap">
-        <pixmap>../style/logo_triangle.png</pixmap>
-       </property>
        <property name="scaledContents">
         <bool>true</bool>
        </property>

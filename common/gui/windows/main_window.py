@@ -1,13 +1,15 @@
 from sys import exit
 from ctypes import windll
-from PyQt6.QtGui import QPalette, QColor, QCloseEvent, QKeySequence, QShortcut
+from copy import deepcopy
 from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QPalette, QColor, QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.ConnectionStatus import ConnectionDefinitions
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
+from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.core.JsonView import JsonView
 from common.gui.decorators.window_settings import set_window_icon
 from common.lib.data_models.Transaction import TypeFields, Transaction
@@ -51,6 +53,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _hotkeys: pyqtSignal = pyqtSignal()
     _send: pyqtSignal = pyqtSignal()
     _reset: pyqtSignal = pyqtSignal()
+    _keep_alive: pyqtSignal = pyqtSignal(str)
+
+    @property
+    def keep_alive(self):
+        return self._keep_alive
 
     @property
     def field_added(self):
@@ -152,6 +159,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self._add_json_control_buttons()
         self._connect_all()
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
+        self.process_keep_alive_change(ButtonAction.KEEP_ALIVE_STOP)
 
     def _add_json_control_buttons(self) -> None:
         # Create, place, and connect the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
@@ -204,6 +212,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonHotkeys.clicked: self.hotkeys,
             self.ButtonSettings.clicked: self.settings,
             self.ButtonCopyBitmap.clicked: self.copy_bitmap,
+
         }
 
         keys_connection_map = {
@@ -230,10 +239,21 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             QKeySequence.StandardKey.Redo: self.json_view.redo,
         }
 
-        buttons_menu_structure = {
+        self.buttons_menu_structure = {
 
             # Special menu buttons. Along with the signal they send modifiers - string values, aka pragma.
             # The modifiers are used to define the requested data format or as a hint on how to process the data
+
+            self.ButtonKeepAlive: {
+                ButtonAction.KEEP_ALIVE_1S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_1S),
+                ButtonAction.KEEP_ALIVE_5S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_5S),
+                ButtonAction.KEEP_ALIVE_10S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_10S),
+                ButtonAction.KEEP_ALIVE_30S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_30S),
+                ButtonAction.KEEP_ALIVE_60S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_60S),
+                ButtonAction.KEEP_ALIVE_300S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_300S),
+                ButtonAction.KEEP_ALIVE_STOP: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_STOP),
+                ButtonAction.KEEP_ALIVE_ONCE: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_ONCE),
+            },
 
             self.ButtonReverse: {
                 ButtonAction.LAST: lambda: self.reverse.emit(ButtonAction.LAST),
@@ -257,18 +277,46 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         # The mapping is defined, let's connect them all
 
-        for signal, slot in buttons_connection_map.items():  # Regular buttons
-            signal.connect(slot)
-
         for combination, function in keys_connection_map.items():  # Key sequences
             QShortcut(QKeySequence(combination), self).activated.connect(function)
 
-        for button, actions in buttons_menu_structure.items():  # Menu buttons
+        for signal, slot in buttons_connection_map.items():  # Regular buttons
+            signal.connect(slot)
+
+        for button, actions in self.buttons_menu_structure.items():  # Menu buttons
             button.setMenu(QMenu())
 
             for action, function in actions.items():
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
+
+    def process_keep_alive_change(self, interval_name):
+        icon_file = TermFilesPath.GREEN_CIRCLE
+
+        if interval_name == ButtonAction.KEEP_ALIVE_STOP:
+            icon_file = TermFilesPath.GREY_CIRCLE
+
+        self.ButtonKeepAlive.setIcon(QIcon(QPixmap(icon_file)))
+        self.ButtonKeepAlive.menu().clear()
+
+        button_action_menu = deepcopy(self.buttons_menu_structure.get(self.ButtonKeepAlive))
+
+        if self.config.smartvista.keep_alive_mode:
+            interval: str = ButtonAction.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
+            button_action_menu[interval] = lambda: self.keep_alive.emit(interval)
+
+        for action, function in button_action_menu.items():
+            if action == interval_name:
+                action = f"{ButtonAction.CURRENT_ACTION_MARK} {action}"
+
+            self.ButtonKeepAlive.menu().addAction(action, function)
+            self.ButtonKeepAlive.menu().addSeparator()
+
+        # for action in self.ButtonKeepAlive.menu().actions():
+        #     if not action.text() == ButtonAction.KEEP_ALIVE_ONCE:
+        #         continue
+        #
+        #     self.ButtonKeepAlive.menu().setDefaultAction(action)
 
     def disable_next_level_button(self, disable: bool = True):
         self.NextLevelButton.setDisabled(disable)

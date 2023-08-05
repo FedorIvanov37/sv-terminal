@@ -4,6 +4,8 @@ from pydantic import BaseModel, validator
 class SmartVista(BaseModel):
     host: str = str()
     port: str = str()
+    keep_alive_mode: bool = False
+    keep_alive_interval: int = 300
 
 
 class Terminal(BaseModel):

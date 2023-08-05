@@ -1,16 +1,19 @@
 from json import dumps
 from logging import debug, info, error
 from common.gui.constants.TextConstants import TextConstants
-from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Parser import Parser
 from common.lib.toolkit.toolkit import mask_pan
+from common.lib.data_models.Config import Config
 
 
 class LogPrinter:
     spec: EpaySpecification = EpaySpecification()
     default_level = info
+
+    def __init__(self, config: Config):
+        self.config = config
 
     @staticmethod
     def print_multi_row(data: str, level=default_level):
@@ -19,9 +22,9 @@ class LogPrinter:
 
         level("")
 
-    def print_startup_info(self, config: Config, level=default_level):
+    def print_startup_info(self, level=default_level):
         LogPrinter.print_multi_row(TextConstants.HELLO_MESSAGE)
-        config_data = dumps(config.dict(), indent=4)
+        config_data = dumps(self.config.dict(), indent=4)
         config_data = f"## Configuration parameters ##\n{config_data}\n## End of configuration parameters ##"
         self.print_multi_row(config_data, level=level)
 
@@ -32,6 +35,9 @@ class LogPrinter:
         self.print_multi_row(dump, level)
 
     def print_transaction(self, transaction: Transaction, level=default_level):
+        if transaction.is_keep_alive:
+            return
+        
         def put(string: str, size=0):
             return f"[{string.zfill(size)}]"
 

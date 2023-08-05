@@ -17,3 +17,4 @@ class Transaction(BaseModel):
     data_fields: dict = {}
     is_request: bool | None = None
     is_reversal: bool | None = None
+    is_keep_alive: bool = False

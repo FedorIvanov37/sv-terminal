@@ -8,7 +8,7 @@
  #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#
   ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ##########
 
- SvTerminal v0.15 starting file
+ SvTerminal v0.15.1 starting file
 
  This file runs SvTerminal GUI. The GUI runs once the file is imported, no any additional actions required
 

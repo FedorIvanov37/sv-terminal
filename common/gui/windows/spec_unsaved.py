@@ -1,8 +1,9 @@
 from common.gui.forms.spec_unsaved import Ui_SpecUnsaved
 from PyQt6.QtWidgets import QDialog, QMenu
-from PyQt6.QtGui import QCloseEvent, QKeyEvent
+from PyQt6.QtGui import QCloseEvent, QKeyEvent, QPixmap
 from PyQt6.QtCore import Qt, pyqtSignal
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
+from common.gui.constants.TermFilesPath import TermFilesPath
 
 
 class SpecUnsaved(Ui_SpecUnsaved, QDialog):
@@ -25,6 +26,8 @@ class SpecUnsaved(Ui_SpecUnsaved, QDialog):
     @set_window_icon
     @has_close_button_only
     def setup(self):
+        self.LogoLabel.setPixmap(QPixmap(TermFilesPath.MAIN_LOGO))
+
         apply_menu = QMenu()
 
         for action in ("For current session", "Permanently"):

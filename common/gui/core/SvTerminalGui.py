@@ -1,6 +1,7 @@
 from json import dumps
 from logging import error, info, warning
 from pydantic import ValidationError
+from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QFileDialog
@@ -18,7 +19,6 @@ from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread
 from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.lib.constants.LogDefinition import LogDefinition
-from common.lib.core.LogPrinter import LogPrinter
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.core.Terminal import SvTerminal
@@ -47,16 +47,16 @@ from common.lib.core.Terminal import SvTerminal
 
 class SvTerminalGui(SvTerminal):
     connector: ConnectionThread
+    keep_alive_timer: QTimer = QTimer()
 
     def __init__(self, config: Config):
         super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
         self.window: MainWindow = MainWindow(self.config)
-        self.log_printer = LogPrinter()
         self.setup()
 
     def setup(self):
         self.create_window_logger()
-        self.log_printer.print_startup_info(self.config)
+        self.log_printer.print_startup_info()
         self.connect_widgets()
         self.window.set_mti_values(self.spec.get_mti_list())
         self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
@@ -64,6 +64,10 @@ class SvTerminalGui(SvTerminal):
 
         if self.config.terminal.process_default_dump:
             self.set_default_values()
+
+        if self.config.smartvista.keep_alive_mode:
+            interval = self.config.smartvista.keep_alive_interval
+            self.switch_keep_alive_mode(interval_name=ButtonAction.KEEP_ALIVE_DEFAULT % interval)
 
         self.window.show()
 
@@ -94,6 +98,7 @@ class SvTerminalGui(SvTerminal):
             window.hotkeys: lambda: HotKeysHintWindow().exec(),
             window.specification: lambda: SpecWindow().exec(),
             window.about: lambda: AboutWindow(),
+            window.keep_alive: self.switch_keep_alive_mode,
             self.connector.stateChanged: self.set_connection_status,
         }
 
@@ -101,20 +106,69 @@ class SvTerminalGui(SvTerminal):
             signal.connect(slot)
 
     def settings(self):
-        def validate_all(validation):
-            if not validation:
+        def validate_all(validation: bool):
+            if not validation:  # Return when no changes detected
                 return
 
             self.window.validate_fields()
 
+        def set_keep_alive(keep_alive_mode_changed: bool):
+            if not keep_alive_mode_changed:  # Return when no changes detected
+                return
+
+            interval_name = ButtonAction.KEEP_ALIVE_STOP
+
+            if self.config.smartvista.keep_alive_mode:
+                interval_name = ButtonAction.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
+
+            self.switch_keep_alive_mode(interval_name)
+
+        # Save configuration to local variables for future compare to track changes
         fields_validation = self.config.fields.validation
+        keep_alive = self.config.smartvista.keep_alive_mode
+
         settings_window: SettingsWindow = SettingsWindow(self.config)
+        settings_window.accepted.connect(self.read_config)
         settings_window.accepted.connect(lambda: validate_all(fields_validation != self.config.fields.validation))
+        settings_window.accepted.connect(lambda: set_keep_alive(keep_alive != self.config.smartvista.keep_alive_mode))
         settings_window.accepted.connect(lambda: self.window.set_json_mode(self.config.fields.json_mode))
         settings_window.exec()
 
+    def read_config(self):
+        config = Config.parse_file(TermFilesPath.CONFIG)
+        self.config.fields = config.fields
+
     def stop_sv_terminal(self):
         self.connector.stop_thread()
+
+    def switch_keep_alive_mode(self, interval_name):
+        if interval_name == ButtonAction.KEEP_ALIVE_ONCE:
+            self.keep_alive()
+            return
+
+        self.keep_alive_timer.stop()
+
+        if interval_name == ButtonAction.KEEP_ALIVE_STOP:
+            self.window.process_keep_alive_change(interval_name)
+            return
+
+        interval = None
+        keep_alive_default = ButtonAction.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
+
+        if interval_name == keep_alive_default:
+            info(f"Set KeepAlive mode to {interval_name}")
+            interval = self.config.smartvista.keep_alive_interval
+
+        if interval is None:
+            if not (interval := ButtonAction.get_interval_time(interval_name)):
+                return
+
+            info(f"Set KeepAlive mode to {interval_name}")
+
+        self.window.process_keep_alive_change(interval_name)
+        self.keep_alive_timer = QTimer()
+        self.keep_alive_timer.timeout.connect(self.keep_alive)
+        self.keep_alive_timer.start(int(interval) * 1000)
 
     def reconnect(self):
         SvTerminal.reconnect(self)
@@ -181,9 +235,6 @@ class SvTerminalGui(SvTerminal):
     def send(self, transaction: Transaction | None = None):
         sender = None
 
-        if self.config.debug.clear_log:
-            self.window.clean_window_log()
-
         if not transaction:
             try:
                 transaction: Transaction = self.parse_main_window()
@@ -194,14 +245,16 @@ class SvTerminalGui(SvTerminal):
                 [error(err) for err in str(building_error).splitlines()]
                 return
 
-        info(f"Processing transaction ID [{transaction.trans_id}]")
+        if self.config.debug.clear_log and not transaction.is_keep_alive:
+            self.window.clean_window_log()
+
+        if not transaction.is_keep_alive:
+            info(f"Processing transaction ID [{transaction.trans_id}]")
 
         SvTerminal.send(self, transaction)  # SvTerminal always used to real data processing
 
-        if sender is not self.window:
-            return
-
-        self.set_generated_fields(transaction)
+        if sender is self.window:
+            self.set_generated_fields(transaction)
 
     @staticmethod
     def get_output_filename():

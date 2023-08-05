@@ -16,10 +16,18 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QobjecAbcMeta):
         self.config = config
         self.readyRead.connect(self.read_transaction_data)
 
+    def connection_in_progress(self):
+        return self.state() == self.SocketState.ConnectingState
+
     def send_transaction_data(self, trans_id: str, transaction_data: bytes):
         if not self.state() == self.SocketState.ConnectedState:
             warning("SmartVista disconnected. Trying to established the connection")
-            self.reconnect_sv()
+
+            try:
+                self.reconnect_sv()
+            except Exception as connection_error:
+                error(connection_error)
+                return
 
         if not self.state() == self.SocketState.ConnectedState:
             return
@@ -57,6 +65,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QobjecAbcMeta):
         debug("Connecting to %s:%s", host, port)
 
         self.connectToHost(host, port)
+
         self.waitForConnected(msecs=10000)
 
         if self.state() is self.SocketState.ConnectedState:
@@ -85,7 +94,11 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QobjecAbcMeta):
             error("Cannot disconnect SmartVista host")
             return
 
-        self.connect_sv()
+        try:
+            self.connect_sv()
+
+        except Exception as connection_error:
+            error(f"SV connection error: {connection_error}")
 
     def is_connected(self):
         return self.state() == self.SocketState.ConnectedState

@@ -84,19 +84,13 @@
 + Remove ErrorWindow
 + Remove config duplicate from lib
 + CTRL + ALT + ENTER added subfield even in flat mode
+#
++ Keep Alive: Button, Function start / stop, File, Default state in settings, Activate on startup, doc
++ No logo in frameless windows
++ No logo in SpecUnsaved window
++ Files structure
 
-
-• Keep Alive
-    • Button
-    • Function start / stop
-    • File
-
-• No logo in frameless windows
-• No logo in SpecUnsaved window
-• Validation after edit doesn't work sometimes
-• Files structure
-
-
+? Validation after edit doesn't work sometimes
 • Change approach to fields path
 • No data in socket if delete field in spec
 • Exceptions policy

@@ -76,6 +76,9 @@ class ConnectionThread(ConnectionInterface, QObject, metaclass=QobjecAbcMeta):
     def stateChanged(self):
         return self.connector.stateChanged
 
+    def connection_in_progress(self):
+        return self.connector.connection_in_progress()
+
     def __init__(self, config: Config):
         super(ConnectionThread, self).__init__()
         self.config: Config = config

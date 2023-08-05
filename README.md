@@ -2,7 +2,7 @@
 
 ![image](https://mir-s3-cdn-cf.behance.net/project_modules/1400/d85c39110350507.600ff057b310b.gif)
 
-SmartVista Electronic Commerce Terminal v0.15 July 2023 | Powered by <a href="https://www.unlimit.com">Unlimit</a></p> 
+SmartVista Electronic Commerce Terminal v0.15.1 Aug 2023 | Powered by <a href="https://www.unlimit.com">Unlimit</a></p> 
 
 
 # Description
@@ -32,7 +32,7 @@ In case of any questions about SvTerminal [contact author](#author). Your feedba
 
 
 
-## v0.15 Release info
+## v0.15.1 Release info
 
 * New features
   * Since v0.15 SvTerminal GUI delivers as a single binary executable .exe file
@@ -44,6 +44,7 @@ In case of any questions about SvTerminal [contact author](#author). Your feedba
   * Hotkeys combinations, hotkeys hint window, and button to call the window
   * Undo / redo of transaction fields 
   * Complex fields flat mode aka INI style
+  * Keep Alive message sending button and config setting
 
 
 * Updates
@@ -60,7 +61,7 @@ In case of any questions about SvTerminal [contact author](#author). Your feedba
   * GUI freezes while opening the connection. The Connector moved to its own thread, separated from the event loop  
   * Incorrect field names in INI files
   * Terminal fall down when empty field number set in Specification
-  * Small bugs inherited from v0.14
+  * Small bugs inherited from v0.15
   * Code and project structure optimization
 
 # Graphic User Interface
@@ -234,4 +235,4 @@ if transaction.success:
 
 Designed and developed by Fedor Ivanov   
 
-In case of any question contract [f.ivanov@unlimit.com](mailto:f.ivanov@unlimit.com?subject=SvTerminal%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SvTerminal%20version%20is%20v0.15%20%7C%20Released%20in%20July%202023%0A)
+In case of any question contract [f.ivanov@unlimit.com](mailto:f.ivanov@unlimit.com?subject=SvTerminal%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SvTerminal%20version%20is%20v0.15.1%20%7C%20Released%20in%20Aug%202023%0A)
