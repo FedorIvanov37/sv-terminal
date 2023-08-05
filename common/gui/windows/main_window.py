@@ -188,6 +188,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.json_view.field_added: self.field_added,
             self.json_view.field_removed: self.field_removed,
             self.json_view.need_disable_next_level: self.disable_next_level_button,
+            self.json_view.need_enable_next_level: self.enable_next_level_button,
             self.PlusButton.clicked: self.json_view.plus,
             self.MinusButton.clicked: self.json_view.minus,
             self.NextLevelButton.clicked: self.json_view.next_level,
@@ -269,8 +270,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
 
-    def disable_next_level_button(self, disable: bool):
+    def disable_next_level_button(self, disable: bool = True):
         self.NextLevelButton.setDisabled(disable)
+
+    def enable_next_level_button(self, enable: bool = True):
+        self.NextLevelButton.setEnabled(enable)
 
     def set_json_mode(self, json_mode):
         self.json_view.switch_json_mode(json_mode)

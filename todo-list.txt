@@ -86,6 +86,16 @@
 + CTRL + ALT + ENTER added subfield even in flat mode
 
 
+• Keep Alive
+    • Button
+    • Function start / stop
+    • File
+
+• No logo in frameless windows
+• No logo in SpecUnsaved window
+• Validation after edit doesn't work sometimes
+• Files structure
+
 
 • Change approach to fields path
 • No data in socket if delete field in spec
