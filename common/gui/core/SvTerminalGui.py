@@ -22,7 +22,6 @@ from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.core.Terminal import SvTerminal
 
-
 """
  
  The core of the GUI backend
@@ -105,13 +104,13 @@ class SvTerminalGui(SvTerminal):
 
     def settings(self):
         def validate_all(validation: bool):
-            if not validation:  # Return when no changes detected
+            if not validation:  # Return when no fields change detected
                 return
 
             self.window.validate_fields()
 
         def set_keep_alive(keep_alive_mode_changed: bool):
-            if not keep_alive_mode_changed:  # Return when no changes detected
+            if not keep_alive_mode_changed:  # Return when no fields change detected
                 return
 
             interval_name = ButtonAction.KEEP_ALIVE_STOP
@@ -124,12 +123,20 @@ class SvTerminalGui(SvTerminal):
         # Save configuration to local variables for future compare to track changes
         fields_validation = self.config.fields.validation
         keep_alive = self.config.smartvista.keep_alive_mode
+        keep_alive_interval = self.config.smartvista.keep_alive_interval
 
         settings_window: SettingsWindow = SettingsWindow(self.config)
         settings_window.accepted.connect(self.read_config)
         settings_window.accepted.connect(lambda: validate_all(fields_validation != self.config.fields.validation))
-        settings_window.accepted.connect(lambda: set_keep_alive(keep_alive != self.config.smartvista.keep_alive_mode))
         settings_window.accepted.connect(lambda: self.window.set_json_mode(self.config.fields.json_mode))
+        settings_window.accepted.connect(
+            lambda: set_keep_alive(
+                keep_alive_interval != self.config.smartvista.keep_alive_interval or
+                keep_alive != self.config.smartvista.keep_alive_mode
+            )
+        )
+
+        # When some field changed
         settings_window.exec()
 
     def read_config(self):
