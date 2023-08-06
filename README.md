@@ -73,7 +73,7 @@ SvTerminal GUI is a friendly interface, based on the SvTerminal library. Since v
 
 Check the parameters, opened by the "Configuration" button to make your settings  
 
-![image](https://i.imgur.com/NuAjySc.png)
+![image](https://i.imgur.com/1BFr77N.png)
 
 ## Main Window hotkeys
 
