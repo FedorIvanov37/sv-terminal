@@ -2,7 +2,7 @@ from sys import exit
 from ctypes import windll
 from copy import deepcopy
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QPalette, QColor, QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
+from PyQt6.QtGui import QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.constants.ButtonActions import ButtonAction
