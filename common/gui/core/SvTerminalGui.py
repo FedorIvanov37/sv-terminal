@@ -171,6 +171,7 @@ class SvTerminalGui(SvTerminal):
             info(f"Set KeepAlive mode to {interval_name}")
 
         self.window.process_keep_alive_change(interval_name)
+        # self.keep_alive()
         self.run_keep_alive_loop(int(interval))
 
     def reconnect(self):
