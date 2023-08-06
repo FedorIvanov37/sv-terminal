@@ -55,6 +55,7 @@ In case of any questions about SvTerminal [contact author](#author). Your feedba
   * SvTerminal library is completely separated. Now GUI works as an independent application
   * Incoming JSON-files format simplified with backward compatibility respect
   * New section [CONFIG] added in INI incoming files. Two options are available - MAX_AMOUNT and GENERATE_FIELDS
+  * Small improvement of color scheme
 
 
 * Fixed:
