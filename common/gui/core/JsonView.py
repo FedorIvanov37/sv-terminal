@@ -467,7 +467,7 @@ class JsonView(QTreeWidget):
 
         return result
 
-    def get_checkboxes(self) -> list:
+    def get_checkboxes(self) -> list[str]:
         column = FieldsSpec.ColumnsOrder.PROPERTY
         return [item.field_number for item in self.root.get_children() if bool(item.checkState(column).value)]
 

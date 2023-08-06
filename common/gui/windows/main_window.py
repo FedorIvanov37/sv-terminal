@@ -1,6 +1,7 @@
 from sys import exit
 from copy import deepcopy
 from ctypes import windll
+from pydantic import FilePath
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
@@ -12,6 +13,7 @@ from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.core.JsonView import JsonView
 from common.gui.decorators.window_settings import set_window_icon
+from common.gui.constants.KeySequence import KeySequence
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Config import Config
 
@@ -154,7 +156,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self._setup()
 
     @set_window_icon
-    def _setup(self):
+    def _setup(self) -> None:
         self.setupUi(self)
         self._add_json_control_buttons()
         self._connect_all()
@@ -218,17 +220,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         keys_connection_map = {
 
             # Signals, which should be emitted by key sequences on keyboard
+            # The string argument (modifier) is a hint about a requested data format
 
-            'Ctrl+T': lambda: self.print.emit(DataFormats.TERM),  # The modifier is a hint about a requested data format
-            'Ctrl+Shift+Return': lambda: self.reverse.emit(ButtonAction.LAST),
-            'Ctrl+Return': self.send,
-            'Ctrl+R': self.reconnect,
-            'Ctrl+L': self.clear_log,
-            'Ctrl+E': lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.VALUE),
-            'Ctrl+W': lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.FIELD),
-            'Ctrl+Shift+N': self.json_view.next_level,
-            'Ctrl+Alt+Q': exit,
-            'Ctrl+Alt+Return': self.echo_test,
+            # Predefined Key Sequences
             QKeySequence.StandardKey.New: self.json_view.plus,
             QKeySequence.StandardKey.Delete: self.json_view.minus,
             QKeySequence.StandardKey.HelpContents: self.about,
@@ -237,6 +231,19 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             QKeySequence.StandardKey.Open: self.parse_file,
             QKeySequence.StandardKey.Undo: self.json_view.undo,
             QKeySequence.StandardKey.Redo: self.json_view.redo,
+
+            # Custom Key Sequences
+            # The string argument (modifier) is a hint about a requested data format
+            KeySequence.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
+            KeySequence.CTRL_SHIFT_ENTER: lambda: self.reverse.emit(ButtonAction.LAST),
+            KeySequence.CTRL_ENTER: self.send,
+            KeySequence.CTRL_R: self.reconnect,
+            KeySequence.CTRL_L: self.clear_log,
+            KeySequence.CTRL_E: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.VALUE),
+            KeySequence.CTRL_W: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.FIELD),
+            KeySequence.CTRL_SHIFT_N: self.json_view.next_level,
+            KeySequence.CTRL_ALT_Q: exit,
+            KeySequence.CTRL_ALT_ENTER: self.echo_test,
         }
 
         self.buttons_menu_structure = {
@@ -290,36 +297,41 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
 
-    def disable_next_level_button(self, disable: bool = True):
+    # Usually disables in fields flat-mode to avoid subfields creation
+    def disable_next_level_button(self, disable: bool = True) -> None:
         self.NextLevelButton.setDisabled(disable)
 
-    def enable_next_level_button(self, enable: bool = True):
+    def enable_next_level_button(self, enable: bool = True) -> None:
         self.NextLevelButton.setEnabled(enable)
 
-    def set_json_mode(self, json_mode):
+    # Switch from JSON mode to flat mode and back
+    def set_json_mode(self, json_mode: bool) -> None:
         self.json_view.switch_json_mode(json_mode)
 
-    def validate_fields(self):
+    # Validate whole transaction data, presented on MainWindow
+    def validate_fields(self) -> None:
         self.json_view.validate_all()
 
-    def clean_window_log(self):
+    def clean_window_log(self) -> None:
         self.LogArea.setText(str())
 
+    # Return transaction data fields in dict-representation
     def get_fields(self) -> TypeFields:
         return self.json_view.generate_fields()
 
-    def get_top_level_field_numbers(self):
+    # Return fields list, no subfields included
+    def get_top_level_field_numbers(self) -> list[str]:
         return self.json_view.get_top_level_field_numbers()
 
-    def get_fields_to_generate(self):
+    def get_fields_to_generate(self) -> list[str]:
         return self.json_view.get_checkboxes()
 
-    def get_mti(self, length=4):
+    def get_mti(self, length: int = 4) -> str:
         message_type = self.msgtype.currentText()
         message_type = message_type[:length]
         return message_type
 
-    def set_log_data(self, data: str = str()):
+    def set_log_data(self, data: str = str()) -> None:
         self.LogArea.setText(data)
 
     def get_log_data(self) -> str:
@@ -328,15 +340,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def get_bitmap_data(self) -> str:
         return self.Bitmap.text()
 
-    def block_connection_buttons(self):
-        # To avoid errors connection buttons will be disabled during the network connection opening
+    # To avoid errors connection buttons will be disabled during the network connection opening
+    def block_connection_buttons(self) -> None:
         self.change_connection_buttons_state(enabled=False)
 
-    def unblock_connection_buttons(self):
-        # After the connection status is changed connection buttons will be enabled again
+    # After the connection status is changed connection buttons will be enabled again
+    def unblock_connection_buttons(self) -> None:
         self.change_connection_buttons_state(enabled=True)
 
-    def change_connection_buttons_state(self, enabled: bool):
+    def change_connection_buttons_state(self, enabled: bool) -> None:
         for button in (self.ButtonReconnect, self.ButtonSend, self.ButtonEchoTest, self.ButtonReverse):
             button.setEnabled(enabled)
 
@@ -344,10 +356,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for mti in mti_list:
             self.msgtype.addItem(mti)
 
-    def get_field_data(self, field_number: str):
+    # Get value of specific field
+    def get_field_data(self, field_number: str) -> str:
         return self.json_view.get_field_data(field_number)
 
-    def set_mti_value(self, mti: str):
+    # Set value of specific field
+    def set_field_value(self, field, field_data) -> None:
+        self.json_view.set_field_value(field, field_data)
+
+    def set_mti_value(self, mti: str) -> None:
         index = self.msgtype.findText(mti, flags=Qt.MatchFlag.MatchContains)
 
         if index == -1:
@@ -355,46 +372,44 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         self.msgtype.setCurrentIndex(index)
 
-    def set_fields(self, transaction: Transaction):
+    def set_fields(self, transaction: Transaction) -> None:
         self.json_view.parse_transaction(transaction)
         self.set_bitmap()
 
-    def set_field_value(self, field, field_data):
-        self.json_view.set_field_value(field, field_data)
-
-    def clear_message(self):
+    def clear_message(self) -> None:
         self.msgtype.setCurrentIndex(-1)
         self.json_view.clean()
 
-    def set_connection_status(self, status):
+    def set_connection_status(self, status) -> None:
         self.ConnectionStatusLabel.setPixmap(QPixmap(TermFilesPath.GREEN_CIRCLE))
         self.ConnectionStatus.setText(ConnectionDefinitions.get_state_description(status))
         pixmap = QPixmap(ConnectionDefinitions.get_state_color(status))
         self.ConnectionStatusLabel.setPixmap(pixmap)
 
-    def process_keep_alive_change(self, interval_name):
-        icon_file = TermFilesPath.GREEN_CIRCLE
+    # Change KeepAlive loop status
+    def process_keep_alive_change(self, interval_name: str) -> None:
+        icon_file: FilePath = TermFilesPath.GREEN_CIRCLE
 
         if interval_name == ButtonAction.KEEP_ALIVE_STOP:
-            icon_file = TermFilesPath.GREY_CIRCLE
+            icon_file: FilePath = TermFilesPath.GREY_CIRCLE
 
         self.ButtonKeepAlive.setIcon(QIcon(QPixmap(icon_file)))
         self.ButtonKeepAlive.menu().clear()
 
         button_action_menu = deepcopy(self.buttons_menu_structure.get(self.ButtonKeepAlive))
 
-        if self.config.smartvista.keep_alive_mode:
+        if self.config.smartvista.keep_alive_mode:  # Add custom interval
             interval: str = ButtonAction.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
             button_action_menu[interval] = lambda: self.keep_alive.emit(interval)
 
         for action, function in button_action_menu.items():
             if action == interval_name:
-                action = f"{ButtonAction.CURRENT_ACTION_MARK} {action}"
+                action = f"{ButtonAction.CURRENT_ACTION_MARK} {action}"  # Set checked
 
             self.ButtonKeepAlive.menu().addAction(action, function)
             self.ButtonKeepAlive.menu().addSeparator()
 
-    def set_bitmap(self, bitmap: str = str()):
+    def set_bitmap(self, bitmap: str = str()) -> None:
         self.Bitmap.setText(bitmap)
 
     def closeEvent(self, a0: QCloseEvent) -> None:
