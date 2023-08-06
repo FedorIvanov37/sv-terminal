@@ -1,24 +1,14 @@
-"""
-
-  ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::
- :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:
- +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+
- +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+
-        +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+
- #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#
-  ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ##########
-
- SvTerminal v0.15.1 starting file
-
- This file runs SvTerminal GUI. The GUI runs once the file is imported, no any additional actions required
-
- e.g.: import common.sv_terminal
-
-"""
+#
+# SvTerminal starting file
+#
+# This file runs SvTerminal GUI. The GUI runs once the file is imported, no any additional actions required
+#
+# e.g.: import common.sv_terminal
+#
 
 
 if __name__ == "__main__":  # Do not run directly
-    raise RuntimeError(f"The file common/sv_terminal.py should be imported from main working directory, " 
+    raise RuntimeError(f"The file common/sv_terminal.py should be imported from main working directory, "
                        "direct run has no effect")
 
 
@@ -29,5 +19,6 @@ from sys import exit
 
 
 config: Config = Config.parse_file(TermFilesPath.CONFIG)
-status: int = SvTerminalGui(config).run()
+terminal: SvTerminalGui = SvTerminalGui(config)
+status: int = terminal.run()
 exit(status)

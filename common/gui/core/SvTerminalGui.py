@@ -145,6 +145,7 @@ class SvTerminalGui(SvTerminal):
             return
 
         if interval_name == ButtonAction.KEEP_ALIVE_STOP:
+            info("Stop Keep Alive mode")
             self.keep_alive_timer.stop()
             self.window.process_keep_alive_change(interval_name)
             return

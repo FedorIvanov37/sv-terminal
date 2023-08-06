@@ -1,6 +1,6 @@
 from sys import exit
-from ctypes import windll
 from copy import deepcopy
+from ctypes import windll
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
@@ -17,7 +17,7 @@ from common.lib.data_models.Config import Config
 
 
 """
- MainWindow - central SVTerminal GUI, Runs as an independent application, interacts with the backend using pyqtSignal. 
+ MainWindow is a general SVTerminal GUI, Runs as an independent application, interacts with the backend using pyqtSignal 
  Can be run separately from the backend, but does nothing in this case. 
  
  The goals of MainWindow are interaction with the GUI user, user input data collection, and data processing requests 
@@ -30,7 +30,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     """
     Data processing request signals. Some of them send string modifiers as a hint on how to process the data
     Each signal has a corresponding @property for external interactions. The signals handling should be build
-    using then properties
+    using their properties
     """
 
     _window_close: pyqtSignal = pyqtSignal()
@@ -290,28 +290,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
 
-    def process_keep_alive_change(self, interval_name):
-        icon_file = TermFilesPath.GREEN_CIRCLE
-
-        if interval_name == ButtonAction.KEEP_ALIVE_STOP:
-            icon_file = TermFilesPath.GREY_CIRCLE
-
-        self.ButtonKeepAlive.setIcon(QIcon(QPixmap(icon_file)))
-        self.ButtonKeepAlive.menu().clear()
-
-        button_action_menu = deepcopy(self.buttons_menu_structure.get(self.ButtonKeepAlive))
-
-        if self.config.smartvista.keep_alive_mode:
-            interval: str = ButtonAction.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
-            button_action_menu[interval] = lambda: self.keep_alive.emit(interval)
-
-        for action, function in button_action_menu.items():
-            if action == interval_name:
-                action = f"{ButtonAction.CURRENT_ACTION_MARK} {action}"
-
-            self.ButtonKeepAlive.menu().addAction(action, function)
-            self.ButtonKeepAlive.menu().addSeparator()
-
     def disable_next_level_button(self, disable: bool = True):
         self.NextLevelButton.setDisabled(disable)
 
@@ -393,6 +371,28 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.ConnectionStatus.setText(ConnectionDefinitions.get_state_description(status))
         pixmap = QPixmap(ConnectionDefinitions.get_state_color(status))
         self.ConnectionStatusLabel.setPixmap(pixmap)
+
+    def process_keep_alive_change(self, interval_name):
+        icon_file = TermFilesPath.GREEN_CIRCLE
+
+        if interval_name == ButtonAction.KEEP_ALIVE_STOP:
+            icon_file = TermFilesPath.GREY_CIRCLE
+
+        self.ButtonKeepAlive.setIcon(QIcon(QPixmap(icon_file)))
+        self.ButtonKeepAlive.menu().clear()
+
+        button_action_menu = deepcopy(self.buttons_menu_structure.get(self.ButtonKeepAlive))
+
+        if self.config.smartvista.keep_alive_mode:
+            interval: str = ButtonAction.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
+            button_action_menu[interval] = lambda: self.keep_alive.emit(interval)
+
+        for action, function in button_action_menu.items():
+            if action == interval_name:
+                action = f"{ButtonAction.CURRENT_ACTION_MARK} {action}"
+
+            self.ButtonKeepAlive.menu().addAction(action, function)
+            self.ButtonKeepAlive.menu().addSeparator()
 
     def set_bitmap(self, bitmap: str = str()):
         self.Bitmap.setText(bitmap)
