@@ -5,13 +5,13 @@ from pydantic import FilePath
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
+from common.gui.core.JsonView import JsonView
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.constants.DataFormats import DataFormats
 from common.gui.constants.ConnectionStatus import ConnectionDefinitions
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.gui.constants.TermFilesPath import TermFilesPath
-from common.gui.core.JsonView import JsonView
 from common.gui.decorators.window_settings import set_window_icon
 from common.gui.constants.KeySequence import KeySequence
 from common.lib.data_models.Transaction import TypeFields, Transaction
@@ -19,11 +19,11 @@ from common.lib.data_models.Config import Config
 
 
 """
- MainWindow is a general SVTerminal GUI, Runs as an independent application, interacts with the backend using pyqtSignal 
- Can be run separately from the backend, but does nothing in this case. 
+MainWindow is a general SVTerminal GUI, Runs as an independent application, interacts with the backend using pyqtSignal 
+Can be run separately from the backend, but does nothing in this case. 
  
- The goals of MainWindow are interaction with the GUI user, user input data collection, and data processing requests 
- using pyqtSignal. Better to not force it to process the data, validate values, and so on.
+The goals of MainWindow are interaction with the GUI user, user input data collection, and data processing requests 
+using pyqtSignal. Better to not force it to process the data, validate values, and so on.
 """
 
 
@@ -164,7 +164,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.process_keep_alive_change(ButtonAction.KEEP_ALIVE_STOP)
 
     def _add_json_control_buttons(self) -> None:
-        # Create, place, and connect the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
+        # Create and place the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
 
         self.FieldsTreeLayout.addWidget(self.json_view)
         self.PlusButton = QPushButton(ButtonAction.BUTTON_PLUS_SIGN)
@@ -193,12 +193,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
             # Signals, which should be emitted by MainWindow key press event
 
-            self.json_view.itemChanged: self.field_changed,
-            self.json_view.field_changed: self.field_changed,
-            self.json_view.field_added: self.field_added,
-            self.json_view.field_removed: self.field_removed,
-            self.json_view.need_disable_next_level: self.disable_next_level_button,
-            self.json_view.need_enable_next_level: self.enable_next_level_button,
             self.PlusButton.clicked: self.json_view.plus,
             self.MinusButton.clicked: self.json_view.minus,
             self.NextLevelButton.clicked: self.json_view.next_level,
@@ -215,6 +209,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonSettings.clicked: self.settings,
             self.ButtonCopyBitmap.clicked: self.copy_bitmap,
 
+        }
+
+        json_view_connection_map = {
+            self.json_view.itemChanged: self.field_changed,
+            self.json_view.field_changed: self.field_changed,
+            self.json_view.field_added: self.field_added,
+            self.json_view.field_removed: self.field_removed,
+            self.json_view.need_disable_next_level: self.disable_next_level_button,
+            self.json_view.need_enable_next_level: self.enable_next_level_button,
         }
 
         keys_connection_map = {
@@ -287,8 +290,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for combination, function in keys_connection_map.items():  # Key sequences
             QShortcut(QKeySequence(combination), self).activated.connect(function)
 
-        for signal, slot in buttons_connection_map.items():  # Regular buttons
-            signal.connect(slot)
+        for connection_map in buttons_connection_map, json_view_connection_map:  # Signals, activated by key press event
+            for signal, slot in connection_map.items():
+                signal.connect(slot)
 
         for button, actions in self.buttons_menu_structure.items():  # Menu buttons
             button.setMenu(QMenu())

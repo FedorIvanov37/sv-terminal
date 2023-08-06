@@ -1,9 +1,9 @@
 #
 # SvTerminal starting file
 #
-# This file runs SvTerminal GUI. The GUI runs once the file is imported, no any additional actions required
+# This file runs SvTerminal GUI. The GUI runs once the file is imported, no additional actions are required
 #
-# e.g.: import common.sv_terminal
+# e.g.: "import common.sv_terminal" or "from common import sv_terminal"
 #
 
 
