@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from common.gui.constants.ReleaseDefinitoin import ReleaseDefinition
+from common.lib.constants.ReleaseDefinitoin import ReleaseDefinition
 
 
 @dataclass(frozen=True)
