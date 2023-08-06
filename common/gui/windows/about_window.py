@@ -53,12 +53,17 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         audio_output = QAudioOutput()
         self.player.setAudioOutput(audio_output)
         self.player.setSource(music_file_path)
+        self.player.playbackStateChanged.connect(self.record_finished)
         self.exec()
 
     @staticmethod
     def open_url(link):
         link = QUrl(link)
         QDesktopServices.openUrl(link)
+
+    def record_finished(self, state):
+        if state == self.player.PlaybackState.StoppedState:
+            self.MusicOnOfButton.setIcon(QIcon(QPixmap(TermFilesPath.MUSIC_ON)))
 
     def switch_music(self):
         match self.player.playbackState():
