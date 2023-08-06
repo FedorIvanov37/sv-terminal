@@ -1,7 +1,6 @@
 from json import dumps
 from logging import error, info, warning
 from pydantic import ValidationError
-from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QFileDialog
@@ -47,7 +46,6 @@ from common.lib.core.Terminal import SvTerminal
 
 class SvTerminalGui(SvTerminal):
     connector: ConnectionThread
-    keep_alive_timer: QTimer = QTimer()
 
     def __init__(self, config: Config):
         super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
@@ -146,9 +144,8 @@ class SvTerminalGui(SvTerminal):
             self.keep_alive()
             return
 
-        self.keep_alive_timer.stop()
-
         if interval_name == ButtonAction.KEEP_ALIVE_STOP:
+            self.keep_alive_timer.stop()
             self.window.process_keep_alive_change(interval_name)
             return
 
@@ -166,9 +163,7 @@ class SvTerminalGui(SvTerminal):
             info(f"Set KeepAlive mode to {interval_name}")
 
         self.window.process_keep_alive_change(interval_name)
-        self.keep_alive_timer = QTimer()
-        self.keep_alive_timer.timeout.connect(self.keep_alive)
-        self.keep_alive_timer.start(int(interval) * 1000)
+        self.run_keep_alive_loop(int(interval))
 
     def reconnect(self):
         SvTerminal.reconnect(self)

@@ -1,19 +1,19 @@
 from json import dumps
 from logging import error, info, warning, debug
 from PyQt6 import QtWidgets
-from PyQt6.QtCore import pyqtSignal, QObject
+from PyQt6.QtCore import pyqtSignal, QObject, QTimer
+from PyQt6.QtNetwork import QTcpSocket
+from common.gui.constants.DataFormats import DataFormats
+from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.core.Parser import Parser
 from common.lib.core.Logger import Logger
 from common.lib.core.TransactionQueue import TransactionQueue
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.core.Validator import Validator
-from common.gui.constants.DataFormats import DataFormats
-from common.gui.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.Connector import Connector
-from PyQt6.QtNetwork import QTcpSocket
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.core.LogPrinter import LogPrinter
 
@@ -24,6 +24,7 @@ class SvTerminal(QObject):
     config: Config = Config.parse_file(TermFilesPath.CONFIG)
     validator = Validator()
     need_reconnect: pyqtSignal = pyqtSignal()
+    keep_alive_timer: QTimer = QTimer()
 
     def __init__(self, config: Config, connector: ConnectionInterface | None = None):
         super(SvTerminal, self).__init__()
@@ -148,11 +149,11 @@ class SvTerminal(QObject):
 
         if response.matched and response.resp_time_seconds:
             if response.is_keep_alive:
-                message = f"Keep Alive transaction [{response.match_id}] successfully matched"
+                message = f"Keep Alive transaction [{response.match_id}] successfully matched."
             else:
-                message = f"Transaction ID [{response.match_id}] matched"
+                message = f"Transaction ID [{response.match_id}] matched."
 
-            message = f"{message} response time seconds: {response.resp_time_seconds}"
+            message = f"{message} Response time seconds: {response.resp_time_seconds}"
 
             info(message)
 
@@ -167,6 +168,12 @@ class SvTerminal(QObject):
         if not response.resp_time_seconds:
             warning(f"Transaction ID [{response.match_id}] received and matched after timeout 60 seconds")
             return
+
+    def run_keep_alive_loop(self, interval: int = 300):
+        self.keep_alive_timer.stop()
+        self.keep_alive_timer = QTimer()
+        self.keep_alive_timer.timeout.connect(self.keep_alive)
+        self.keep_alive_timer.start(int(interval) * 1000)
 
     def keep_alive(self):
         if self.connector.connection_in_progress():

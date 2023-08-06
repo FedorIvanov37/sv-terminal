@@ -312,12 +312,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonKeepAlive.menu().addAction(action, function)
             self.ButtonKeepAlive.menu().addSeparator()
 
-        # for action in self.ButtonKeepAlive.menu().actions():
-        #     if not action.text() == ButtonAction.KEEP_ALIVE_ONCE:
-        #         continue
-        #
-        #     self.ButtonKeepAlive.menu().setDefaultAction(action)
-
     def disable_next_level_button(self, disable: bool = True):
         self.NextLevelButton.setDisabled(disable)
 

@@ -13,10 +13,10 @@ class ConnectionDefinitions:
         UNKNOWN: str = "Unknown"
 
         # RGB
-        GREY = (195, 195, 195)
-        YELLOW = (255, 255, 0)
-        RED = (255, 0, 0)
-        GREEN = (0, 255, 0)
+        GREY = (128, 128, 128)
+        YELLOW = (255, 165, 0)
+        RED = (224, 64, 6)
+        GREEN = (166, 215, 133)
 
     @staticmethod
     def get_state_description(state):
