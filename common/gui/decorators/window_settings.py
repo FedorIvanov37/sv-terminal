@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.gui.constants.GuiFilesPath import GuiFilesPath
 
 
 """
@@ -20,7 +20,7 @@ is required to change the settings, restarting SVTerminal is not required
 def set_window_icon(setup_function: callable):
 
     def wrapper(window: QDialog, *args, **kwargs):
-        window.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
+        window.setWindowIcon(QIcon(GuiFilesPath.MAIN_LOGO))
         setup_function(window, *args, **kwargs)
 
     return wrapper
@@ -31,7 +31,7 @@ def frameless_window(setup_function: callable):
 
     def wrapper(window: QDialog, *args, **kwargs):
         window.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        window.setWindowIcon(QIcon(TermFilesPath.MAIN_LOGO))
+        window.setWindowIcon(QIcon(GuiFilesPath.MAIN_LOGO))
         setup_function(window, *args, **kwargs)
 
     return wrapper

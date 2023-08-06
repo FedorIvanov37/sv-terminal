@@ -3,8 +3,8 @@ from logging import error, info, warning, debug
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject, QTimer
 from PyQt6.QtNetwork import QTcpSocket
-from common.gui.constants.DataFormats import DataFormats
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.lib.constants.DataFormats import DataFormats
+from common.lib.constants.TermFilesPath import TermFilesPath
 from common.lib.core.Parser import Parser
 from common.lib.core.Logger import Logger
 from common.lib.core.TransactionQueue import TransactionQueue

@@ -10,7 +10,7 @@
 # Correct way to run
 if __name__ != "__main__":  # Runs only by import command
     from common.gui.core.SvTerminalGui import SvTerminalGui
-    from common.gui.constants.TermFilesPath import TermFilesPath
+    from common.lib.constants.TermFilesPath import TermFilesPath
     from common.lib.data_models.Config import Config
     from sys import exit
 

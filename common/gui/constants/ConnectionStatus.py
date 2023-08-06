@@ -1,6 +1,7 @@
 from dataclasses import dataclass
+from pydantic import FilePath
 from PyQt6.QtNetwork import QTcpSocket
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.gui.constants.GuiFilesPath import GuiFilesPath
 
 
 @dataclass(frozen=True)
@@ -13,18 +14,18 @@ class ConnectionDefinitions:
         IN_PROGRESS: str = "SVFE Connection In Progress"
         UNKNOWN: str = "Unknown"
 
-        GREY = TermFilesPath.GREY_CIRCLE
-        GREEN = TermFilesPath.GREEN_CIRCLE
-        YELLOW = TermFilesPath.YELLOW_CIRCLE
-        RED = TermFilesPath.RED_CIRCLE
+        GREY: FilePath = GuiFilesPath.GREY_CIRCLE
+        GREEN: FilePath = GuiFilesPath.GREEN_CIRCLE
+        YELLOW: FilePath = GuiFilesPath.YELLOW_CIRCLE
+        RED: FilePath = GuiFilesPath.RED_CIRCLE
 
     @staticmethod
     def get_state_description(state):
         return ConnectionDefinitions.ConnectionStatusMap.get(state, ConnectionDefinitions.ConnectionStatuses.UNKNOWN)
 
     @staticmethod
-    def get_state_color(state):
-        return ConnectionDefinitions.ConnectionColorMap.get(state, ConnectionDefinitions.ConnectionStatuses.GREY)
+    def get_state_icon_path(state):
+        return ConnectionDefinitions.ConnectionIconMap.get(state, ConnectionDefinitions.ConnectionStatuses.GREY)
 
     ConnectionStatusMap = {
         QTcpSocket.SocketState.ConnectedState: ConnectionStatuses.CONNECTED,
@@ -36,12 +37,12 @@ class ConnectionDefinitions:
         QTcpSocket.SocketState.ListeningState: ConnectionStatuses.UNKNOWN,
     }
 
-    ConnectionColorMap = {
-        QTcpSocket.SocketState.ConnectedState: TermFilesPath.GREEN_CIRCLE,
-        QTcpSocket.SocketState.UnconnectedState: TermFilesPath.RED_CIRCLE,
-        QTcpSocket.SocketState.ConnectingState: TermFilesPath.YELLOW_CIRCLE,
-        QTcpSocket.SocketState.HostLookupState: TermFilesPath.YELLOW_CIRCLE,
-        QTcpSocket.SocketState.BoundState: TermFilesPath.YELLOW_CIRCLE,
-        QTcpSocket.SocketState.ClosingState: TermFilesPath.YELLOW_CIRCLE,
-        QTcpSocket.SocketState.ListeningState: TermFilesPath.GREY_CIRCLE,
+    ConnectionIconMap = {
+        QTcpSocket.SocketState.ConnectedState: GuiFilesPath.GREEN_CIRCLE,
+        QTcpSocket.SocketState.UnconnectedState: GuiFilesPath.RED_CIRCLE,
+        QTcpSocket.SocketState.ConnectingState: GuiFilesPath.YELLOW_CIRCLE,
+        QTcpSocket.SocketState.HostLookupState: GuiFilesPath.YELLOW_CIRCLE,
+        QTcpSocket.SocketState.BoundState: GuiFilesPath.YELLOW_CIRCLE,
+        QTcpSocket.SocketState.ClosingState: GuiFilesPath.YELLOW_CIRCLE,
+        QTcpSocket.SocketState.ListeningState: GuiFilesPath.GREY_CIRCLE,
     }

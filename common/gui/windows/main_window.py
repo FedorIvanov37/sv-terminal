@@ -8,10 +8,10 @@ from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
 from common.gui.core.JsonView import JsonView
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.constants.ButtonActions import ButtonAction
-from common.gui.constants.DataFormats import DataFormats
+from common.lib.constants.DataFormats import DataFormats
 from common.gui.constants.ConnectionStatus import ConnectionDefinitions
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.gui.constants.GuiFilesPath import GuiFilesPath
 from common.gui.decorators.window_settings import set_window_icon
 from common.gui.constants.KeySequence import KeySequence
 from common.lib.data_models.Transaction import TypeFields, Transaction
@@ -385,17 +385,16 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.json_view.clean()
 
     def set_connection_status(self, status) -> None:
-        self.ConnectionStatusLabel.setPixmap(QPixmap(TermFilesPath.GREEN_CIRCLE))
+        self.ConnectionStatusLabel.setPixmap(QPixmap(GuiFilesPath.GREEN_CIRCLE))
         self.ConnectionStatus.setText(ConnectionDefinitions.get_state_description(status))
-        pixmap = QPixmap(ConnectionDefinitions.get_state_color(status))
-        self.ConnectionStatusLabel.setPixmap(pixmap)
+        self.ConnectionStatusLabel.setPixmap(QPixmap(ConnectionDefinitions.get_state_icon_path(status)))
 
     # Change KeepAlive loop status
     def process_keep_alive_change(self, interval_name: str) -> None:
-        icon_file: FilePath = TermFilesPath.GREEN_CIRCLE
+        icon_file: FilePath = GuiFilesPath.GREEN_CIRCLE
 
         if interval_name == ButtonAction.KEEP_ALIVE_STOP:
-            icon_file: FilePath = TermFilesPath.GREY_CIRCLE
+            icon_file: FilePath = GuiFilesPath.GREY_CIRCLE
 
         self.ButtonKeepAlive.setIcon(QIcon(QPixmap(icon_file)))
         self.ButtonKeepAlive.menu().clear()

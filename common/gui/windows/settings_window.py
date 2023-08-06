@@ -6,7 +6,8 @@ from PyQt6.QtCore import QRegularExpression
 from common.lib.constants.LogDefinition import LogDefinition
 from common.lib.data_models.Config import Config
 from common.gui.forms.settings import Ui_SettingsWindow
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.gui.constants.GuiFilesPath import GuiFilesPath
+from common.lib.constants.TermFilesPath import TermFilesPath
 from common.gui.windows.about_window import AboutWindow
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 
@@ -21,7 +22,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
     @set_window_icon
     @has_close_button_only
     def setup(self):
-        self.ButtonAbout.setIcon(QIcon(QPixmap(TermFilesPath.MAIN_LOGO)))
+        self.ButtonAbout.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
         self.SvPort.setValidator(QIntValidator(1, 65535))
         self.SvPort.setValidator(QRegularExpressionValidator(QRegularExpression(r"[^\D]\d+")))
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){3}\d+")))

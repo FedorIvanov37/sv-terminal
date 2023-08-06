@@ -3,7 +3,7 @@ from logging.handlers import RotatingFileHandler
 from common.lib.constants.LogDefinition import LogDefinition
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Config import Config
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.lib.constants.TermFilesPath import TermFilesPath
 
 
 class LogStream:

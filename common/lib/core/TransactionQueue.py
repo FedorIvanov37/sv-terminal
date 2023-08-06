@@ -1,3 +1,4 @@
+from logging import error
 from collections import deque
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtCore import QTimer
@@ -6,7 +7,6 @@ from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.Parser import Parser
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
-from logging import error
 
 
 class TransactionQueue(QObject):

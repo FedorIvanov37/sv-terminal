@@ -162,18 +162,17 @@ Using build SvTerminal object without separated modules. Same as user, but witho
 5. Run SvTerminal as separated process
 6. Send the transaction using the terminal
 7. Wait for the transaction response 
-8. In case of success reverse the transaction 
+8. In case of success reverse the transaction
 
 ```python
 from multiprocessing import Process
 from common.lib.data_models.Config import Config
 from common.lib.Terminal import SvTerminal
 from common.lib.data_models.Transaction import Transaction
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.gui.constants.GuiFilesPath import GuiFilesPath
 
-
-config: Config = Config.parse_file(TermFilesPath.CONFIG)
-transaction: Transaction = Transaction.parse_file(TermFilesPath.DEFAULT_FILE)
+config: Config = Config.parse_file(GuiFilesPath.CONFIG)
+transaction: Transaction = Transaction.parse_file(GuiFilesPath.DEFAULT_FILE)
 terminal: SvTerminal = SvTerminal(config)
 
 sv_terminal: Process = Process(target=terminal.run)
@@ -182,18 +181,18 @@ sv_terminal.run()
 terminal.send(transaction)
 
 for second in range(60):
-    transaction: Transaction = terminal.get_transaction(transaction.trans_id)
+  transaction: Transaction = terminal.get_transaction(transaction.trans_id)
 
-    if transaction.matched:
-        break
+  if transaction.matched:
+    break
 
 if not transaction.matched:  # SV Timeout
-    exit(100)
+  exit(100)
 
 print(transaction.json())
 
 if transaction.success:
-    terminal.reverse_transaction(transaction)
+  terminal.reverse_transaction(transaction)
 
 ```
 
@@ -203,18 +202,17 @@ Building uwn solution, using SvTerminal's modules library:
 2. Create the Config object using Pydantic's parser
 3. Create the Transaction object using Pydantic's parser
 4. Construct the logical data conveyor with transactions files on one side and SmartVista on another
-5. Run the conveyor, sending the transactions to SV 
+5. Run the conveyor, sending the transactions to SV
 
 ```python
 from multiprocessing import Process
 from common.lib.data_models.Config import Config
 from common.lib.Terminal import SvTerminal
 from common.lib.data_models.Transaction import Transaction
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.gui.constants.GuiFilesPath import GuiFilesPath
 
-
-config: Config = Config.parse_file(TermFilesPath.CONFIG)
-transaction: Transaction = Transaction.parse_file(TermFilesPath.DEFAULT_FILE)
+config: Config = Config.parse_file(GuiFilesPath.CONFIG)
+transaction: Transaction = Transaction.parse_file(GuiFilesPath.DEFAULT_FILE)
 terminal: SvTerminal = SvTerminal(config)
 
 sv_terminal: Process = Process(target=terminal.run)
@@ -223,18 +221,18 @@ sv_terminal.run()
 terminal.send(transaction)
 
 for second in range(60):
-    transaction: Transaction = terminal.get_transaction(transaction.trans_id)
+  transaction: Transaction = terminal.get_transaction(transaction.trans_id)
 
-    if transaction.matched:
-        break
+  if transaction.matched:
+    break
 
 if not transaction.matched:  # SV Timeout
-    exit(100)
+  exit(100)
 
 print(transaction.json())
 
 if transaction.success:
-    terminal.reverse_transaction(transaction)
+  terminal.reverse_transaction(transaction)
 ```
 
 ## Author

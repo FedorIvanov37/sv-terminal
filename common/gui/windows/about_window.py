@@ -1,6 +1,6 @@
 from os import getcwd, path
 from common.gui.forms.about import Ui_AboutWindow
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.gui.constants.GuiFilesPath import GuiFilesPath
 from common.gui.constants.ReleaseDefinitoin import ReleaseDefinition
 from common.gui.decorators.window_settings import frameless_window
 from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
@@ -28,11 +28,11 @@ class AboutWindow(Ui_AboutWindow, QDialog):
 
     @frameless_window
     def setup(self):
-        self.movie: QMovie = QMovie(TermFilesPath.GIF_ABOUT)
+        self.movie: QMovie = QMovie(GuiFilesPath.GIF_ABOUT)
         self.logoLabel.setMovie(self.movie)
-        self.MusicOnOfButton.setIcon(QIcon(QPixmap(TermFilesPath.MAIN_LOGO)))
+        self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
         self.MusicOnOfButton.clicked.connect(self.switch_music)
-        self.MusicOnOfButton.setIcon(QIcon(QPixmap(TermFilesPath.MUSIC_ON)))
+        self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MUSIC_ON)))
         self.ContactLabel.linkActivated.connect(self.open_url)
 
         data_bind = {
@@ -48,7 +48,7 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         self.movie.start()
 
     def init_music_player(self):
-        music_file_path = path.normpath(f"{getcwd()}/{TermFilesPath.VVVVVV}")
+        music_file_path = path.normpath(f"{getcwd()}/{GuiFilesPath.VVVVVV}")
         music_file_path = QUrl.fromLocalFile(music_file_path)
         audio_output = QAudioOutput()
         self.player.setAudioOutput(audio_output)
@@ -63,20 +63,20 @@ class AboutWindow(Ui_AboutWindow, QDialog):
 
     def record_finished(self, state):
         if state == self.player.PlaybackState.StoppedState:
-            self.MusicOnOfButton.setIcon(QIcon(QPixmap(TermFilesPath.MUSIC_ON)))
+            self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MUSIC_ON)))
 
     def switch_music(self):
         match self.player.playbackState():
             case self.player.PlaybackState.PlayingState:
-                icon = TermFilesPath.MUSIC_ON
+                icon = GuiFilesPath.MUSIC_ON
                 self.player.stop()
 
             case self.player.PlaybackState.StoppedState:
-                icon = TermFilesPath.MUSIC_OFF
+                icon = GuiFilesPath.MUSIC_OFF
                 self.player.play()
 
             case self.player.PlaybackState.PausedState:
-                icon = TermFilesPath.MUSIC_OFF
+                icon = GuiFilesPath.MUSIC_OFF
                 self.player.stop()
                 self.player.play()
 

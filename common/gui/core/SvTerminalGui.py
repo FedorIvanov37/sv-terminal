@@ -10,9 +10,9 @@ from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.spec_window import SpecWindow
 from common.gui.windows.hotkeys_hint_window import HotKeysHintWindow
 from common.gui.windows.about_window import AboutWindow
-from common.gui.constants.TextConstants import TextConstants
-from common.gui.constants.DataFormats import DataFormats
-from common.gui.constants.TermFilesPath import TermFilesPath
+from common.lib.constants.TextConstants import TextConstants
+from common.lib.constants.DataFormats import DataFormats
+from common.lib.constants.TermFilesPath import TermFilesPath
 from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread

@@ -7,9 +7,9 @@ from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog, QPushButton
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
+from common.lib.constants.TermFilesPath import TermFilesPath
 from common.gui.windows.spec_unsaved import SpecUnsaved
 from common.gui.forms.spec import Ui_SpecificationWindow
-from common.gui.constants.TermFilesPath import TermFilesPath
 from common.gui.core.SpecView import SpecView
 from common.gui.windows.mti_spec_window import MtiSpecWindow
 from common.gui.constants.ButtonActions import ButtonAction
