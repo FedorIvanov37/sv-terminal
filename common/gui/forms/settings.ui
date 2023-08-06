@@ -83,7 +83,7 @@
         <item>
          <widget class="QCheckBox" name="KeepAliveMode">
           <property name="text">
-           <string>Send Keep Alive message every</string>
+           <string>Keep Alive message loop (sec)</string>
           </property>
          </widget>
         </item>

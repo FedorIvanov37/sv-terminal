@@ -162,7 +162,7 @@ class Ui_SettingsWindow(object):
         self.SvAddress.setPlaceholderText(_translate("SettingsWindow", "SV address"))
         self.label_2.setText(_translate("SettingsWindow", ":"))
         self.SvPort.setPlaceholderText(_translate("SettingsWindow", "port"))
-        self.KeepAliveMode.setText(_translate("SettingsWindow", "Send Keep Alive message every"))
+        self.KeepAliveMode.setText(_translate("SettingsWindow", "Keep Alive message loop (sec)"))
         self.KeepAliveInterval.setPlaceholderText(_translate("SettingsWindow", "seconds"))
         self.OnStartupBox.setTitle(_translate("SettingsWindow", "On startup"))
         self.ConnectOnStartup.setText(_translate("SettingsWindow", "Open SV connection"))

@@ -34,6 +34,9 @@ In case of any questions about SvTerminal [contact author](#author). Your feedba
 
 ## v0.15.1 Release info
 
+v0.15.1 is the same as v0.15 with a few small improvements and adding Keep Alive functions. Release info below concerns both versions v0.15 and v0.15.1 
+
+
 * New features
   * Since v0.15 SvTerminal GUI delivers as a single binary executable .exe file
   * The card number will be hidden in logs and the message constructor, except in debug mode
@@ -44,7 +47,7 @@ In case of any questions about SvTerminal [contact author](#author). Your feedba
   * Hotkeys combinations, hotkeys hint window, and button to call the window
   * Undo / redo of transaction fields 
   * Complex fields flat mode aka INI style
-  * Keep Alive message sending button and config setting
+  * Keep Alive Message sending button and loop
 
 
 * Updates
@@ -67,7 +70,7 @@ In case of any questions about SvTerminal [contact author](#author). Your feedba
 
 # Graphic User Interface
 
-⚠️Only Windows x64 build exists. Request the author if you need to build the binary file for any other OS. Tests were done on Win11 only.
+⚠️Only Windows x64 build exists. Use the source code to run SvTerminal on another platform. Tests were done on Win11 only.
 
 SvTerminal GUI is a friendly interface, based on the SvTerminal library. Since v0.15 SvTerminal GUI is released as a binary .exe file. No dependencies need to run the SvTerminal, it is ready to use from the box. No installation or settings are needed to run GUI on a Windows machine. Run "sv_terminal.exe" executable file for start the SvTerminal
 
@@ -107,6 +110,8 @@ Go to the program directory, then follow to `common/source/common/lib` directory
 
 
 ## Requirements 
+
+These dependencies should be installed in case of library usage only. GUI delivers as a `.exe` build, without neediness install any dependencies 
  
 * [Python 3.10+](https://www.python.org/)
 * [PyQt6](https://www.qt.io/product/qt6)
