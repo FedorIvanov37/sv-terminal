@@ -23,3 +23,5 @@ class TermFilesPath(object):
 
     GREEN_CIRCLE: FilePath = f"{STYLE_DIR}/green_circle.ico"
     GREY_CIRCLE: FilePath = f"{STYLE_DIR}/grey_circle.ico"
+    RED_CIRCLE: FilePath = f"{STYLE_DIR}/red_circle.ico"
+    YELLOW_CIRCLE: FilePath = f"{STYLE_DIR}/yellow_circle.ico"

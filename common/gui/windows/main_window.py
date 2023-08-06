@@ -389,11 +389,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.json_view.clean()
 
     def set_connection_status(self, status):
+        self.ConnectionStatusLabel.setPixmap(QPixmap(TermFilesPath.GREEN_CIRCLE))
         self.ConnectionStatus.setText(ConnectionDefinitions.get_state_description(status))
-        color = ConnectionDefinitions.get_state_color(status)
-        palette = self.ConnectionScreen.palette()
-        palette.setColor(QPalette.ColorRole.Base, QColor(*color))
-        self.ConnectionScreen.setPalette(palette)
+        pixmap = QPixmap(ConnectionDefinitions.get_state_color(status))
+        self.ConnectionStatusLabel.setPixmap(pixmap)
 
     def set_bitmap(self, bitmap: str = str()):
         self.Bitmap.setText(bitmap)
