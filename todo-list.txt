@@ -90,14 +90,43 @@
 + No logo in SpecUnsaved window
 + Files structure
 + No icon changes when music is finished
++ Complex field parser - JSON mode
++ Prepare document
 
 
+• API
+    • Activation button
+    • API
+    • URL Mapping
+    • Postman collection
+    • Logger
+    • Document
+    • Settings window and config
+    • Thread
+    • Deactivation / reload
+
+• Add svterminal command to $PATH
 ? Validation after edit doesn't work sometimes
 • Change approach to fields path
 • No data in socket if delete field in spec
 • Exceptions policy
 • Correct and publish the Specification
 • Publish on confluence
-• Prepare document
-• Complex field parser
 • Spec explanation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

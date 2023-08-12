@@ -3,11 +3,11 @@ from logging import error, debug, warning
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtCore import pyqtSignal
 from common.lib.data_models.Config import Config
-from common.lib.interfaces.MetaClasses import QobjecAbcMeta
+from common.lib.interfaces.MetaClasses import QObjectAbcMeta
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 
 
-class Connector(QTcpSocket, ConnectionInterface, metaclass=QobjecAbcMeta):
+class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
     incoming_transaction_data: pyqtSignal = pyqtSignal(bytes)
     transaction_sent: pyqtSignal = pyqtSignal(str)
 

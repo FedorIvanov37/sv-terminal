@@ -2,7 +2,7 @@ from PyQt6.QtCore import QObject, QThread, QCoreApplication
 from common.lib.core.Connector import Connector
 from common.lib.data_models.Config import Config
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
-from common.lib.interfaces.MetaClasses import QobjecAbcMeta
+from common.lib.interfaces.MetaClasses import QObjectAbcMeta
 
 
 """
@@ -20,7 +20,7 @@ from common.lib.interfaces.MetaClasses import QobjecAbcMeta
 """
 
 
-class ConnectionThread(ConnectionInterface, QObject, metaclass=QobjecAbcMeta):
+class ConnectionThread(ConnectionInterface, QObject, metaclass=QObjectAbcMeta):
     thread: QThread
     stop: bool = False
 
