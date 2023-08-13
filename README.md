@@ -95,7 +95,7 @@ concerns both versions v0.15 and v0.15.1
   * Small improvement of color scheme
 
 
-* Fixed:
+* Fixed
   * GUI freezes while opening the connection. The Connector moved to its own thread, separated from the event loop  
   * Incorrect field names in INI files
   * Terminal fall down when empty field number set in Specification
