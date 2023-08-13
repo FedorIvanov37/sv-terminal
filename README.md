@@ -8,8 +8,8 @@ SmartVista Electronic Commerce Terminal v0.15.1 Aug 2023 | Powered by <a href="h
 
 * [Description](#description)
   * [SvTerminal overview](#overview)
-  * [Important notes](#⚠️-important-notes)
-  * [v0.15.1 Release info](#v0.15.1-release-info)
+  * [Important notes](#important-notes)
+  * [v0.15.1 Release info](#release-info)
 
  
 * [Graphic User Interface](#graphic-user-interface)
@@ -23,7 +23,7 @@ SmartVista Electronic Commerce Terminal v0.15.1 Aug 2023 | Powered by <a href="h
   * [Installation](#installation)
   * [Modules usage](#modules-usage)
     * [Intro](#intro)
-    * [What's inside](whats-inside)
+    * [What's inside](what-is-inside)
     * [Usage example](#usage-example)
 
 
@@ -56,8 +56,8 @@ Written on Python 3.10 with using of PyQt6 and pydantic packages
 In case of any questions about SvTerminal [contact author](#author). Your feedback and suggestions are general drivers 
 of SvTerminal evolution.
 
-## ⚠️ Important notes  
-
+## Important notes  
+⚠️
 * Allowed usage on test environment only. SvTerminal only implements basic security checks
 * Since v0.15 SvTerminal library doesn't support PyQt5 anymore
 * At the moment SvTerminal doesn't support byte-fields
@@ -65,7 +65,7 @@ of SvTerminal evolution.
 
 
 
-## v0.15.1 Release info
+## Release info
 
 v0.15.1 is the same as v0.15 with a few small improvements and adding Keep Alive functions. Release info below 
 concerns both versions v0.15 and v0.15.1 
@@ -180,7 +180,7 @@ the moment library's documentation is in the development stage
 
 Don't forget to install the [requirements](#requirements) before using SvTerminal's package
 
-### Whats inside
+### What is inside
 
 The table describes fundamental system objects. In fact, SvTerminal contains much more modules for achieving the result. 
 At the moment the only way to be familiar with the whole package is through code investigation 
