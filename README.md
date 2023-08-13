@@ -73,7 +73,7 @@ concerns both versions v0.15 and v0.15.1
 
 * New features
   * Since v0.15 SvTerminal GUI delivers as a single binary executable `.exe` file
-  * The card number will be hidden in logs and the message constructor, except in debug mode
+  * The card number will be hidden in logs and the message constructor, except debug mode
   * Fields basic validation, validation can be switched off in the settings
   * Transaction timeouts: in case of no response for 60 seconds transaction will be marked as timeout with a warning
   * ISO8583 Message Type Indicators (MTI) setting window. Opens by the button "Set MTI" in the Specification window
