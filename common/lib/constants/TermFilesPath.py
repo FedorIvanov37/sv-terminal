@@ -4,7 +4,8 @@ from pydantic import DirectoryPath, FilePath
 
 @dataclass(frozen=True)
 class TermFilesPath(object):
-    DATA_DIR: DirectoryPath = "common"
+    DATA_DIR: DirectoryPath = "common/data"
+    LOG_DIR: DirectoryPath = "common/log"
     SPEC_BACKUP_DIR: DirectoryPath = f"{DATA_DIR}/spec_backup"
     #
     CONFIG: FilePath = f"{DATA_DIR}/settings/config.json"
@@ -12,4 +13,4 @@ class TermFilesPath(object):
     KEEP_ALIVE: FilePath = f"{DATA_DIR}/settings/keep-alive.json"
     DEFAULT_FILE: FilePath = f"{DATA_DIR}/settings/default.json"
     SPECIFICATION: FilePath = f"{DATA_DIR}/settings/specification.json"
-    LOG_FILE_NAME: FilePath = f"{DATA_DIR}/log/sv_terminal.log"
+    LOG_FILE_NAME: FilePath = f"{LOG_DIR}/sv_terminal.log"

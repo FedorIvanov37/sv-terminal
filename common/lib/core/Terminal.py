@@ -5,6 +5,8 @@ from PyQt6.QtCore import pyqtSignal, QObject, QTimer
 from PyQt6.QtNetwork import QTcpSocket
 from common.lib.constants.DataFormats import DataFormats
 from common.lib.constants.TermFilesPath import TermFilesPath
+from common.lib.constants.KeepAliveIntervals import KeepAliveInterval
+from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.core.Parser import Parser
 from common.lib.core.Logger import Logger
 from common.lib.core.TransactionQueue import TransactionQueue
@@ -14,7 +16,6 @@ from common.lib.core.Validator import Validator
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.Connector import Connector
-from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.core.LogPrinter import LogPrinter
 
 
@@ -169,11 +170,33 @@ class SvTerminal(QObject):
             warning(f"Transaction ID [{response.match_id}] received and matched after timeout 60 seconds")
             return
 
+    def switch_keep_alive_mode(self, interval_name):
+        if interval_name == KeepAliveInterval.KEEP_ALIVE_ONCE:
+            self.keep_alive()
+            return
+
+        if interval_name == KeepAliveInterval.KEEP_ALIVE_STOP:
+            info("Stop Keep Alive mode")
+            self.stop_keep_alive_loop()
+            return
+
+        info(f"Set KeepAlive mode to {interval_name}")
+
+        if interval_name == KeepAliveInterval.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval:
+            self.run_keep_alive_loop(self.config.smartvista.keep_alive_interval)
+            return
+
+        if interval := KeepAliveInterval.get_interval_time(interval_name):
+            self.run_keep_alive_loop(interval)
+
     def run_keep_alive_loop(self, interval: int = 300):
-        self.keep_alive_timer.stop()
+        self.stop_keep_alive_loop()
         self.keep_alive_timer = QTimer()
         self.keep_alive_timer.timeout.connect(self.keep_alive)
         self.keep_alive_timer.start(int(interval) * 1000)
+
+    def stop_keep_alive_loop(self):
+        self.keep_alive_timer.stop()
 
     def keep_alive(self):
         if self.connector.connection_in_progress():

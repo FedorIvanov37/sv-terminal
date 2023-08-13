@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from pydantic import DirectoryPath, FilePath
+from common.lib.constants.TermFilesPath import TermFilesPath
 
 
 @dataclass(frozen=True)
 class GuiFilesPath(object):
-    STYLE_DIR: DirectoryPath = "common/style"
+    STYLE_DIR: DirectoryPath = f"{TermFilesPath.DATA_DIR}/style"
 
     MAIN_LOGO: FilePath = f"{STYLE_DIR}/logo_triangle.png"
     MUSIC_ON: FilePath = f"{STYLE_DIR}/music_on.png"

@@ -92,8 +92,20 @@
 + No icon changes when music is finished
 + Complex field parser - JSON mode
 + Prepare document
++ Flat mode uncheck all checkboxes - not confirmed
++ Move keep alive functions from GUI to core, from MainWindow to GUI
 
 
+• Document logo
+
+
+? Validation after edit doesn't work sometimes
+• Change approach to fields path
+• No data in socket if delete field in spec
+• Exceptions policy
+• Correct and publish the Specification
+• Publish on confluence
+• Spec explanation
 • API
     • Activation button
     • API
@@ -104,16 +116,6 @@
     • Settings window and config
     • Thread
     • Deactivation / reload
-
-• Add svterminal command to $PATH
-? Validation after edit doesn't work sometimes
-• Change approach to fields path
-• No data in socket if delete field in spec
-• Exceptions policy
-• Correct and publish the Specification
-• Publish on confluence
-• Spec explanation
-
 
 
 

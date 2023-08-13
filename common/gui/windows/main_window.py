@@ -23,7 +23,7 @@ MainWindow is a general SVTerminal GUI, Runs as an independent application, inte
 Can be run separately from the backend, but does nothing in this case. 
  
 The goals of MainWindow are interaction with the GUI user, user input data collection, and data processing requests 
-using pyqtSignal. Better to not force it to process the data, validate values, and so on.
+using pyqtSignal. Better to not force it to process the data, validate values, and so on
 """
 
 
@@ -251,7 +251,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         self.buttons_menu_structure = {
 
-            # Special menu buttons. Along with the signal they send modifiers - string values, aka pragma.
+            # Special menu buttons. Along with the signal they send modifiers - string values, aka pragma
             # The modifiers are used to define the requested data format or as a hint on how to process the data
 
             self.ButtonKeepAlive: {
@@ -391,6 +391,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     # Change KeepAlive loop status
     def process_keep_alive_change(self, interval_name: str) -> None:
+        if interval_name == ButtonAction.KEEP_ALIVE_ONCE:
+            return
+
         icon_file: FilePath = GuiFilesPath.GREEN_CIRCLE
 
         if interval_name == ButtonAction.KEEP_ALIVE_STOP:

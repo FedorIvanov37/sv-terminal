@@ -1,5 +1,5 @@
 from json import dumps
-from logging import error, info, warning
+from logging import error, info, warning, debug
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
@@ -14,6 +14,7 @@ from common.lib.constants.TextConstants import TextConstants
 from common.lib.constants.DataFormats import DataFormats
 from common.lib.constants.TermFilesPath import TermFilesPath
 from common.gui.constants.ButtonActions import ButtonAction
+from common.lib.constants.KeepAliveIntervals import KeepAliveInterval
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread
 from common.lib.core.Logger import LogStream, getLogger, Formatter
@@ -23,23 +24,21 @@ from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.core.Terminal import SvTerminal
 
 """
+The core of the GUI backend
  
- The core of the GUI backend
+Performs all the management and control. The main purpose is to receive a validated data-processing request from 
+MainWindow or TransactionQueue and manage this using the other low-level modules such as Parser for data transformation
+TransactionQueue for interaction with the target system, Connector for TCP integration, and so on. 
  
- Performs all the management and control. The main purpose is to receive a validated data-processing request from 
- MainWindow or TransactionQueue and manage this using the other low-level modules such as Parser for data transformation
- TransactionQueue for interaction with the target system, Connector for TCP integration, and so on. 
- 
- Always tries not to do the work itself, managing corresponding modules instead
+Always tries not to do the work itself, managing corresponding modules instead
 
- SvTerminalGui is a basic executor for all user requests. Inherited from SvTerminal class, which does not interact 
- with GUI anyhow. Low-level data processing performs using the basic SvTerminal class.
+SvTerminalGui is a basic executor for all user requests. Inherited from SvTerminal class, which does not interact 
+with GUI anyhow. Low-level data processing performs using the basic SvTerminal class.
 
- Usually get data in the Transaction format. In any other case targeting to transform data into the Transaction and 
- proceed to work with this. The Transaction is a common I/O format for SvTerminalGui. 
+Usually get data in the Transaction format. In any other case targeting to transform data into the Transaction and 
+proceed to work with this. The Transaction is a common I/O format for SvTerminalGui. 
  
- Starts MainWindow when starting its work, being a kind of low-level adapter between the GUI and the system's core
- 
+Starts MainWindow when starting its work, being a kind of low-level adapter between the GUI and the system's core
 """
 
 
@@ -64,7 +63,7 @@ class SvTerminalGui(SvTerminal):
 
         if self.config.smartvista.keep_alive_mode:
             interval = self.config.smartvista.keep_alive_interval
-            self.switch_keep_alive_mode(interval_name=ButtonAction.KEEP_ALIVE_DEFAULT % interval)
+            self.switch_keep_alive_mode(interval_name=KeepAliveInterval.KEEP_ALIVE_DEFAULT % interval)
 
         self.window.show()
 
@@ -113,32 +112,34 @@ class SvTerminalGui(SvTerminal):
             if not keep_alive_mode_changed:  # Return when no fields change detected
                 return
 
-            interval_name = ButtonAction.KEEP_ALIVE_STOP
+            interval_name = KeepAliveInterval.KEEP_ALIVE_STOP
 
             if self.config.smartvista.keep_alive_mode:
-                interval_name = ButtonAction.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
+                interval_name = KeepAliveInterval.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
 
             self.switch_keep_alive_mode(interval_name)
+
+        def set_json_mode(json_mode_changed):
+            if not json_mode_changed:
+                return
+
+            self.window.set_json_mode(self.config.fields.json_mode)
 
         # Save configuration to local variables for future compare to track changes
         fields_validation = self.config.fields.validation
         keep_alive = self.config.smartvista.keep_alive_mode
-        keep_alive_interval = self.config.smartvista.keep_alive_interval
+        keep_alive_interval = int(self.config.smartvista.keep_alive_interval)
+        json_mode = self.config.fields.json_mode
 
         settings_window: SettingsWindow = SettingsWindow(self.config)
         settings_window.accepted.connect(self.read_config)
         settings_window.accepted.connect(lambda: validate_all(fields_validation != self.config.fields.validation))
-        settings_window.accepted.connect(lambda: self.window.set_json_mode(self.config.fields.json_mode))
-        settings_window.accepted.connect(
-            lambda: set_keep_alive(
-                keep_alive_interval != self.config.smartvista.keep_alive_interval or
-                keep_alive != self.config.smartvista.keep_alive_mode
-            )
-        )
-
-        # When some field changed
+        settings_window.accepted.connect(lambda: set_json_mode(json_mode != self.config.fields.json_mode))
+        settings_window.accepted.connect(lambda: set_keep_alive(  # When KeepAlive fields changed
+                                            keep_alive_interval != int(self.config.smartvista.keep_alive_interval) or
+                                            keep_alive != self.config.smartvista.keep_alive_mode))
         settings_window.exec()
-
+    
     def read_config(self):
         config = Config.parse_file(TermFilesPath.CONFIG)
         self.config.fields = config.fields
@@ -147,32 +148,8 @@ class SvTerminalGui(SvTerminal):
         self.connector.stop_thread()
 
     def switch_keep_alive_mode(self, interval_name):
-        if interval_name == ButtonAction.KEEP_ALIVE_ONCE:
-            self.keep_alive()
-            return
-
-        if interval_name == ButtonAction.KEEP_ALIVE_STOP:
-            info("Stop Keep Alive mode")
-            self.keep_alive_timer.stop()
-            self.window.process_keep_alive_change(interval_name)
-            return
-
-        interval = None
-        keep_alive_default = ButtonAction.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
-
-        if interval_name == keep_alive_default:
-            info(f"Set KeepAlive mode to {interval_name}")
-            interval = self.config.smartvista.keep_alive_interval
-
-        if interval is None:
-            if not (interval := ButtonAction.get_interval_time(interval_name)):
-                return
-
-            info(f"Set KeepAlive mode to {interval_name}")
-
+        SvTerminal.switch_keep_alive_mode(self, interval_name)
         self.window.process_keep_alive_change(interval_name)
-        # self.keep_alive()
-        self.run_keep_alive_loop(int(interval))
 
     def reconnect(self):
         SvTerminal.reconnect(self)

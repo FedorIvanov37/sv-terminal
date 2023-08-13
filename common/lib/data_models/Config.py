@@ -5,7 +5,7 @@ class SmartVista(BaseModel):
     host: str = str()
     port: str = str()
     keep_alive_mode: bool = False
-    keep_alive_interval: int = 300
+    keep_alive_interval: int
 
 
 class Terminal(BaseModel):
@@ -37,7 +37,7 @@ class Fields(BaseModel):
 
 
 class Config(BaseModel):
-    smartvista: SmartVista = SmartVista()
-    terminal: Terminal = Terminal()
-    debug: Debug = Debug()
+    smartvista: SmartVista
+    terminal: Terminal
+    debug: Debug
     fields: Fields | None = None

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from common.lib.constants.KeepAliveIntervals import KeepAliveInterval
 
 
 @dataclass
@@ -10,15 +11,15 @@ class ButtonAction(object):
     BUTTON_MINUS_SIGN = "━"
     BUTTON_NEXT_LEVEL_SIGN = "🡾"
     #
-    KEEP_ALIVE_1S = "1 second"
-    KEEP_ALIVE_5S = "5 seconds"
-    KEEP_ALIVE_10S = "10 seconds"
-    KEEP_ALIVE_30S = "30 seconds"
-    KEEP_ALIVE_60S = "60 seconds"
-    KEEP_ALIVE_300S = "300 seconds"
-    KEEP_ALIVE_DEFAULT = "%s second(s)"
-    KEEP_ALIVE_ONCE = "Send once"
-    KEEP_ALIVE_STOP = "Stop"
+    KEEP_ALIVE_1S = KeepAliveInterval.KEEP_ALIVE_1S
+    KEEP_ALIVE_5S = KeepAliveInterval.KEEP_ALIVE_5S
+    KEEP_ALIVE_10S = KeepAliveInterval.KEEP_ALIVE_10S
+    KEEP_ALIVE_30S = KeepAliveInterval.KEEP_ALIVE_30S
+    KEEP_ALIVE_60S = KeepAliveInterval.KEEP_ALIVE_60S
+    KEEP_ALIVE_300S = KeepAliveInterval.KEEP_ALIVE_300S
+    KEEP_ALIVE_DEFAULT = KeepAliveInterval.KEEP_ALIVE_DEFAULT
+    KEEP_ALIVE_ONCE = KeepAliveInterval.KEEP_ALIVE_ONCE
+    KEEP_ALIVE_STOP = KeepAliveInterval.KEEP_ALIVE_STOP
     #
     CURRENT_ACTION_MARK = "•"
 
@@ -34,19 +35,6 @@ class ButtonAction(object):
             ButtonAction.KEEP_ALIVE_ONCE,
             ButtonAction.KEEP_ALIVE_STOP,
         ]
-
-    @staticmethod
-    def get_interval_time(interval_name):
-        interval_map = {
-            ButtonAction.KEEP_ALIVE_1S: 1,
-            ButtonAction.KEEP_ALIVE_5S: 5,
-            ButtonAction.KEEP_ALIVE_10S: 10,
-            ButtonAction.KEEP_ALIVE_30S: 30,
-            ButtonAction.KEEP_ALIVE_60S: 60,
-            ButtonAction.KEEP_ALIVE_300S: 300,
-        }
-
-        return interval_map.get(interval_name, None)
 
     @staticmethod
     def get_reversal_actions():

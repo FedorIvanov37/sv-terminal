@@ -343,10 +343,9 @@ class JsonView(QTreeWidget):
             return
 
         parsing_error_text: str = "Cannot change JSON mode due to parsing error(s)"
+        json_mode = item.json_mode_checkbox_checked()
 
-        # Set json mode
-
-        if item.json_mode_checkbox_checked():
+        if json_mode:  # Set JSON mode
             if item.get_children():
                 return
 
@@ -354,7 +353,7 @@ class JsonView(QTreeWidget):
                 return
 
             try:
-                fields: RawFieldSet= Parser.split_complex_field(item.field_number, item.field_data)
+                fields: RawFieldSet = Parser.split_complex_field(item.field_number, item.field_data)
                 self._parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
 
             except Exception as parsing_error:
@@ -365,26 +364,22 @@ class JsonView(QTreeWidget):
             item.field_data = ""
 
             self.expandToDepth(-1)
-            return
 
-        # Set flat mode
+        if not json_mode:  # Set flat mode
+            if not item.get_children():
+                return
 
-        if not item.get_children():
-            return
+            try:
+                fields: RawFieldSet = self.generate_fields(parent=item)
+                field_data: str = Parser.join_complex_field(item.field_number, fields)
+                item.takeChildren()
+                item.field_data = field_data
 
-        try:
-            fields: RawFieldSet = self.generate_fields(parent=item)
-            field_data: str = Parser.join_complex_field(item.field_number, fields)
-
-        except Exception as parsing_error:
-            error(parsing_error_text)
-            [error(line) for line in str(parsing_error).splitlines()]
-            item.set_checkbox()
-            return
-
-        item.takeChildren()
-        item.field_data = field_data
-        self.expandToDepth(-10)
+            except Exception as parsing_error:
+                error(parsing_error_text)
+                [error(line) for line in str(parsing_error).splitlines()]
+                item.set_checkbox()
+                return
 
     @void_qt_signals
     def set_checkboxes(self, transaction: Transaction):

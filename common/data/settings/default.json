@@ -1,12 +1,6 @@
 {
-    "trans_id": "20230727_142911_0255734307",
-    "match_id": "",
-    "utrnno": "",
     "message_type": "0200",
-    "matched": null,
-    "success": null,
     "max_amount": "100",
-    "resp_time_seconds": null,
     "generate_fields": [
         "4",
         "7",
@@ -48,7 +42,5 @@
             "92": "000"
         },
         "49": "978"
-    },
-    "is_request": null,
-    "is_reversal": null
+    }
 }
