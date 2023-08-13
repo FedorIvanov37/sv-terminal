@@ -84,7 +84,6 @@
 + Remove ErrorWindow
 + Remove config duplicate from lib
 + CTRL + ALT + N added subfield even in flat mode
-#
 + Keep Alive: Button, Function start / stop, File, Default state in settings, Activate on startup, doc
 + No logo in frameless windows
 + No logo in SpecUnsaved window

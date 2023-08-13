@@ -22,5 +22,10 @@ if __name__ != "__main__":  # Runs only by import command
 
 # Incorrect way to run
 if __name__ == "__main__":  # Do not run directly
-    raise RuntimeError(f"The file common/sv_terminal.py should be imported from main working directory, "
-                       "direct run has no effect")
+    error_message = """
+The file common/sv_terminal.py should be imported from the main working directory, the direct run has no effect
+The GUI runs once the file is imported, no additional actions are required
+Please, refer to the SvTerminal documentation to read more about how to run the application 
+"""
+
+    raise RuntimeError(error_message)
