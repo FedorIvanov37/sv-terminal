@@ -7,7 +7,7 @@ SmartVista Electronic Commerce Terminal v0.15.1 Aug 2023 | Powered by <a href="h
 # Contents 
 
 * [Description](#description)
-  * [SvTerminal overview](#overview)
+  * [SvTerminal overview](#svterminal-overview)
   * [Important notes](#important-notes)
   * [Release info](#release-info)
 
@@ -31,7 +31,7 @@ SmartVista Electronic Commerce Terminal v0.15.1 Aug 2023 | Powered by <a href="h
 
 # Description
 
-## Overview
+## SvTerminal Overview
 
 SV-Terminal simplifies sending of banking card e-commerce transactions to SmartVista using a useful visual interface 
 making simple things simple to achieve
