@@ -24,7 +24,7 @@
         },
         {
             "request": "0221",
-            "response": "0230",
+            "response": "0231",
             "description": "Financial Transaction Advice Repeat",
             "is_reversible": false,
             "reversal_mti": ""
@@ -10501,7 +10501,7 @@
             "max_length": 8,
             "var_length": 0,
             "tag_length": 0,
-            "generate": false,
+            "generate": true,
             "reversal": false,
             "matching": false,
             "alpha": true,

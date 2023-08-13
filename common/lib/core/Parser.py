@@ -13,6 +13,7 @@ from common.lib.constants.DataFormats import DataFormats
 from common.lib.data_models.Config import Config
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet, RawFieldSet
 from common.lib.data_models.Transaction import TypeFields, Transaction
+from common.lib.core.JsonConverter import JsonConverter
 
 
 class Parser:
@@ -62,12 +63,6 @@ class Parser:
         bitmap: hex = Bitmap(transaction.data_fields)
         bitmap: hex = bitmap.get_bitmap(hex)
         body: str = Parser.create_dump(transaction, body=True)
-
-        # try:
-        #     body: str = Parser.create_dump(transaction, body=True)
-        # except Exception as exc:
-        #     error("Dump generating error: %s", exc)
-        #     return
 
         dump = "\n"
         ascii_dump = mti + DumpDefinition.ASCII_BITMAP + body
@@ -277,6 +272,8 @@ class Parser:
 
     @staticmethod
     def _parse_json_file(filename: str) -> Transaction:
+        JsonConverter.convert(filename)  # TODO: Temporary solution for transfer period
+
         transaction: Transaction = Transaction.parse_file(filename)
         transaction.trans_id = FieldsGenerator.generate_trans_id()
         return transaction
@@ -305,7 +302,7 @@ class Parser:
 
         mti = self.unpack_ini_field(ini.get(ini_def.MTI, ini_def.MTI))
 
-        transaction = Transaction(
+        transaction: Transaction = Transaction(
             message_type=mti,
             generate_fields=generate_fields,
             max_amount=max_amount,
