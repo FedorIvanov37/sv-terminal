@@ -9,7 +9,7 @@ SmartVista Electronic Commerce Terminal v0.15.1 Aug 2023 | Powered by <a href="h
 * [Description](#description)
   * [SvTerminal overview](#overview)
   * [Important notes](#important-notes)
-  * [v0.15.1 Release info](#release-info)
+  * [Release info](#release-info)
 
  
 * [Graphic User Interface](#graphic-user-interface)
@@ -22,8 +22,8 @@ SmartVista Electronic Commerce Terminal v0.15.1 Aug 2023 | Powered by <a href="h
   * [Requirements](#requirements)
   * [Installation](#installation)
   * [Modules usage](#modules-usage)
-    * [Intro](#intro)
-    * [What's inside](what-is-inside)
+    * [Intro](#modules-intro)
+    * [What's inside](#what-is-inside)
     * [Usage example](#usage-example)
 
 
@@ -173,7 +173,7 @@ pip install -r requirements.txt
 
 ## Modules usage 
 
-### Intro
+### Modules Intro
 SvTerminal is a group of independent modules, connected by PyQt6 Signal / Slot mechanism. You can use the SvTerminal 
 modules package for your own project or when GUI running is impossible. This section provided a quick introduction, at 
 the moment library's documentation is in the development stage
