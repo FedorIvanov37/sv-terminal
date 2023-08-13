@@ -114,8 +114,16 @@ class SvTerminalGui(SvTerminal):
         if "" in (self.config.smartvista.host, self.config.smartvista.port):
             warning("Lost SV address or SV port! Check the parameters")
 
-        if self.config.smartvista.port and int(self.config.smartvista.port) > 65535:
-            warning("SV port value must be in the range 0 to 65535")
+        try:
+            if not self.config.smartvista.port:
+                raise ValueError
+
+            if int(self.config.smartvista.port) > 65535:
+                raise ValueError
+
+        except ValueError:
+            warning(f'Incorrect SV port value: "{self.config.smartvista.port}". '
+                    f'Must be a number in the range of 0 to 65535')
 
         if old_config.fields.validation != self.config.fields.validation:
             self.window.validate_fields()
