@@ -4,9 +4,34 @@
 
 SmartVista Electronic Commerce Terminal v0.15.1 Aug 2023 | Powered by <a href="https://www.unlimit.com">Unlimit</a></p> 
 
+# Contents 
+
+* [Description](#description)
+  * [SvTerminal overview](#overview)
+  * [Important notes](#⚠️-important-notes)
+  * [v0.15.1 Release info](#v0.15.1-release-info)
+
+ 
+* [Graphic User Interface](#graphic-user-interface)
+  * [GUI overview](#gui-overview)
+  * [Main Window hotkeys](#main-window-hotkeys)
+
+
+* [Modules package](#modules-package)
+  * [Library overview](#library-overview)
+  * [Requirements](#requirements)
+  * [Installation](#installation)
+  * [Modules usage](#modules-usage)
+    * [Intro](#intro)
+    * [What's inside](whats-inside)
+    * [Usage example](#usage-example)
+
+
+* [Author](#author) 
 
 # Description
 
+## Overview
 
 SV-Terminal simplifies sending of banking card e-commerce transactions to SmartVista using a useful visual interface 
 making simple things simple to achieve
@@ -79,6 +104,8 @@ concerns both versions v0.15 and v0.15.1
 
 # Graphic User Interface
 
+## GUI overview
+
 ⚠️Only Windows x64 build exists. Use the source code to run SvTerminal on another platform. Tests were done on 
 Windows 10-11 only
 
@@ -116,6 +143,8 @@ The list of key sequence and corresponding actions
 
 # Modules package
 
+## Library overview 
+
 For using SvTerminal modules installation is required. Also, check the [Requirements](#requirements) chapter of 
 this document 
 
@@ -151,7 +180,7 @@ the moment library's documentation is in the development stage
 
 Don't forget to install the [requirements](#requirements) before using SvTerminal's package
 
-### What's inside
+### Whats inside
 
 The table describes fundamental system objects. In fact, SvTerminal contains much more modules for achieving the result. 
 At the moment the only way to be familiar with the whole package is through code investigation 
