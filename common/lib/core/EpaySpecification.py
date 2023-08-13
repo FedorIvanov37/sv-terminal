@@ -48,6 +48,18 @@ class EpaySpecification(EpaySpecificationData):
 
         return False
 
+    def get_mti_dict(self):
+        result = {}
+
+        for mti in self.spec.mti:
+            result[f"{mti.description}_request"] = mti.request
+            result[f"{mti.description}_response"] = mti.response
+
+        return result
+
+    def get_generated_fields_dict(self):
+        return {field.description: field.field_number for field in self.spec.fields.values() if field.generate}
+
     def get_reversal_mti(self, original_mti: str):
         for mti in self.spec.mti:
             if not (mti.reversal_mti and mti.is_reversible):

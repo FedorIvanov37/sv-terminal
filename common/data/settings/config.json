@@ -2,16 +2,16 @@
     "smartvista": {
         "host": "172.21.30.5",
         "port": "16677",
-        "keep_alive_mode": false,
+        "keep_alive_mode": true,
         "keep_alive_interval": "300"
     },
     "terminal": {
         "process_default_dump": true,
-        "connect_on_startup": false
+        "connect_on_startup": true
     },
     "debug": {
-        "level": "DEBUG",
-        "clear_log": false,
+        "level": "INFO",
+        "clear_log": true,
         "parse_subfields": false
     },
     "fields": {
@@ -19,6 +19,6 @@
         "build_fld_90": true,
         "send_internal_id": true,
         "validation": true,
-        "json_mode": false
+        "json_mode": true
     }
 }

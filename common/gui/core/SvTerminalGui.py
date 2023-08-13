@@ -322,7 +322,8 @@ class SvTerminalGui(SvTerminal):
         try:
             transaction: Transaction = self.parser.parse_file(filename)
         except (TypeError, ValueError, Exception) as parsing_error:
-            error(f"File parsing error: {parsing_error}")
+            error_message = parsing_error.json() if isinstance(parsing_error, ValidationError) else str(parsing_error)
+            error(f"File parsing error: {error_message}")
             return
 
         if transaction.generate_fields:

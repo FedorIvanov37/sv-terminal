@@ -1,14 +1,6 @@
 # SmartVista Electronic Commerce Terminal
 
-<span style="font-size:11px;">
-<pre>
- ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::
-:+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:
-+:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+
-+#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+
-       +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+
-#+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#
- ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ##########</pre></span>
+![image](https://camo.githubusercontent.com/568a4f77e5187cca9e602fb8e108ea3f4b44884c7f3010abe2db2b6d5a12f105/68747470733a2f2f692e696d6775722e636f6d2f5378656e4d55512e706e67)
 
 SmartVista Electronic Commerce Terminal | v0.15.1 production beta | 
 Powered by <a href="https://www.unlimit.com">Unlimit</a></p>
@@ -65,8 +57,8 @@ Written on Python 3.10 with using of PyQt6 and pydantic packages
 In case of any questions about SvTerminal [contact author](#author). Your feedback and suggestions are general drivers 
 of SvTerminal evolution.
 
-## Important notes  
-⚠️
+## ⚠️ Important notes  
+
 * Allowed usage on test environment only. SvTerminal only implements basic security checks
 * Since v0.15 SvTerminal library doesn't support PyQt5 anymore
 * At the moment SvTerminal doesn't support byte-fields

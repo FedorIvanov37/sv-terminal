@@ -93,10 +93,13 @@
 + Prepare document
 + Flat mode uncheck all checkboxes - not confirmed
 + Move keep alive functions from GUI to core, from MainWindow to GUI
++ Old JSON support
+
+
+• Enumerations
 
 
 • Document logo
-
 • Set complex fields full expanding when switch JSON mode
 ? Validation after edit doesn't work sometimes
 • Change approach to fields path
@@ -123,7 +126,7 @@
 
 
 
-https://mir-s3-cdn-cf.behance.net/project_modules/1400/d85c39110350507.600ff057b310b.gif
+
 
 
 
