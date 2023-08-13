@@ -64,7 +64,7 @@ class SvTerminalGui(SvTerminal):
 
         if self.config.smartvista.keep_alive_mode:
             interval = self.config.smartvista.keep_alive_interval
-            self.switch_keep_alive_mode(interval_name=KeepAliveInterval.KEEP_ALIVE_DEFAULT % interval)
+            self.set_keep_alive_interval(interval_name=KeepAliveInterval.KEEP_ALIVE_DEFAULT % interval)
 
         self.window.show()
 
@@ -95,7 +95,7 @@ class SvTerminalGui(SvTerminal):
             window.hotkeys: lambda: HotKeysHintWindow().exec(),
             window.specification: lambda: SpecWindow().exec(),
             window.about: lambda: AboutWindow(),
-            window.keep_alive: self.switch_keep_alive_mode,
+            window.keep_alive: self.set_keep_alive_interval,
             self.connector.stateChanged: self.set_connection_status,
         }
 
@@ -129,7 +129,7 @@ class SvTerminalGui(SvTerminal):
             if self.config.smartvista.keep_alive_mode:
                 interval_name = KeepAliveInterval.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
 
-            self.switch_keep_alive_mode(interval_name)
+            self.set_keep_alive_interval(interval_name)
 
         info("Settings applied")
 
@@ -139,14 +139,14 @@ class SvTerminalGui(SvTerminal):
         except ValidationError as parsing_error:
             error(f"Cannot parse configuration file: {parsing_error}")
             return
-        
+
         self.config.fields = config.fields
 
     def stop_sv_terminal(self):
         self.connector.stop_thread()
 
-    def switch_keep_alive_mode(self, interval_name):
-        SvTerminal.switch_keep_alive_mode(self, interval_name)
+    def set_keep_alive_interval(self, interval_name: str):
+        SvTerminal.set_keep_alive_interval(self, interval_name)
         self.window.process_keep_alive_change(interval_name)
 
     def reconnect(self):

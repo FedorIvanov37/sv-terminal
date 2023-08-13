@@ -157,7 +157,7 @@ class SvTerminal(QObject):
             warning(f"Transaction ID [{response.match_id}] received and matched after timeout 60 seconds")
             return
 
-    def switch_keep_alive_mode(self, interval_name):
+    def set_keep_alive_interval(self, interval_name: str):
         if interval_name == KeepAliveInterval.KEEP_ALIVE_ONCE:
             self.keep_alive()
             return
