@@ -1,6 +1,6 @@
 # SmartVista Electronic Commerce Terminal
 
-![image](https://mir-s3-cdn-cf.behance.net/project_modules/1400/d85c39110350507.600ff057b310b.gif)
+![image](https://i.imgur.com/SxenMUQ.png)
 
 SmartVista Electronic Commerce Terminal v0.15.1 Aug 2023 | Powered by <a href="https://www.unlimit.com">Unlimit</a></p> 
 
@@ -94,24 +94,24 @@ Check the parameters, opened by the "Configuration" button to make your settings
 
 The list of key sequence and corresponding actions 
 
-| Key sequence         | Action                     | 
-|----------------------|----------------------------| 
-| F1                   | About SvTerminal           | 
-| Ctrl + Enter         | Send transaction           |
-| Ctrl + Shift + Enter | Reverse last transaction   |
-| Ctrl + Alt + Enter   | Send Echo-Test             |
-| Ctrl + N             | Add new fileld             |
-| Ctrl + Shift + N     | Add new subfileld          |
-| Delete               | Remove field               |
-| Ctrl + E             | Edit current field data    |
-| Ctrl + W             | Edit current field number  |
-| Ctrl + R             | Reconnect SV               |
-| Ctrl + L             | Clear log                  |
-| Ctrl + O             | Open transaction file      |
-| Ctrl + S             | Save transaction to file   |
-| Ctrl + P             | Print transaction          |
-| Ctrl + T             | Print SV Terminal logo     |
-| Ctrl + Alt + Q       | Quit SV Terminal           |
+| Key sequence         | Action                    |
+|----------------------|---------------------------|
+| F1                   | About SvTerminal          |
+| Ctrl + Enter         | Send transaction          |
+| Ctrl + Shift + Enter | Reverse last transaction  |
+| Ctrl + Alt + Enter   | Send Echo-Test            |
+| Ctrl + N             | Add new field             |
+| Ctrl + Shift + N     | Add new subfield          |
+| Delete               | Remove field              |
+| Ctrl + E             | Edit current field data   |
+| Ctrl + W             | Edit current field number |
+| Ctrl + R             | Reconnect SV              |
+| Ctrl + L             | Clear log                 |
+| Ctrl + O             | Open transaction file     |
+| Ctrl + S             | Save transaction to file  |
+| Ctrl + P             | Print transaction         |
+| Ctrl + T             | Print SV Terminal logo    |
+| Ctrl + Alt + Q       | Quit SV Terminal          |
 
 
 # Modules package
@@ -187,12 +187,12 @@ Using build SvTerminal object without separated modules. Same as user, but witho
 ```python
 from multiprocessing import Process
 from common.lib.data_models.Config import Config
-from common.lib.Terminal import SvTerminal
+from common.lib.core.Terminal import SvTerminal
 from common.lib.data_models.Transaction import Transaction
-from common.gui.constants.GuiFilesPath import GuiFilesPath
+from common.lib.constants.TermFilesPath import TermFilesPath
 
-config: Config = Config.parse_file(GuiFilesPath.CONFIG)
-transaction: Transaction = Transaction.parse_file(GuiFilesPath.DEFAULT_FILE)
+config: Config = Config.parse_file(TermFilesPath.CONFIG)
+transaction: Transaction = Transaction.parse_file(TermFilesPath.DEFAULT_FILE)
 terminal: SvTerminal = SvTerminal(config)
 
 sv_terminal: Process = Process(target=terminal.run)
@@ -216,7 +216,7 @@ if transaction.success:
 
 ```
 
-Building uwn solution, using SvTerminal's modules library:
+Building own solution, using SvTerminal's modules library:
 
 1. Import SvTerminal's library toolkit
 2. Create the Config object using Pydantic's parser
@@ -227,12 +227,12 @@ Building uwn solution, using SvTerminal's modules library:
 ```python
 from multiprocessing import Process
 from common.lib.data_models.Config import Config
-from common.lib.Terminal import SvTerminal
+from common.lib.core.Terminal import SvTerminal
 from common.lib.data_models.Transaction import Transaction
-from common.gui.constants.GuiFilesPath import GuiFilesPath
+from common.lib.constants.TermFilesPath import TermFilesPath
 
-config: Config = Config.parse_file(GuiFilesPath.CONFIG)
-transaction: Transaction = Transaction.parse_file(GuiFilesPath.DEFAULT_FILE)
+config: Config = Config.parse_file(TermFilesPath.CONFIG)
+transaction: Transaction = Transaction.parse_file(TermFilesPath.DEFAULT_FILE)
 terminal: SvTerminal = SvTerminal(config)
 
 sv_terminal: Process = Process(target=terminal.run)
