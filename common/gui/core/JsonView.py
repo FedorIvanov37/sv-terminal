@@ -55,7 +55,7 @@ class JsonView(QTreeWidget):
         for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
             action.connect(self.resize_all)
 
-        self.header().setMaximumSectionSize(500)
+        self.header().setMaximumSectionSize(700)
         self.validator = ItemsValidator(self.config)
         self.itemDoubleClicked.connect(self.edit_item)
         self.itemChanged.connect(self.process_change_item)

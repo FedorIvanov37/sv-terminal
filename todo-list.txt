@@ -94,12 +94,10 @@
 + Flat mode uncheck all checkboxes - not confirmed
 + Move keep alive functions from GUI to core, from MainWindow to GUI
 + Old JSON support
++ Document logo
 
 
-• Enumerations
-
-
-• Document logo
+• Enumerations for fields validation
 • Set complex fields full expanding when switch JSON mode
 ? Validation after edit doesn't work sometimes
 • Change approach to fields path
