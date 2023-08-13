@@ -1,6 +1,6 @@
 # SmartVista Electronic Commerce Terminal
 
-![image](https://i.imgur.com/SxenMUQ.png)
+![image](https://camo.githubusercontent.com/568a4f77e5187cca9e602fb8e108ea3f4b44884c7f3010abe2db2b6d5a12f105/68747470733a2f2f692e696d6775722e636f6d2f5378656e4d55512e706e67)
 
 SmartVista Electronic Commerce Terminal v0.15.1 Aug 2023 | Powered by <a href="https://www.unlimit.com">Unlimit</a></p> 
 
@@ -72,7 +72,7 @@ concerns both versions v0.15 and v0.15.1
 
 
 * New features
-  * Since v0.15 SvTerminal GUI delivers as a single binary executable .exe file
+  * Since v0.15 SvTerminal GUI delivers as a single binary executable `.exe` file
   * The card number will be hidden in logs and the message constructor, except in debug mode
   * Fields basic validation, validation can be switched off in the settings
   * Transaction timeouts: in case of no response for 60 seconds transaction will be marked as timeout with a warning
@@ -110,7 +110,7 @@ concerns both versions v0.15 and v0.15.1
 Windows 10-11 only
 
 SvTerminal GUI is a friendly interface, based on the SvTerminal library. Since v0.15 SvTerminal GUI is released as a 
-binary .exe file. No dependencies need to run the SvTerminal, it is ready to use from the box. No installation or 
+binary `.exe` file. No dependencies need to run the SvTerminal, it is ready to use from the box. No installation or 
 settings are needed to run GUI on a Windows machine. Run "sv_terminal.exe" executable file for start the SvTerminal
 
 Check the parameters, opened by the "Configuration" button to make your settings  
