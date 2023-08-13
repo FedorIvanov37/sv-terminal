@@ -363,8 +363,6 @@ class JsonView(QTreeWidget):
 
             item.field_data = ""
 
-            self.expandToDepth(-1)
-
         if not json_mode:  # Set flat mode
             if not item.get_children():
                 return
@@ -379,7 +377,6 @@ class JsonView(QTreeWidget):
                 error(parsing_error_text)
                 [error(line) for line in str(parsing_error).splitlines()]
                 item.set_checkbox()
-                return
 
     @void_qt_signals
     def set_checkboxes(self, transaction: Transaction):

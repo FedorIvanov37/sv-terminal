@@ -98,7 +98,7 @@
 
 • Document logo
 
-
+• Set complex fields full expanding when switch JSON mode
 ? Validation after edit doesn't work sometimes
 • Change approach to fields path
 • No data in socket if delete field in spec

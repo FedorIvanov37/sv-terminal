@@ -1,5 +1,6 @@
 from json import dumps
-from logging import error, info, warning, debug
+from copy import deepcopy
+from logging import error, info, warning
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
@@ -102,16 +103,21 @@ class SvTerminalGui(SvTerminal):
             signal.connect(slot)
 
     def settings(self):
-        def validate_all(validation: bool):
-            if not validation:  # Return when no fields change detected
-                return
+        old_config: Config = Config.parse_obj(deepcopy(self.config.dict()))
+        settings_window: SettingsWindow = SettingsWindow(self.config)
+        settings_window.accepted.connect(lambda: self.process_config_change(old_config))
+        settings_window.exec()
 
+    def process_config_change(self, old_config: Config):
+        self.read_config()
+
+        if old_config.fields.validation != self.config.fields.validation:
             self.window.validate_fields()
 
-        def set_keep_alive(keep_alive_mode_changed: bool):
-            if not keep_alive_mode_changed:  # Return when no fields change detected
-                return
+        if old_config.fields.json_mode != self.config.fields.json_mode:
+            self.window.set_json_mode(self.config.fields.json_mode)
 
+        if old_config.smartvista.keep_alive_mode != self.config.smartvista.keep_alive_mode:
             interval_name = KeepAliveInterval.KEEP_ALIVE_STOP
 
             if self.config.smartvista.keep_alive_mode:
@@ -119,27 +125,6 @@ class SvTerminalGui(SvTerminal):
 
             self.switch_keep_alive_mode(interval_name)
 
-        def set_json_mode(json_mode_changed):
-            if not json_mode_changed:
-                return
-
-            self.window.set_json_mode(self.config.fields.json_mode)
-
-        # Save configuration to local variables for future compare to track changes
-        fields_validation = self.config.fields.validation
-        keep_alive = self.config.smartvista.keep_alive_mode
-        keep_alive_interval = int(self.config.smartvista.keep_alive_interval)
-        json_mode = self.config.fields.json_mode
-
-        settings_window: SettingsWindow = SettingsWindow(self.config)
-        settings_window.accepted.connect(self.read_config)
-        settings_window.accepted.connect(lambda: validate_all(fields_validation != self.config.fields.validation))
-        settings_window.accepted.connect(lambda: set_json_mode(json_mode != self.config.fields.json_mode))
-        settings_window.accepted.connect(lambda: set_keep_alive(  # When KeepAlive fields changed
-                                            keep_alive_interval != int(self.config.smartvista.keep_alive_interval) or
-                                            keep_alive != self.config.smartvista.keep_alive_mode))
-        settings_window.exec()
-    
     def read_config(self):
         config = Config.parse_file(TermFilesPath.CONFIG)
         self.config.fields = config.fields

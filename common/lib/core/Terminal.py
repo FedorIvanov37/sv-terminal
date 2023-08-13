@@ -6,6 +6,7 @@ from PyQt6.QtNetwork import QTcpSocket
 from common.lib.constants.DataFormats import DataFormats
 from common.lib.constants.TermFilesPath import TermFilesPath
 from common.lib.constants.KeepAliveIntervals import KeepAliveInterval
+from common.lib.constants.LogDefinition import LogDefinition
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.core.Parser import Parser
 from common.lib.core.Logger import Logger
@@ -112,39 +113,25 @@ class SvTerminal(QObject):
         self.trans_queue.put_transaction(transaction)
 
     def transaction_sent(self, request: Transaction):
-        levels = {  # TODO
-            'DEBUG': debug,
-            'INFO': info,
-            'ERROR': error,
-            'WARNING': warning
-        }
-
         try:
             self.log_printer.print_dump(request)
         except Exception as parsing_error:
             error(f"Data parsing error: {parsing_error}")
             return
 
-        self.log_printer.print_transaction(request, level=levels.get(self.config.debug.level, info))
+        self.log_printer.print_transaction(request, level=LogDefinition.get_level_by_name(self.config.debug.level))
 
         if not request.is_keep_alive:
             info(f"Transaction [{request.trans_id}] was sent ")
 
     def transaction_received(self, response: Transaction):
-        levels = {  # TODO
-            'DEBUG': debug,
-            'INFO': info,
-            'ERROR': error,
-            'WARNING': warning
-        }
-
         try:
             self.log_printer.print_dump(response)
         except Exception as parsing_error:
             debug(f"Cannot print transaction dump, data parsing error: {parsing_error}")
 
         try:
-            self.log_printer.print_transaction(response, level=levels.get(self.config.debug.level, info))
+            self.log_printer.print_transaction(response, level=LogDefinition.get_level_by_name(self.config.debug.level))
         except Exception as parsing_error:
             error(f"Cannot print transaction, data parsing error: {parsing_error}")
 
