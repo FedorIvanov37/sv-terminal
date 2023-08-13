@@ -111,6 +111,12 @@ class SvTerminalGui(SvTerminal):
     def process_config_change(self, old_config: Config):
         self.read_config()
 
+        if "" in (self.config.smartvista.host, self.config.smartvista.port):
+            warning("Lost SV address or SV port! Check the parameters")
+
+        if self.config.smartvista.port and int(self.config.smartvista.port) > 65535:
+            warning("SV port value must be in the range 0 to 65535")
+
         if old_config.fields.validation != self.config.fields.validation:
             self.window.validate_fields()
 
@@ -125,8 +131,15 @@ class SvTerminalGui(SvTerminal):
 
             self.switch_keep_alive_mode(interval_name)
 
+        info("Settings applied")
+
     def read_config(self):
-        config = Config.parse_file(TermFilesPath.CONFIG)
+        try:
+            config = Config.parse_file(TermFilesPath.CONFIG)
+        except ValidationError as parsing_error:
+            error(f"Cannot parse configuration file: {parsing_error}")
+            return
+        
         self.config.fields = config.fields
 
     def stop_sv_terminal(self):

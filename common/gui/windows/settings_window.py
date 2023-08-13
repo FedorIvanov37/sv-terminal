@@ -5,9 +5,9 @@ from PyQt6.QtGui import QIntValidator, QRegularExpressionValidator, QIcon, QPixm
 from PyQt6.QtCore import QRegularExpression
 from common.lib.constants.LogDefinition import LogDefinition
 from common.lib.data_models.Config import Config
+from common.lib.constants.TermFilesPath import TermFilesPath
 from common.gui.forms.settings import Ui_SettingsWindow
 from common.gui.constants.GuiFilesPath import GuiFilesPath
-from common.lib.constants.TermFilesPath import TermFilesPath
 from common.gui.windows.about_window import AboutWindow
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 
@@ -25,9 +25,9 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.ButtonAbout.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
         self.SvPort.setValidator(QIntValidator(1, 65535))
         self.SvPort.setValidator(QRegularExpressionValidator(QRegularExpression(r"[^\D]\d+")))
-        self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){3}\d+")))
+        self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){1,3}\d+")))
         self.KeepAliveInterval.setValidator(QRegularExpressionValidator(QRegularExpression(r"[^0|\D]\d+")))
-        self.MaxAmount.setValidator(QIntValidator(1, 2000000000))
+        self.MaxAmount.setValidator(QRegularExpressionValidator(QRegularExpression(r"[^0|\D]\d+")))
         self.DebugLevel.addItems(LogDefinition.LOG_LEVEL)
         self.ParseSubfields.setHidden(True)  # TODO
         self.buttonBox.accepted.connect(self.ok)
@@ -73,14 +73,18 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         getLogger().setLevel(getLevelName(self.DebugLevel.currentText()))
 
         try:  # Raise ValueError when max_amount is less than one or has a non-int value
-            if (max_amount := int(self.MaxAmount.text())) < 1:
+            if int(self.MaxAmount.text()) < 1:
                 raise ValueError
-
         except ValueError:
-            warning(f"Incorrect max amount. The default value 100 will be set instead")
-            max_amount: int = 100  # When max_amount is less than one or has a non-int value
+            warning(f"Incorrect max amount. Set the default value of 100 instead")
+            self.MaxAmount.setText("100")  # When max_amount is less than one or has a non-int value
 
-        self.MaxAmount.setText(str(max_amount))
+        try:
+            int(self.KeepAliveInterval.text())
+        except ValueError:
+            error("Empty Keep Alive Interval, set default value 300 sec")
+            self.KeepAliveInterval.setText("300")
+
         self.config.smartvista.host = self.SvAddress.text()
         self.config.smartvista.port = self.SvPort.text()
         self.config.smartvista.keep_alive_mode = self.KeepAliveMode.isChecked()
@@ -96,22 +100,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.config.fields.validation = self.ValidationEnabled.isChecked()
         self.config.fields.json_mode = self.JsonMode.isChecked()
 
-        if int(self.SvPort.text()) > 65535:
-            warning("SV port value must be in the range 0 to 65535")
-
-        try:
-            int(self.KeepAliveInterval.text())
-        except ValueError:
-            error("Empty Keep Alive Interval, set default value 300 sec")
-            self.config.smartvista.keep_alive_interval = 300
-
         with open(TermFilesPath.CONFIG, "w") as file:
             file.write(dumps(self.config.dict(), indent=4))
-
-        info("Settings applied")
-
-        if "" in (self.SvAddress.text(), self.SvPort.text()):
-            warning("Lost SV address or SV port! Check the parameters.")
 
         self.accepted.emit()
         self.close()

@@ -8,20 +8,28 @@ SmartVista Electronic Commerce Terminal v0.15.1 Aug 2023 | Powered by <a href="h
 # Description
 
 
-SV-Terminal simplifies sending of banking card e-commerce transactions to SmartVista using a useful visual interface making simple things simple to achieve.
+SV-Terminal simplifies sending of banking card e-commerce transactions to SmartVista using a useful visual interface 
+making simple things simple to achieve
 
-The Terminal uses ISO-8583 E-pay protocol for transactions sending, instead of PSP. It can be used during the Payment Systems certification test, for checking and setting up the system on the test environment, during the application development process, and so on.
+The Terminal uses ISO-8583 E-pay protocol for transactions sending, instead of PSP. It can be used during the Payment 
+Systems certification test, for checking and setting up the system on the test environment, during the application 
+development process, and so on
 
-Also, the Terminal builds like a kit of weakly connected modules like a Parser, Connector, Queue, etc. It allows to reuse or extend the Terminal's functionality making emulators, loaders, parsers, converters, application interfaces, and many other things based on SV-Terminal modules.
+Also, the Terminal builds like a kit of weakly connected modules like a Parser, Connector, Queue, etc. It allows to 
+reuse or extend the Terminal's functionality making emulators, loaders, parsers, converters, application interfaces, 
+and many other things based on SV-Terminal modules
 
-[UBC SV API](http://feapi.unlimint.io:7171/documentation) is a good example of using SvTerminal modules without any GUI. 
+[UBC SV API](http://feapi.unlimint.io:7171/documentation) is a good example of using SvTerminal modules without any GUI 
   
-SV-Terminal is not an emulator of PSP or SmartVista. It doesn't try to be similar to these systems. It is more positioned as a simplified version card payment terminal, developed with respect for the everyday needs of the Card Processing Support Team.
+SV-Terminal is not an emulator of PSP or SmartVista. It doesn't try to be similar to these systems. It is more 
+positioned as a simplified version card payment terminal, developed with respect for the everyday needs of the Card 
+Processing Support Team
 
 Written on Python 3.10 with using of PyQt6 and pydantic packages
 
 
-In case of any questions about SvTerminal [contact author](#author). Your feedback and suggestions are general drivers of SvTerminal evolution.
+In case of any questions about SvTerminal [contact author](#author). Your feedback and suggestions are general drivers 
+of SvTerminal evolution.
 
 ## ⚠️ Important notes  
 
@@ -34,7 +42,8 @@ In case of any questions about SvTerminal [contact author](#author). Your feedba
 
 ## v0.15.1 Release info
 
-v0.15.1 is the same as v0.15 with a few small improvements and adding Keep Alive functions. Release info below concerns both versions v0.15 and v0.15.1 
+v0.15.1 is the same as v0.15 with a few small improvements and adding Keep Alive functions. Release info below 
+concerns both versions v0.15 and v0.15.1 
 
 
 * New features
@@ -47,7 +56,7 @@ v0.15.1 is the same as v0.15 with a few small improvements and adding Keep Alive
   * Hotkeys combinations, hotkeys hint window, and button to call the window
   * Undo / redo of transaction fields 
   * Complex fields flat mode aka INI style
-  * Keep Alive Message sending button and loop
+  * Keep Alive Message sending button and its loop settings
 
 
 * Updates
@@ -65,14 +74,17 @@ v0.15.1 is the same as v0.15 with a few small improvements and adding Keep Alive
   * GUI freezes while opening the connection. The Connector moved to its own thread, separated from the event loop  
   * Incorrect field names in INI files
   * Terminal fall down when empty field number set in Specification
-  * Small bugs inherited from v0.15
+  * Small bugs inherited from v0.14, v0.15
   * Code and project structure optimization
 
 # Graphic User Interface
 
-⚠️Only Windows x64 build exists. Use the source code to run SvTerminal on another platform. Tests were done on Win11 only.
+⚠️Only Windows x64 build exists. Use the source code to run SvTerminal on another platform. Tests were done on 
+Windows 10-11 only
 
-SvTerminal GUI is a friendly interface, based on the SvTerminal library. Since v0.15 SvTerminal GUI is released as a binary .exe file. No dependencies need to run the SvTerminal, it is ready to use from the box. No installation or settings are needed to run GUI on a Windows machine. Run "sv_terminal.exe" executable file for start the SvTerminal
+SvTerminal GUI is a friendly interface, based on the SvTerminal library. Since v0.15 SvTerminal GUI is released as a 
+binary .exe file. No dependencies need to run the SvTerminal, it is ready to use from the box. No installation or 
+settings are needed to run GUI on a Windows machine. Run "sv_terminal.exe" executable file for start the SvTerminal
 
 Check the parameters, opened by the "Configuration" button to make your settings  
 
@@ -104,21 +116,25 @@ The list of key sequence and corresponding actions
 
 # Modules package
 
-For using SvTerminal modules installation is required. Also, check the [Requirements](#requirements) chapter of this document. 
+For using SvTerminal modules installation is required. Also, check the [Requirements](#requirements) chapter of 
+this document 
 
-Go to the program directory, then follow to `common/source/common/lib` directory to get access to the SvTerminal's library 
+Go to the program directory, then follow to `common/source/common/lib` directory to get access to the SvTerminal's 
+library 
 
 
 ## Requirements 
 
-These dependencies should be installed in case of library usage only. GUI delivers as a `.exe` build, without neediness install any dependencies 
+These dependencies should be installed in case of library usage only. GUI delivers as a `.exe` build, without neediness 
+install any dependencies 
  
 * [Python 3.10+](https://www.python.org/)
 * [PyQt6](https://www.qt.io/product/qt6)
 * [pydantic](https://docs.pydantic.dev/)
 
 ## Installation
-For using SvTerminal's library you have to install Python 3.10 or above and run the following command in the program directory
+For using SvTerminal's library you have to install Python 3.10 or above and run the following command in the program 
+directory
 
 All dependencies can be installed by a single command in SvTerminal's directory 
 
@@ -129,13 +145,16 @@ pip install -r requirements.txt
 ## Modules usage 
 
 ### Intro
-SvTerminal is a group of independent modules, connected by PyQt6 Signal / Slot mechanism. You can use the SvTerminal modules package for your own project or when GUI running is impossible. This section provided a quick introduction, at the moment library's documentation is in the development stage.
+SvTerminal is a group of independent modules, connected by PyQt6 Signal / Slot mechanism. You can use the SvTerminal 
+modules package for your own project or when GUI running is impossible. This section provided a quick introduction, at 
+the moment library's documentation is in the development stage
 
 Don't forget to install the [requirements](#requirements) before using SvTerminal's package
 
 ### What's inside
 
-The table describes fundamental system objects. In fact, SvTerminal contains much more modules for achieving the result. At the moment the only way to be familiar with the whole package is through code investigation 
+The table describes fundamental system objects. In fact, SvTerminal contains much more modules for achieving the result. 
+At the moment the only way to be familiar with the whole package is through code investigation 
 
 | Module        | Purpose                                                                                                                                                                             |
 |---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -151,7 +170,8 @@ The table describes fundamental system objects. In fact, SvTerminal contains muc
 ![image](https://camo.githubusercontent.com/dccafcb932d549e921b2adb6d56d1bc521c51e2bc8e0f4be5fbaade5c7fef22f/68747470733a2f2f692e696d6775722e636f6d2f75444a334b78352e706e67)
 
 ## Usage example
-In this case, we'll see the general usage of the SvTerminal library. The example below is ready to start out of the box, without any changes. 
+In this case, we'll see the general usage of the SvTerminal library. The example below is ready to start out of the box, 
+without any changes. 
 
 Using build SvTerminal object without separated modules. Same as user, but without UI:
 
