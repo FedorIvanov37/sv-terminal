@@ -41,21 +41,13 @@ class EpaySpecification(EpaySpecificationData):
     def MessageLength(self):
         return self._MessageLength
 
-    @staticmethod
-    def is_reversal(mti: str):
-        if mti in ("0400", "0410", "0420", "0430"):
-            return True
-
-        return False
-
-    def get_mti_dict(self):
-        result = {}
-
-        for mti in self.spec.mti:
-            result[f"{mti.description}_request"] = mti.request
-            result[f"{mti.description}_response"] = mti.response
-
-        return result
+    def is_reversal(self, mti: str):
+        return mti in (
+            self.MESSAGE_TYPE_INDICATORS.REVERSAL_REQUEST,
+            self.MESSAGE_TYPE_INDICATORS.REVERSAL_RESPONSE,
+            self.MESSAGE_TYPE_INDICATORS.REVERSAL_ADVICE_REQUEST,
+            self.MESSAGE_TYPE_INDICATORS.REVERSAL_ADVICE_RESPONSE
+        )
 
     def get_generated_fields_dict(self):
         return {field.description: field.field_number for field in self.spec.fields.values() if field.generate}

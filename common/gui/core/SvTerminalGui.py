@@ -102,6 +102,16 @@ class SvTerminalGui(SvTerminal):
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
 
+    def echo_test(self):
+        try:
+            SvTerminal.echo_test(self)
+
+        except ValidationError as validation_error:
+            error(validation_error.json())
+
+        except Exception as sending_error:
+            error(sending_error)
+
     def settings(self):
         old_config: Config = Config.parse_obj(deepcopy(self.config.dict()))
         settings_window: SettingsWindow = SettingsWindow(self.config)
@@ -210,7 +220,6 @@ class SvTerminalGui(SvTerminal):
             raise ValueError("Invalid MTI")
 
         transaction = Transaction(
-            trans_id=self.generator.generate_trans_id(),
             message_type=message_type,
             max_amount=self.config.fields.max_amount,
             generate_fields=self.window.get_fields_to_generate(),
@@ -321,18 +330,25 @@ class SvTerminalGui(SvTerminal):
 
         try:
             transaction: Transaction = self.parser.parse_file(filename)
-        except (TypeError, ValueError, Exception) as parsing_error:
-            error_message = parsing_error.json() if isinstance(parsing_error, ValidationError) else str(parsing_error)
-            error(f"File parsing error: {error_message}")
+
+        except ValidationError as validation_error:
+            error(f"File parsing error: {validation_error.json()}")
             return
 
-        if transaction.generate_fields:
-            self.generator.set_generated_fields(transaction)
-            self.set_generated_fields(transaction)
+        except Exception as parsing_error:
+            error(f"File parsing error: {parsing_error}")
+            return
+
+        if transaction.max_amount:
+            self.config.fields.max_amount = transaction.max_amount
+
+        if not transaction.max_amount:
+            transaction.max_amount = self.config.fields.max_amount
 
         try:
             self.window.set_mti_value(transaction.message_type)
             self.window.set_fields(transaction)
+            self.set_generated_fields(transaction)
             self.set_bitmap()
 
         except ValueError as fields_settings_error:

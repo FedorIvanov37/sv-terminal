@@ -49,8 +49,8 @@ class Validator(object):
             return
 
         if field_number not in range(1, self.spec.MessageLength.second_bitmap_capacity):
-            error_text = f"Incorrect field number {field_number}. Top level " \
-                         f"field number must be in range 1 - {self.spec.MessageLength.second_bitmap_capacity}"
+            error_text = f"Incorrect field number {field_number}. Top level field number must be in range 1 " \
+                         f"- {self.spec.MessageLength.second_bitmap_capacity}"
 
             raise ValueError(error_text)
 
@@ -73,7 +73,7 @@ class Validator(object):
                 self.validate_field_number(field, is_top_level_field=level == 1)
 
             except ValueError as validation_error:
-                raise ValueError(f"{validation_error} {str_path}")
+                raise ValueError(f"{validation_error}. Path: {str_path}")
 
         if not self.spec.get_field_spec(path=path):
             raise ValueError(f"Lost spec for field {str_path}")

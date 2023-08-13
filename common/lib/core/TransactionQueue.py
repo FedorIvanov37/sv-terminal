@@ -67,9 +67,6 @@ class TransactionQueue(QObject):
             request = self.get_transaction(response.match_id)
             self.generator.merge_trans_data(request, response)
 
-        if not response.trans_id:
-            response.trans_id = FieldsGenerator.generate_trans_id()
-
         self.incoming_transaction.emit(response)
 
     def start_transaction_timer(self, transaction: Transaction, timeout=60):
