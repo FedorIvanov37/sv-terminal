@@ -71,15 +71,16 @@ of SvTerminal evolution.
 * New features
   * Added anonymous voluntary statistic collection
   * Added pydantic native data validation
+  * Secret fields hiding in logs and transaction constructor
    
 * Updates
-  * User doc update. Main settings, the specification, files format, and many other things are reflected in the document
+  * User doc update: main settings, the specification, files format, and many other things are reflected in the document
   * Default message corrected according to mandatory changes 22Q4
   
 * Fixed
   * All problems around old JSON files incompatibility  
   * Transaction field max_amount has no effect
-
+  
 # Graphic User Interface
 
 ## GUI overview
