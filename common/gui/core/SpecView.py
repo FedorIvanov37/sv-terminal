@@ -6,7 +6,7 @@ from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
 from common.gui.constants.SpecFieldDef import SpecFieldDefinition
 from common.gui.core.SpecItem import SpecItem
 from common.gui.core.SpecValidator import SpecValidator
-from typing import Callable
+from common.gui.decorators.void_qt_signals import void_qt_signals
 
 
 class SpecView(QObject):
@@ -17,14 +17,6 @@ class SpecView(QObject):
     @property
     def spec(self):
         return self._spec
-
-    def void_qt_signals(function: Callable):
-        def wrapper(self, *args):
-            self.blockSignals(True)
-            function(self, *args)
-            self.blockSignals(False)
-
-        return wrapper
 
     def __init__(self, tree: QTreeWidget, window):
         super(SpecView, self).__init__()

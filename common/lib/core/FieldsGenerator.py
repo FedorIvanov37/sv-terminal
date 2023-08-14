@@ -27,9 +27,9 @@ class FieldsGenerator:
 
         try:  # TODO
             transaction.data_fields[self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD]["072"] = transaction.trans_id
-        except (KeyError, TypeError):
+        except KeyError | TypeError:
             pass
-        
+
         return transaction
 
     def set_generated_fields(self, transaction: Transaction) -> Transaction:

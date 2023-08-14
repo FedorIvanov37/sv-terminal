@@ -10,14 +10,14 @@ def mask_secret(value: str) -> str:
 
 
 def mask_pan(pan: str):
-    pan_spec: IsoField = spec.get_field_spec([spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER])
     length = len(pan)
-
-    if length < pan_spec.min_length or length > pan_spec.max_length or not pan.isdigit():
-        return pan
 
     head: int = 6
     tail: int = 4
+
+    if length < head + tail:
+        return pan
+
     hide: int = length - head - tail
     head: str = pan[:head]
     tail: str = pan[-tail:]

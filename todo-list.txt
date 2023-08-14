@@ -108,21 +108,14 @@ v0.16
 + Transaction field max_amount has no effect
 + Correct default message according to mandatory changes 22Q4
 + Add pydantic native data validation
-+ Secret Fields
-
-
-• Hide secret fields in log
++ Secret Fields - Checkbox in spec window, Checkbox in config window with priority, Hide secret fields in log,
+  constructor, display; Restrict full PAN show, Show secret when checkbox changed in settings or spec, checkbox
+  cascade, config processing, invalid PAN hiding
 
 
 • Add anonymous voluntary statistic collection
 • Reflect in the document - Main settings, the specification, files format
 • Set complex fields full expanding when switch JSON mode
-
-
-
-
-
-
 
 
 

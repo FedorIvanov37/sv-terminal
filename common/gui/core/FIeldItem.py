@@ -1,4 +1,3 @@
-from typing import Callable
 from PyQt6 import QtGui
 from PyQt6.QtWidgets import QTreeWidgetItem
 from common.lib.data_models.EpaySpecificationModel import IsoField
@@ -7,41 +6,34 @@ from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.gui.core.AbstractItem import AbstractItem
 from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
-from common.lib.toolkit.toolkit import secret_hide_mark
+from common.gui.decorators.void_qt_signals import void_tree_signals
 
 
 class Item(AbstractItem):
     epay_spec: EpaySpecification = EpaySpecification()
     spec: IsoField = None
-    secret = ""
+    _secret: str = ""
+    _masked: bool = False
 
-    def void_tree_signals(function: Callable):
-        def wrapper(self, *args, **kwargs):
-            try:
-                self.treeWidget().blockSignals(True)
-            except AttributeError:
-                pass
+    @property
+    def masked(self):
+        return self._masked
 
-            function(self, *args, **kwargs)
-
-            try:
-                self.treeWidget().blockSignals(False)
-            except AttributeError:
-                pass
-
-        return wrapper
+    @masked.setter
+    def masked(self, masked):
+        self._masked = masked
 
     @property
     def field_data(self):
-        if self.is_secret and self.secret:
-            return self.secret
+        if self.is_secret and self._secret:
+            return self._secret
 
         return self.text(FieldsSpec.ColumnsOrder.VALUE)
 
     @field_data.setter
     def field_data(self, field_data):
         self.setText(FieldsSpec.ColumnsOrder.VALUE, field_data)
-        self.secret = ""
+        self._secret = ""
         self.hide_secret()
 
     @property
@@ -71,7 +63,7 @@ class Item(AbstractItem):
         self.spec = spec
 
     def hide_secret(self, hide_the_secret: bool | None = None):
-        if not self.treeWidget().hide_secret_fields:
+        if self.treeWidget() and not self.treeWidget().hide_secret_fields:
             if self.field_number != self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
                 hide_the_secret = False
 
@@ -84,20 +76,6 @@ class Item(AbstractItem):
         if not hide_the_secret:
             self.show_secret_value()
 
-    def _hide_secret(self, hide_the_secret: bool | None = None):
-        if self.field_number != self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER and \
-             not self.treeWidget().hide_secret_fields:
-                hide_the_secret = False
-
-        if hide_the_secret is None:
-            hide_the_secret = self.is_secret
-
-        if hide_the_secret:
-            self.mask_secret_value()
-            return
-
-        self.show_secret_value()
-
     @void_tree_signals
     def mask_secret_value(self):
         secret = self.field_data
@@ -108,7 +86,17 @@ class Item(AbstractItem):
             mask = mask_secret(secret)
 
         self.setText(FieldsSpec.ColumnsOrder.VALUE, mask)
-        self.secret = secret
+        self._secret = secret
+        self.masked = True
+
+    @void_tree_signals
+    def show_secret_value(self):
+        if not self.masked:
+            return
+
+        self.setText(FieldsSpec.ColumnsOrder.VALUE, self._secret)
+        self._secret = ""
+        self.masked = False
 
     def generate_checkbox_checked(self):
         if self.field_number not in FieldsSpec.generated_fields:
@@ -121,14 +109,6 @@ class Item(AbstractItem):
             return False
 
         return bool(self.checkState(FieldsSpec.ColumnsOrder.PROPERTY).value)
-
-    @void_tree_signals
-    def show_secret_value(self):
-        if secret_hide_mark not in self.text(FieldsSpec.ColumnsOrder.VALUE):
-            return
-
-        self.setText(FieldsSpec.ColumnsOrder.VALUE, self.secret)
-        self.secret = ""
 
     @void_tree_signals
     def set_checkbox(self, checked=True):

@@ -1,5 +1,4 @@
 from copy import deepcopy
-from typing import Callable
 from logging import error, warning
 from collections import OrderedDict
 from PyQt6.QtGui import QFont, QUndoStack
@@ -16,6 +15,7 @@ from common.gui.core.FIeldItem import Item
 from common.gui.core.ItemsValidator import ItemsValidator
 from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
 from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
+from common.gui.decorators.void_qt_signals import void_qt_signals
 
 
 class JsonView(QTreeWidget):
@@ -28,17 +28,6 @@ class JsonView(QTreeWidget):
     root: Item = Item(["Message"])
     spec: EpaySpecification = EpaySpecification()
 
-    def void_qt_signals(function: Callable):
-        #  The decorator switches off field data validation and helps to avoid the recursive effects
-        #  while the field data changes automatically
-
-        def wrapper(self, *args):
-            self.blockSignals(True)
-            function(self, *args)
-            self.blockSignals(False)
-
-        return wrapper
-
     @property
     def hide_secret_fields(self):
         return self.config.fields.hide_secrets
@@ -48,7 +37,7 @@ class JsonView(QTreeWidget):
         self.config: Config = config
         self._setup()
         self.delegate = QItemDelegate()
-        self.delegate.closeEditor.connect(lambda: self.hide_secrets(self.root))
+        self.delegate.closeEditor.connect(lambda: self.hide_secrets())
         self.setItemDelegate(self.delegate)
         self.undo_stack = QUndoStack()
 

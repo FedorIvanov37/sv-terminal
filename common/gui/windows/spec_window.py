@@ -49,15 +49,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def read_only(self):
         return self._read_only
 
-    @read_only.setter
-    def read_only(self, checked):
-        self._read_only = checked
-
-    def __init__(self):
-        super(SpecWindow, self).__init__()
-        self.setupUi(self)
-        self.setup()
-
     @set_window_icon
     @has_close_button_only
     def setup(self):
@@ -95,6 +86,15 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             box.setChecked(bool(Qt.CheckState.Checked))
 
         self.set_status(">")
+
+    @read_only.setter
+    def read_only(self, checked):
+        self._read_only = checked
+
+    def __init__(self):
+        super(SpecWindow, self).__init__()
+        self.setupUi(self)
+        self.setup()
 
     def minus(self):
         self.changed = True
@@ -140,7 +140,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.changed = False
         self._mti_changed = False
         self.accepted.emit()
-        
+
     def closeEvent(self, a0: QCloseEvent) -> None:
         self.process_close(a0)
 
