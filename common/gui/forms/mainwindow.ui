@@ -293,6 +293,27 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="ButtonRepeat">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Repeat</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="ButtonReverse">
         <property name="font">
          <font>

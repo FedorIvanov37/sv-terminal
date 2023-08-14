@@ -113,6 +113,8 @@ v0.16
   cascade, config processing, invalid PAN hiding
 
 
+• Transaction repeat
+
 • Add anonymous voluntary statistic collection
 • Reflect in the document - Main settings, the specification, files format
 • Set complex fields full expanding when switch JSON mode

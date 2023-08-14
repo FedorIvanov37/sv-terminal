@@ -72,7 +72,8 @@ of SvTerminal evolution.
   * Added anonymous voluntary statistic collection
   * Added pydantic native data validation
   * Secret fields hiding in logs and transaction constructor
-   
+  * MainWindow transaction loop
+
 * Updates
   * User doc update: main settings, the specification, files format, and many other things are reflected in the document
   * Default message corrected according to mandatory changes 22Q4

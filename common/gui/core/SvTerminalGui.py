@@ -5,6 +5,7 @@ from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtCore import QTimer
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
@@ -45,6 +46,7 @@ Starts MainWindow when starting its work, being a kind of low-level adapter betw
 
 class SvTerminalGui(SvTerminal):
     connector: ConnectionThread
+    trans_loop_timer: QTimer = QTimer()
 
     def __init__(self, config: Config):
         super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
@@ -96,6 +98,7 @@ class SvTerminalGui(SvTerminal):
             window.specification: self.run_specification_window,
             window.about: lambda: AboutWindow(),
             window.keep_alive: self.set_keep_alive_interval,
+            window.repeat: self.set_trans_loop_interval,
             self.connector.stateChanged: self.set_connection_status,
         }
 
@@ -106,6 +109,40 @@ class SvTerminalGui(SvTerminal):
         spec_window = SpecWindow()
         spec_window.accepted.connect(self.window.hide_secrets)
         spec_window.exec()
+
+    def repeat_transaction(self):
+        ...
+
+    def activate_transaction_loop(self, interval: int):
+        self.stop_transaction_loop()
+        self.trans_loop_timer = QTimer()
+        self.trans_loop_timer.timeout.connect(self.send_transaction)
+        self.trans_loop_timer.start(int(interval) * 1000)
+
+    def stop_transaction_loop(self):
+        self.trans_loop_timer.stop()
+
+    def set_trans_loop_interval(self, interval_name: str):
+        if interval_name == KeepAliveInterval.KEEP_ALIVE_STOP:
+            self.stop_transaction_loop()
+
+        if interval := KeepAliveInterval.get_interval_time(interval_name):
+            self.activate_transaction_loop(interval)
+
+        self.window.process_repeat_change(interval_name)
+
+    def send_transaction(self):
+        try:
+            transaction: Transaction = self.parse_main_window()
+
+        except Exception as window_parsing_error:
+            error(f"MainWindow parsing error: {window_parsing_error}")
+            return
+
+        try:
+            self.send(transaction)
+        except Exception as sending_error:
+            error(f"Transaction sending error: {sending_error}")
 
     def echo_test(self):
         try:
@@ -170,6 +207,7 @@ class SvTerminalGui(SvTerminal):
 
     def stop_sv_terminal(self):
         self.connector.stop_thread()
+
 
     def set_keep_alive_interval(self, interval_name: str):
         SvTerminal.set_keep_alive_interval(self, interval_name)

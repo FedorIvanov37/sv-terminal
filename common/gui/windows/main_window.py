@@ -56,6 +56,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _send: pyqtSignal = pyqtSignal()
     _reset: pyqtSignal = pyqtSignal()
     _keep_alive: pyqtSignal = pyqtSignal(str)
+    _repeat: pyqtSignal = pyqtSignal(str)
+
+    @property
+    def repeat(self):
+        return self._repeat
 
     @property
     def keep_alive(self):
@@ -162,6 +167,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self._connect_all()
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
         self.process_keep_alive_change(ButtonAction.KEEP_ALIVE_STOP)
+        self.process_repeat_change(ButtonAction.KEEP_ALIVE_STOP)
 
     def _add_json_control_buttons(self) -> None:
         # Create and place the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
@@ -263,6 +269,16 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 ButtonAction.KEEP_ALIVE_300S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_300S),
                 ButtonAction.KEEP_ALIVE_STOP: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_STOP),
                 ButtonAction.KEEP_ALIVE_ONCE: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_ONCE),
+            },
+
+            self.ButtonRepeat: {
+                ButtonAction.KEEP_ALIVE_1S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_1S),
+                ButtonAction.KEEP_ALIVE_5S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_5S),
+                ButtonAction.KEEP_ALIVE_10S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_10S),
+                ButtonAction.KEEP_ALIVE_30S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_30S),
+                ButtonAction.KEEP_ALIVE_60S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_60S),
+                ButtonAction.KEEP_ALIVE_300S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_300S),
+                ButtonAction.KEEP_ALIVE_STOP: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_STOP),
             },
 
             self.ButtonReverse: {
@@ -391,6 +407,24 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.ConnectionStatusLabel.setPixmap(QPixmap(GuiFilesPath.GREEN_CIRCLE))
         self.ConnectionStatus.setText(ConnectionDefinitions.get_state_description(status))
         self.ConnectionStatusLabel.setPixmap(QPixmap(ConnectionDefinitions.get_state_icon_path(status)))
+
+    def process_repeat_change(self, interval_name: str) -> None:
+        icon_file: FilePath = GuiFilesPath.GREEN_CIRCLE
+
+        if interval_name == ButtonAction.KEEP_ALIVE_STOP:
+            icon_file: FilePath = GuiFilesPath.GREY_CIRCLE
+
+        self.ButtonRepeat.setIcon(QIcon(QPixmap(icon_file)))
+        self.ButtonRepeat.menu().clear()
+
+        button_action_menu = deepcopy(self.buttons_menu_structure.get(self.ButtonRepeat))
+
+        for action, function in button_action_menu.items():
+            if action == interval_name:
+                action = f"{ButtonAction.CURRENT_ACTION_MARK} {action}"  # Set checked
+
+            self.ButtonRepeat.menu().addAction(action, function)
+            self.ButtonRepeat.menu().addSeparator()
 
     # Change KeepAlive loop status
     def process_keep_alive_change(self, interval_name: str) -> None:
