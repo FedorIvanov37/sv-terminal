@@ -5,6 +5,7 @@ from pydantic import FilePath
 from binascii import hexlify, unhexlify
 from configparser import ConfigParser, NoSectionError, NoOptionError
 from common.lib.toolkit.generate_trans_id import generate_trans_id
+from common.lib.toolkit.toolkit import mask_secret
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Bitmap import Bitmap
 from common.lib.constants.DumpDefinition import DumpDefinition
@@ -88,7 +89,7 @@ class Parser:
         return dump
 
     @staticmethod
-    def join_complex_field(field, field_data, path=None) -> str:
+    def join_complex_field(field, field_data, path=None, hide_secrets: bool = False) -> str:
         spec: EpaySpecification = EpaySpecification()
 
         if path is None:
@@ -106,8 +107,11 @@ class Parser:
                                  "Set parameters in the Specification tool. ")
 
             if subfield_spec.fields:
-                result += Parser.join_complex_field(subfield, subfield_data, path)
+                result += Parser.join_complex_field(subfield, subfield_data, path, hide_secrets=hide_secrets)
             else:
+                if subfield_spec.is_secret and hide_secrets:
+                    subfield_data = mask_secret(subfield_data)
+                    
                 length = str(len(subfield_data))
                 length = length.zfill(subfield_spec.var_length)
                 result = f"{result}{subfield}{length}{subfield_data}"
@@ -271,7 +275,7 @@ class Parser:
                 try:
                     if transaction := function(filename):
                         break
-                        
+
                 except Exception as parsing_error:
                     warning(f"Cannot parse file as {extension}: {parsing_error}")
                     continue

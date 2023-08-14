@@ -74,6 +74,10 @@ class SpecItem(AbstractItem):
     def field_number(self):
         return self.text(SpecFieldDefinition.ColumnsOrder.FIELD)
 
+    @property
+    def is_secret(self):
+        return self.is_checked(SpecFieldDefinition.ColumnsOrder.SECRET)
+
     def __init__(self, field_data: list[str], checkboxes: dict[str, bool] = None):
         super(SpecItem, self).__init__(field_data)
         self.setup(checkboxes=checkboxes)

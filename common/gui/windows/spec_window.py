@@ -14,6 +14,7 @@ from common.gui.core.SpecView import SpecView
 from common.gui.windows.mti_spec_window import MtiSpecWindow
 from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
+from common.gui.constants.SpecFieldDef import SpecFieldDefinition
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):
@@ -138,11 +139,16 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.spec_accepted.emit(self.spec.name)
         self.changed = False
         self._mti_changed = False
-
+        self.accepted.emit()
+        
     def closeEvent(self, a0: QCloseEvent) -> None:
         self.process_close(a0)
 
     def item_changed(self, item, column):
+        if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER and \
+                column == SpecFieldDefinition.ColumnsOrder.SECRET:
+            return
+
         self.changed = True
 
     def backup(self):

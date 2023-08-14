@@ -39,12 +39,16 @@ class JsonView(QTreeWidget):
 
         return wrapper
 
+    @property
+    def hide_secret_fields(self):
+        return self.config.fields.hide_secrets
+
     def __init__(self, config: Config):
         super(JsonView, self).__init__()
         self.config: Config = config
         self._setup()
         self.delegate = QItemDelegate()
-        self.delegate.closeEditor.connect(self.hide_pan_after_edit)
+        self.delegate.closeEditor.connect(lambda: self.hide_secrets(self.root))
         self.setItemDelegate(self.delegate)
         self.undo_stack = QUndoStack()
 
@@ -77,14 +81,17 @@ class JsonView(QTreeWidget):
         self.undo_stack.redo()
         self.field_changed.emit()
 
-    def hide_pan_after_edit(self):  # TODO
+    def hide_secrets(self, parent=None):
+        if parent is None:
+            parent = self.root
+
         child: Item
 
-        for child in self.root.get_children():
-            if not child.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-                continue
+        for child in parent.get_children():
+            if child.get_children():
+                self.hide_secrets(parent=child)
 
-            child.hide_pan(True)
+            child.hide_secret()
 
     def disable_next_level(self, item, column=None):
         if not (current_item := self.currentItem()):
@@ -114,9 +121,11 @@ class JsonView(QTreeWidget):
             if item.generate_checkbox_checked():
                 item.field_data = FieldsGenerator.generate_field(item.field_number, self.config.fields.max_amount)
 
-        if column == FieldsSpec.ColumnsOrder.PROPERTY:
-            if item.text(column) == CheckBoxesDefinition.JSON_MODE:
+        if column == FieldsSpec.ColumnsOrder.PROPERTY and item.text(column) == CheckBoxesDefinition.JSON_MODE:
+            if item.json_mode_checkbox_checked():
                 self.set_json_mode(item)
+            else:
+                self.set_flat_mode(item)
 
         try:
             item.process_change_item()
@@ -128,10 +137,6 @@ class JsonView(QTreeWidget):
 
         if column == FieldsSpec.ColumnsOrder.FIELD:
             item.set_checkbox()
-
-        if column in (FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.FIELD):
-            item.hide_pan(True)
-            # self.undo_stack.push(UndoItemEditCommand(item, column, new_text=item.text(column)))
 
         try:
             self.validate(item, column)
@@ -285,8 +290,7 @@ class JsonView(QTreeWidget):
             if item.field_number != field:
                 continue
 
-            item.setText(FieldsSpec.ColumnsOrder.VALUE, value)
-            return
+            item.field_data = value
 
     def edit_item(self, item, column):
         if item is self.root:
@@ -299,7 +303,7 @@ class JsonView(QTreeWidget):
             return
 
         if column == FieldsSpec.ColumnsOrder.VALUE:
-            item.hide_pan(False)
+            item.hide_secret(False)
 
         self.editItem(item, column)
 
@@ -326,8 +330,8 @@ class JsonView(QTreeWidget):
         if self.config.fields.validation:
             self.validate_all()
 
-        # self.expandAll()
         self.make_order()
+        self.hide_secrets()
 
     def switch_json_mode(self, json_mode):
         for item in self.root.get_children():
@@ -336,47 +340,51 @@ class JsonView(QTreeWidget):
 
             item.set_checkbox(json_mode)
 
+            if not json_mode:
+                self.set_flat_mode(item)
+                continue
+
             self.set_json_mode(item)
 
-    def set_json_mode(self, item: Item) -> None:
-        if not self.spec.is_field_complex(item.get_field_path()):
+    def set_json_mode(self, item):
+        parsing_error_text: str = "Cannot change JSON mode due to parsing error(s)"
+
+        if item.get_children():
             return
 
+        if not isinstance(item.field_data, str):
+            return
+
+        try:
+            fields: RawFieldSet = Parser.split_complex_field(item.field_number, item.field_data)
+            self._parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
+
+        except Exception as parsing_error:
+            error(f"{parsing_error_text}: {parsing_error}")
+            item.set_checkbox(False)
+            return
+
+        item.field_data = ""
+        self.hide_secrets(parent=item)
+
+    def set_flat_mode(self, item):
         parsing_error_text: str = "Cannot change JSON mode due to parsing error(s)"
-        json_mode = item.json_mode_checkbox_checked()
 
-        if json_mode:  # Set JSON mode
-            if item.get_children():
-                return
+        if not item.get_children():
+            return
 
-            if not isinstance(item.field_data, str):
-                return
+        try:
+            fields: RawFieldSet = self.generate_fields(parent=item)
+            field_data: str = Parser.join_complex_field(item.field_number, fields)
+            item.takeChildren()
+            item.field_data = field_data
 
-            try:
-                fields: RawFieldSet = Parser.split_complex_field(item.field_number, item.field_data)
-                self._parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
+        except Exception as parsing_error:
+            error(parsing_error_text)
+            [error(line) for line in str(parsing_error).splitlines()]
+            item.set_checkbox()
 
-            except Exception as parsing_error:
-                error(f"{parsing_error_text}: {parsing_error}")
-                item.set_checkbox(False)
-                return
-
-            item.field_data = ""
-
-        if not json_mode:  # Set flat mode
-            if not item.get_children():
-                return
-
-            try:
-                fields: RawFieldSet = self.generate_fields(parent=item)
-                field_data: str = Parser.join_complex_field(item.field_number, fields)
-                item.takeChildren()
-                item.field_data = field_data
-
-            except Exception as parsing_error:
-                error(parsing_error_text)
-                [error(line) for line in str(parsing_error).splitlines()]
-                item.set_checkbox()
+        self.hide_secrets()
 
     @void_qt_signals
     def set_checkboxes(self, transaction: Transaction):
@@ -402,6 +410,7 @@ class JsonView(QTreeWidget):
 
         for field, field_data in input_json.items():
             field_spec = specification.fields.get(field)
+
             description = field_spec.description if field_spec else None
 
             if isinstance(field_data, dict):
@@ -414,9 +423,7 @@ class JsonView(QTreeWidget):
                 child: Item = Item(string_data)
 
             parent.addChild(child)
-
-            if parent is self.root:
-                continue
+            child.set_spec(field_spec)
 
     def resize_all(self):
         for column in range(self.columnCount()):

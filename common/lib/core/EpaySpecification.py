@@ -49,6 +49,15 @@ class EpaySpecification(EpaySpecificationData):
             self.MESSAGE_TYPE_INDICATORS.REVERSAL_ADVICE_RESPONSE
         )
 
+    def is_secret(self, path: type_field_path) -> bool:
+        spec = self.spec
+
+        for field in path:
+            if not (spec := spec.fields.get(field)):
+                return False
+
+        return spec.is_secret
+
     def get_generated_fields_dict(self):
         return {field.description: field.field_number for field in self.spec.fields.values() if field.generate}
 

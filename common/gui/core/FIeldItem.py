@@ -2,17 +2,18 @@ from typing import Callable
 from PyQt6 import QtGui
 from PyQt6.QtWidgets import QTreeWidgetItem
 from common.lib.data_models.EpaySpecificationModel import IsoField
-from common.lib.toolkit.toolkit import mask_pan
+from common.lib.toolkit.toolkit import mask_pan, mask_secret
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.gui.core.AbstractItem import AbstractItem
 from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
+from common.lib.toolkit.toolkit import secret_hide_mark
 
 
 class Item(AbstractItem):
     epay_spec: EpaySpecification = EpaySpecification()
     spec: IsoField = None
-    pan = ""
+    secret = ""
 
     def void_tree_signals(function: Callable):
         def wrapper(self, *args, **kwargs):
@@ -32,52 +33,82 @@ class Item(AbstractItem):
 
     @property
     def field_data(self):
-        if self.field_number == self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            return self.pan if self.pan else self.text(FieldsSpec.ColumnsOrder.VALUE)
+        if self.is_secret and self.secret:
+            return self.secret
 
         return self.text(FieldsSpec.ColumnsOrder.VALUE)
 
     @field_data.setter
     def field_data(self, field_data):
         self.setText(FieldsSpec.ColumnsOrder.VALUE, field_data)
+        self.secret = ""
+        self.hide_secret()
 
     @property
     def field_number(self):
         return self.text(FieldsSpec.ColumnsOrder.FIELD)
 
-    def __init__(self, item_data: list[str]):
-        super(Item, self).__init__(item_data)
-        field_path = self.get_field_path()
-        self.spec: IsoField = self.epay_spec.get_field_spec(field_path)
+    @property
+    def is_secret(self):
+        if not (spec := self.epay_spec.get_field_spec(self.get_field_path())):
+            spec = self.spec
 
-        if self.field_number == self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            self.pan = self.field_data
-            self.hide_pan(True)
+        return spec and spec.is_secret
+
+    def __init__(self, item_data: list[str], spec=None):
+        super(Item, self).__init__(item_data)
+        self.spec = spec if spec else self.spec
 
     def addChild(self, item):
         item.spec = self.epay_spec.get_field_spec(item.get_field_path())
         QTreeWidgetItem.addChild(self, item)
         item.set_length()
 
-    def set_spec(self):
-        self.spec: IsoField = self.epay_spec.get_field_spec(self.get_field_path())
+    def set_spec(self, spec: IsoField | None = None):
+        if not spec:
+            self.spec: IsoField = self.epay_spec.get_field_spec(self.get_field_path())
+
+        self.spec = spec
+
+    def hide_secret(self, hide_the_secret: bool | None = None):
+        if not self.treeWidget().hide_secret_fields:
+            if self.field_number != self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+                hide_the_secret = False
+
+        if hide_the_secret is None:
+            hide_the_secret = self.is_secret
+
+        if hide_the_secret:
+            self.mask_secret_value()
+
+        if not hide_the_secret:
+            self.show_secret_value()
+
+    def _hide_secret(self, hide_the_secret: bool | None = None):
+        if self.field_number != self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER and \
+             not self.treeWidget().hide_secret_fields:
+                hide_the_secret = False
+
+        if hide_the_secret is None:
+            hide_the_secret = self.is_secret
+
+        if hide_the_secret:
+            self.mask_secret_value()
+            return
+
+        self.show_secret_value()
 
     @void_tree_signals
-    def hide_pan(self, hide=True):
-        if not self.field_number == self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            return
+    def mask_secret_value(self):
+        secret = self.field_data
 
-        if not hide:
-            self.setText(FieldsSpec.ColumnsOrder.VALUE, self.pan)
-            self.pan = ""
-            return
+        if self.field_number == self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+            mask = mask_pan(secret)
+        else:
+            mask = mask_secret(secret)
 
-        if not (pan := self.field_data):
-            return
-
-        mask = mask_pan(pan)
         self.setText(FieldsSpec.ColumnsOrder.VALUE, mask)
-        self.pan = pan
+        self.secret = secret
 
     def generate_checkbox_checked(self):
         if self.field_number not in FieldsSpec.generated_fields:
@@ -90,6 +121,14 @@ class Item(AbstractItem):
             return False
 
         return bool(self.checkState(FieldsSpec.ColumnsOrder.PROPERTY).value)
+
+    @void_tree_signals
+    def show_secret_value(self):
+        if secret_hide_mark not in self.text(FieldsSpec.ColumnsOrder.VALUE):
+            return
+
+        self.setText(FieldsSpec.ColumnsOrder.VALUE, self.secret)
+        self.secret = ""
 
     @void_tree_signals
     def set_checkbox(self, checked=True):

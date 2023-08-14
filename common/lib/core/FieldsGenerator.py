@@ -21,13 +21,15 @@ class FieldsGenerator:
 
         return f"{mti}{stan}{date}"
 
-    @staticmethod
-    def set_trans_id_to_47_072(transaction: Transaction) -> Transaction:  # TODO
-        try:
-            transaction.data_fields["47"]["072"] = transaction.trans_id
-        except (KeyError, TypeError):
-            ...
+    def set_trans_id(self, transaction: Transaction) -> Transaction:
+        if not transaction.data_fields.get(self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD):
+            return transaction
 
+        try:  # TODO
+            transaction.data_fields[self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD]["072"] = transaction.trans_id
+        except (KeyError, TypeError):
+            pass
+        
         return transaction
 
     def set_generated_fields(self, transaction: Transaction) -> Transaction:

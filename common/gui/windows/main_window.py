@@ -301,6 +301,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
 
+    def hide_secrets(self):
+        self.json_view.hide_secrets()
+
     # Usually disables in fields flat-mode to avoid subfields creation
     def disable_next_level_button(self, disable: bool = True) -> None:
         self.NextLevelButton.setDisabled(disable)

@@ -25,6 +25,7 @@ class Fields(BaseModel):
     send_internal_id: bool = True
     validation: bool = True
     json_mode: bool = True
+    hide_secrets: bool = True
 
     @validator("max_amount")
     def amount_should_be_digit(cls, max_amount: str):

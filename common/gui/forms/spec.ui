@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1150</width>
+    <width>1200</width>
     <height>700</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1150</width>
+    <width>1200</width>
     <height>700</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1150</width>
+    <width>1200</width>
     <height>700</height>
    </size>
   </property>
@@ -112,6 +112,11 @@
      <property name="allColumnsShowFocus">
       <bool>true</bool>
      </property>
+     <column>
+      <property name="text">
+       <string notr="true">1</string>
+      </property>
+     </column>
     </widget>
    </item>
    <item row="4" column="0" colspan="2">

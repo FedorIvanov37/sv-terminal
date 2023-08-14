@@ -4,7 +4,7 @@ from common.lib.constants.TextConstants import TextConstants
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Parser import Parser
-from common.lib.toolkit.toolkit import mask_pan
+from common.lib.toolkit.toolkit import mask_pan, mask_secret
 from common.lib.data_models.Config import Config
 
 
@@ -61,16 +61,20 @@ class LogPrinter:
             if field == self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
                 continue
 
-            if level is not debug and field == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-                field_data = mask_pan(field_data)
-
             if isinstance(field_data, dict):
                 try:
-                    field_data = Parser.join_complex_field(field, field_data)
+                    field_data = Parser.join_complex_field(field, field_data, hide_secrets=self.config.fields.hide_secrets)
                 except Exception as parsing_error:
                     error(f"Cannot print field {field}")
                     error(f"data parsing error: {parsing_error}")
                     continue
+
+            if field == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+                field_data = mask_pan(field_data)
+
+            if field != self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+                if self.config.fields.hide_secrets and self.spec.is_secret([field]):
+                    field_data = mask_secret(field_data)
 
             length = str(len(field_data))
             level(f"{put(field, size=3)}{put(length, size=3)}{put(field_data)}")

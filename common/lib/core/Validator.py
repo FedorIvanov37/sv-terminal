@@ -108,7 +108,7 @@ class Validator(object):
 
         for letter in value:
             if letter not in valid_values:
-                validation_errors.add(f"Incorrect letters in field {path}. Seems like a problem with encoding")
+                validation_errors.add(f"Non-printable letters in field {path}. Seems like a problem with encoding")
 
             if letter in ascii_letters and not field_spec.alpha:
                 validation_errors.add(f"Alphabetic values not allowed in field {path} - {field_spec.description}")

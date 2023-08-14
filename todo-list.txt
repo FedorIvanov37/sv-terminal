@@ -108,19 +108,36 @@ v0.16
 + Transaction field max_amount has no effect
 + Correct default message according to mandatory changes 22Q4
 + Add pydantic native data validation
++ Secret Fields
+
+
+• Hide secret fields in log
+
 
 • Add anonymous voluntary statistic collection
 • Reflect in the document - Main settings, the specification, files format
-
-
-
 • Set complex fields full expanding when switch JSON mode
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 • Change approach to fields path
 • No data in socket if delete field in spec
 • Exceptions policy
 • Correct and publish the Specification
 • Publish on confluence
 • Spec explanation
+
 
 • Statistics collection
     • Checkbox in settings

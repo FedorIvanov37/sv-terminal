@@ -1,17 +1,12 @@
-from dataclasses import dataclass
 from common.lib.core.EpaySpecification import EpaySpecification, IsoField
 
-
-@dataclass(frozen=True)
-class Config:
-    secret_hide_mark: str = '•'
-
+secret_hide_mark: str = '•'
 
 spec: EpaySpecification = EpaySpecification()
 
 
 def mask_secret(value: str) -> str:
-    return Config.secret_hide_mark * len(value)
+    return secret_hide_mark * len(value)
 
 
 def mask_pan(pan: str):
@@ -26,6 +21,6 @@ def mask_pan(pan: str):
     hide: int = length - head - tail
     head: str = pan[:head]
     tail: str = pan[-tail:]
-    hide: str = Config.secret_hide_mark * hide
+    hide: str = secret_hide_mark * hide
 
     return f"{head}{hide}{tail}"

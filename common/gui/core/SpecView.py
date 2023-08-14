@@ -1,4 +1,4 @@
-from PyQt6.QtCore import pyqtSignal, QObject
+from PyQt6.QtCore import pyqtSignal, QObject, Qt
 from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
@@ -6,6 +6,7 @@ from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
 from common.gui.constants.SpecFieldDef import SpecFieldDefinition
 from common.gui.core.SpecItem import SpecItem
 from common.gui.core.SpecValidator import SpecValidator
+from typing import Callable
 
 
 class SpecView(QObject):
@@ -16,6 +17,14 @@ class SpecView(QObject):
     @property
     def spec(self):
         return self._spec
+
+    def void_qt_signals(function: Callable):
+        def wrapper(self, *args):
+            self.blockSignals(True)
+            function(self, *args)
+            self.blockSignals(False)
+
+        return wrapper
 
     def __init__(self, tree: QTreeWidget, window):
         super(SpecView, self).__init__()
@@ -30,10 +39,38 @@ class SpecView(QObject):
         self.tree.addTopLevelItem(self.root)
         self.tree.itemDoubleClicked.connect(self.edit)
         self.tree.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
-        self.tree.itemChanged.connect(lambda item, column: self.validate_item(item, column))
+        self.tree.itemChanged.connect(self.process_item_change)
         self.tree.setSortingEnabled(False)
         self.parse_spec()
         self.make_order()
+
+    def process_item_change(self, item, column):
+        if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+            self.set_pan_as_secret(item, column)
+
+        if column == SpecFieldDefinition.ColumnsOrder.SECRET:
+            self.cascade_checkboxes(item)
+
+        self.validate_item(item, column)
+
+    @void_qt_signals
+    def cascade_checkboxes(self, parent: SpecItem):
+        check_state = parent.checkState(SpecFieldDefinition.ColumnsOrder.SECRET)
+
+        for item in parent.get_children():
+            item.setCheckState(SpecFieldDefinition.ColumnsOrder.SECRET, check_state)
+
+            if item.get_children():
+                self.cascade_checkboxes(item)
+
+    def set_pan_as_secret(self, item: SpecItem, column: int):
+        if item.field_number != self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+            return
+
+        if column != SpecFieldDefinition.ColumnsOrder.SECRET:
+            return
+
+        item.setCheckState(column, Qt.CheckState.PartiallyChecked)
 
     def validate_item(self, item: SpecItem, column: int, validate_all=False):
         if item is self.root:
@@ -178,13 +215,15 @@ class SpecView(QObject):
                 SpecFieldDefinition.ColumnsOrder.ALPHA: field_data.alpha,
                 SpecFieldDefinition.ColumnsOrder.NUMERIC: field_data.numeric,
                 SpecFieldDefinition.ColumnsOrder.SPECIAL: field_data.special,
+                SpecFieldDefinition.ColumnsOrder.SECRET: field_data.is_secret
             }
 
             item: SpecItem = SpecItem(field_data_for_item, checkboxes=checkboxes)
 
-            parent.addChild(item)
+            if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+                self.set_pan_as_secret(item, SpecFieldDefinition.ColumnsOrder.SECRET)
 
-            item.set_spec()
+            parent.addChild(item)
 
             if field_data.fields:
                 self.parse_spec_fields(input_json=field_data.fields, parent=item)
@@ -221,6 +260,7 @@ class SpecView(QObject):
                     special=row.special,
                     reserved_for_future=row.reserved_for_future,
                     description=row.description,
+                    is_secret=row.is_secret,
                     fields=None
                 )
 

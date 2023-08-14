@@ -93,7 +93,7 @@ class SvTerminalGui(SvTerminal):
             window.field_added: self.set_bitmap,
             window.settings: self.settings,
             window.hotkeys: lambda: HotKeysHintWindow().exec(),
-            window.specification: lambda: SpecWindow().exec(),
+            window.specification: self.run_specification_window,
             window.about: lambda: AboutWindow(),
             window.keep_alive: self.set_keep_alive_interval,
             self.connector.stateChanged: self.set_connection_status,
@@ -101,6 +101,11 @@ class SvTerminalGui(SvTerminal):
 
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
+
+    def run_specification_window(self):
+        spec_window = SpecWindow()
+        spec_window.accepted.connect(self.window.hide_secrets)
+        spec_window.exec()
 
     def echo_test(self):
         try:
@@ -140,6 +145,9 @@ class SvTerminalGui(SvTerminal):
 
         if old_config.fields.json_mode != self.config.fields.json_mode:
             self.window.set_json_mode(self.config.fields.json_mode)
+
+        if old_config.fields.hide_secrets != self.config.fields.hide_secrets:
+            self.window.hide_secrets()
 
         if old_config.smartvista.keep_alive_mode != self.config.smartvista.keep_alive_mode:
             interval_name = KeepAliveInterval.KEEP_ALIVE_STOP
@@ -348,7 +356,6 @@ class SvTerminalGui(SvTerminal):
         try:
             self.window.set_mti_value(transaction.message_type)
             self.window.set_fields(transaction)
-            self.set_generated_fields(transaction)
             self.set_bitmap()
 
         except ValueError as fields_settings_error:
