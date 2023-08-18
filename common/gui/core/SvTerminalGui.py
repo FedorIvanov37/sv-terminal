@@ -124,24 +124,22 @@ class SvTerminalGui(SvTerminal):
     def set_trans_loop_interval(self, interval_name: str):
         if interval_name == KeepAliveInterval.KEEP_ALIVE_STOP:
             self.stop_transaction_loop()
+            info("Transaction loop is deactivated")
 
         if interval := KeepAliveInterval.get_interval_time(interval_name):
             self.activate_transaction_loop(interval)
+            info("Transaction loop is activated")
 
         self.window.process_repeat_change(interval_name)
 
     def auto_send_transaction(self):
-        try:
-            transaction: Transaction = self.parse_main_window()
+        info("Sending auto transaction")
 
-        except Exception as window_parsing_error:
-            error(f"MainWindow parsing error: {window_parsing_error}")
+        if self.connector.connection_in_progress():
+            warning("Cannot repeat transaction while connection is in progress")
             return
 
-        try:
-            self.send(transaction)
-        except Exception as sending_error:
-            error(f"Transaction sending error: {sending_error}")
+        self.window.send.emit()
 
     def echo_test(self):
         try:

@@ -114,13 +114,10 @@ v0.16
 
 
 • Transaction repeat
-
 • Add anonymous voluntary statistic collection
 • Reflect in the document - Main settings, the specification, files format
 • Set complex fields full expanding when switch JSON mode
-
-
-
+• QTabWidget
 
 
 
