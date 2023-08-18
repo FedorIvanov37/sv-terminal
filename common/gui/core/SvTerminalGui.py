@@ -110,17 +110,16 @@ class SvTerminalGui(SvTerminal):
         spec_window.accepted.connect(self.window.hide_secrets)
         spec_window.exec()
 
-    def repeat_transaction(self):
-        ...
-
     def activate_transaction_loop(self, interval: int):
         self.stop_transaction_loop()
         self.trans_loop_timer = QTimer()
-        self.trans_loop_timer.timeout.connect(self.send_transaction)
+        self.trans_loop_timer.timeout.connect(self.auto_send_transaction)
         self.trans_loop_timer.start(int(interval) * 1000)
+        info(f"Transaction repeat set to {interval} second(s)")
 
     def stop_transaction_loop(self):
         self.trans_loop_timer.stop()
+        info("Transaction repeat stopped")
 
     def set_trans_loop_interval(self, interval_name: str):
         if interval_name == KeepAliveInterval.KEEP_ALIVE_STOP:
@@ -131,7 +130,7 @@ class SvTerminalGui(SvTerminal):
 
         self.window.process_repeat_change(interval_name)
 
-    def send_transaction(self):
+    def auto_send_transaction(self):
         try:
             transaction: Transaction = self.parse_main_window()
 
