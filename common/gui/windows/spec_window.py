@@ -1,5 +1,4 @@
 from json import dumps
-from re import search
 from typing import Optional
 from datetime import datetime
 from pydantic import ValidationError
@@ -25,11 +24,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     _spec: EpaySpecification = EpaySpecification()
     _spec_accepted: pyqtSignal = pyqtSignal(str)
     _spec_rejected: pyqtSignal = pyqtSignal()
-    _search: pyqtSignal = pyqtSignal(str)
-
-    @property
-    def search(self):
-        return self._search
 
     @property
     def spec_accepted(self):
@@ -80,13 +74,13 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.ParseFile.pressed.connect(self.parse_file)
         self.ButtonSetMti.clicked.connect(self.set_mti)
         self.spec_accepted.connect(lambda name: self.set_status(f"Specification applied - {name}"))
-        self.SearchLine.textEdited.connect(self.activate_search)
+        self.SearchLine.textEdited.connect(self.SpecView.search)
         self.SearchLine.editingFinished.connect(lambda: self.SpecView.tree.setFocus())
         QShortcut(QKeySequence(QKeySequence.StandardKey.Find), self).activated.connect(self.SearchLine.setFocus)
 
         apply_menu = QMenu()
 
-        for action in ("For current session", "Permanently"):  # TODO Hardcode
+        for action in (ButtonAction.FOR_CURRENT_SESSION, ButtonAction.PERMANENTLY):
             apply_menu.addAction(action, self.apply)
 
         self.ButtonApply.setMenu(apply_menu)
@@ -108,19 +102,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def unhide_all(self):
         if self.SearchLine.text() == str():
             self.SpecView.unhide_all()
-
-    def activate_search(self):
-        text = self.SearchLine.text()
-
-        if not text:
-            self.SpecView.unhide_all()
-            return
-
-        if search("^(?:\d+(\.|/)?)+$", text):
-            self.SpecView.goto(text)
-            return
-
-        self.SpecView.search(text)
 
     def minus(self):
         self.changed = True
@@ -152,13 +133,13 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     
     def apply(self, commit: bool = None):
         if commit is None:
-            commit = self.sender().text().upper() == "PERMANENTLY"  # TODO Hardcode
+            commit = self.sender().text().upper() == ButtonAction.PERMANENTLY
 
         try:
             self.SpecView.reload_spec(commit)
 
-        except Exception as E:
-            self.set_status(str(E), error=True)
+        except Exception as apply_error:
+            self.set_status(str(apply_error), error=True)
             self.spec_rejected.emit()
             return
 
@@ -240,7 +221,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             text_message.append(f"{text[position: position + 150]}")
 
         if error:
-            self.StatusLabel.setStyleSheet("color: red")  # TODO Hardcode
+            self.StatusLabel.setStyleSheet("color: red")
             text_message[int()] = f"Error: {text_message[int()]}"
         else:
             self.StatusLabel.setStyleSheet("color: black")

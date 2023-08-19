@@ -1,4 +1,4 @@
-from re import search
+from re import search as regexp_search
 from PyQt6.QtCore import pyqtSignal, QObject, Qt
 from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -8,6 +8,7 @@ from common.gui.constants.SpecFieldDef import SpecFieldDefinition
 from common.gui.core.SpecItem import SpecItem
 from common.gui.core.SpecValidator import SpecValidator
 from common.gui.decorators.void_qt_signals import void_qt_signals
+from common.gui.constants.SearchDefinition import SearchDefinition
 
 
 class SpecView(QObject):
@@ -21,7 +22,7 @@ class SpecView(QObject):
 
     def __init__(self, tree: QTreeWidget, window):
         super(SpecView, self).__init__()
-        self.root: SpecItem = SpecItem(["Specification"])
+        self.root: SpecItem = SpecItem([SpecFieldDefinition.SPECIFICATION])
         self.tree: QTreeWidget = tree
         self.window = window
         self.validator = SpecValidator()
@@ -37,7 +38,7 @@ class SpecView(QObject):
         self.parse_spec()
         self.make_order()
 
-    def search(self, input_data: str, parent: SpecItem | None = None):
+    def find_text(self, input_data: str, parent: SpecItem | None = None):
         if not input_data:
             self.unhide_all()
             return
@@ -53,21 +54,43 @@ class SpecView(QObject):
                 continue
 
             if item.get_children:
-                self.search(input_data, parent=item)
+                self.find_text(input_data, parent=item)
 
-            item_not_found: bool = not any((
-                    input_data in item.field_number,
-                    input_data.lower() in item.description.lower(),
-                    item.get_children() and self.value_in_item(input_data, item)
-                ))
-
-            item.setHidden(item_not_found)
-
-            if not item_not_found:
-                item.setExpanded(True)
+            item_found: bool = self.value_in_item(input_data, item)
+            item.setHidden(not item_found)
+            item.setExpanded(item_found)
 
             if input_data in item.field_number and item.get_children():
                 self.unhide_all(item)
+
+    def goto(self, path: str):
+        def _goto(field_path: list[str], parent: SpecItem | None = None):
+            if parent is None:
+                parent = self.root
+
+            self.unhide_all(parent)
+
+            item: SpecItem
+
+            for item in parent.get_children():
+                if item.get_children():
+                    _goto(field_path, item)
+
+                if item.get_field_path() != field_path:
+                    continue
+
+                self.tree.setCurrentItem(item)
+                self.tree.scrollToItem(item)
+
+                item.setExpanded(True)
+
+        path: str = path.replace(SearchDefinition.PATH_SEPARATOR_SLASH, SearchDefinition.PATH_SEPARATOR_DOT)
+        path: list[str] = path.split(SearchDefinition.PATH_SEPARATOR_DOT)
+
+        while str() in path:
+            path.remove(str())
+
+        _goto(path)
 
     def value_in_item(self, value: str, item: SpecItem):
         if value in item.field_number:
@@ -93,32 +116,16 @@ class SpecView(QObject):
             if not item.reserved_for_future:
                 item.setHidden(False)
 
-    def goto(self, path: str):
-        def _goto(field_path: list[str], parent: SpecItem | None = None):
-            if parent is None:
-                parent = self.root
+    def search(self, text):
+        if not text:
+            self.unhide_all()
+            return
 
-            self.unhide_all(parent)
+        if regexp_search(SearchDefinition.FIELD_PATH_PATTERN, text):
+            self.goto(text)
+            return
 
-            item: SpecItem
-
-            for item in parent.get_children():
-                if item.get_children():
-                    _goto(field_path, item)
-
-                if item.get_field_path() != field_path:
-                    continue
-
-                self.tree.setCurrentItem(item)
-                self.tree.scrollToItem(item)
-
-        path: str = path.replace('/', '.')
-        path: list[str] = path.split('.')
-
-        while str() in path:
-            path.remove(str())
-
-        _goto(path)
+        self.find_text(text)
 
     def process_item_change(self, item, column):
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:

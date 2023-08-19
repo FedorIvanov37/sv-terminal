@@ -25,7 +25,7 @@ class JsonView(QTreeWidget):
     need_disable_next_level: pyqtSignal = pyqtSignal()
     need_enable_next_level: pyqtSignal = pyqtSignal()
 
-    root: Item = Item(["Message"])
+    root: Item = Item([FieldsSpec.MESSAGE])
     spec: EpaySpecification = EpaySpecification()
 
     @property
@@ -74,16 +74,9 @@ class JsonView(QTreeWidget):
             if item.get_children:
                 self.search(input_data, parent=item)
 
-            input_data = input_data.lower()
-
-            item_not_found: bool = not any((
-                    input_data in item.field_number,
-                    input_data in item.field_data.lower(),
-                    input_data in item.description.lower(),
-                    item.get_children() and self.value_in_item(input_data, item)
-                ))
-
-            item.setHidden(item_not_found)
+            item_found: bool = self.value_in_item(input_data, item)
+            item.setHidden(not item_found)
+            item.setExpanded(item_found)
 
             if input_data in item.field_number and item.get_children():
                 self.unhide_all(item)
