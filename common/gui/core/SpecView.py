@@ -38,7 +38,7 @@ class SpecView(QObject):
 
     def process_item_change(self, item, column):
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            self.set_pan_as_secret(item, column)
+            self.set_pan_as_secret(item)
 
         if column == SpecFieldDefinition.ColumnsOrder.SECRET:
             self.cascade_checkboxes(item)
@@ -55,14 +55,11 @@ class SpecView(QObject):
             if item.get_children():
                 self.cascade_checkboxes(item)
 
-    def set_pan_as_secret(self, item: SpecItem, column: int):
+    def set_pan_as_secret(self, item: SpecItem):
         if item.field_number != self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
             return
 
-        if column != SpecFieldDefinition.ColumnsOrder.SECRET:
-            return
-
-        item.setCheckState(column, Qt.CheckState.PartiallyChecked)
+        item.setCheckState(SpecFieldDefinition.ColumnsOrder.SECRET, Qt.CheckState.PartiallyChecked)
 
     def validate_item(self, item: SpecItem, column: int, validate_all=False):
         if item is self.root:
@@ -213,7 +210,7 @@ class SpecView(QObject):
             item: SpecItem = SpecItem(field_data_for_item, checkboxes=checkboxes)
 
             if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-                self.set_pan_as_secret(item, SpecFieldDefinition.ColumnsOrder.SECRET)
+                self.set_pan_as_secret(item)
 
             parent.addChild(item)
 
