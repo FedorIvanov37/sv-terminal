@@ -78,8 +78,9 @@ of SvTerminal evolution.
 * Updates
   * User doc update: main settings, the specification, files format, and many other things are reflected in the document
   * Default message corrected according to mandatory changes 23Q4
-
+  * Lines wrap on log display 
   
+
 * Fixed
   * All problems around old JSON files incompatibility  
   * Transaction field max_amount has no effect

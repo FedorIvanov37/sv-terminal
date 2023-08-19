@@ -217,7 +217,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonHotkeys: self.hotkeys,
             self.ButtonSettings: self.settings,
             self.ButtonCopyBitmap: self.copy_bitmap,
-            # self.ButtonClearSearch: self.clear_search,
         }
 
         json_view_connection_map = {
@@ -328,9 +327,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             for action, function in actions.items():
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
-
-    def clear_search(self):
-        self.SearchLine.setText(str())
 
     def activate_search(self):
         self.SearchLine.setFocus()

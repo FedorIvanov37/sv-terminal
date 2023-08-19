@@ -133,7 +133,7 @@ class Ui_MainWindow(object):
         font.setPointSize(11)
         self.LogArea.setFont(font)
         self.LogArea.setFocusPolicy(QtCore.Qt.FocusPolicy.ClickFocus)
-        self.LogArea.setLineWrapMode(QtWidgets.QTextEdit.LineWrapMode.NoWrap)
+        self.LogArea.setLineWrapMode(QtWidgets.QTextEdit.LineWrapMode.WidgetWidth)
         self.LogArea.setReadOnly(True)
         self.LogArea.setAcceptRichText(False)
         self.LogArea.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.TextSelectableByKeyboard|QtCore.Qt.TextInteractionFlag.TextSelectableByMouse)
