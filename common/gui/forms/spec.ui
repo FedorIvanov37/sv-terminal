@@ -68,6 +68,12 @@
    </item>
    <item row="1" column="0">
     <widget class="QCheckBox" name="CheckBoxReadOnly">
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Read only mode</string>
      </property>
@@ -75,6 +81,12 @@
    </item>
    <item row="2" column="0">
     <widget class="QCheckBox" name="CheckBoxHideReverved">
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Hide reserved for future</string>
      </property>
@@ -132,36 +144,40 @@
        <item>
         <layout class="QHBoxLayout" name="NextLevelLayout"/>
        </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
       </layout>
      </item>
      <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+      <widget class="QLineEdit" name="SearchLine">
+       <property name="font">
+        <font>
+         <family>Calibri</family>
+         <pointsize>12</pointsize>
+        </font>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
+       <property name="inputMethodHints">
+        <set>Qt::ImhLatinOnly</set>
        </property>
-      </spacer>
+       <property name="maxLength">
+        <number>128</number>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
+       </property>
+       <property name="placeholderText">
+        <string>Search: text | Goto: field path</string>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="ButtonSetMti">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -172,6 +188,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="ButtonApply">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -182,6 +203,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="ButtonReset">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -192,6 +218,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="ButtonBackup">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -202,6 +233,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="ParseFile">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -212,6 +248,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="ButtonClean">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -222,6 +263,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="ButtonClose">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>

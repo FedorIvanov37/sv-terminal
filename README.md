@@ -70,7 +70,8 @@ of SvTerminal evolution.
 * New features
   * Secret fields can be hidden in logs and transaction constructor
   * Transactions repeat loop
-  * MainWindow search line 
+  * Main Window search line 
+  * Spec Window search line
   * Pydantic native data validation
 
 

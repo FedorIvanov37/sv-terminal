@@ -74,9 +74,12 @@ class JsonView(QTreeWidget):
             if item.get_children:
                 self.search(input_data, parent=item)
 
-            item_not_found = not any((
+            input_data = input_data.lower()
+
+            item_not_found: bool = not any((
                     input_data in item.field_number,
-                    input_data.lower() in item.field_data.lower(),
+                    input_data in item.field_data.lower(),
+                    input_data in item.description.lower(),
                     item.get_children() and self.value_in_item(input_data, item)
                 ))
 
@@ -92,6 +95,9 @@ class JsonView(QTreeWidget):
             return True
 
         if value.lower() in item.field_data.lower():
+            return True
+
+        if value.lower() in item.description.lower():
             return True
 
         for child in item.get_children():

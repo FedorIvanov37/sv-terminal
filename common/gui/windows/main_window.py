@@ -217,7 +217,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonHotkeys: self.hotkeys,
             self.ButtonSettings: self.settings,
             self.ButtonCopyBitmap: self.copy_bitmap,
-            self.ButtonClearSearch: self.clear_search,
+            # self.ButtonClearSearch: self.clear_search,
         }
 
         json_view_connection_map = {

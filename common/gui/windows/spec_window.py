@@ -1,8 +1,9 @@
 from json import dumps
+from re import search
 from typing import Optional
 from datetime import datetime
 from pydantic import ValidationError
-from PyQt6.QtGui import QCloseEvent, QKeyEvent
+from PyQt6.QtGui import QCloseEvent, QKeyEvent, QKeySequence, QShortcut
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog, QPushButton
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -24,6 +25,11 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     _spec: EpaySpecification = EpaySpecification()
     _spec_accepted: pyqtSignal = pyqtSignal(str)
     _spec_rejected: pyqtSignal = pyqtSignal()
+    _search: pyqtSignal = pyqtSignal(str)
+
+    @property
+    def search(self):
+        return self._search
 
     @property
     def spec_accepted(self):
@@ -74,6 +80,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.ParseFile.pressed.connect(self.parse_file)
         self.ButtonSetMti.clicked.connect(self.set_mti)
         self.spec_accepted.connect(lambda name: self.set_status(f"Specification applied - {name}"))
+        self.SearchLine.textEdited.connect(self.activate_search)
+        self.SearchLine.editingFinished.connect(lambda: self.SpecView.tree.setFocus())
+        QShortcut(QKeySequence(QKeySequence.StandardKey.Find), self).activated.connect(self.SearchLine.setFocus)
 
         apply_menu = QMenu()
 
@@ -95,6 +104,23 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         super(SpecWindow, self).__init__()
         self.setupUi(self)
         self.setup()
+
+    def unhide_all(self):
+        if self.SearchLine.text() == str():
+            self.SpecView.unhide_all()
+
+    def activate_search(self):
+        text = self.SearchLine.text()
+
+        if not text:
+            self.SpecView.unhide_all()
+            return
+
+        if search("^(?:\d+(\.|/)?)+$", text):
+            self.SpecView.goto(text)
+            return
+
+        self.SpecView.search(text)
 
     def minus(self):
         self.changed = True

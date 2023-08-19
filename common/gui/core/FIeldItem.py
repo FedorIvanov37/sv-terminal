@@ -47,6 +47,10 @@ class Item(AbstractItem):
 
         return spec and spec.is_secret
 
+    @property
+    def description(self):
+        return self.text(FieldsSpec.ColumnsOrder.DESCRIPTION)
+
     def __init__(self, item_data: list[str], spec=None):
         super(Item, self).__init__(item_data)
         self.spec = spec if spec else self.spec

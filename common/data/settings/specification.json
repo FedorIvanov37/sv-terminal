@@ -6827,7 +6827,7 @@
                     "numeric": true,
                     "special": false,
                     "reserved_for_future": false,
-                    "description": "Service Level Indicator (?)",
+                    "description": "IPS Service Level Indicator",
                     "is_secret": false,
                     "fields": null
                 }
@@ -9198,7 +9198,7 @@
                 "63"
             ],
             "min_length": 0,
-            "max_length": 100,
+            "max_length": 0,
             "var_length": 0,
             "tag_length": 0,
             "generate": false,

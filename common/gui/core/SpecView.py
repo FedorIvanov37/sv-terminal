@@ -1,3 +1,4 @@
+from re import search
 from PyQt6.QtCore import pyqtSignal, QObject, Qt
 from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -35,6 +36,89 @@ class SpecView(QObject):
         self.tree.setSortingEnabled(False)
         self.parse_spec()
         self.make_order()
+
+    def search(self, input_data: str, parent: SpecItem | None = None):
+        if not input_data:
+            self.unhide_all()
+            return
+
+        if parent is None:
+            parent = self.root
+
+        item: SpecItem
+
+        for item in parent.get_children():
+            if item.reserved_for_future:
+                item.setHidden(True)
+                continue
+
+            if item.get_children:
+                self.search(input_data, parent=item)
+
+            item_not_found: bool = not any((
+                    input_data in item.field_number,
+                    input_data.lower() in item.description.lower(),
+                    item.get_children() and self.value_in_item(input_data, item)
+                ))
+
+            item.setHidden(item_not_found)
+
+            if not item_not_found:
+                item.setExpanded(True)
+
+            if input_data in item.field_number and item.get_children():
+                self.unhide_all(item)
+
+    def value_in_item(self, value: str, item: SpecItem):
+        if value in item.field_number:
+            return True
+
+        if value.lower() in item.description.lower():
+            return True
+
+        for child in item.get_children():
+            if self.value_in_item(value, child):
+                return True
+
+        return False
+
+    def unhide_all(self, parent=None):
+        if parent is None:
+            parent = self.root
+
+        for item in parent.get_children():
+            if item.get_children():
+                self.unhide_all(item)
+
+            if not item.reserved_for_future:
+                item.setHidden(False)
+
+    def goto(self, path: str):
+        def _goto(field_path: list[str], parent: SpecItem | None = None):
+            if parent is None:
+                parent = self.root
+
+            self.unhide_all(parent)
+
+            item: SpecItem
+
+            for item in parent.get_children():
+                if item.get_children():
+                    _goto(field_path, item)
+
+                if item.get_field_path() != field_path:
+                    continue
+
+                self.tree.setCurrentItem(item)
+                self.tree.scrollToItem(item)
+
+        path: str = path.replace('/', '.')
+        path: list[str] = path.split('.')
+
+        while str() in path:
+            path.remove(str())
+
+        _goto(path)
 
     def process_item_change(self, item, column):
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
