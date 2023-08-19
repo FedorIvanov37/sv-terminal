@@ -4,12 +4,12 @@ from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
+from common.lib.data_models.Types import FieldPath
 from common.gui.constants.SpecFieldDef import SpecFieldDefinition
 from common.gui.core.SpecItem import SpecItem
 from common.gui.core.SpecValidator import SpecValidator
 from common.gui.decorators.void_qt_signals import void_qt_signals
 from common.gui.constants.SearchDefinition import SearchDefinition
-from common.lib.data_models.Types import FieldPath
 
 
 class SpecView(QObject):
@@ -140,7 +140,8 @@ class SpecView(QObject):
 
         self.validate_item(item, column, validate_all=True)
 
-    def cascade_tag_length(self, parent: SpecItem):
+    @staticmethod
+    def cascade_tag_length(parent: SpecItem):
         child_item: SpecItem
 
         for child_item in parent.get_children():
@@ -181,7 +182,7 @@ class SpecView(QObject):
             return
 
         item.set_item_color(red=False)
-            
+
     def hide_reserved(self, hide=True):
         item: SpecItem
 
@@ -243,7 +244,9 @@ class SpecView(QObject):
             return
 
         self.tree.setFocus()
+
         parent: SpecItem = item.parent()
+
         parent.takeChild(parent.indexOfChild(item))
 
     def plus(self):
@@ -372,4 +375,3 @@ class SpecView(QObject):
             fields=fields_set,
             mti=self.spec.mti
         )
-

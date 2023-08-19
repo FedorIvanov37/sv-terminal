@@ -68,18 +68,19 @@ of SvTerminal evolution.
 ## Release info
 
 * New features
-  * Secret fields can be hidden in logs and transaction constructor
+  * Hiding of secrets in logs and transaction constructor
   * Transactions repeat loop
-  * Main Window search line 
+  * Main Window search line, key sequence 
   * Spec Window search / goto line, key sequence 
   * Pydantic native data validation
 
 
 * Updates
-  * User doc update: main settings, the specification, files format, and many other things are reflected in the document
+  * User doc update: the specification, files format, and many other things are reflected in the document
   * Default message corrected according to mandatory changes 23Q4
   * Lines wrap on log display 
-  
+  * Checkboxes and Tag Length cascading in the Spec Window
+
 
 * Fixed
   * All problems around old JSON files incompatibility  
@@ -192,8 +193,9 @@ by file extension. When the extension is absent or unknown the Terminal will try
 pattern one by one. Better to set correct extension for each format. Refer to the
 [data formats description](#the-data-formats-description) to define correct extension for each file format
 
--*-*-*-GIF-*-*-*-*-*
+### Save transaction to file
 
+... 
 
 
 

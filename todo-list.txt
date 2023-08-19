@@ -116,11 +116,9 @@ v0.16
 + Search: MW line, clear button, key sequence, key sequence hint
 
 
-• Reflect in the document - Main settings, the specification, files format
+• Reflect in the document - Main settings, the specification+, files format+
 • Set complex fields full expanding when switch JSON mode
 • QTabWidget
-
-
 
 
 
@@ -130,37 +128,3 @@ v0.16
 • Correct and publish the Specification
 • Publish on confluence
 • Spec explanation
-
-
-• Statistics collection
-    • Checkbox in settings
-    • Document explanation
-    • Collection
-    • Backup
-
-• API
-    • Activation button
-    • API
-    • URL Mapping
-    • Postman collection
-    • Logger
-    • Document
-    • Settings window and config
-    • Thread
-    • Deactivation / reload
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
