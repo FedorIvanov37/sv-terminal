@@ -18,7 +18,7 @@
         "max_amount": "100",
         "build_fld_90": true,
         "send_internal_id": true,
-        "validation": false,
+        "validation": true,
         "json_mode": true,
         "hide_secrets": true
     }

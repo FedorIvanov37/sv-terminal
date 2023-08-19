@@ -9,6 +9,7 @@ from common.gui.core.SpecItem import SpecItem
 from common.gui.core.SpecValidator import SpecValidator
 from common.gui.decorators.void_qt_signals import void_qt_signals
 from common.gui.constants.SearchDefinition import SearchDefinition
+from common.lib.data_models.Types import FieldPath
 
 
 class SpecView(QObject):
@@ -64,7 +65,7 @@ class SpecView(QObject):
                 self.unhide_all(item)
 
     def goto(self, path: str):
-        def _goto(field_path: list[str], parent: SpecItem | None = None):
+        def _goto(field_path: FieldPath, parent: SpecItem | None = None):
             if parent is None:
                 parent = self.root
 
@@ -85,7 +86,7 @@ class SpecView(QObject):
                 item.setExpanded(True)
 
         path: str = path.replace(SearchDefinition.PATH_SEPARATOR_SLASH, SearchDefinition.PATH_SEPARATOR_DOT)
-        path: list[str] = path.split(SearchDefinition.PATH_SEPARATOR_DOT)
+        path: FieldPath = path.split(SearchDefinition.PATH_SEPARATOR_DOT)
 
         while str() in path:
             path.remove(str())
@@ -134,7 +135,16 @@ class SpecView(QObject):
         if column == SpecFieldDefinition.ColumnsOrder.SECRET:
             self.cascade_checkboxes(item)
 
-        self.validate_item(item, column)
+        if column == SpecFieldDefinition.ColumnsOrder.TAG_LENGTH:
+            self.cascade_tag_length(item)
+
+        self.validate_item(item, column, validate_all=True)
+
+    def cascade_tag_length(self, parent: SpecItem):
+        child_item: SpecItem
+
+        for child_item in parent.get_children():
+            child_item.var_length = parent.tag_length
 
     @void_qt_signals
     def cascade_checkboxes(self, parent: SpecItem):
@@ -167,7 +177,11 @@ class SpecView(QObject):
 
         except ValueError as validation_error:
             self.status_changed.emit(str(validation_error), True)
+            item.set_item_color(red=True)
+            return
 
+        item.set_item_color(red=False)
+            
     def hide_reserved(self, hide=True):
         item: SpecItem
 

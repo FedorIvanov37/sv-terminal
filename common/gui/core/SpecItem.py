@@ -30,6 +30,10 @@ class SpecItem(AbstractItem):
     def var_length(self):
         return self.text(SpecFieldDefinition.ColumnsOrder.VARIABLE_LENGTH)
 
+    @var_length.setter
+    def var_length(self, var_length):
+        self.setText(SpecFieldDefinition.ColumnsOrder.VARIABLE_LENGTH, var_length)
+
     @property
     def description(self):
         return self.text(SpecFieldDefinition.ColumnsOrder.DESCRIPTION)

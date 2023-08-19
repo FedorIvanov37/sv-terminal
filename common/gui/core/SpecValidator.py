@@ -85,9 +85,18 @@ class SpecValidator:
             except ValueError as validation_error:
                 raise ValueError(f"Field {field_path} length validation error {validation_error}")
 
+        for length in item.tag_length, item.var_length:
+            try:
+                self.validate_number(length, allow_zero=True)
+            except ValueError as validation_error:
+                raise ValueError(f"Field {field_path} length validation error {validation_error}")
+
         if int(item.min_length) > int(item.max_length):
             raise ValueError(f"Field {item.get_field_path(string=True)}, {SpecFieldDefinition.Columns.MIN_LENGTH}"
                              f" must be greater or equal to {SpecFieldDefinition.Columns.MAX_LENGTH}")
+
+        if int(item.tag_length) > 0 and not item.get_children():
+            raise ValueError(f"Non-zero Tag Len, but field {field_path} doesn't contain subfields")
 
     @staticmethod
     def validate_datatype_checkboxes(item):

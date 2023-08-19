@@ -1,6 +1,9 @@
-from PyQt6.QtWidgets import QTreeWidgetItem
+from PyQt6 import QtGui
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QTreeWidgetItem
 from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.data_models.Types import FieldPath
+from common.gui.decorators.void_qt_signals import void_tree_signals
 
 
 class AbstractItem(QTreeWidgetItem):
@@ -28,8 +31,8 @@ class AbstractItem(QTreeWidgetItem):
     def get_field_depth(self):
         return len(self.get_field_path())
 
-    def get_field_path(self, string=False) -> list[str] | str:
-        path: list[str] = list()
+    def get_field_path(self, string=False) -> FieldPath | str:
+        path: FieldPath = list()
         item = self
 
         while item.parent() is not None:
@@ -43,3 +46,10 @@ class AbstractItem(QTreeWidgetItem):
 
     def get_children(self) -> tuple:
         return tuple(self.child(child_id) for child_id in range(self.childCount()))
+
+    @void_tree_signals
+    def set_item_color(self, red=False):
+        color = "#ff0000" if red else "#000000"
+
+        for column in range(self.columnCount()):
+            self.setForeground(column, QtGui.QBrush(QtGui.QColor(color)))

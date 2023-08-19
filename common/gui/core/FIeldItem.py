@@ -159,10 +159,3 @@ class Item(AbstractItem):
             length = len(self.field_data)
 
         return length
-
-    @void_tree_signals
-    def set_item_color(self, red=False):
-        color = "#ff0000" if red else "#000000"
-
-        for column in range(self.columnCount()):
-            self.setForeground(column, QtGui.QBrush(QtGui.QColor(color)))

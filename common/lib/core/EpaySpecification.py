@@ -6,13 +6,13 @@ from common.lib.constants.MessageLength import MessageLength
 from common.lib.constants.EpaySpecificationData import EpaySpecificationData
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField
 from common.lib.constants.TermFilesPath import TermFilesPath
+from common.lib.data_models.Types import FieldPath
 
 
 @singleton
 class EpaySpecification(EpaySpecificationData):
     _MessageLength: MessageLength = MessageLength()
     _specification_model: EpaySpecModel = None
-    type_field_path = list[str]
 
     def __init__(self, filename: FilePath | None = None):
         if filename is None:
@@ -49,7 +49,7 @@ class EpaySpecification(EpaySpecificationData):
             self.MESSAGE_TYPE_INDICATORS.REVERSAL_ADVICE_RESPONSE
         )
 
-    def is_secret(self, path: type_field_path) -> bool:
+    def is_secret(self, path: FieldPath) -> bool:
         spec = self.spec
 
         for field in path:
@@ -72,7 +72,7 @@ class EpaySpecification(EpaySpecificationData):
     def get_fields_to_generate(self):
         return [field for field in self.spec.fields if self.spec.fields.get(field).generate]
 
-    def can_be_generated(self, field_path: type_field_path):
+    def can_be_generated(self, field_path: FieldPath):
         if not (field_spec := self.get_field_spec(field_path)):
             return False
 
@@ -135,7 +135,7 @@ class EpaySpecification(EpaySpecificationData):
 
         return False
 
-    def get_field_spec(self, path: type_field_path, spec=None) -> IsoField | None:
+    def get_field_spec(self, path: FieldPath, spec=None) -> IsoField | None:
         if spec is None:
             spec = self.spec
 
@@ -151,7 +151,7 @@ class EpaySpecification(EpaySpecificationData):
 
         return field_data
 
-    def is_field_complex(self, field_path: type_field_path):
+    def is_field_complex(self, field_path: FieldPath):
         if not (field_spec := self.get_field_spec(field_path)):
             return False
 
@@ -176,7 +176,7 @@ class EpaySpecification(EpaySpecificationData):
 
             return getattr(self.FIELD_DATE_FORMAT, field_name, "")
 
-    def get_field_data_kit(self, field_path: type_field_path):
+    def get_field_data_kit(self, field_path: FieldPath):
         field_spec: IsoField
 
         if not (field_spec := self.get_field_spec(field_path)):

@@ -1,6 +1,7 @@
 from string import digits, ascii_letters, punctuation
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
+from common.lib.data_models.Types import FieldPath
 
 
 class Validator(object):
@@ -18,7 +19,7 @@ class Validator(object):
         if mti not in self.spec.get_mti_codes():
             raise ValueError(f"Unknown MTI: {mti}")
 
-    def validate_fields(self, fields: TypeFields, field_path: list[str] | None = None):
+    def validate_fields(self, fields: TypeFields, field_path: FieldPath | None = None):
         if field_path is None:
             field_path = []
 
@@ -54,8 +55,8 @@ class Validator(object):
 
             raise ValueError(error_text)
 
-    def validate_field_path(self, path: list[str]):
-        def path_to_str(field_path: list[str]):
+    def validate_field_path(self, path: FieldPath):
+        def path_to_str(field_path: FieldPath):
             return ".".join(field_path)
 
         if not path:
@@ -78,7 +79,7 @@ class Validator(object):
         if not self.spec.get_field_spec(path=path):
             raise ValueError(f"Lost spec for field {str_path}")
 
-    def validate_field_data(self, field_path: list[str], value: TypeFields | str):
+    def validate_field_data(self, field_path: FieldPath, value: TypeFields | str):
         alphabetic = ascii_letters
         numeric = digits
         specials = punctuation + " "
