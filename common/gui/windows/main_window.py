@@ -173,6 +173,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
         self.process_keep_alive_change(ButtonAction.KEEP_ALIVE_STOP)
         self.process_repeat_change(ButtonAction.KEEP_ALIVE_STOP)
+        self.ButtonSend.setFocus()
 
     def _add_json_control_buttons(self) -> None:
         # Create and place the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"

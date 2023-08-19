@@ -304,7 +304,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::StrongFocus</enum>
         </property>
         <property name="text">
          <string>Send</string>
@@ -325,7 +325,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Repeat</string>
@@ -340,7 +340,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Reverse</string>
@@ -361,7 +361,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Clear log</string>
@@ -376,7 +376,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Copy log</string>
@@ -397,7 +397,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Parse file</string>
@@ -418,7 +418,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Save to file</string>
@@ -439,7 +439,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Clear message</string>
@@ -460,7 +460,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Reset message</string>
@@ -481,7 +481,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Print</string>
@@ -502,7 +502,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Keep Alive</string>
@@ -523,7 +523,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Echo-Test</string>
@@ -544,7 +544,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>[Re]connect</string>
@@ -565,7 +565,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Specification</string>
@@ -586,7 +586,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Hotkeys</string>
@@ -607,7 +607,7 @@
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Configuration</string>
