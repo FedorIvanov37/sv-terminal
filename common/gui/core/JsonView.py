@@ -119,6 +119,15 @@ class JsonView(QTreeWidget):
         self.undo_stack.redo()
         self.field_changed.emit()
 
+    def set_focus_after_search(self):
+        for item in self.root.get_children():
+            if item.isHidden():
+                continue
+
+            self.setCurrentItem(item)
+            self.setFocus()
+            return
+
     def hide_secrets(self, parent=None):
         if parent is None:
             parent = self.root
@@ -131,15 +140,18 @@ class JsonView(QTreeWidget):
 
             child.hide_secret()
 
-    def disable_next_level(self, item, column=None):
+    def disable_next_level(self, item: Item):
+        current_item: Item
+
         if not (current_item := self.currentItem()):
-            current_item = item
+            current_item: Item = item
 
         exemptions = [
             item.get_field_depth() != 1,
             not self.spec.is_field_complex(item.get_field_path()),
             item.json_mode_checkbox_checked() and item is current_item,
-            current_item.json_mode_checkbox_checked()
+            current_item.json_mode_checkbox_checked(),
+            not self.spec.is_field_complex(current_item.get_field_path())
         ]
 
         signal = self.need_enable_next_level if any(exemptions) else self.need_disable_next_level
@@ -244,7 +256,7 @@ class JsonView(QTreeWidget):
         self.undo_stack.push(UndoAddChildCommand(item, parent))
 
     @void_qt_signals
-    def minus(self, checked=None):
+    def minus(self, *args):
         item: Item | QTreeWidgetItem
 
         if not (item := self.currentItem()):
@@ -271,7 +283,7 @@ class JsonView(QTreeWidget):
         self.setFocus()
         self.field_removed.emit()
 
-    def next_level(self, checked=None):
+    def next_level(self, *args):
         current_item: Item | None = self.currentItem()
 
         if not current_item:
@@ -384,7 +396,7 @@ class JsonView(QTreeWidget):
 
             self.set_json_mode(item)
 
-    def set_json_mode(self, item):
+    def set_json_mode(self, item: Item):
         parsing_error_text: str = "Cannot change JSON mode due to parsing error(s)"
 
         if item.get_children():
@@ -403,6 +415,7 @@ class JsonView(QTreeWidget):
             return
 
         item.field_data = ""
+        # item.setExpanded(True)
         self.hide_secrets(parent=item)
 
     def set_flat_mode(self, item):

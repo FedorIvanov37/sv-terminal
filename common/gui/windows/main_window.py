@@ -57,11 +57,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _reset: pyqtSignal = pyqtSignal()
     _keep_alive: pyqtSignal = pyqtSignal(str)
     _repeat: pyqtSignal = pyqtSignal(str)
-    _search_requested: pyqtSignal = pyqtSignal(str)
-
-    @property
-    def search_requested(self):
-        return self._search_requested
 
     @property
     def repeat(self):
@@ -228,9 +223,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.json_view.need_enable_next_level: self.enable_next_level_button,
         }
 
-        other_connection_map = {
-            self.SearchLine.textChanged: self.search_requested,
-            self.search_requested: self.json_view.search,
+        main_window_connection_map = {
+            self.SearchLine.textChanged: self.json_view.search,
+            self.SearchLine.editingFinished: self.json_view.set_focus_after_search,
         }
 
         keys_connection_map = {
@@ -317,7 +312,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for button, slot in buttons_connection_map.items():
             button.clicked.connect(slot)
 
-        for connection_map in json_view_connection_map, other_connection_map:  # Signals, activated by key press event
+        for connection_map in json_view_connection_map, main_window_connection_map:  # Signals, activated by key press event
             for signal, slot in connection_map.items():
                 signal.connect(slot)
 
