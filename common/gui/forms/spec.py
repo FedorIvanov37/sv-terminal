@@ -150,7 +150,7 @@ class Ui_SpecificationWindow(object):
         self.StatusLabel.setText(_translate("SpecificationWindow", ">"))
         self.CheckBoxReadOnly.setText(_translate("SpecificationWindow", "Read only mode"))
         self.CheckBoxHideReverved.setText(_translate("SpecificationWindow", "Hide reserved for future"))
-        self.SearchLine.setPlaceholderText(_translate("SpecificationWindow", "Search: text | Goto: field path"))
+        self.SearchLine.setPlaceholderText(_translate("SpecificationWindow", "Search: any text | Goto: field path e.g. 47.038.01"))
         self.ButtonSetMti.setText(_translate("SpecificationWindow", "Set MTI"))
         self.ButtonApply.setText(_translate("SpecificationWindow", "Apply"))
         self.ButtonReset.setText(_translate("SpecificationWindow", "Reset"))

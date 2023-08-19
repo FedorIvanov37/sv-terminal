@@ -164,7 +164,7 @@
         <bool>false</bool>
        </property>
        <property name="placeholderText">
-        <string>Search: text | Goto: field path</string>
+        <string>Search: any text | Goto: field path e.g. 47.038.01</string>
        </property>
        <property name="clearButtonEnabled">
         <bool>true</bool>

@@ -71,7 +71,7 @@ of SvTerminal evolution.
   * Secret fields can be hidden in logs and transaction constructor
   * Transactions repeat loop
   * Main Window search line 
-  * Spec Window search line
+  * Spec Window search / goto line, key sequence 
   * Pydantic native data validation
 
 
@@ -100,30 +100,32 @@ settings are needed to run GUI on a Windows machine. Run "sv_terminal.exe" execu
 
 Check the parameters, opened by the "Configuration" button to make your settings  
 
-![image](https://i.imgur.com/1BFr77N.png)
+![image](https://i.imgur.com/TqcRkr4.png)
 
 ## Main Window hotkeys
 
 The list of key sequence and corresponding actions 
 
-| Key sequence         | Action                    |
-|----------------------|---------------------------|
-| F1                   | About SvTerminal          |
-| Ctrl + Enter         | Send transaction          |
-| Ctrl + Shift + Enter | Reverse last transaction  |
-| Ctrl + Alt + Enter   | Send Echo-Test            |
-| Ctrl + N             | Add new field             |
-| Ctrl + Shift + N     | Add new subfield          |
-| Delete               | Remove field              |
-| Ctrl + E             | Edit current field data   |
-| Ctrl + W             | Edit current field number |
-| Ctrl + R             | Reconnect SV              |
-| Ctrl + L             | Clear log                 |
-| Ctrl + O             | Open transaction file     |
-| Ctrl + S             | Save transaction to file  |
-| Ctrl + P             | Print transaction         |
-| Ctrl + T             | Print SV Terminal logo    |
-| Ctrl + Alt + Q       | Quit SV Terminal          |
+| Key sequence          | Action                     |
+|-----------------------|----------------------------|
+| F1                    | About SvTerminal           |
+| Ctrl + Enter          | Send transaction           |
+| Ctrl + Shift + Enter  | Reverse last transaction   |
+| Ctrl + Alt + Enter    | Send Echo-Test             |
+| Ctrl + N              | Add new field              |
+| Ctrl + N              | Add new field              |
+| Ctrl + Shift + N      | Add new subfield           |
+| Ctrl + F              | Search                     |
+| Delete                | Remove field               |
+| Ctrl + E              | Edit current field data    |
+| Ctrl + W              | Edit current field number  |
+| Ctrl + R              | Reconnect SV               |
+| Ctrl + L              | Clear log                  |
+| Ctrl + O              | Open transaction file      |
+| Ctrl + S              | Save transaction to file   |
+| Ctrl + P              | Print transaction          |
+| Ctrl + T              | Print SV Terminal logo     |
+| Ctrl + Alt + Q        | Quit SV Terminal           |
 
 ## Specification settings
 
@@ -141,7 +143,7 @@ by the author.
 
 ### Settings description
 
-![image](https://i.imgur.com/ICXUWD8.png)
+![image](https://i.imgur.com/MMFrgwX.png)
 
 The table below describes the settings window columns from left to right
 
