@@ -111,7 +111,7 @@ class Parser:
             else:
                 if subfield_spec.is_secret and hide_secrets:
                     subfield_data = mask_secret(subfield_data)
-                    
+
                 length = str(len(subfield_data))
                 length = length.zfill(subfield_spec.var_length)
                 result = f"{result}{subfield}{length}{subfield_data}"
@@ -246,7 +246,7 @@ class Parser:
 
         return ini_data
 
-    def parse_file(self, filename: FilePath) -> Transaction:
+    def parse_file(self, filename: FilePath | str) -> Transaction:
         file_extension = Path(filename).suffix
         file_extension = file_extension.replace(".", "")
         file_extension = file_extension.upper()
