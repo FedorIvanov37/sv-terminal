@@ -57,6 +57,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _reset: pyqtSignal = pyqtSignal()
     _keep_alive: pyqtSignal = pyqtSignal(str)
     _repeat: pyqtSignal = pyqtSignal(str)
+    _search_requested: pyqtSignal = pyqtSignal(str)
+
+    @property
+    def search_requested(self):
+        return self._search_requested
 
     @property
     def repeat(self):
@@ -195,26 +200,23 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         e.g. cause for transaction data sending (signal "send") can be MainWindow key press or keyboard key sequence.
         """
 
-        buttons_connection_map = {
-
-            # Signals, which should be emitted by MainWindow key press event
-
-            self.PlusButton.clicked: self.json_view.plus,
-            self.MinusButton.clicked: self.json_view.minus,
-            self.NextLevelButton.clicked: self.json_view.next_level,
-            self.ButtonSend.clicked: self.send,
-            self.ButtonClearLog.clicked: self.clear_log,
-            self.ButtonCopyLog.clicked: self.copy_log,
-            self.ButtonParseDump.clicked: self.parse_file,
-            self.ButtonClearMessage.clicked: self.clear,
-            self.ButtonDefault.clicked: self.reset,
-            self.ButtonEchoTest.clicked: self.echo_test,
-            self.ButtonReconnect.clicked: self.reconnect,
-            self.ButtonSpecification.clicked: self.specification,
-            self.ButtonHotkeys.clicked: self.hotkeys,
-            self.ButtonSettings.clicked: self.settings,
-            self.ButtonCopyBitmap.clicked: self.copy_bitmap,
-
+        buttons_connection_map = {  # Signals, which should be emitted by MainWindow key press event
+            self.PlusButton: self.json_view.plus,
+            self.MinusButton: self.json_view.minus,
+            self.NextLevelButton: self.json_view.next_level,
+            self.ButtonSend: self.send,
+            self.ButtonClearLog: self.clear_log,
+            self.ButtonCopyLog: self.copy_log,
+            self.ButtonParseDump: self.parse_file,
+            self.ButtonClearMessage: self.clear,
+            self.ButtonDefault: self.reset,
+            self.ButtonEchoTest: self.echo_test,
+            self.ButtonReconnect: self.reconnect,
+            self.ButtonSpecification: self.specification,
+            self.ButtonHotkeys: self.hotkeys,
+            self.ButtonSettings: self.settings,
+            self.ButtonCopyBitmap: self.copy_bitmap,
+            self.ButtonClearSearch: self.clear_search,
         }
 
         json_view_connection_map = {
@@ -224,6 +226,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.json_view.field_removed: self.field_removed,
             self.json_view.need_disable_next_level: self.disable_next_level_button,
             self.json_view.need_enable_next_level: self.enable_next_level_button,
+        }
+
+        other_connection_map = {
+            self.SearchLine.textChanged: self.search_requested,
+            self.search_requested: self.json_view.search,
         }
 
         keys_connection_map = {
@@ -240,6 +247,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             QKeySequence.StandardKey.Open: self.parse_file,
             QKeySequence.StandardKey.Undo: self.json_view.undo,
             QKeySequence.StandardKey.Redo: self.json_view.redo,
+            QKeySequence.StandardKey.Find: self.activate_search,
 
             # Custom Key Sequences
             # The string argument (modifier) is a hint about a requested data format
@@ -306,7 +314,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for combination, function in keys_connection_map.items():  # Key sequences
             QShortcut(QKeySequence(combination), self).activated.connect(function)
 
-        for connection_map in buttons_connection_map, json_view_connection_map:  # Signals, activated by key press event
+        for button, slot in buttons_connection_map.items():
+            button.clicked.connect(slot)
+
+        for connection_map in json_view_connection_map, other_connection_map:  # Signals, activated by key press event
             for signal, slot in connection_map.items():
                 signal.connect(slot)
 
@@ -316,6 +327,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             for action, function in actions.items():
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
+
+    def clear_search(self):
+        self.SearchLine.setText(str())
+
+    def activate_search(self):
+        self.SearchLine.setFocus()
 
     def hide_secrets(self):
         self.json_view.hide_secrets()

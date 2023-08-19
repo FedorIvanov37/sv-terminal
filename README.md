@@ -2,8 +2,7 @@
 
 ![image](https://camo.githubusercontent.com/568a4f77e5187cca9e602fb8e108ea3f4b44884c7f3010abe2db2b6d5a12f105/68747470733a2f2f692e696d6775722e636f6d2f5378656e4d55512e706e67)
 
-SmartVista Electronic Commerce Terminal | v0.16 | 
-Powered by <a href="https://www.unlimit.com">Unlimit</a></p>
+SmartVista Electronic Commerce Terminal | v0.16 Nov 2023 | Powered by <a href="https://www.unlimit.com">Unlimit</a></p>
 
 # Contents 
 
@@ -69,19 +68,21 @@ of SvTerminal evolution.
 ## Release info
 
 * New features
+  * Secret fields can be hidden in logs and transaction constructor
+  * Transactions repeat loop
+  * MainWindow search line 
   * Pydantic native data validation
-  * Secret fields hiding in logs and transaction constructor
-  * Transactions loop
-  * Multi tabs on MainWindow. SvTerminal supports up to 64 tabs
-  * Search line 
- 
+
+
 * Updates
   * User doc update: main settings, the specification, files format, and many other things are reflected in the document
   * Default message corrected according to mandatory changes 23Q4
+
   
 * Fixed
   * All problems around old JSON files incompatibility  
   * Transaction field max_amount has no effect
+  * Code optimization, minor bug fixes
   
 
 # Graphic User Interface

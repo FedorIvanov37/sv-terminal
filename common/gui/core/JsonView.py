@@ -62,6 +62,56 @@ class JsonView(QTreeWidget):
         self.addTopLevelItem(self.root)
         self.make_order()
 
+    def search(self, input_data: str, parent: Item | None = None):
+        if not input_data:
+            self.unhide_all()
+            return
+
+        if parent is None:
+            parent = self.root
+
+        for item in parent.get_children():
+            if item.get_children:
+                self.search(input_data, parent=item)
+
+            item_not_found = not any((
+                    input_data in item.field_number,
+                    input_data.lower() in item.field_data.lower(),
+                    item.get_children() and self.value_in_item(input_data, item)
+                ))
+
+            item.setHidden(item_not_found)
+
+            if input_data in item.field_number and item.get_children():
+                self.unhide_all(item)
+
+        self.resize_all()
+
+    def value_in_item(self, value: str, item: Item):
+        if value in item.field_number:
+            return True
+
+        if value.lower() in item.field_data.lower():
+            return True
+
+        for child in item.get_children():
+            if self.value_in_item(value, child):
+                return True
+
+        return False
+
+    def unhide_all(self, parent=None):
+        if parent is None:
+            parent = self.root
+
+        for item in parent.get_children():
+            if item.get_children():
+                self.unhide_all(item)
+
+            item.setHidden(False)
+
+        self.resize_all()
+
     def undo(self):
         self.undo_stack.undo()
         self.field_changed.emit()

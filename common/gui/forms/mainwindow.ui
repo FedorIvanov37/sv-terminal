@@ -166,21 +166,40 @@
        <layout class="QHBoxLayout" name="NextLevelLayout"/>
       </item>
       <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QLineEdit" name="SearchLine">
+          <property name="font">
+           <font>
+            <family>Calibri</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="maxLength">
+           <number>1024</number>
+          </property>
+          <property name="placeholderText">
+           <string>Search: field number, field value</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ButtonClearSearch">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Clear</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
-    <item row="5" column="0">
+    <item row="6" column="0">
      <widget class="QTextEdit" name="LogArea">
       <property name="palette">
        <palette>
@@ -269,7 +288,7 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
+    <item row="7" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QPushButton" name="ButtonSend">

@@ -104,6 +104,7 @@
 
 
 v0.16
+
 + Fix all problems around old JSON files incompatibility
 + Transaction field max_amount has no effect
 + Correct default message according to mandatory changes 22Q4
@@ -111,10 +112,10 @@ v0.16
 + Secret Fields - Checkbox in spec window, Checkbox in config window with priority, Hide secret fields in log,
   constructor, display; Restrict full PAN show, Show secret when checkbox changed in settings or spec, checkbox
   cascade, config processing, invalid PAN hiding
++ Transaction repeat
++ Search: MW line, clear button, key sequence, key sequence hint
 
 
-• Transaction repeat
-• Add anonymous voluntary statistic collection
 • Reflect in the document - Main settings, the specification, files format
 • Set complex fields full expanding when switch JSON mode
 • QTabWidget
