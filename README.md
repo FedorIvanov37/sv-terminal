@@ -72,7 +72,6 @@ of SvTerminal evolution.
   * Transactions repeat loop
   * Main Window search line, key sequence 
   * Spec Window search / goto line, key sequence 
-  * Pydantic native data validation
 
 
 * Updates
@@ -80,6 +79,8 @@ of SvTerminal evolution.
   * Default message corrected according to mandatory changes 23Q4
   * Lines wrap on log display 
   * Checkboxes and Tag Length cascading in the Spec Window
+  * Transaction constructor improvements: improved checkboxes, instant field length counting
+  * Pydantic native data validation
 
 
 * Fixed

@@ -2,8 +2,8 @@ from copy import deepcopy
 from logging import error, warning
 from collections import OrderedDict
 from PyQt6.QtGui import QFont, QUndoStack
-from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget, QItemDelegate
+from PyQt6.QtCore import pyqtSignal, QModelIndex
+from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget, QItemDelegate, QLineEdit
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
@@ -19,6 +19,17 @@ from common.gui.decorators.void_qt_signals import void_qt_signals
 
 
 class JsonView(QTreeWidget):
+    class Delegate(QItemDelegate):
+        _text_edited: pyqtSignal = pyqtSignal(str)
+
+        @property
+        def text_edited(self):
+            return self._text_edited
+
+        def setEditorData(self, editor: QLineEdit, index: QModelIndex):
+            editor.textEdited.connect(self.text_edited)
+            QItemDelegate.setEditorData(self, editor, index)
+
     field_removed: pyqtSignal = pyqtSignal()
     field_changed: pyqtSignal = pyqtSignal()
     field_added: pyqtSignal = pyqtSignal()
@@ -36,8 +47,9 @@ class JsonView(QTreeWidget):
         super(JsonView, self).__init__()
         self.config: Config = config
         self._setup()
-        self.delegate = QItemDelegate()
+        self.delegate = JsonView.Delegate()
         self.delegate.closeEditor.connect(lambda: self.hide_secrets())
+        self.delegate.text_edited.connect(self.set_item_length)
         self.setItemDelegate(self.delegate)
         self.undo_stack = QUndoStack()
 
@@ -61,6 +73,14 @@ class JsonView(QTreeWidget):
         self.setEditTriggers(self.EditTrigger.NoEditTriggers)
         self.addTopLevelItem(self.root)
         self.make_order()
+
+    def set_item_length(self, text):
+        item: QTreeWidgetItem | Item
+
+        if not (item := self.currentItem()):
+            return
+
+        item.set_length(len(text))
 
     def search(self, input_data: str, parent: Item | None = None):
         if not input_data:
@@ -149,8 +169,8 @@ class JsonView(QTreeWidget):
         exemptions = [
             item.get_field_depth() != 1,
             not self.spec.is_field_complex(item.get_field_path()),
-            item.json_mode_checkbox_checked() and item is current_item,
-            current_item.json_mode_checkbox_checked(),
+            item.checkbox_checked(CheckBoxesDefinition.JSON_MODE) and item is current_item,
+            current_item.checkbox_checked(CheckBoxesDefinition.JSON_MODE),
             not self.spec.is_field_complex(current_item.get_field_path())
         ]
 
@@ -168,14 +188,20 @@ class JsonView(QTreeWidget):
             return
 
         if column in (FieldsSpec.ColumnsOrder.PROPERTY, FieldsSpec.ColumnsOrder.VALUE):
-            if item.generate_checkbox_checked():
+            if item.checkbox_checked(CheckBoxesDefinition.GENERATE):
                 item.field_data = FieldsGenerator.generate_field(item.field_number, self.config.fields.max_amount)
 
-        if column == FieldsSpec.ColumnsOrder.PROPERTY and item.text(column) == CheckBoxesDefinition.JSON_MODE:
-            if item.json_mode_checkbox_checked():
-                self.set_json_mode(item)
-            else:
-                self.set_flat_mode(item)
+        if column == FieldsSpec.ColumnsOrder.PROPERTY:
+            try:
+                text = self.itemWidget(item, FieldsSpec.ColumnsOrder.PROPERTY).text()
+            except AttributeError | ValueError:
+                text = ""
+
+            if text  == CheckBoxesDefinition.JSON_MODE:
+                if item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
+                    self.set_json_mode(item)
+                else:
+                    self.set_flat_mode(item)
 
         try:
             item.process_change_item()
@@ -213,8 +239,9 @@ class JsonView(QTreeWidget):
         if not self.config.fields.validation:
             return
 
-        if self.spec.can_be_generated(item.get_field_path()) and item.generate_checkbox_checked():
-            return
+        if self.spec.can_be_generated(item.get_field_path()):
+            if item.checkbox_checked(CheckBoxesDefinition.GENERATE):
+                return
 
         if column == FieldsSpec.ColumnsOrder.FIELD:
             if all((item.field_number, not item.field_data, not item.childCount())):
@@ -292,7 +319,7 @@ class JsonView(QTreeWidget):
         if current_item.get_field_depth() == 1:
             is_field_complex = self.spec.is_field_complex(current_item.get_field_path())
 
-            if is_field_complex and not current_item.json_mode_checkbox_checked():
+            if is_field_complex and not current_item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
                 return
 
         item = Item([])
@@ -474,6 +501,7 @@ class JsonView(QTreeWidget):
                 child: Item = Item(string_data)
 
             parent.addChild(child)
+
             child.set_spec(field_spec)
 
     def resize_all(self):
@@ -518,7 +546,16 @@ class JsonView(QTreeWidget):
         return result
 
     def get_checkboxes(self) -> list[str]:
-        return [item.field_number for item in self.root.get_children() if item.generate_checkbox_checked()]
+        checkboxes = list()
+        item: Item
+
+        for item in self.root.get_children():
+            if not item.checkbox_checked(CheckBoxesDefinition.GENERATE):
+                continue
+
+            checkboxes.append(item.field_number)
+
+        return checkboxes
 
     def get_field_set(self):
         field_set = [field.field_number for field in self.root.get_children() if field.field_data]

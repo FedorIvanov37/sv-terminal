@@ -1,6 +1,7 @@
 from re import search as regexp_search
-from PyQt6.QtCore import pyqtSignal, QObject, Qt
-from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem
+from PyQt6.QtGui import QFont
+from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
@@ -12,7 +13,7 @@ from common.gui.decorators.void_qt_signals import void_qt_signals
 from common.gui.constants.SearchDefinition import SearchDefinition
 
 
-class SpecView(QObject):
+class SpecView(QTreeWidget):
     _spec: EpaySpecification = EpaySpecification()
     item_changed = pyqtSignal(SpecItem, int)
     status_changed = pyqtSignal(str, bool)
@@ -21,21 +22,25 @@ class SpecView(QObject):
     def spec(self):
         return self._spec
 
-    def __init__(self, tree: QTreeWidget, window):
+    def __init__(self, window):
         super(SpecView, self).__init__()
         self.root: SpecItem = SpecItem([SpecFieldDefinition.SPECIFICATION])
-        self.tree: QTreeWidget = tree
         self.window = window
         self.validator = SpecValidator()
+        self.setItemDelegate(QItemDelegate())
         self.setup()
 
     def setup(self):
-        self.tree.setHeaderLabels(SpecFieldDefinition.COLUMNS)
-        self.tree.addTopLevelItem(self.root)
-        self.tree.itemDoubleClicked.connect(self.edit)
-        self.tree.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
-        self.tree.itemChanged.connect(self.process_item_change)
-        self.tree.setSortingEnabled(False)
+        self.setHeaderLabels(SpecFieldDefinition.COLUMNS)
+        self.addTopLevelItem(self.root)
+        self.itemDoubleClicked.connect(self.edit_item)
+        self.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
+        self.itemChanged.connect(self.process_item_change)
+        self.setFont(QFont("Calibri", 12))
+        self.setAllColumnsShowFocus(True)
+        self.setAlternatingRowColors(True)
+        self.setEditTriggers(self.EditTrigger.NoEditTriggers)
+        self.setSortingEnabled(False)
         self.parse_spec()
         self.make_order()
 
@@ -80,8 +85,8 @@ class SpecView(QObject):
                 if item.get_field_path() != field_path:
                     continue
 
-                self.tree.setCurrentItem(item)
-                self.tree.scrollToItem(item)
+                self.setCurrentItem(item)
+                self.scrollToItem(item)
 
                 item.setExpanded(True)
 
@@ -202,16 +207,16 @@ class SpecView(QObject):
         self.root.takeChildren()
 
     def resize_all(self):
-        for column in range(self.tree.columnCount()):
-            self.tree.resizeColumnToContents(column)
+        for column in range(self.columnCount()):
+            self.resizeColumnToContents(column)
 
     def make_order(self):
-        self.tree.collapseAll()
-        self.tree.expandToDepth(int())
+        self.collapseAll()
+        self.expandToDepth(int())
         self.resize_all()
         self.hide_reserved()
 
-    def edit(self, item, column):
+    def edit_item(self, item, column):
         if item is self.root and column != SpecFieldDefinition.ColumnsOrder.DESCRIPTION:
             return
 
@@ -222,7 +227,7 @@ class SpecView(QObject):
             self.window.set_status("Read only mode", error=True)
             return
 
-        self.tree.editItem(item, column)
+        self.editItem(item, column)
 
     def set_field_path(self, item):
         path = item.get_field_path(string=True)
@@ -233,17 +238,17 @@ class SpecView(QObject):
         self.status_changed.emit(path, False)
 
     def minus(self):
-        item: SpecItem = self.tree.currentItem()
+        item: SpecItem = self.currentItem()
 
         if item is None:
             return
 
         if item is self.root:
-            self.tree.setCurrentItem(self.root)
-            self.tree.setFocus()
+            self.setCurrentItem(self.root)
+            self.setFocus()
             return
 
-        self.tree.setFocus()
+        self.setFocus()
 
         parent: SpecItem = item.parent()
 
@@ -252,7 +257,7 @@ class SpecView(QObject):
     def plus(self):
         item = SpecItem([])
 
-        if not (current_item := self.tree.currentItem()):
+        if not (current_item := self.currentItem()):
             return
 
         parent = current_item.parent()
@@ -262,20 +267,20 @@ class SpecView(QObject):
 
         current_index = parent.indexOfChild(current_item)
         parent.insertChild(current_index + 1, item)
-        self.tree.scrollToItem(item)
-        self.edit(item, 0)
-        self.tree.setCurrentItem(item)
+        self.scrollToItem(item)
+        self.edit_item(item, 0)
+        self.setCurrentItem(item)
 
     def next_level(self):
         item = SpecItem([])
-        current_item: SpecItem = self.tree.currentItem()
+        current_item: SpecItem = self.currentItem()
 
         if current_item is None:
             return
 
-        self.tree.currentItem().addChild(item)
-        self.tree.setCurrentItem(item)
-        self.edit(item, int())
+        self.currentItem().addChild(item)
+        self.setCurrentItem(item)
+        self.edit_item(item, int())
 
     def parse_spec(self, spec=None):
         if spec is None:
@@ -324,6 +329,8 @@ class SpecView(QObject):
 
             if field_data.fields:
                 self.parse_spec_fields(input_json=field_data.fields, parent=item)
+
+
 
         self.make_order()
 

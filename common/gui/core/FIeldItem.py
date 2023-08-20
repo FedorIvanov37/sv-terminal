@@ -1,5 +1,4 @@
-from PyQt6 import QtGui
-from PyQt6.QtWidgets import QTreeWidgetItem
+from PyQt6.QtWidgets import QTreeWidgetItem, QCheckBox, QWidget
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.lib.toolkit.toolkit import mask_pan, mask_secret
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -102,17 +101,27 @@ class Item(AbstractItem):
         self._secret = ""
         self.masked = False
 
-    def generate_checkbox_checked(self):
-        if self.field_number not in FieldsSpec.generated_fields:
+    def checkbox_checked(self, checkbox_type: str):
+        if checkbox_type not in (CheckBoxesDefinition.GENERATE, CheckBoxesDefinition.JSON_MODE):
             return False
 
-        return bool(self.checkState(FieldsSpec.ColumnsOrder.PROPERTY).value)
+        if checkbox_type == CheckBoxesDefinition.JSON_MODE:
+            if not self.epay_spec.is_field_complex(self.get_field_path()):
+                return False
 
-    def json_mode_checkbox_checked(self):
-        if not self.epay_spec.is_field_complex(self.get_field_path()):
+        if checkbox_type == CheckBoxesDefinition.GENERATE:
+            if self.field_number not in FieldsSpec.generated_fields:
+                return False
+
+        if not (tree := self.treeWidget()):
             return False
 
-        return bool(self.checkState(FieldsSpec.ColumnsOrder.PROPERTY).value)
+        checkbox: QWidget | QCheckBox = tree.itemWidget(self, FieldsSpec.ColumnsOrder.PROPERTY)
+
+        if not isinstance(checkbox, QCheckBox):
+            return False
+
+        return bool(checkbox.checkState().value)
 
     @void_tree_signals
     def set_checkbox(self, checked=True):
@@ -121,14 +130,21 @@ class Item(AbstractItem):
 
         column_number = FieldsSpec.ColumnsOrder.PROPERTY
         state = CheckBoxesDefinition.CHECKED if checked else CheckBoxesDefinition.UNCHECKED
+        checkbox = QCheckBox()
+        checkbox.setCheckState(state)
+
+        if not (tree := self.treeWidget()):
+            return
 
         if self.field_number in FieldsSpec.generated_fields:
-            self.setCheckState(column_number, state)
-            self.setText(column_number, CheckBoxesDefinition.GENERATE)
+            checkbox.setText(CheckBoxesDefinition.GENERATE)
+            tree.setItemWidget(self, column_number, checkbox)
 
         if self.epay_spec.is_field_complex(self.get_field_path()):
-            self.setCheckState(column_number, state)
-            self.setText(column_number, CheckBoxesDefinition.JSON_MODE)
+            checkbox.setText(CheckBoxesDefinition.JSON_MODE)
+            tree.setItemWidget(self, column_number, checkbox)
+
+        checkbox.stateChanged.connect(lambda: tree.itemChanged.emit(self, FieldsSpec.ColumnsOrder.PROPERTY))
 
     def process_change_item(self):
         self.set_spec()
@@ -144,13 +160,20 @@ class Item(AbstractItem):
         self.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, self.spec.description)
 
     @void_tree_signals
-    def set_length(self) -> None:
+    def set_length(self, length: int | None = None) -> None:
         column = FieldsSpec.ColumnsOrder.LENGTH
-        length = f"{self.get_field_length():03}"
+
+        if length is None:
+            length = self.get_field_length()
+
+        length: str = f"{length:03}"
+
         self.setText(column, length)
 
-        if self.parent() is not None:
-            self.parent().set_length()
+        if not (parent := self.parent()):
+            return
+
+        parent.set_length()
 
     def get_field_length(self):
         if self.childCount():

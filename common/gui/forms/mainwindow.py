@@ -150,7 +150,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.ButtonSend.setFont(font)
-        self.ButtonSend.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
+        self.ButtonSend.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.ButtonSend.setObjectName("ButtonSend")
         self.horizontalLayout_2.addWidget(self.ButtonSend)
         self.ButtonRepeat = QtWidgets.QPushButton(parent=self.centralwidget)

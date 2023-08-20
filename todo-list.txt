@@ -100,11 +100,7 @@
 + Check Transaction.max_amount usage
 ? Validation after edit doesn't work sometimes
 
-
-
-
 v0.16
-
 + Fix all problems around old JSON files incompatibility
 + Transaction field max_amount has no effect
 + Correct default message according to mandatory changes 22Q4
@@ -114,8 +110,10 @@ v0.16
   cascade, config processing, invalid PAN hiding
 + Transaction repeat
 + Search: MW line, clear button, key sequence, key sequence hint
++ Instant fields length count
 
 
+• SpecWindow key sequences
 • Reflect in the document - Main settings, the specification+, files format+
 • Set complex fields full expanding when switch JSON mode
 • QTabWidget
