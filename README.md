@@ -1,8 +1,20 @@
 # SmartVista Electronic Commerce Terminal
 
-![image](https://camo.githubusercontent.com/568a4f77e5187cca9e602fb8e108ea3f4b44884c7f3010abe2db2b6d5a12f105/68747470733a2f2f692e696d6775722e636f6d2f5378656e4d55512e706e67)
+```
+  ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::       
+ :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:       
+ +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+       
+ +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+       
+        +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+       
+ #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#       
+  ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ##########
+                                                                                                                      
+ SmartVista Electronic Commerce Terminal | v0.16 Nov 2023                                                             
+```
 
-SmartVista Electronic Commerce Terminal | v0.16 Nov 2023 | Powered by <a href="https://www.unlimit.com">Unlimit</a></p>
+[//]: # (![image]&#40;https://camo.githubusercontent.com/568a4f77e5187cca9e602fb8e108ea3f4b44884c7f3010abe2db2b6d5a12f105/68747470733a2f2f692e696d6775722e636f6d2f5378656e4d55512e706e67&#41;)
+
+[//]: # (SmartVista Electronic Commerce Terminal | v0.16 Nov 2023 | Powered by <a href="https://www.unlimit.com">Unlimit</a></p>)
 
 # Contents 
 
