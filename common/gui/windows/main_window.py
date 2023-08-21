@@ -56,6 +56,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _send: pyqtSignal = pyqtSignal()
     _reset: pyqtSignal = pyqtSignal()
     _keep_alive: pyqtSignal = pyqtSignal(str)
+    _repeat: pyqtSignal = pyqtSignal(str)
+
+    @property
+    def repeat(self):
+        return self._repeat
 
     @property
     def keep_alive(self):
@@ -162,6 +167,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self._connect_all()
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
         self.process_keep_alive_change(ButtonAction.KEEP_ALIVE_STOP)
+        self.process_repeat_change(ButtonAction.KEEP_ALIVE_STOP)
+        self.ButtonSend.setFocus()
 
     def _add_json_control_buttons(self) -> None:
         # Create and place the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
@@ -189,26 +196,22 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         e.g. cause for transaction data sending (signal "send") can be MainWindow key press or keyboard key sequence.
         """
 
-        buttons_connection_map = {
-
-            # Signals, which should be emitted by MainWindow key press event
-
-            self.PlusButton.clicked: self.json_view.plus,
-            self.MinusButton.clicked: self.json_view.minus,
-            self.NextLevelButton.clicked: self.json_view.next_level,
-            self.ButtonSend.clicked: self.send,
-            self.ButtonClearLog.clicked: self.clear_log,
-            self.ButtonCopyLog.clicked: self.copy_log,
-            self.ButtonParseDump.clicked: self.parse_file,
-            self.ButtonClearMessage.clicked: self.clear,
-            self.ButtonDefault.clicked: self.reset,
-            self.ButtonEchoTest.clicked: self.echo_test,
-            self.ButtonReconnect.clicked: self.reconnect,
-            self.ButtonSpecification.clicked: self.specification,
-            self.ButtonHotkeys.clicked: self.hotkeys,
-            self.ButtonSettings.clicked: self.settings,
-            self.ButtonCopyBitmap.clicked: self.copy_bitmap,
-
+        buttons_connection_map = {  # Signals, which should be emitted by MainWindow key press event
+            self.PlusButton: self.json_view.plus,
+            self.MinusButton: self.json_view.minus,
+            self.NextLevelButton: self.json_view.next_level,
+            self.ButtonSend: self.send,
+            self.ButtonClearLog: self.clear_log,
+            self.ButtonCopyLog: self.copy_log,
+            self.ButtonParseDump: self.parse_file,
+            self.ButtonClearMessage: self.clear,
+            self.ButtonDefault: self.reset,
+            self.ButtonEchoTest: self.echo_test,
+            self.ButtonReconnect: self.reconnect,
+            self.ButtonSpecification: self.specification,
+            self.ButtonHotkeys: self.hotkeys,
+            self.ButtonSettings: self.settings,
+            self.ButtonCopyBitmap: self.copy_bitmap,
         }
 
         json_view_connection_map = {
@@ -220,6 +223,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.json_view.need_enable_next_level: self.enable_next_level_button,
         }
 
+        main_window_connection_map = {
+            self.SearchLine.textChanged: self.json_view.search,
+            self.SearchLine.editingFinished: self.json_view.set_focus_after_search,
+        }
+
         keys_connection_map = {
 
             # Signals, which should be emitted by key sequences on keyboard
@@ -229,11 +237,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             QKeySequence.StandardKey.New: self.json_view.plus,
             QKeySequence.StandardKey.Delete: self.json_view.minus,
             QKeySequence.StandardKey.HelpContents: self.about,
-            QKeySequence.StandardKey.Save: self.ButtonSave.showMenu,
             QKeySequence.StandardKey.Print: self.ButtonPrintData.showMenu,
+            QKeySequence.StandardKey.Save: self.ButtonSave.showMenu,
             QKeySequence.StandardKey.Open: self.parse_file,
             QKeySequence.StandardKey.Undo: self.json_view.undo,
             QKeySequence.StandardKey.Redo: self.json_view.redo,
+            QKeySequence.StandardKey.Find: self.activate_search,
 
             # Custom Key Sequences
             # The string argument (modifier) is a hint about a requested data format
@@ -265,6 +274,16 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 ButtonAction.KEEP_ALIVE_ONCE: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_ONCE),
             },
 
+            self.ButtonRepeat: {
+                ButtonAction.KEEP_ALIVE_1S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_1S),
+                ButtonAction.KEEP_ALIVE_5S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_5S),
+                ButtonAction.KEEP_ALIVE_10S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_10S),
+                ButtonAction.KEEP_ALIVE_30S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_30S),
+                ButtonAction.KEEP_ALIVE_60S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_60S),
+                ButtonAction.KEEP_ALIVE_300S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_300S),
+                ButtonAction.KEEP_ALIVE_STOP: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_STOP),
+            },
+
             self.ButtonReverse: {
                 ButtonAction.LAST: lambda: self.reverse.emit(ButtonAction.LAST),
                 ButtonAction.OTHER: lambda: self.reverse.emit(ButtonAction.OTHER),
@@ -290,7 +309,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for combination, function in keys_connection_map.items():  # Key sequences
             QShortcut(QKeySequence(combination), self).activated.connect(function)
 
-        for connection_map in buttons_connection_map, json_view_connection_map:  # Signals, activated by key press event
+        for button, slot in buttons_connection_map.items():
+            button.clicked.connect(slot)
+
+        for connection_map in json_view_connection_map, main_window_connection_map:  # Signals, activated by key press event
             for signal, slot in connection_map.items():
                 signal.connect(slot)
 
@@ -300,6 +322,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             for action, function in actions.items():
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
+
+    def activate_search(self):
+        self.SearchLine.setFocus()
+
+    def hide_secrets(self):
+        self.json_view.hide_secrets()
 
     # Usually disables in fields flat-mode to avoid subfields creation
     def disable_next_level_button(self, disable: bool = True) -> None:
@@ -388,6 +416,24 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.ConnectionStatusLabel.setPixmap(QPixmap(GuiFilesPath.GREEN_CIRCLE))
         self.ConnectionStatus.setText(ConnectionDefinitions.get_state_description(status))
         self.ConnectionStatusLabel.setPixmap(QPixmap(ConnectionDefinitions.get_state_icon_path(status)))
+
+    def process_repeat_change(self, interval_name: str) -> None:
+        icon_file: FilePath = GuiFilesPath.GREEN_CIRCLE
+
+        if interval_name == ButtonAction.KEEP_ALIVE_STOP:
+            icon_file: FilePath = GuiFilesPath.GREY_CIRCLE
+
+        self.ButtonRepeat.setIcon(QIcon(QPixmap(icon_file)))
+        self.ButtonRepeat.menu().clear()
+
+        button_action_menu = deepcopy(self.buttons_menu_structure.get(self.ButtonRepeat))
+
+        for action, function in button_action_menu.items():
+            if action == interval_name:
+                action = f"{ButtonAction.CURRENT_ACTION_MARK} {action}"  # Set checked
+
+            self.ButtonRepeat.menu().addAction(action, function)
+            self.ButtonRepeat.menu().addSeparator()
 
     # Change KeepAlive loop status
     def process_keep_alive_change(self, interval_name: str) -> None:

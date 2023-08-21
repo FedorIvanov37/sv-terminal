@@ -29,7 +29,7 @@ class IsoField(BaseModel):
     special: bool
     reserved_for_future: bool
     description: str = str()
-    is_secret: bool | None = None
+    is_secret: bool = False
     fields: FieldSet | None = None
 
 

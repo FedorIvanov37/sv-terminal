@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>532</height>
+    <height>561</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>500</width>
-    <height>532</height>
+    <height>561</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>500</width>
-    <height>532</height>
+    <height>561</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -122,6 +122,11 @@
      <row>
       <property name="text">
        <string>Ctrl + Shift + N</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Ctrl + F</string>
       </property>
      </row>
      <row>
@@ -246,100 +251,110 @@
      </item>
      <item row="6" column="0">
       <property name="text">
-       <string>Delete</string>
+       <string>Ctrl + F</string>
       </property>
      </item>
      <item row="6" column="1">
       <property name="text">
-       <string>Remove field</string>
+       <string>Search</string>
       </property>
      </item>
      <item row="7" column="0">
       <property name="text">
-       <string>Ctrl + E</string>
+       <string>Delete</string>
       </property>
      </item>
      <item row="7" column="1">
       <property name="text">
-       <string>Edit current field data</string>
+       <string>Remove field</string>
       </property>
      </item>
      <item row="8" column="0">
       <property name="text">
-       <string>Ctrl + W</string>
+       <string>Ctrl + E</string>
       </property>
      </item>
      <item row="8" column="1">
       <property name="text">
-       <string>Edit current field number</string>
+       <string>Edit current field data</string>
       </property>
      </item>
      <item row="9" column="0">
       <property name="text">
-       <string>Ctrl + R</string>
+       <string>Ctrl + W</string>
       </property>
      </item>
      <item row="9" column="1">
       <property name="text">
-       <string>Reconnect SV</string>
+       <string>Edit current field number</string>
       </property>
      </item>
      <item row="10" column="0">
       <property name="text">
-       <string>Ctrl + L</string>
+       <string>Ctrl + R</string>
       </property>
      </item>
      <item row="10" column="1">
       <property name="text">
-       <string>Clear log</string>
+       <string>Reconnect SV</string>
       </property>
      </item>
      <item row="11" column="0">
       <property name="text">
-       <string>Ctrl + O</string>
+       <string>Ctrl + L</string>
       </property>
      </item>
      <item row="11" column="1">
       <property name="text">
-       <string>Open transaction file</string>
+       <string>Clear log</string>
       </property>
      </item>
      <item row="12" column="0">
       <property name="text">
-       <string>Ctrl + S</string>
+       <string>Ctrl + O</string>
       </property>
      </item>
      <item row="12" column="1">
       <property name="text">
-       <string>Save transaction to file</string>
+       <string>Open transaction file</string>
       </property>
      </item>
      <item row="13" column="0">
       <property name="text">
-       <string>Ctrl + P</string>
+       <string>Ctrl + S</string>
       </property>
      </item>
      <item row="13" column="1">
       <property name="text">
-       <string>Print transaction</string>
+       <string>Save transaction to file</string>
       </property>
      </item>
      <item row="14" column="0">
       <property name="text">
-       <string>Ctrl + T</string>
+       <string>Ctrl + P</string>
       </property>
      </item>
      <item row="14" column="1">
       <property name="text">
-       <string>Print SV Terminal logo</string>
+       <string>Print transaction</string>
       </property>
      </item>
      <item row="15" column="0">
       <property name="text">
-       <string>Ctrl + Alt + Q</string>
+       <string>Ctrl + T</string>
       </property>
      </item>
      <item row="15" column="1">
+      <property name="text">
+       <string>Print SV Terminal logo</string>
+      </property>
+     </item>
+     <item row="16" column="0">
+      <property name="text">
+       <string>Ctrl + Alt + Q</string>
+      </property>
+     </item>
+     <item row="16" column="1">
       <property name="text">
        <string>Quit SV Terminal</string>
       </property>

@@ -101,7 +101,7 @@ class SvTerminal(QObject):
             transaction: Transaction = self.generator.set_generated_fields(transaction)
 
         if self.config.fields.send_internal_id:
-            transaction: Transaction = self.generator.set_trans_id_to_47_072(transaction)
+            transaction: Transaction = self.generator.set_trans_id(transaction)
 
         if self.config.fields.validation:
             try:

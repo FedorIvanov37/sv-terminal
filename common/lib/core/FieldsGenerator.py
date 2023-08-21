@@ -11,10 +11,6 @@ class FieldsGenerator:
     def spec(self):
         return self._spec
 
-    @staticmethod
-    def generate_trans_id() -> str:
-        return f"{datetime.now():%Y%m%d_%H%M%S_%f}{randint(1000, 9999)}"
-
     def generate_original_data_elements(self, transaction: Transaction) -> str:
         try:
             mti: str = transaction.message_type
@@ -25,12 +21,14 @@ class FieldsGenerator:
 
         return f"{mti}{stan}{date}"
 
-    @staticmethod
-    def set_trans_id_to_47_072(transaction: Transaction) -> Transaction:  # TODO
-        try:
-            transaction.data_fields["47"]["072"] = transaction.trans_id
-        except (KeyError, TypeError):
-            ...
+    def set_trans_id(self, transaction: Transaction) -> Transaction:
+        if not transaction.data_fields.get(self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD):
+            return transaction
+
+        try:  # TODO
+            transaction.data_fields[self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD]["072"] = transaction.trans_id
+        except KeyError | TypeError:
+            pass
 
         return transaction
 
@@ -48,8 +46,9 @@ class FieldsGenerator:
         return transaction
 
     @staticmethod
-    def generate_field(field: str, max_amount="100"):
+    def generate_field(field: str, max_amount: int = 100):
         spec = EpaySpecification()
+        max_amount: str = str(max_amount)
 
         if field == spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT:
             max_amount = str(randint(1, int(max_amount) * 100))
@@ -69,9 +68,6 @@ class FieldsGenerator:
         return data
 
     def add_logical_fields(self, transaction: Transaction) -> Transaction:
-        if not transaction.trans_id:
-            transaction.trans_id = FieldsGenerator.generate_trans_id()
-
         transaction.is_request = self.spec.is_request(transaction)
         transaction.is_reversal = self.spec.is_reversal(transaction.message_type)
 

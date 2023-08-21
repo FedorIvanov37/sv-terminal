@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>475</height>
+    <height>500</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>300</width>
-    <height>475</height>
+    <height>500</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>300</width>
-    <height>475</height>
+    <height>500</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -251,6 +251,20 @@
       <string>Fields</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="BuildFld90">
+        <property name="text">
+         <string>Build field 90 in reversal</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="JsonMode">
+        <property name="text">
+         <string>JSON-like fields representation </string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QCheckBox" name="SendInternalId">
         <property name="text">
@@ -299,17 +313,10 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="0">
-       <widget class="QCheckBox" name="BuildFld90">
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="HideSecrets">
         <property name="text">
-         <string>Build field 90 in reversal</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="JsonMode">
-        <property name="text">
-         <string>JSON-like fields representation </string>
+         <string>Hide secret fields</string>
         </property>
        </widget>
       </item>

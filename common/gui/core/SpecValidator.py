@@ -69,11 +69,11 @@ class SpecValidator:
 
         if item.get_field_depth() == 1:
             if int(item.field_number) < int(self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY):
-                raise ValueError(f"Field {field_path}, column {SpecFieldDefinition.Columns.FIELD} - Cannot set "
+                raise ValueError(f"Field {field_path}, column {SpecFieldDefinition.ColumnsOrder.FIELD} - Cannot set "
                                  f"field number less than {self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY}")
 
             if int(item.field_number) > int(self.spec.FIELD_SET.FIELD_128_SECONDARY_MAC_DATA):
-                raise ValueError(f"Field {field_path}, column {SpecFieldDefinition.Columns.FIELD} - Cannot set top "
+                raise ValueError(f"Field {field_path}, column {SpecFieldDefinition.ColumnsOrder.FIELD} - Cannot set top "
                                  f"level field number greater than {self.spec.FIELD_SET.FIELD_128_SECONDARY_MAC_DATA}")
 
     def validate_field_length(self, item):
@@ -85,9 +85,17 @@ class SpecValidator:
             except ValueError as validation_error:
                 raise ValueError(f"Field {field_path} length validation error {validation_error}")
 
+        for length in item.tag_length, item.var_length:
+            try:
+                self.validate_number(length, allow_zero=True)
+            except ValueError as validation_error:
+                raise ValueError(f"Field {field_path} length validation error {validation_error}")
+
         if int(item.min_length) > int(item.max_length):
-            raise ValueError(f"Field {item.get_field_path(string=True)}, {SpecFieldDefinition.Columns.MIN_LENGTH}"
-                             f" must be greater or equal to {SpecFieldDefinition.Columns.MAX_LENGTH}")
+            raise ValueError(f"Field {field_path} - Min Length over Max Length")
+
+        if int(item.tag_length) > 0 and not item.get_children():
+            raise ValueError(f"Non-zero Tag Len, but field {field_path} doesn't contain subfields")
 
     @staticmethod
     def validate_datatype_checkboxes(item):

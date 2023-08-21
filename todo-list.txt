@@ -95,40 +95,34 @@
 + Move keep alive functions from GUI to core, from MainWindow to GUI
 + Old JSON support
 + Document logo
-
-
-• Enumerations for fields validation
-• Set complex fields full expanding when switch JSON mode
++ 20:20:19 [WARNING] Incorrect field number 222. Top level field number must be in range 1- 128 222
++ Enumerations for fields validation
++ Check Transaction.max_amount usage
 ? Validation after edit doesn't work sometimes
+
+v0.16
++ Fix all problems around old JSON files incompatibility
++ Transaction field max_amount has no effect
++ Correct default message according to mandatory changes 22Q4
++ Add pydantic native data validation
++ Secret Fields - Checkbox in spec window, Checkbox in config window with priority, Hide secret fields in log,
+  constructor, display; Restrict full PAN show, Show secret when checkbox changed in settings or spec, checkbox
+  cascade, config processing, invalid PAN hiding
++ Transaction repeat
++ Search: MW line, clear button, key sequence, key sequence hint
++ Instant fields length count
+
+
+• SpecWindow key sequences
+• Reflect in the document - Main settings, the specification+, files format+
+• Set complex fields full expanding when switch JSON mode
+• QTabWidget
+
+
+
 • Change approach to fields path
 • No data in socket if delete field in spec
 • Exceptions policy
 • Correct and publish the Specification
 • Publish on confluence
 • Spec explanation
-• API
-    • Activation button
-    • API
-    • URL Mapping
-    • Postman collection
-    • Logger
-    • Document
-    • Settings window and config
-    • Thread
-    • Deactivation / reload
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

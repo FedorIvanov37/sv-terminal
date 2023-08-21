@@ -1,6 +1,7 @@
 from string import digits, ascii_letters, punctuation
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
+from common.lib.data_models.Types import FieldPath
 
 
 class Validator(object):
@@ -18,7 +19,7 @@ class Validator(object):
         if mti not in self.spec.get_mti_codes():
             raise ValueError(f"Unknown MTI: {mti}")
 
-    def validate_fields(self, fields: TypeFields, field_path: list[str] | None = None):
+    def validate_fields(self, fields: TypeFields, field_path: FieldPath | None = None):
         if field_path is None:
             field_path = []
 
@@ -49,13 +50,13 @@ class Validator(object):
             return
 
         if field_number not in range(1, self.spec.MessageLength.second_bitmap_capacity):
-            error_text = f"Incorrect field number {field_number}. Top level " \
-                         f"field number must be in range 1 - {self.spec.MessageLength.second_bitmap_capacity}"
+            error_text = f"Incorrect field number {field_number}. Top level field number must be in range 1 " \
+                         f"- {self.spec.MessageLength.second_bitmap_capacity}"
 
             raise ValueError(error_text)
 
-    def validate_field_path(self, path: list[str]):
-        def path_to_str(field_path: list[str]):
+    def validate_field_path(self, path: FieldPath):
+        def path_to_str(field_path: FieldPath):
             return ".".join(field_path)
 
         if not path:
@@ -73,12 +74,12 @@ class Validator(object):
                 self.validate_field_number(field, is_top_level_field=level == 1)
 
             except ValueError as validation_error:
-                raise ValueError(f"{validation_error} {str_path}")
+                raise ValueError(f"{validation_error}. Path: {str_path}")
 
         if not self.spec.get_field_spec(path=path):
             raise ValueError(f"Lost spec for field {str_path}")
 
-    def validate_field_data(self, field_path: list[str], value: TypeFields | str):
+    def validate_field_data(self, field_path: FieldPath, value: TypeFields | str):
         alphabetic = ascii_letters
         numeric = digits
         specials = punctuation + " "
@@ -108,7 +109,7 @@ class Validator(object):
 
         for letter in value:
             if letter not in valid_values:
-                validation_errors.add(f"Incorrect letters in field {path}. Seems like a problem with encoding")
+                validation_errors.add(f"Non-printable letters in field {path}. Seems like a problem with encoding")
 
             if letter in ascii_letters and not field_spec.alpha:
                 validation_errors.add(f"Alphabetic values not allowed in field {path} - {field_spec.description}")

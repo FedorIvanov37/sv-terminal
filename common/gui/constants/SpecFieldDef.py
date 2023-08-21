@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 @dataclass
 class SpecFieldDefinition:
+    SPECIFICATION = "Specification"
+
 
     class _Columns(Enum):
         FIELD = "Field"
@@ -18,6 +20,8 @@ class SpecFieldDefinition:
         USE_FOR_MATCHING = "Matching"
         USE_FOR_REVERSAL = "Reversal"
         CAN_BE_GENERATED = "Generated"
+        SECRET = "Secret"
+
 
     @dataclass
     class ColumnsOrder:
@@ -33,8 +37,11 @@ class SpecFieldDefinition:
         USE_FOR_MATCHING = 9
         USE_FOR_REVERSAL = 10
         CAN_BE_GENERATED = 11
+        SECRET = 12
+
 
     COLUMNS = tuple(column.value for column in _Columns)
+
 
     CHECKBOXES = (
             ColumnsOrder.USE_FOR_MATCHING,
@@ -43,4 +50,5 @@ class SpecFieldDefinition:
             ColumnsOrder.ALPHA,
             ColumnsOrder.NUMERIC,
             ColumnsOrder.SPECIAL,
+            ColumnsOrder.SECRET,
     )

@@ -57,6 +57,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.KeepAliveMode.setChecked(self.config.smartvista.keep_alive_mode)
         self.KeepAliveInterval.setText(str(self.config.smartvista.keep_alive_interval))
         self.KeepAliveInterval.setEnabled(self.KeepAliveMode.isChecked())
+        self.HideSecrets.setChecked(self.config.fields.hide_secrets)
 
     def process_debug_level_change(self):
         disabled = False
@@ -99,7 +100,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.config.fields.send_internal_id = self.SendInternalId.isChecked()
         self.config.fields.validation = self.ValidationEnabled.isChecked()
         self.config.fields.json_mode = self.JsonMode.isChecked()
-
+        self.config.fields.hide_secrets = self.HideSecrets.isChecked()
+        
         with open(TermFilesPath.CONFIG, "w") as file:
             file.write(dumps(self.config.dict(), indent=4))
 

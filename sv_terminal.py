@@ -7,7 +7,7 @@
 # #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#
 #  ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ##########
 #
-# SmartVista Electronic Commerce Terminal | v0.15.1 Production Beta | Released in Aug 2023
+# SmartVista Electronic Commerce Terminal | v0.16 | Released in Nov 2023
 #
 # E-com banking terminal GUI, used for direct interaction with SmartVista Front End by ISO 8583 protocol
 #

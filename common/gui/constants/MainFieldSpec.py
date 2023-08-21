@@ -5,6 +5,7 @@ from common.lib.core.EpaySpecification import EpaySpecification
 
 @dataclass(frozen=True)
 class MainFieldSpec:
+    MESSAGE = "Message"
 
     @dataclass(frozen=True)
     class ColumnsOrder:

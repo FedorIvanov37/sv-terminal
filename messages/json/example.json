@@ -1,19 +1,6 @@
 {
-    "trans_id": "",
-    "match_id": "",
-    "utrnno": "",
+    "trans_id": "20230814_212114_2683299504",
     "message_type": "0200",
-    "matched": null,
-    "success": null,
-    "max_amount": 100,
-    "resp_time_seconds": null,
-    "generate_fields": [
-        "11",
-        "7",
-        "12",
-        "37",
-        "4"
-    ],
     "data_fields": {
         "2": "5486736712458564",
         "3": "000000",
@@ -53,6 +40,19 @@
         },
         "49": "978"
     },
+    "max_amount": 100,
+    "generate_fields": [
+        "11",
+        "7",
+        "12",
+        "37",
+        "4"
+    ],
+    "match_id": "",
+    "utrnno": "",
+    "matched": null,
+    "success": null,
+    "resp_time_seconds": null,
     "is_request": null,
     "is_reversal": null,
     "is_keep_alive": false

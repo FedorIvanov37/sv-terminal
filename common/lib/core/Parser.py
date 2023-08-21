@@ -4,9 +4,10 @@ from logging import error, warning, info
 from pydantic import FilePath
 from binascii import hexlify, unhexlify
 from configparser import ConfigParser, NoSectionError, NoOptionError
+from common.lib.toolkit.generate_trans_id import generate_trans_id
+from common.lib.toolkit.toolkit import mask_secret
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Bitmap import Bitmap
-from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.constants.DumpDefinition import DumpDefinition
 from common.lib.constants.IniMessageDefinition import IniMessageDefinition
 from common.lib.constants.DataFormats import DataFormats
@@ -14,6 +15,7 @@ from common.lib.data_models.Config import Config
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet, RawFieldSet
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.core.JsonConverter import JsonConverter
+from common.lib.core.FieldsGenerator import FieldsGenerator
 
 
 class Parser:
@@ -25,6 +27,7 @@ class Parser:
 
     def __init__(self, config: Config):
         self.config: Config = config
+        self.generator = FieldsGenerator()
 
     @staticmethod
     def create_dump(transaction: Transaction, body: bool = False) -> bytes | str:
@@ -86,7 +89,7 @@ class Parser:
         return dump
 
     @staticmethod
-    def join_complex_field(field, field_data, path=None) -> str:
+    def join_complex_field(field, field_data, path=None, hide_secrets: bool = False) -> str:
         spec: EpaySpecification = EpaySpecification()
 
         if path is None:
@@ -104,8 +107,11 @@ class Parser:
                                  "Set parameters in the Specification tool. ")
 
             if subfield_spec.fields:
-                result += Parser.join_complex_field(subfield, subfield_data, path)
+                result += Parser.join_complex_field(subfield, subfield_data, path, hide_secrets=hide_secrets)
             else:
+                if subfield_spec.is_secret and hide_secrets:
+                    subfield_data = mask_secret(subfield_data)
+
                 length = str(len(subfield_data))
                 length = length.zfill(subfield_spec.var_length)
                 result = f"{result}{subfield}{length}{subfield_data}"
@@ -166,7 +172,6 @@ class Parser:
                     raise ValueError("Incorrect transaction message or wrong Specification settings")
 
         transaction: Transaction = Transaction(
-            trans_id=FieldsGenerator.generate_trans_id(),
             message_type=message_type_indicator,
             data_fields=fields
         )
@@ -241,7 +246,7 @@ class Parser:
 
         return ini_data
 
-    def parse_file(self, filename: FilePath) -> Transaction:
+    def parse_file(self, filename: FilePath | str) -> Transaction:
         file_extension = Path(filename).suffix
         file_extension = file_extension.replace(".", "")
         file_extension = file_extension.upper()
@@ -252,30 +257,44 @@ class Parser:
             DataFormats.TXT: self._parse_dump_file
         }
 
+        transaction: Transaction | None = None
+
         if function := data_processing_map.get(file_extension):
-            return function(filename)
+            transaction: Transaction = function(filename)
 
-        warning("Unknown file extension, trying to guess the format")
+        if not transaction:
+            warning("Unknown file extension, trying to guess the format")
 
-        for extension in data_processing_map:
-            info(f"Trying to parse file as {extension}")
-            function = data_processing_map.get(extension)
+            for extension in data_processing_map:
+                info(f"Trying to parse file as {extension}")
 
-            try:
-                return function(filename)
+                if not (function := data_processing_map.get(extension)):
+                    warning(f"Cannot parse file as {extension}")
+                    continue
 
-            except Exception as parsing_error:
-                warning(f"Cannot parse file as {extension}: {parsing_error}")
-                continue
+                try:
+                    if transaction := function(filename):
+                        break
 
-        raise TypeError("Can't parse incoming file using known formats")
+                except Exception as parsing_error:
+                    warning(f"Cannot parse file as {extension}: {parsing_error}")
+                    continue
+
+        if not transaction:
+            raise TypeError("Can't parse incoming file using known formats")
+
+        if transaction.generate_fields:
+            self.generator.set_generated_fields(transaction)
+
+        return transaction
 
     @staticmethod
     def _parse_json_file(filename: str) -> Transaction:
         JsonConverter.convert(filename)  # TODO: Temporary solution for transfer period
 
         transaction: Transaction = Transaction.parse_file(filename)
-        transaction.trans_id = FieldsGenerator.generate_trans_id()
+        transaction.trans_id = generate_trans_id()
+
         return transaction
 
     @staticmethod
@@ -306,7 +325,7 @@ class Parser:
             message_type=mti,
             generate_fields=generate_fields,
             max_amount=max_amount,
-            data_fields=fields
+            data_fields=fields,
         )
 
         return transaction

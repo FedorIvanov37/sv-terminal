@@ -5,6 +5,7 @@ from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtCore import QTimer
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
@@ -45,6 +46,7 @@ Starts MainWindow when starting its work, being a kind of low-level adapter betw
 
 class SvTerminalGui(SvTerminal):
     connector: ConnectionThread
+    trans_loop_timer: QTimer = QTimer()
 
     def __init__(self, config: Config):
         super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
@@ -93,14 +95,59 @@ class SvTerminalGui(SvTerminal):
             window.field_added: self.set_bitmap,
             window.settings: self.settings,
             window.hotkeys: lambda: HotKeysHintWindow().exec(),
-            window.specification: lambda: SpecWindow().exec(),
+            window.specification: self.run_specification_window,
             window.about: lambda: AboutWindow(),
             window.keep_alive: self.set_keep_alive_interval,
+            window.repeat: self.set_trans_loop_interval,
             self.connector.stateChanged: self.set_connection_status,
         }
 
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
+
+    def run_specification_window(self):
+        spec_window = SpecWindow()
+        spec_window.accepted.connect(self.window.hide_secrets)
+        spec_window.exec()
+
+    def activate_transaction_loop(self, interval: int):
+        self.stop_transaction_loop()
+        self.trans_loop_timer = QTimer()
+        self.trans_loop_timer.timeout.connect(self.auto_send_transaction)
+        self.trans_loop_timer.start(int(interval) * 1000)
+
+    def stop_transaction_loop(self):
+        self.trans_loop_timer.stop()
+
+    def set_trans_loop_interval(self, interval_name: str):
+        if interval_name == KeepAliveInterval.KEEP_ALIVE_STOP:
+            self.stop_transaction_loop()
+            info("Transaction loop is deactivated")
+
+        if interval := KeepAliveInterval.get_interval_time(interval_name):
+            self.activate_transaction_loop(interval)
+            info(f"Transaction repeat set to {interval} second(s)")
+
+        self.window.process_repeat_change(interval_name)
+
+    def auto_send_transaction(self):
+        info("Sending auto transaction")
+
+        if self.connector.connection_in_progress():
+            warning("Cannot repeat transaction while connection is in progress")
+            return
+
+        self.window.send.emit()
+
+    def echo_test(self):
+        try:
+            SvTerminal.echo_test(self)
+
+        except ValidationError as validation_error:
+            error(validation_error.json())
+
+        except Exception as sending_error:
+            error(sending_error)
 
     def settings(self):
         old_config: Config = Config.parse_obj(deepcopy(self.config.dict()))
@@ -130,6 +177,9 @@ class SvTerminalGui(SvTerminal):
 
         if old_config.fields.json_mode != self.config.fields.json_mode:
             self.window.set_json_mode(self.config.fields.json_mode)
+
+        if old_config.fields.hide_secrets != self.config.fields.hide_secrets:
+            self.window.hide_secrets()
 
         if old_config.smartvista.keep_alive_mode != self.config.smartvista.keep_alive_mode:
             interval_name = KeepAliveInterval.KEEP_ALIVE_STOP
@@ -210,7 +260,6 @@ class SvTerminalGui(SvTerminal):
             raise ValueError("Invalid MTI")
 
         transaction = Transaction(
-            trans_id=self.generator.generate_trans_id(),
             message_type=message_type,
             max_amount=self.config.fields.max_amount,
             generate_fields=self.window.get_fields_to_generate(),
@@ -321,14 +370,20 @@ class SvTerminalGui(SvTerminal):
 
         try:
             transaction: Transaction = self.parser.parse_file(filename)
-        except (TypeError, ValueError, Exception) as parsing_error:
-            error_message = parsing_error.json() if isinstance(parsing_error, ValidationError) else str(parsing_error)
-            error(f"File parsing error: {error_message}")
+
+        except ValidationError as validation_error:
+            error(f"File parsing error: {validation_error.json()}")
             return
 
-        if transaction.generate_fields:
-            self.generator.set_generated_fields(transaction)
-            self.set_generated_fields(transaction)
+        except Exception as parsing_error:
+            error(f"File parsing error: {parsing_error}")
+            return
+
+        if transaction.max_amount:
+            self.config.fields.max_amount = transaction.max_amount
+
+        if not transaction.max_amount:
+            transaction.max_amount = self.config.fields.max_amount
 
         try:
             self.window.set_mti_value(transaction.message_type)

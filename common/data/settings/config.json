@@ -7,7 +7,7 @@
     },
     "terminal": {
         "process_default_dump": true,
-        "connect_on_startup": true
+        "connect_on_startup": false
     },
     "debug": {
         "level": "INFO",
@@ -19,6 +19,7 @@
         "build_fld_90": true,
         "send_internal_id": true,
         "validation": true,
-        "json_mode": false
+        "json_mode": true,
+        "hide_secrets": true
     }
 }

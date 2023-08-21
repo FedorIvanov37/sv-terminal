@@ -2,7 +2,7 @@ from json import dumps
 from typing import Optional
 from datetime import datetime
 from pydantic import ValidationError
-from PyQt6.QtGui import QCloseEvent, QKeyEvent
+from PyQt6.QtGui import QCloseEvent, QKeyEvent, QKeySequence, QShortcut
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog, QPushButton
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -14,6 +14,7 @@ from common.gui.core.SpecView import SpecView
 from common.gui.windows.mti_spec_window import MtiSpecWindow
 from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
+from common.gui.constants.SpecFieldDef import SpecFieldDefinition
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):
@@ -48,15 +49,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def read_only(self):
         return self._read_only
 
-    @read_only.setter
-    def read_only(self, checked):
-        self._read_only = checked
-
-    def __init__(self):
-        super(SpecWindow, self).__init__()
-        self.setupUi(self)
-        self.setup()
-
     @set_window_icon
     @has_close_button_only
     def setup(self):
@@ -66,26 +58,30 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.PlusLayout.addWidget(self.PlusButton)
         self.MinusLayout.addWidget(self.MinusButton)
         self.NextLevelLayout.addWidget(self.NextLevelButton)
-        self.SpecView: SpecView = SpecView(self.SpecTree, self)
+        self.SpecView: SpecView = SpecView(self)
+        self.SpecView.itemChanged.connect(self.item_changed)
+        self.SpecView.status_changed.connect(lambda status, error: self.set_status(status, error))
+        self.SpecTreeLayout.addWidget(self.SpecView)
         self.StatusLabel.setText(str())
-        self.SpecTree.itemChanged.connect(self.item_changed)
         self.PlusButton.clicked.connect(self.SpecView.plus)
         self.MinusButton.clicked.connect(self.minus)
         self.NextLevelButton.clicked.connect(self.SpecView.next_level)
         self.ButtonClose.clicked.connect(self.close)
         self.ButtonReset.clicked.connect(self.reload)
         self.ButtonClean.clicked.connect(self.clean)
-        self.SpecView.status_changed.connect(lambda status, error: self.set_status(status, error))
         self.CheckBoxReadOnly.stateChanged.connect(lambda state: self.set_read_only(bool(state)))
         self.CheckBoxHideReverved.stateChanged.connect(lambda state: self.SpecView.hide_reserved(bool(state)))
         self.ButtonBackup.clicked.connect(self.backup)
         self.ParseFile.pressed.connect(self.parse_file)
         self.ButtonSetMti.clicked.connect(self.set_mti)
         self.spec_accepted.connect(lambda name: self.set_status(f"Specification applied - {name}"))
+        self.SearchLine.textEdited.connect(self.SpecView.search)
+        self.SearchLine.editingFinished.connect(lambda: self.SpecView.setFocus())
+        QShortcut(QKeySequence(QKeySequence.StandardKey.Find), self).activated.connect(self.SearchLine.setFocus)
 
         apply_menu = QMenu()
 
-        for action in ("For current session", "Permanently"):  # TODO Hardcode
+        for action in (ButtonAction.FOR_CURRENT_SESSION, ButtonAction.PERMANENTLY):
             apply_menu.addAction(action, self.apply)
 
         self.ButtonApply.setMenu(apply_menu)
@@ -94,6 +90,19 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             box.setChecked(bool(Qt.CheckState.Checked))
 
         self.set_status(">")
+
+    @read_only.setter
+    def read_only(self, checked):
+        self._read_only = checked
+
+    def __init__(self):
+        super(SpecWindow, self).__init__()
+        self.setupUi(self)
+        self.setup()
+
+    def unhide_all(self):
+        if self.SearchLine.text() == str():
+            self.SpecView.unhide_all()
 
     def minus(self):
         self.changed = True
@@ -125,24 +134,29 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     
     def apply(self, commit: bool = None):
         if commit is None:
-            commit = self.sender().text().upper() == "PERMANENTLY"  # TODO Hardcode
+            commit = self.sender().text().upper() == ButtonAction.PERMANENTLY
 
         try:
             self.SpecView.reload_spec(commit)
 
-        except Exception as E:
-            self.set_status(str(E), error=True)
+        except Exception as apply_error:
+            self.set_status(str(apply_error), error=True)
             self.spec_rejected.emit()
             return
 
         self.spec_accepted.emit(self.spec.name)
         self.changed = False
         self._mti_changed = False
+        self.accepted.emit()
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         self.process_close(a0)
 
     def item_changed(self, item, column):
+        if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER and \
+                column == SpecFieldDefinition.ColumnsOrder.SECRET:
+            return
+
         self.changed = True
 
     def backup(self):
@@ -208,7 +222,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             text_message.append(f"{text[position: position + 150]}")
 
         if error:
-            self.StatusLabel.setStyleSheet("color: red")  # TODO Hardcode
+            self.StatusLabel.setStyleSheet("color: red")
             text_message[int()] = f"Error: {text_message[int()]}"
         else:
             self.StatusLabel.setStyleSheet("color: black")

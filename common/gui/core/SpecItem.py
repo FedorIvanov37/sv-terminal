@@ -30,6 +30,10 @@ class SpecItem(AbstractItem):
     def var_length(self):
         return self.text(SpecFieldDefinition.ColumnsOrder.VARIABLE_LENGTH)
 
+    @var_length.setter
+    def var_length(self, var_length):
+        self.setText(SpecFieldDefinition.ColumnsOrder.VARIABLE_LENGTH, var_length)
+
     @property
     def description(self):
         return self.text(SpecFieldDefinition.ColumnsOrder.DESCRIPTION)
@@ -74,41 +78,38 @@ class SpecItem(AbstractItem):
     def field_number(self):
         return self.text(SpecFieldDefinition.ColumnsOrder.FIELD)
 
+    @property
+    def is_secret(self):
+        return self.is_checked(SpecFieldDefinition.ColumnsOrder.SECRET)
+
     def __init__(self, field_data: list[str], checkboxes: dict[str, bool] = None):
         super(SpecItem, self).__init__(field_data)
         self.setup(checkboxes=checkboxes)
 
     def setup(self, checkboxes=None):
-        if checkboxes is None:
-            checkboxes = dict()
-
-            for box in SpecFieldDefinition.CHECKBOXES:
-                checkboxes[box] = False
-
         self.set_checkboxes(checkboxes)
 
     def set_spec(self):
         self.spec = self.epay_spec.get_field_spec(self.get_field_path())
 
-    def set_checkboxes(self, checkboxes):
-        if not checkboxes:
-            return
-
-        if self.text(SpecFieldDefinition.ColumnsOrder.FIELD) == "Specification":
+    def set_checkboxes(self, checkboxes: dict[str, bool]):
+        if self.text(SpecFieldDefinition.ColumnsOrder.FIELD) == SpecFieldDefinition.SPECIFICATION:
             return
 
         if self.field_number == self.epay_spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
             return
 
-        [self.set_checkbox(int(column), state) for column, state in checkboxes.items()]
+        if checkboxes is None:
+            checkboxes: dict[str, bool] = dict()
 
-    def set_checkbox(self, column: int, checked: bool = True) -> None:
-        state = Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked
-        self.setCheckState(column, state)
+            for box in SpecFieldDefinition.CHECKBOXES:
+                checkboxes[box] = False
+
+        for column, state in checkboxes.items():
+            self.setCheckState(int(column), Qt.CheckState.Checked if state else Qt.CheckState.Unchecked)
 
     def is_checked(self, column):
         state = self.checkState(column)
         state = state.value
         state = bool(state)
-
         return state

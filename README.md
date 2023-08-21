@@ -1,9 +1,20 @@
 # SmartVista Electronic Commerce Terminal
 
-![image](https://camo.githubusercontent.com/568a4f77e5187cca9e602fb8e108ea3f4b44884c7f3010abe2db2b6d5a12f105/68747470733a2f2f692e696d6775722e636f6d2f5378656e4d55512e706e67)
+```
+  ::::::::  :::     ::: ::::::::::: :::::::::: :::::::::  ::::    ::::  ::::::::::: ::::    :::     :::     :::       
+ :+:    :+: :+:     :+:     :+:     :+:        :+:    :+: +:+:+: :+:+:+     :+:     :+:+:   :+:   :+: :+:   :+:       
+ +:+        +:+     +:+     +:+     +:+        +:+    +:+ +:+ +:+:+ +:+     +:+     :+:+:+  +:+  +:+   +:+  +:+       
+ +#++:++#++ +#+     +:+     +#+     +#++:++#   +#++:++#:  +#+  +:+  +#+     +#+     +#+ +:+ +#+ +#++:++#++: +#+       
+        +#+  +#+   +#+      +#+     +#+        +#+    +#+ +#+       +#+     +#+     +#+  +#+#+# +#+     +#+ +#+       
+ #+#    #+#   #+#+#+#       #+#     #+#        #+#    #+# #+#       #+#     #+#     #+#   #+#+# #+#     #+# #+#       
+  ########      ###         ###     ########## ###    ### ###       ### ########### ###    #### ###     ### ##########
+                                                                                                                      
+ SmartVista Electronic Commerce Terminal | v0.16 Nov 2023                                                             
+```
 
-SmartVista Electronic Commerce Terminal | v0.15.1 production beta | 
-Powered by <a href="https://www.unlimit.com">Unlimit</a></p>
+[//]: # (![image]&#40;https://camo.githubusercontent.com/568a4f77e5187cca9e602fb8e108ea3f4b44884c7f3010abe2db2b6d5a12f105/68747470733a2f2f692e696d6775722e636f6d2f5378656e4d55512e706e67&#41;)
+
+[//]: # (SmartVista Electronic Commerce Terminal | v0.16 Nov 2023 | Powered by <a href="https://www.unlimit.com">Unlimit</a></p>)
 
 # Contents 
 
@@ -68,40 +79,27 @@ of SvTerminal evolution.
 
 ## Release info
 
-v0.15.1 is the same as v0.15 with a few small improvements and adding Keep Alive functions. Release info below 
-concerns both versions v0.15 and v0.15.1 
-
-
 * New features
-  * Since v0.15 SvTerminal GUI delivers as a single binary executable `.exe` file
-  * The card number will be hidden in logs and the message constructor, except debug mode
-  * Fields basic validation, validation can be switched off in the settings
-  * Transaction timeouts: in case of no response for 60 seconds transaction will be marked as timeout with a warning
-  * ISO8583 Message Type Indicators (MTI) setting window. Opens by the button "Set MTI" in the Specification window
-  * Small warning window in case when Specification was changed but not saved 
-  * Hotkeys combinations, hotkeys hint window, and button to call the window
-  * Undo / redo of transaction fields 
-  * Complex fields flat mode aka INI style
-  * Keep Alive Message sending button and its loop settings
+  * Hiding of secrets in logs and transaction constructor
+  * Transactions repeat loop
+  * Main Window search line, key sequence 
+  * Spec Window search / goto line, key sequence 
 
 
 * Updates
-  * Full renovation of Window About
-  * Framework changed to PyQt6, SvTerminal does not support PyQt5 since v0.15
-  * Logfile now has its own handler and log format
-  * Since v0.15 Specification settings are required for any fields
-  * SvTerminal library is completely separated. Now GUI works as an independent application
-  * Incoming JSON-files format simplified with backward compatibility respect
-  * New section [CONFIG] added in INI incoming files. Two options are available - MAX_AMOUNT and GENERATE_FIELDS
-  * Small improvement of color scheme
+  * User doc update: the specification, files format, and many other things are reflected in the document
+  * Default message corrected according to mandatory changes 23Q4
+  * Lines wrap on log display 
+  * Checkboxes and Tag Length cascading in the Spec Window
+  * Transaction constructor improvements: improved checkboxes, instant field length counting
+  * Pydantic native data validation
 
 
 * Fixed
-  * GUI freezes while opening the connection. The Connector moved to its own thread, separated from the event loop  
-  * Incorrect field names in INI files
-  * Terminal fall down when empty field number set in Specification
-  * Small bugs inherited from v0.14, v0.15
-  * Code and project structure optimization
+  * All problems around old JSON files incompatibility  
+  * Transaction field max_amount has no effect
+  * Code optimization, minor bug fixes
+  
 
 # Graphic User Interface
 
@@ -116,30 +114,102 @@ settings are needed to run GUI on a Windows machine. Run "sv_terminal.exe" execu
 
 Check the parameters, opened by the "Configuration" button to make your settings  
 
-![image](https://i.imgur.com/1BFr77N.png)
+![image](https://i.imgur.com/TqcRkr4.png)
 
 ## Main Window hotkeys
 
 The list of key sequence and corresponding actions 
 
-| Key sequence         | Action                    |
-|----------------------|---------------------------|
-| F1                   | About SvTerminal          |
-| Ctrl + Enter         | Send transaction          |
-| Ctrl + Shift + Enter | Reverse last transaction  |
-| Ctrl + Alt + Enter   | Send Echo-Test            |
-| Ctrl + N             | Add new field             |
-| Ctrl + Shift + N     | Add new subfield          |
-| Delete               | Remove field              |
-| Ctrl + E             | Edit current field data   |
-| Ctrl + W             | Edit current field number |
-| Ctrl + R             | Reconnect SV              |
-| Ctrl + L             | Clear log                 |
-| Ctrl + O             | Open transaction file     |
-| Ctrl + S             | Save transaction to file  |
-| Ctrl + P             | Print transaction         |
-| Ctrl + T             | Print SV Terminal logo    |
-| Ctrl + Alt + Q       | Quit SV Terminal          |
+| Key sequence          | Action                     |
+|-----------------------|----------------------------|
+| F1                    | About SvTerminal           |
+| Ctrl + Enter          | Send transaction           |
+| Ctrl + Shift + Enter  | Reverse last transaction   |
+| Ctrl + Alt + Enter    | Send Echo-Test             |
+| Ctrl + N              | Add new field              |
+| Ctrl + N              | Add new field              |
+| Ctrl + Shift + N      | Add new subfield           |
+| Ctrl + F              | Search                     |
+| Delete                | Remove field               |
+| Ctrl + E              | Edit current field data    |
+| Ctrl + W              | Edit current field number  |
+| Ctrl + R              | Reconnect SV               |
+| Ctrl + L              | Clear log                  |
+| Ctrl + O              | Open transaction file      |
+| Ctrl + S              | Save transaction to file   |
+| Ctrl + P              | Print transaction          |
+| Ctrl + T              | Print SV Terminal logo     |
+| Ctrl + Alt + Q        | Quit SV Terminal           |
+
+## Specification settings
+
+### Specification Overview 
+
+This chapter describes the specification settings and maintenance. Refer to SVFE E-pay specification for more info.
+
+The Specification is a root data structure, describing data processing mechanics, such as fields hierarchy, types, 
+validation, and other things. SvTerminal needs the correct settings in the Specification for regular work. From v0.15 
+specification settings are required for transaction processing.
+
+The specification can be set using the button "Specification" of MainWindow. Settings through GUI are highly recommended 
+by the author. 
+
+
+### Settings description
+
+![image](https://i.imgur.com/MMFrgwX.png)
+
+The table below describes the settings window columns from left to right
+
+| Field       | Purpose                                                                                                                                                                                                                                                 | Used to                                                      | Type                       | Mandatory    |
+|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------|----------------------------|--------------|
+| Field       | The field or subfield number                                                                                                                                                                                                                            | Define main fields structure, describe fields nesting        | Number                     | Yes          |
+| Description | Free text field purpose explanation                                                                                                                                                                                                                     | Show field description on MainWindow transaction constructor | Text, no min or max length | No           |
+| Min Len     | Field value minimum length                                                                                                                                                                                                                              | Fields validation during data processing                     | Number, min value is 1     | Yes          |
+| Max Len     | Field value maximum length                                                                                                                                                                                                                              | Fields validation during data processing                     | Number, min value is 1     | Yes          | 
+| Data Len    | Applicable for variable-length fields. How many numbers marks the field own length. Should ba take from E-pay specification document. In the specification usualy marks as `LLVAR` - 2 digits, `LLLVAR` - 3 digits, and so on                           | Message construction, Fields validation, Message parsing     | Number, min value is 0     | Yes          |
+| Tag Len     | For complex fields only (field should contain subfields). How many numbers marks each subfield length. In the specification usually marks as `LLVAR` - 2 digits, `LLLVAR` - 3 digits, and so on. Tag Len of field should equal to field's own Data Len  | Message construction, Fields validation, Message parsing     | Number, min value is 0     | Yes          |
+| Alpha       | Are the alphabetic letters allowed in this field                                                                                                                                                                                                        | Fields validation                                            | Checkbox                   | Yes          |
+| Numeric     | Are the digits  allowed in this field                                                                                                                                                                                                                   | Fields validation                                            | Checkbox                   | Yes          |
+| Special     | Are the special characters allowed in this field                                                                                                                                                                                                        | Fields validation                                            | Checkbox                   | Yes          |
+| Matching    | If yes the field will be used for matching requests and responses. It means SvTerminal, sending the transaction expects the same field value in the SV response                                                                                         | Message matching                                             | Checkbox                   | Yes          |
+| Reversal    | When Yes then the field value will be taken from the original message and put to the reversal in case of reversal                                                                                                                                       | Message matching, message construction                       | Checkbox                   | Yes          |
+| Generated   | Can the fields be auto-generated by SvTerminal before sending? If yes then the corresponding checkbox appears in Main Window¹                                                                                                                           | Message construction                                         | Checkbox                   | Yes          |
+| Secret      | If yes field value will be hidden in the log, transaction constructor, and on MainWindow display³                                                                                                                                                       | Display data, log writing                                    | Checkbox                   | Yes          |
+
+¹ Currently, SvTerminal supports randomly generated field values only. No date-time and other specific format are supported, except pre-defined fields 7 and 11
+
+² Due to security reasons, it is impossible to set Primary Account Number (Field 2) as non-secret. The field has a non-removable "secret" mark  
+
+## Transaction data files format
+
+
+### Overview
+
+The SvTerminal supports multiple representations of transaction-data files. The data can be put to the Terminal using 
+one of three formats - `JSON`, `INI`, and `DUMP`. The data is stored in text files, which can be read or written 
+by SvTerminal. This chapter describes each format's features and purpose
+
+### The data formats description 
+
+| Format | File extension | Incoming  | Outgoing | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+|--------|----------------|-----------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| JSON   | `.json`        | Yes       | Yes      | Equally well suited for operator reading and machine analysis. The main goal is to make complex fields not so complicated, through structure-readable decomposition. Fields and subfields lengths are left out because they will be calculated later according to the Specification. All the transactions, incoming and outgoing stored in memory in JSON representation. Strictly requires Specification settings for each subfield                                                              | 
+| INI    | `.ini`         | Yes       | Yes      | Flat format, where each field is written in one string. Fields fill in Tag-Length-Value (TLV) style with no separators. All the lengths have to be calculated and set by the operator. The format skips the data validation process. Recommended when you definitely understand what you do. Requires specification for top-level fields only, subfields specification is not required                                                                                                            | 
+| DUMP   | `.txt`         | Yes       | Yes      | Raw SV-dump format. Used for loading and generating SVFE-compatible dump messages for parsing incoming and generating outgoing SV messages. Low-level data exchange with SVFE makes using this format. The DUMP is the fully ready-read message for the SVFE epayint module. For the sv-dump building recommended set fields data through the transaction constructor using JSON or INI style, then generating the dump by SvTerminal interface. Manual analysis or generation is not recommended | 
+
+### Loading to the SvTerminal
+
+To read the incoming data file in the open SvTerminal window press `CTRL + O`, or hit the button "Parse file" on the 
+MainWindow bottom, then choose the file using the file-navigation window. SvTerminal recognizes the incoming file format 
+by file extension. When the extension is absent or unknown the Terminal will try to parse the file using each format 
+pattern one by one. Better to set correct extension for each format. Refer to the
+[data formats description](#the-data-formats-description) to define correct extension for each file format
+
+### Save transaction to file
+
+... 
+
 
 
 # Modules package
@@ -289,4 +359,4 @@ if transaction.success:
 
 Designed and developed by Fedor Ivanov   
 
-In case of any question contract [f.ivanov@unlimit.com](mailto:f.ivanov@unlimit.com?subject=SvTerminal%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SvTerminal%20version%20is%20v0.15.1%20%7C%20Released%20in%20Aug%202023%0A)
+In case of any question contract [f.ivanov@unlimit.com](mailto:f.ivanov@unlimit.com?subject=SvTerminal%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SvTerminal%20version%20is%20v0.16%20%7C%20Released%20in%20Dec%202023%0A)
