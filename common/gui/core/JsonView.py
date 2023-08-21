@@ -49,6 +49,7 @@ class JsonView(QTreeWidget):
         self._setup()
         self.delegate = JsonView.Delegate()
         self.delegate.closeEditor.connect(lambda: self.hide_secrets())
+        self.delegate.closeEditor.connect(lambda: self.set_all_items_length())
         self.delegate.text_edited.connect(self.set_item_length)
         self.setItemDelegate(self.delegate)
         self.undo_stack = QUndoStack()
@@ -81,6 +82,18 @@ class JsonView(QTreeWidget):
             return
 
         item.set_length(len(text))
+
+    def set_all_items_length(self, parent: Item | None = None):
+        if parent is None:
+            parent = self.root
+
+        child_item: Item
+
+        for child_item in parent.get_children():
+            if child_item.get_children():
+                self.set_all_items_length(child_item)
+
+            child_item.set_length()
 
     def search(self, input_data: str, parent: Item | None = None):
         if not input_data:
