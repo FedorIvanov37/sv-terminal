@@ -20,14 +20,14 @@ from common.gui.decorators.void_qt_signals import void_qt_signals
 
 class JsonView(QTreeWidget):
     class Delegate(QItemDelegate):
-        _text_edited: pyqtSignal = pyqtSignal(str)
+        _text_edited: pyqtSignal = pyqtSignal(str, int)
 
         @property
         def text_edited(self):
             return self._text_edited
 
         def setEditorData(self, editor: QLineEdit, index: QModelIndex):
-            editor.textEdited.connect(self.text_edited)
+            editor.textEdited.connect(lambda text: self.text_edited.emit(text, index.column()))
             QItemDelegate.setEditorData(self, editor, index)
 
     field_removed: pyqtSignal = pyqtSignal()
@@ -75,10 +75,13 @@ class JsonView(QTreeWidget):
         self.addTopLevelItem(self.root)
         self.make_order()
 
-    def set_item_length(self, text):
+    def set_item_length(self, text, column):
         item: QTreeWidgetItem | Item
 
         if not (item := self.currentItem()):
+            return
+
+        if column != FieldsSpec.ColumnsOrder.VALUE:
             return
 
         item.set_length(len(text))
@@ -558,22 +561,17 @@ class JsonView(QTreeWidget):
 
         return result
 
-    def get_checkboxes(self) -> list[str]:
+    def get_checkboxes(self, checkbox_type=CheckBoxesDefinition.GENERATE) -> list[str]:
         checkboxes = list()
         item: Item
 
         for item in self.root.get_children():
-            if not item.checkbox_checked(CheckBoxesDefinition.GENERATE):
+            if not item.checkbox_checked(checkbox_type):
                 continue
 
             checkboxes.append(item.field_number)
 
         return checkboxes
-
-    def get_field_set(self):
-        field_set = [field.field_number for field in self.root.get_children() if field.field_data]
-        field_set = field_set + self.get_checkboxes()
-        return field_set
 
     def get_field_data(self, field_number):
         for item in self.root.get_children():
