@@ -16,6 +16,8 @@ from common.gui.decorators.window_settings import set_window_icon
 from common.gui.constants.KeySequence import KeySequence
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Config import Config
+from common.lib.constants.TextConstants import TextConstants
+from common.lib.constants.ReleaseDefinitoin import ReleaseDefinition
 
 
 """
@@ -165,6 +167,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.setupUi(self)
         self._add_json_control_buttons()
         self._connect_all()
+        self.setWindowTitle(f"{TextConstants.SYSTEM_NAME} {ReleaseDefinition.VERSION}")
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
         self.process_keep_alive_change(ButtonAction.KEEP_ALIVE_STOP)
         self.process_repeat_change(ButtonAction.KEEP_ALIVE_STOP)

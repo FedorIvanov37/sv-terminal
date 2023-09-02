@@ -1,0 +1,23 @@
+#
+#  :::::::: ::::::::::: ::::::::  ::::    :::     :::     :::
+# :+:    :+:    :+:    :+:    :+: :+:+:   :+:   :+: :+:   :+:
+# +:+           +:+    +:+        :+:+:+  +:+  +:+   +:+  +:+
+# +#++:++#++    +#+    :#:        +#+ +:+ +#+ +#++:++#++: +#+
+#        +#+    +#+    +#+   +#+# +#+  +#+#+# +#+     +#+ +#+
+# #+#    #+#    #+#    #+#    #+# #+#   #+#+# #+#     #+# #+#
+#  ######## ########### ########  ###    #### ###     ### ##########
+#
+# Simplified ISO generation algorithm v0.16 | Released in Nov 2023
+#
+#
+# E-com banking terminal GUI, used for direct interaction with SmartVista Front End by ISO 8583 protocol
+#
+# Install dependencies from requirements.txt, then run the file by the following command - "python signal.py"
+#
+# For test environment only! See details in README.md
+#
+#
+# Designed and developed by Fedor Ivanov
+#
+
+import common.signal
