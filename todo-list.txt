@@ -111,22 +111,40 @@ v0.16
 + Transaction repeat
 + Search: MW line, clear button, key sequence, key sequence hint
 + Instant fields length count
++ SvEmulator
 
 
-• Parser of complex fields WINDOW
-• Non-spec fields in flat mode
-• 47.120=0601 terminal is down (WFT)
 • Field names don't appear in message
+
+
+• Non-spec fields in flat mode
+• Parser of complex fields WINDOW
+• 47.120=0601 terminal is down (WFT)
 • Console mode
 
+• Change name to SIGNAL
+    • Document
+    • Text constants
+    • Windows titles
+    • Code?
 
 
+• Abstract JSON view
 • SpecWindow key sequences
 • Reflect in the document - Main settings, the specification+, files format+
 • Set complex fields full expanding when switch JSON mode
 • QTabWidget
 
 
+• Licensing preparation
+    • Change the framework to pyside
+    • Buy the logo
+    • Gif copyright
+    • Buy music
+    • Change the name
+    • Prepare code
+    • Get Unlimit's disclaimer
+    • License window
 
 • Change approach to fields path
 • No data in socket if delete field in spec
