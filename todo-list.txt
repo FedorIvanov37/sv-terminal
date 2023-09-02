@@ -113,6 +113,14 @@ v0.16
 + Instant fields length count
 
 
+• Parser of complex fields WINDOW
+• Non-spec fields in flat mode
+• 47.120=0601 terminal is down (WFT)
+• Field names don't appear in message
+• Console mode
+
+
+
 • SpecWindow key sequences
 • Reflect in the document - Main settings, the specification+, files format+
 • Set complex fields full expanding when switch JSON mode
