@@ -1,12 +1,12 @@
 from PyQt6.QtGui import QUndoCommand
-from common.gui.core.FIeldItem import Item
+from common.gui.core.json_items.FIeldItem import FieldItem
 
 
 class UndoAddChildCommand(QUndoCommand):
-    def __init__(self, item: Item, parent: Item):
+    def __init__(self, item: FieldItem, parent: FieldItem):
         super(UndoAddChildCommand, self).__init__()
-        self.item: Item = item
-        self.parent: Item = parent
+        self.item: FieldItem = item
+        self.parent: FieldItem = parent
         self.index: int = self.parent.indexOfChild(self.item)
 
     def undo(self) -> None:
@@ -17,10 +17,10 @@ class UndoAddChildCommand(QUndoCommand):
 
 
 class UndoRemoveChildCommand(QUndoCommand):
-    def __init__(self, item: Item, parent: Item):
+    def __init__(self, item: FieldItem, parent: FieldItem):
         super(UndoRemoveChildCommand, self).__init__()
-        self.item: Item = item
-        self.parent: Item = parent
+        self.item: FieldItem = item
+        self.parent: FieldItem = parent
         self.index: int = self.parent.indexOfChild(self.item)
 
     def undo(self) -> None:

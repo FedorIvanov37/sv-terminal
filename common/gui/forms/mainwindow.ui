@@ -194,7 +194,7 @@
            <number>1000</number>
           </property>
           <property name="placeholderText">
-           <string>Search: field number, field value, field description</string>
+           <string>Search: field number | field value | field description</string>
           </property>
           <property name="clearButtonEnabled">
            <bool>true</bool>

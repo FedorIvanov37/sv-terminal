@@ -1,7 +1,7 @@
 from common.lib.core.Validator import Validator
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Config import Config
-from common.gui.core.FIeldItem import Item
+from common.gui.core.json_items.FIeldItem import FieldItem
 from common.lib.data_models.Types import FieldPath
 
 
@@ -11,7 +11,7 @@ class ItemsValidator(Validator):
     def __init__(self, config: Config):
         self.config: Config = config
 
-    def validate_item(self, item: Item):
+    def validate_item(self, item: FieldItem):
         field_path: FieldPath = item.get_field_path()
 
         self.validate_field_path(field_path)
@@ -22,7 +22,7 @@ class ItemsValidator(Validator):
 
         self.validate_field_data(field_path, item.field_data)
 
-    def validate_duplicates(self, item: Item, parent: Item = None):
+    def validate_duplicates(self, item: FieldItem, parent: FieldItem = None):
         if item is None:
             return
 

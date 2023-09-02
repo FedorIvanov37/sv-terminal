@@ -344,7 +344,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "SmartVista Terminal"))
         self.ConnectionStatusLabel.setText(_translate("MainWindow", "Connection Icon"))
         self.ButtonCopyBitmap.setText(_translate("MainWindow", "Copy"))
-        self.SearchLine.setPlaceholderText(_translate("MainWindow", "Search: field number, field value, field description"))
+        self.SearchLine.setPlaceholderText(_translate("MainWindow", "Search: field number | field value | field description"))
         self.ButtonSend.setText(_translate("MainWindow", "Send"))
         self.ButtonRepeat.setText(_translate("MainWindow", "Repeat"))
         self.ButtonReverse.setText(_translate("MainWindow", "Reverse"))

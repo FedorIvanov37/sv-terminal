@@ -10,7 +10,7 @@ from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.constants.TermFilesPath import TermFilesPath
 from common.gui.windows.spec_unsaved import SpecUnsaved
 from common.gui.forms.spec import Ui_SpecificationWindow
-from common.gui.core.SpecView import SpecView
+from common.gui.core.json_views.SpecView import SpecView
 from common.gui.windows.mti_spec_window import MtiSpecWindow
 from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
@@ -49,47 +49,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def read_only(self):
         return self._read_only
 
-    @set_window_icon
-    @has_close_button_only
-    def setup(self):
-        self.PlusButton = QPushButton(ButtonAction.BUTTON_PLUS_SIGN)
-        self.MinusButton = QPushButton(ButtonAction.BUTTON_MINUS_SIGN)
-        self.NextLevelButton = QPushButton(ButtonAction.BUTTON_NEXT_LEVEL_SIGN)
-        self.PlusLayout.addWidget(self.PlusButton)
-        self.MinusLayout.addWidget(self.MinusButton)
-        self.NextLevelLayout.addWidget(self.NextLevelButton)
-        self.SpecView: SpecView = SpecView(self)
-        self.SpecView.itemChanged.connect(self.item_changed)
-        self.SpecView.status_changed.connect(lambda status, error: self.set_status(status, error))
-        self.SpecTreeLayout.addWidget(self.SpecView)
-        self.StatusLabel.setText(str())
-        self.PlusButton.clicked.connect(self.SpecView.plus)
-        self.MinusButton.clicked.connect(self.minus)
-        self.NextLevelButton.clicked.connect(self.SpecView.next_level)
-        self.ButtonClose.clicked.connect(self.close)
-        self.ButtonReset.clicked.connect(self.reload)
-        self.ButtonClean.clicked.connect(self.clean)
-        self.CheckBoxReadOnly.stateChanged.connect(lambda state: self.set_read_only(bool(state)))
-        self.CheckBoxHideReverved.stateChanged.connect(lambda state: self.SpecView.hide_reserved(bool(state)))
-        self.ButtonBackup.clicked.connect(self.backup)
-        self.ParseFile.pressed.connect(self.parse_file)
-        self.ButtonSetMti.clicked.connect(self.set_mti)
-        self.spec_accepted.connect(lambda name: self.set_status(f"Specification applied - {name}"))
-        self.SearchLine.textEdited.connect(self.SpecView.search)
-        self.SearchLine.editingFinished.connect(lambda: self.SpecView.setFocus())
-        QShortcut(QKeySequence(QKeySequence.StandardKey.Find), self).activated.connect(self.SearchLine.setFocus)
-
-        apply_menu = QMenu()
-
-        for action in (ButtonAction.FOR_CURRENT_SESSION, ButtonAction.PERMANENTLY):
-            apply_menu.addAction(action, self.apply)
-
-        self.ButtonApply.setMenu(apply_menu)
-
-        for box in (self.CheckBoxHideReverved, self.CheckBoxReadOnly):
-            box.setChecked(bool(Qt.CheckState.Checked))
-
-        self.set_status(">")
 
     @read_only.setter
     def read_only(self, checked):
@@ -100,9 +59,68 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.setupUi(self)
         self.setup()
 
-    def unhide_all(self):
-        if self.SearchLine.text() == str():
-            self.SpecView.unhide_all()
+    @set_window_icon
+    @has_close_button_only
+    def setup(self):
+        self.PlusButton: QPushButton = QPushButton(ButtonAction.BUTTON_PLUS_SIGN)
+        self.MinusButton: QPushButton = QPushButton(ButtonAction.BUTTON_MINUS_SIGN)
+        self.NextLevelButton: QPushButton = QPushButton(ButtonAction.BUTTON_NEXT_LEVEL_SIGN)
+        self.SpecView: SpecView = SpecView(self)
+        #
+        self.PlusLayout.addWidget(self.PlusButton)
+        self.MinusLayout.addWidget(self.MinusButton)
+        self.NextLevelLayout.addWidget(self.NextLevelButton)
+        self.SpecTreeLayout.addWidget(self.SpecView)
+        #
+        self.StatusLabel.setText(str())
+        self.ButtonApply.setMenu(QMenu())
+        self.set_status(">")
+        self.connect_all()
+
+        for action in ButtonAction.FOR_CURRENT_SESSION, ButtonAction.PERMANENTLY:
+            self.ButtonApply.menu().addAction(action, self.apply)
+            self.ButtonApply.menu().addSeparator()
+
+        for box in (self.CheckBoxHideReverved, self.CheckBoxReadOnly):
+            box.setChecked(bool(Qt.CheckState.Checked))
+
+    def connect_all(self):
+
+        connection_map = {
+            self.SpecView.itemChanged: self.item_changed,
+            self.SpecView.status_changed: lambda status, error: self.set_status(status, error),
+            self.CheckBoxReadOnly.stateChanged: lambda state: self.set_read_only(bool(state)),
+            self.CheckBoxHideReverved.stateChanged: self.hide_reserved_for_future,
+            self.SpecView.search_finished: self.hide_reserved_for_future,
+            self.ParseFile.pressed: self.parse_file,
+            self.spec_accepted: lambda name: self.set_status(f"Specification applied - {name}"),
+            self.SearchLine.textChanged: self.SpecView.search,
+            self.SearchLine.editingFinished: self.SpecView.setFocus,
+            QShortcut(QKeySequence(QKeySequence.StandardKey.Find), self).activated: self.SearchLine.setFocus,
+        }
+
+        buttons_connection_map = {
+            self.PlusButton: self.SpecView.plus,
+            self.MinusButton: self.minus,
+            self.NextLevelButton: self.SpecView.next_level,
+            self.ButtonClose: self.close,
+            self.ButtonReset: self.reload,
+            self.ButtonClean: self.clean,
+            self.ButtonSetMti: self.set_mti,
+            self.ButtonBackup: self.backup,
+        }
+
+        for signal, slot in connection_map.items():
+            signal.connect(slot)
+
+        for button, function in buttons_connection_map.items():
+            button.clicked.connect(function)
+
+    def hide_reserved_for_future(self):
+        if self.SearchLine.text():
+            return
+
+        self.SpecView.hide_reserved(bool(self.CheckBoxHideReverved.checkState().value))
 
     def minus(self):
         self.changed = True
@@ -131,7 +149,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def clean(self):
         self.StatusLabel.setText(str())
         self.SpecView.clean()
-    
+
     def apply(self, commit: bool = None):
         if commit is None:
             commit = self.sender().text().upper() == ButtonAction.PERMANENTLY

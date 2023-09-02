@@ -2,10 +2,10 @@ from PyQt6.QtCore import Qt
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.constants.SpecFieldDef import SpecFieldDefinition
-from common.gui.core.AbstractItem import AbstractItem
+from common.gui.core.json_items.Item import Item
 
 
-class SpecItem(AbstractItem):
+class SpecItem(Item):
     _spec: IsoField = None
     _field_number: str = None
     _epay_spec: EpaySpecification = EpaySpecification()

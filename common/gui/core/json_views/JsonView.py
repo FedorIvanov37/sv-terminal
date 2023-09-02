@@ -1,9 +1,9 @@
 from copy import deepcopy
 from logging import error, warning
 from collections import OrderedDict
-from PyQt6.QtGui import QFont, QUndoStack
+from PyQt6.QtGui import QFont
 from PyQt6.QtCore import pyqtSignal, QModelIndex
-from PyQt6.QtWidgets import QTreeWidgetItem, QTreeWidget, QItemDelegate, QLineEdit
+from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QLineEdit
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
@@ -11,14 +11,15 @@ from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.data_models.EpaySpecificationModel import RawFieldSet
 from common.lib.core.Parser import Parser
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
-from common.gui.core.FIeldItem import Item
-from common.gui.core.ItemsValidator import ItemsValidator
+from common.gui.core.json_items.FIeldItem import FieldItem
+from common.gui.core.validators.ItemsValidator import ItemsValidator
 from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
 from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
 from common.gui.decorators.void_qt_signals import void_qt_signals
+from common.gui.core.json_views.TreeView import TreeView
 
 
-class JsonView(QTreeWidget):
+class JsonView(TreeView):
     class Delegate(QItemDelegate):
         _text_edited: pyqtSignal = pyqtSignal(str, int)
 
@@ -30,13 +31,9 @@ class JsonView(QTreeWidget):
             editor.textEdited.connect(lambda text: self.text_edited.emit(text, index.column()))
             QItemDelegate.setEditorData(self, editor, index)
 
-    field_removed: pyqtSignal = pyqtSignal()
-    field_changed: pyqtSignal = pyqtSignal()
-    field_added: pyqtSignal = pyqtSignal()
     need_disable_next_level: pyqtSignal = pyqtSignal()
     need_enable_next_level: pyqtSignal = pyqtSignal()
-
-    root: Item = Item([FieldsSpec.MESSAGE])
+    root: FieldItem = FieldItem([FieldsSpec.MESSAGE])
     spec: EpaySpecification = EpaySpecification()
 
     @property
@@ -52,7 +49,6 @@ class JsonView(QTreeWidget):
         self.delegate.closeEditor.connect(lambda: self.set_all_items_length())
         self.delegate.text_edited.connect(self.set_item_length)
         self.setItemDelegate(self.delegate)
-        self.undo_stack = QUndoStack()
 
     def _setup(self):
         self.setTabKeyNavigation(True)
@@ -75,8 +71,14 @@ class JsonView(QTreeWidget):
         self.addTopLevelItem(self.root)
         self.make_order()
 
+    def search(self, text: str, parent = None) -> None:
+        TreeView.search(self, text, parent)
+
+        if text == str():
+            self.resize_all()
+
     def set_item_length(self, text, column):
-        item: QTreeWidgetItem | Item
+        item: QTreeWidgetItem | FieldItem
 
         if not (item := self.currentItem()):
             return
@@ -86,11 +88,11 @@ class JsonView(QTreeWidget):
 
         item.set_length(len(text))
 
-    def set_all_items_length(self, parent: Item | None = None):
+    def set_all_items_length(self, parent: FieldItem | None = None):
         if parent is None:
             parent = self.root
 
-        child_item: Item
+        child_item: FieldItem
 
         for child_item in parent.get_children():
             if child_item.get_children():
@@ -98,77 +100,11 @@ class JsonView(QTreeWidget):
 
             child_item.set_length()
 
-    def search(self, input_data: str, parent: Item | None = None):
-        if not input_data:
-            self.unhide_all()
-            return
-
-        if parent is None:
-            parent = self.root
-
-        for item in parent.get_children():
-            if item.get_children:
-                self.search(input_data, parent=item)
-
-            item_found: bool = self.value_in_item(input_data, item)
-            item.setHidden(not item_found)
-            item.setExpanded(item_found)
-
-            if input_data in item.field_number and item.get_children():
-                self.unhide_all(item)
-
-        self.resize_all()
-
-    def value_in_item(self, value: str, item: Item):
-        if value in item.field_number:
-            return True
-
-        if value.lower() in item.field_data.lower():
-            return True
-
-        if value.lower() in item.description.lower():
-            return True
-
-        for child in item.get_children():
-            if self.value_in_item(value, child):
-                return True
-
-        return False
-
-    def unhide_all(self, parent=None):
-        if parent is None:
-            parent = self.root
-
-        for item in parent.get_children():
-            if item.get_children():
-                self.unhide_all(item)
-
-            item.setHidden(False)
-
-        self.resize_all()
-
-    def undo(self):
-        self.undo_stack.undo()
-        self.field_changed.emit()
-
-    def redo(self):
-        self.undo_stack.redo()
-        self.field_changed.emit()
-
-    def set_focus_after_search(self):
-        for item in self.root.get_children():
-            if item.isHidden():
-                continue
-
-            self.setCurrentItem(item)
-            self.setFocus()
-            return
-
     def hide_secrets(self, parent=None):
         if parent is None:
             parent = self.root
 
-        child: Item
+        child: FieldItem
 
         for child in parent.get_children():
             if child.get_children():
@@ -176,11 +112,11 @@ class JsonView(QTreeWidget):
 
             child.hide_secret()
 
-    def disable_next_level(self, item: Item):
-        current_item: Item
+    def disable_next_level(self, item: FieldItem):
+        current_item: FieldItem
 
         if not (current_item := self.currentItem()):
-            current_item: Item = item
+            current_item: FieldItem = item
 
         exemptions = [
             item.get_field_depth() != 1,
@@ -199,7 +135,7 @@ class JsonView(QTreeWidget):
         self.setCurrentItem(item)
 
     @void_qt_signals
-    def process_change_item(self, item: Item, column):
+    def process_change_item(self, item: FieldItem, column):
         if item is self.root:
             return
 
@@ -244,7 +180,7 @@ class JsonView(QTreeWidget):
         if not self.hasFocus():
             self.setFocus()
 
-        item: Item | QTreeWidgetItem
+        item: FieldItem | QTreeWidgetItem
 
         if not (item := self.currentItem()):
             return
@@ -267,7 +203,7 @@ class JsonView(QTreeWidget):
 
         self.validator.validate_item(item)
 
-    def validate_all(self, parent_item: Item | None = None):
+    def validate_all(self, parent_item: FieldItem | None = None):
         if parent_item is None:
             parent_item = self.root
 
@@ -284,7 +220,7 @@ class JsonView(QTreeWidget):
             self.validate_all(parent_item=child_item)
 
     def plus(self):
-        item = Item([])
+        item = FieldItem([])
         parent = None
 
         if current_item := self.currentItem():
@@ -300,7 +236,7 @@ class JsonView(QTreeWidget):
 
     @void_qt_signals
     def minus(self, *args):
-        item: Item | QTreeWidgetItem
+        item: FieldItem | QTreeWidgetItem
 
         if not (item := self.currentItem()):
             return
@@ -309,7 +245,7 @@ class JsonView(QTreeWidget):
             self.setFocus()
             return
 
-        parent: Item = item.parent()
+        parent: FieldItem = item.parent()
         removed_item_index = parent.indexOfChild(item)
 
         self.undo_stack.push(UndoRemoveChildCommand(item, parent))
@@ -327,7 +263,7 @@ class JsonView(QTreeWidget):
         self.field_removed.emit()
 
     def next_level(self, *args):
-        current_item: Item | None = self.currentItem()
+        current_item: FieldItem | None = self.currentItem()
 
         if not current_item:
             return
@@ -338,7 +274,7 @@ class JsonView(QTreeWidget):
             if is_field_complex and not current_item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
                 return
 
-        item = Item([])
+        item = FieldItem([])
 
         if current_item is None:
             return
@@ -348,13 +284,13 @@ class JsonView(QTreeWidget):
         self.set_new_item(item)
         self.undo_stack.push(UndoAddChildCommand(item, current_item))
 
-    def set_new_item(self, item: Item):
+    def set_new_item(self, item: FieldItem):
         self.setCurrentItem(item)
         self.scrollToItem(item)
         self.setFocus()
         self.editItem(item, int())
 
-    def check_duplicates_after_remove(self, removed_item: Item, parent_item: Item):
+    def check_duplicates_after_remove(self, removed_item: FieldItem, parent_item: FieldItem):
         try:
             self.validator.validate_duplicates(removed_item, parent=parent_item)
         except ValueError:
@@ -372,9 +308,8 @@ class JsonView(QTreeWidget):
 
             item.set_item_color(red=False)
 
-    @void_qt_signals
     def clean(self):
-        self.root.takeChildren()
+        TreeView.clean(self)
         self.root.set_length()
 
     @void_qt_signals
@@ -443,7 +378,7 @@ class JsonView(QTreeWidget):
 
             self.set_json_mode(item)
 
-    def set_json_mode(self, item: Item):
+    def set_json_mode(self, item: FieldItem):
         parsing_error_text: str = "Cannot change JSON mode due to parsing error(s)"
 
         if item.get_children():
@@ -512,27 +447,17 @@ class JsonView(QTreeWidget):
             description = field_spec.description if field_spec else None
 
             if isinstance(field_data, dict):
-                child = Item([field])
+                child = FieldItem([field])
                 child.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, description)
                 self._parse_fields(field_data, parent=child, specification=specification.fields.get(field))
 
             else:
                 string_data = [field, str(field_data), None, description]
-                child: Item = Item(string_data)
+                child: FieldItem = FieldItem(string_data)
 
             parent.addChild(child)
 
             child.set_spec(field_spec)
-
-    def resize_all(self):
-        for column in range(self.columnCount()):
-            self.resizeColumnToContents(column)
-
-    def make_order(self):
-        self.collapseAll()
-        self.expandToDepth(-1)
-        self.expandAll()
-        self.resize_all()
 
     def get_top_level_field_numbers(self) -> list[str]:
         field_numbers: list[str] = list()
@@ -567,7 +492,7 @@ class JsonView(QTreeWidget):
 
     def get_checkboxes(self, checkbox_type=CheckBoxesDefinition.GENERATE) -> list[str]:
         checkboxes = list()
-        item: Item
+        item: FieldItem
 
         for item in self.root.get_children():
             if not item.checkbox_checked(checkbox_type):

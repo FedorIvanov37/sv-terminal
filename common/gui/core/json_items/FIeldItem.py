@@ -3,12 +3,12 @@ from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.lib.toolkit.toolkit import mask_pan, mask_secret
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
-from common.gui.core.AbstractItem import AbstractItem
+from common.gui.core.json_items.Item import Item
 from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
 from common.gui.decorators.void_qt_signals import void_tree_signals
 
 
-class Item(AbstractItem):
+class FieldItem(Item):
     epay_spec: EpaySpecification = EpaySpecification()
     spec: IsoField = None
     _secret: str = ""
@@ -42,7 +42,8 @@ class Item(AbstractItem):
     @property
     def is_secret(self):
         if not (spec := self.epay_spec.get_field_spec(self.get_field_path())):
-            spec = self.spec
+            if not (spec := self.spec):
+                return False
 
         return spec and spec.is_secret
 
@@ -51,7 +52,7 @@ class Item(AbstractItem):
         return self.text(FieldsSpec.ColumnsOrder.DESCRIPTION)
 
     def __init__(self, item_data: list[str], spec=None):
-        super(Item, self).__init__(item_data)
+        super(FieldItem, self).__init__(item_data)
         self.spec = spec if spec else self.spec
 
     def addChild(self, item):
@@ -61,22 +62,24 @@ class Item(AbstractItem):
 
     def set_spec(self, spec: IsoField | None = None):
         if not spec:
-            self.spec: IsoField = self.epay_spec.get_field_spec(self.get_field_path())
+            spec: IsoField = self.epay_spec.get_field_spec(self.get_field_path())
 
         self.spec = spec
 
     def hide_secret(self, hide_the_secret: bool | None = None):
-        if self.treeWidget() and not self.treeWidget().hide_secret_fields:
+        tree = self.treeWidget()
+
+        if tree and not tree.hide_secret_fields:
             if self.field_number != self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
                 hide_the_secret = False
-
+        
         if hide_the_secret is None:
-            hide_the_secret = self.is_secret
+            hide_the_secret: bool = self.is_secret
 
         if hide_the_secret:
             self.mask_secret_value()
 
-        if not hide_the_secret:
+        else:
             self.show_secret_value()
 
     @void_tree_signals
@@ -154,6 +157,9 @@ class Item(AbstractItem):
 
     @void_tree_signals
     def set_description(self):
+        if not self.spec:
+            self.set_spec()
+
         if not self.spec:
             return
 
