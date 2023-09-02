@@ -1,6 +1,5 @@
 from PyQt6.QtCore import Qt
 from common.lib.data_models.EpaySpecificationModel import IsoField
-from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.constants.SpecFieldDef import SpecFieldDefinition
 from common.gui.core.json_items.Item import Item
 
@@ -8,11 +7,6 @@ from common.gui.core.json_items.Item import Item
 class SpecItem(Item):
     _spec: IsoField = None
     _field_number: str = None
-    _epay_spec: EpaySpecification = EpaySpecification()
-
-    @property
-    def epay_spec(self):
-        return self._epay_spec
 
     @property
     def tag_length(self):
@@ -40,7 +34,15 @@ class SpecItem(Item):
 
     @property
     def reserved_for_future(self):
-        return self.text(SpecFieldDefinition.ColumnsOrder.DESCRIPTION) == "Reserved for future"
+        try:
+            return self.spec.reserved_for_future
+        except AttributeError:
+            self.set_spec()
+
+        if not self.spec:
+            return False
+
+        return self.spec.reserved_for_future
 
     @property
     def generate(self):
@@ -88,9 +90,6 @@ class SpecItem(Item):
 
     def setup(self, checkboxes=None):
         self.set_checkboxes(checkboxes)
-
-    def set_spec(self):
-        self.spec = self.epay_spec.get_field_spec(self.get_field_path())
 
     def set_checkboxes(self, checkboxes: dict[str, bool]):
         if self.text(SpecFieldDefinition.ColumnsOrder.FIELD) == SpecFieldDefinition.SPECIFICATION:

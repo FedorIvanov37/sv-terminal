@@ -73,7 +73,7 @@ class SpecView(TreeView):
         for item in parent.get_children():
             item.setCheckState(SpecFieldDefinition.ColumnsOrder.SECRET, check_state)
 
-            if item.get_children():
+            if item.childCount():
                 self.cascade_checkboxes(item)
 
     def set_pan_as_secret(self, item: SpecItem):

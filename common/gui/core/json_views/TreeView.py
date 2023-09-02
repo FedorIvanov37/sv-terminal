@@ -34,6 +34,18 @@ class TreeView(QTreeWidget):
         self.expandAll()
         self.resize_all()
 
+    def setFocus(self) -> None:
+        if not (item := self.currentItem()):
+            item = self.root
+
+        if item.isHidden():
+            item = self.root
+
+        self.setCurrentItem(item)
+        self.scrollToItem(item)
+
+        QTreeWidget.setFocus(self)
+
     def search(self, text: str, parent = None) -> None:
         if not text:
             self.unhide_all()
@@ -45,7 +57,7 @@ class TreeView(QTreeWidget):
         text = text.strip()
 
         for item in parent.get_children():
-            if item.get_children:
+            if item.childCount():
                 self.search(text, parent=item)
 
             item_found: bool = self.value_in_item(text, item)
@@ -53,7 +65,7 @@ class TreeView(QTreeWidget):
             item.setHidden(not item_found)
             item.setExpanded(item_found)
 
-            if text in item.field_number and item.get_children():
+            if item.childCount() and self.value_in_item(text, item, check_subfields=False):
                 self.unhide_all(item)
 
     def unhide_all(self, parent=None):
@@ -61,7 +73,7 @@ class TreeView(QTreeWidget):
             parent = self.root
 
         for item in parent.get_children():
-            if item.get_children():
+            if item.childCount():
                 self.unhide_all(item)
 
             item.setHidden(False)
@@ -78,7 +90,7 @@ class TreeView(QTreeWidget):
         self.undo_stack.redo()
         self.field_changed.emit()
 
-    def value_in_item(self, value: str, item):
+    def value_in_item(self, value: str, item, check_subfields=True):
         if value in item.field_number:
             return True
 
@@ -92,8 +104,11 @@ class TreeView(QTreeWidget):
         except AttributeError:
             pass
 
-        for child in item.get_children():
-            if self.value_in_item(value, child):
+        if check_subfields:
+            for child in item.get_children():
+                if not self.value_in_item(value, child):
+                    continue
+
                 return True
 
         return False

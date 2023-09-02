@@ -94,7 +94,7 @@ class SpecValidator:
         if int(item.min_length) > int(item.max_length):
             raise ValueError(f"Field {field_path} - Min Length over Max Length")
 
-        if int(item.tag_length) > 0 and not item.get_children():
+        if int(item.tag_length) > 0 and not item.childCount():
             raise ValueError(f"Non-zero Tag Len, but field {field_path} doesn't contain subfields")
 
     @staticmethod
