@@ -415,7 +415,11 @@ class JsonView(QTreeWidget):
             if not isinstance(field_data, dict):
                 continue
 
-            fields[field] = Parser.join_complex_field(field, field_data)
+            try:
+                fields[field] = Parser.join_complex_field(field, field_data)
+            except Exception as parsing_error:
+                error(f"Parsing error: {parsing_error}")
+                return
 
         self._parse_fields(fields)
         self.set_checkboxes(transaction)

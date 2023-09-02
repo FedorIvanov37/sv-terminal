@@ -65,7 +65,12 @@ class Parser:
         mti: str = transaction.message_type
         bitmap: hex = Bitmap(transaction.data_fields)
         bitmap: hex = bitmap.get_bitmap(hex)
-        body: str = Parser.create_dump(transaction, body=True)
+
+        try:
+            body: str = Parser.create_dump(transaction, body=True)
+        except Exception as parsing_error:
+            error(f"Parsing error {parsing_error}")
+            return
 
         dump = "\n"
         ascii_dump = mti + DumpDefinition.ASCII_BITMAP + body
@@ -91,6 +96,9 @@ class Parser:
     @staticmethod
     def join_complex_field(field, field_data, path=None, hide_secrets: bool = False) -> str:
         spec: EpaySpecification = EpaySpecification()
+
+        if not isinstance(field_data, dict):
+            raise TypeError("Wrong type of field data")
 
         if path is None:
             path = [field]

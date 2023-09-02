@@ -32,8 +32,8 @@ class TransactionQueue(QObject):
 
         try:
             transaction_dump: bytes = Parser.create_dump(request)
-        except ValueError as value_error:
-            error(value_error)
+        except ValueError | TypeError as parsing_error:
+            error(f"Parsing error: {parsing_error}")
             return
 
         self.ready_to_send.emit(request.trans_id, transaction_dump)
