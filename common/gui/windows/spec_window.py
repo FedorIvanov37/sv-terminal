@@ -49,7 +49,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def read_only(self):
         return self._read_only
 
-
     @read_only.setter
     def read_only(self, checked):
         self._read_only = checked
@@ -57,11 +56,11 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def __init__(self):
         super(SpecWindow, self).__init__()
         self.setupUi(self)
-        self.setup()
+        self._setup()
 
     @set_window_icon
     @has_close_button_only
-    def setup(self):
+    def _setup(self):
         self.PlusButton: QPushButton = QPushButton(ButtonAction.BUTTON_PLUS_SIGN)
         self.MinusButton: QPushButton = QPushButton(ButtonAction.BUTTON_MINUS_SIGN)
         self.NextLevelButton: QPushButton = QPushButton(ButtonAction.BUTTON_NEXT_LEVEL_SIGN)
@@ -76,10 +75,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.ButtonApply.setMenu(QMenu())
         self.set_status(">")
         self.connect_all()
-
-        for action in ButtonAction.FOR_CURRENT_SESSION, ButtonAction.PERMANENTLY:
-            self.ButtonApply.menu().addAction(action, self.apply)
-            self.ButtonApply.menu().addSeparator()
+        self.ButtonApply.menu().addAction(ButtonAction.ONE_SESSION, lambda: self.apply(ButtonAction.ONE_SESSION))
+        self.ButtonApply.menu().addSeparator()
+        self.ButtonApply.menu().addAction(ButtonAction.PERMANENTLY, lambda: self.apply(ButtonAction.PERMANENTLY))
 
         for box in (self.CheckBoxHideReverved, self.CheckBoxReadOnly):
             box.setChecked(bool(Qt.CheckState.Checked))
@@ -150,9 +148,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.StatusLabel.setText(str())
         self.SpecView.clean()
 
-    def apply(self, commit: bool = None):
-        if commit is None:
-            commit = self.sender().text().upper() == ButtonAction.PERMANENTLY
+    def apply(self, commit: bool | str):
+        if isinstance(commit, str):
+            commit: bool = True if commit == ButtonAction.PERMANENTLY else False
 
         try:
             self.SpecView.reload_spec(commit)

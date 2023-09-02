@@ -7,7 +7,7 @@ class ButtonAction(object):
     LAST = "Last"
     OTHER = "Other"
     #
-    FOR_CURRENT_SESSION = "For current session"
+    ONE_SESSION = "For current session"
     PERMANENTLY = "Permanently"
     #
     BUTTON_PLUS_SIGN = "✚"
