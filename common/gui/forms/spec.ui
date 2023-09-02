@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
+    <width>1320</width>
     <height>700</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1200</width>
+    <width>1320</width>
     <height>700</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1200</width>
+    <width>1320</width>
     <height>700</height>
    </size>
   </property>
@@ -138,7 +138,7 @@
         <bool>false</bool>
        </property>
        <property name="placeholderText">
-        <string>Search: any text | Goto: field path e.g. 47.038.01</string>
+        <string>Search: field number | field description</string>
        </property>
        <property name="clearButtonEnabled">
         <bool>true</bool>

@@ -1,0 +1,99 @@
+from PyQt6.QtWidgets import QTreeWidget
+from PyQt6.QtGui import QUndoStack
+from PyQt6.QtCore import pyqtSignal
+from common.gui.decorators.void_qt_signals import void_qt_signals
+
+
+class TreeView(QTreeWidget):
+    field_removed: pyqtSignal = pyqtSignal()
+    field_changed: pyqtSignal = pyqtSignal()
+    field_added: pyqtSignal = pyqtSignal()
+    fields_unhided: pyqtSignal = pyqtSignal()
+    root = None
+
+    def __init__(self):
+        super(TreeView, self).__init__()
+        self.undo_stack = QUndoStack()
+
+    def plus(self):
+        ...
+
+    def minus(self):
+        ...
+
+    def next_level(self):
+        ...
+
+    def resize_all(self):
+        for column in range(self.columnCount()):
+            self.resizeColumnToContents(column)
+
+    def make_order(self):
+        self.collapseAll()
+        self.expandToDepth(-1)
+        self.expandAll()
+        self.resize_all()
+
+    def search(self, text: str, parent = None) -> None:
+        if not text:
+            self.unhide_all()
+            return
+
+        if parent is None:
+            parent = self.root
+
+        text = text.strip()
+
+        for item in parent.get_children():
+            if item.get_children:
+                self.search(text, parent=item)
+
+            item_found: bool = self.value_in_item(text, item)
+
+            item.setHidden(not item_found)
+            item.setExpanded(item_found)
+
+            if text in item.field_number and item.get_children():
+                self.unhide_all(item)
+
+    def unhide_all(self, parent=None):
+        if parent is None:
+            parent = self.root
+
+        for item in parent.get_children():
+            if item.get_children():
+                self.unhide_all(item)
+
+            item.setHidden(False)
+
+    @void_qt_signals
+    def clean(self):
+        self.root.takeChildren()
+
+    def undo(self):
+        self.undo_stack.undo()
+        self.field_changed.emit()
+
+    def redo(self):
+        self.undo_stack.redo()
+        self.field_changed.emit()
+
+    def value_in_item(self, value: str, item):
+        if value in item.field_number:
+            return True
+
+        if value.lower() in item.description.lower():
+            return True
+
+        try:
+            if value.lower() in item.field_data.lower():
+                return True
+
+        except AttributeError:
+            pass
+
+        for child in item.get_children():
+            if self.value_in_item(value, child):
+                return True
+
+        return False

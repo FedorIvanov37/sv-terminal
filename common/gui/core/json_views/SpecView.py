@@ -1,22 +1,21 @@
-from re import search as regexp_search
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import pyqtSignal, Qt
-from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem, QItemDelegate
+from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
-from common.lib.data_models.Types import FieldPath
 from common.gui.constants.SpecFieldDef import SpecFieldDefinition
-from common.gui.core.SpecItem import SpecItem
-from common.gui.core.SpecValidator import SpecValidator
+from common.gui.core.json_items.SpecItem import SpecItem
+from common.gui.core.validators.SpecValidator import SpecValidator
 from common.gui.decorators.void_qt_signals import void_qt_signals
-from common.gui.constants.SearchDefinition import SearchDefinition
+from common.gui.core.json_views.TreeView import TreeView
 
 
-class SpecView(QTreeWidget):
+class SpecView(TreeView):
     _spec: EpaySpecification = EpaySpecification()
     item_changed = pyqtSignal(SpecItem, int)
     status_changed = pyqtSignal(str, bool)
+    search_finished = pyqtSignal()
 
     @property
     def spec(self):
@@ -44,95 +43,6 @@ class SpecView(QTreeWidget):
         self.parse_spec()
         self.make_order()
 
-    def find_text(self, input_data: str, parent: SpecItem | None = None):
-        if not input_data:
-            self.unhide_all()
-            return
-
-        if parent is None:
-            parent = self.root
-
-        item: SpecItem
-
-        for item in parent.get_children():
-            if item.reserved_for_future:
-                item.setHidden(True)
-                continue
-
-            if item.get_children:
-                self.find_text(input_data, parent=item)
-
-            item_found: bool = self.value_in_item(input_data, item)
-            item.setHidden(not item_found)
-            item.setExpanded(item_found)
-
-            if input_data in item.field_number and item.get_children():
-                self.unhide_all(item)
-
-    def goto(self, path: str):
-        def _goto(field_path: FieldPath, parent: SpecItem | None = None):
-            if parent is None:
-                parent = self.root
-
-            self.unhide_all(parent)
-
-            item: SpecItem
-
-            for item in parent.get_children():
-                if item.get_children():
-                    _goto(field_path, item)
-
-                if item.get_field_path() != field_path:
-                    continue
-
-                self.setCurrentItem(item)
-                self.scrollToItem(item)
-
-                item.setExpanded(True)
-
-        path: str = path.replace(SearchDefinition.PATH_SEPARATOR_SLASH, SearchDefinition.PATH_SEPARATOR_DOT)
-        path: FieldPath = path.split(SearchDefinition.PATH_SEPARATOR_DOT)
-
-        while str() in path:
-            path.remove(str())
-
-        _goto(path)
-
-    def value_in_item(self, value: str, item: SpecItem):
-        if value in item.field_number:
-            return True
-
-        if value.lower() in item.description.lower():
-            return True
-
-        for child in item.get_children():
-            if self.value_in_item(value, child):
-                return True
-
-        return False
-
-    def unhide_all(self, parent=None):
-        if parent is None:
-            parent = self.root
-
-        for item in parent.get_children():
-            if item.get_children():
-                self.unhide_all(item)
-
-            if not item.reserved_for_future:
-                item.setHidden(False)
-
-    def search(self, text):
-        if not text:
-            self.unhide_all()
-            return
-
-        if regexp_search(SearchDefinition.FIELD_PATH_PATTERN, text):
-            self.goto(text)
-            return
-
-        self.find_text(text)
-
     def process_item_change(self, item, column):
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
             self.set_pan_as_secret(item)
@@ -144,6 +54,10 @@ class SpecView(QTreeWidget):
             self.cascade_tag_length(item)
 
         self.validate_item(item, column, validate_all=True)
+
+    def search(self, text: str, parent = None) -> None:
+        TreeView.search(self, text, parent)
+        self.search_finished.emit()
 
     @staticmethod
     def cascade_tag_length(parent: SpecItem):
@@ -203,17 +117,8 @@ class SpecView(QTreeWidget):
     def reload(self):
         self.setup()
 
-    def clean(self):
-        self.root.takeChildren()
-
-    def resize_all(self):
-        for column in range(self.columnCount()):
-            self.resizeColumnToContents(column)
-
     def make_order(self):
-        self.collapseAll()
-        self.expandToDepth(int())
-        self.resize_all()
+        TreeView.make_order(self)
         self.hide_reserved()
 
     def edit_item(self, item, column):
@@ -329,8 +234,6 @@ class SpecView(QTreeWidget):
 
             if field_data.fields:
                 self.parse_spec_fields(input_json=field_data.fields, parent=item)
-
-
 
         self.make_order()
 

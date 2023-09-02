@@ -6,7 +6,7 @@ from common.lib.data_models.Types import FieldPath
 from common.gui.decorators.void_qt_signals import void_tree_signals
 
 
-class AbstractItem(QTreeWidgetItem):
+class Item(QTreeWidgetItem):
     _field_number: str = None
     _epay_spec = EpaySpecification()
 
@@ -19,7 +19,7 @@ class AbstractItem(QTreeWidgetItem):
         return self._field_number
 
     def __init__(self, item_data: list[str]):
-        super(AbstractItem, self).__init__(item_data)
+        super(Item, self).__init__(item_data)
 
         self.setFlags(
              Qt.ItemFlag.ItemIsEditable |

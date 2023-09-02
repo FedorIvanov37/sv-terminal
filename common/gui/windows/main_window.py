@@ -5,7 +5,7 @@ from pydantic import FilePath
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
-from common.gui.core.JsonView import JsonView
+from common.gui.core.json_views.JsonView import JsonView
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.constants.ButtonActions import ButtonAction
 from common.lib.constants.DataFormats import DataFormats
@@ -228,7 +228,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         main_window_connection_map = {
             self.SearchLine.textChanged: self.json_view.search,
-            self.SearchLine.editingFinished: self.json_view.set_focus_after_search,
+            self.SearchLine.editingFinished: self.json_view.setFocus,
         }
 
         keys_connection_map = {
