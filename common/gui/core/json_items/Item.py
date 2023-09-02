@@ -1,9 +1,10 @@
 from PyQt6 import QtGui
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QTreeWidgetItem
-from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Types import FieldPath
+from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.decorators.void_qt_signals import void_tree_signals
+from common.lib.data_models.EpaySpecificationModel import IsoField
 
 
 class Item(QTreeWidgetItem):
@@ -22,10 +23,8 @@ class Item(QTreeWidgetItem):
         super(Item, self).__init__(item_data)
 
         self.setFlags(
-             Qt.ItemFlag.ItemIsEditable |
-             Qt.ItemFlag.ItemIsEnabled |
-             Qt.ItemFlag.ItemIsUserCheckable |
-             Qt.ItemFlag.ItemIsSelectable
+            Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsUserCheckable |
+            Qt.ItemFlag.ItemIsSelectable
         )
 
     def get_field_depth(self):
@@ -43,6 +42,12 @@ class Item(QTreeWidgetItem):
             return ".".join(path)
 
         return path
+
+    def set_spec(self, spec: IsoField | None = None):
+        if not spec:
+            spec: IsoField = self.epay_spec.get_field_spec(self.get_field_path())
+
+        self.spec = spec
 
     def get_children(self) -> tuple:
         return tuple(self.child(child_id) for child_id in range(self.childCount()))

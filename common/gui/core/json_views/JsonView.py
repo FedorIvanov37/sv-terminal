@@ -95,7 +95,7 @@ class JsonView(TreeView):
         child_item: FieldItem
 
         for child_item in parent.get_children():
-            if child_item.get_children():
+            if child_item.childCount():
                 self.set_all_items_length(child_item)
 
             child_item.set_length()
@@ -107,7 +107,7 @@ class JsonView(TreeView):
         child: FieldItem
 
         for child in parent.get_children():
-            if child.get_children():
+            if child.childCount():
                 self.hide_secrets(parent=child)
 
             child.hide_secret()
@@ -324,7 +324,7 @@ class JsonView(TreeView):
         if item is self.root:
             return
 
-        if item.get_children():
+        if item.childCount():
             return
 
         if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE):
@@ -381,7 +381,7 @@ class JsonView(TreeView):
     def set_json_mode(self, item: FieldItem):
         parsing_error_text: str = "Cannot change JSON mode due to parsing error(s)"
 
-        if item.get_children():
+        if item.childCount():
             return
 
         if not isinstance(item.field_data, str):
@@ -403,7 +403,7 @@ class JsonView(TreeView):
     def set_flat_mode(self, item):
         parsing_error_text: str = "Cannot change JSON mode due to parsing error(s)"
 
-        if not item.get_children():
+        if not item.childCount():
             return
 
         try:
@@ -511,7 +511,7 @@ class JsonView(TreeView):
             if item.field_data:
                 return item.field_data
 
-            if self.spec.is_field_complex([field_number]) or item.get_children():
+            if self.spec.is_field_complex([field_number]) or item.childCount():
                 field_data = "".join([data.field_data for data in item.get_children()])
                 field_data = f"{item.field_data}{field_data}"
 

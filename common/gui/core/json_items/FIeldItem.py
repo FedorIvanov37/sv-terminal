@@ -60,12 +60,6 @@ class FieldItem(Item):
         QTreeWidgetItem.addChild(self, item)
         item.set_length()
 
-    def set_spec(self, spec: IsoField | None = None):
-        if not spec:
-            spec: IsoField = self.epay_spec.get_field_spec(self.get_field_path())
-
-        self.spec = spec
-
     def hide_secret(self, hide_the_secret: bool | None = None):
         tree = self.treeWidget()
 
