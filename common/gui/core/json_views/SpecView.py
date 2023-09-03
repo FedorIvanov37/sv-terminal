@@ -1,4 +1,3 @@
-from PyQt6.QtGui import QFont
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -35,8 +34,22 @@ class SpecView(TreeView):
         self.itemDoubleClicked.connect(self.edit_item)
         self.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
         self.itemChanged.connect(self.process_item_change)
+        self.currentItemChanged.connect(self.set_path_status)
         self.parse_spec()
         self.make_order()
+
+    def set_path_status(self):
+        item: SpecItem
+
+        if not (item := self.currentItem()):
+            return
+
+        if not (path := item.get_field_path(string=True)):
+            return
+
+        path = f"{path} {item.description}"
+
+        self.status_changed.emit(path, False)
 
     def process_item_change(self, item, column):
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
@@ -130,9 +143,13 @@ class SpecView(TreeView):
         self.editItem(item, column)
 
     def set_field_path(self, item):
-        path = item.get_field_path(string=True)
+        try:
+            if not (path := item.get_field_path(string=True)):
+                path = str()
 
-        if not path:
+            path = f"{path} {item.description}"
+
+        except AttributeError:
             path = str()
 
         self.status_changed.emit(path, False)

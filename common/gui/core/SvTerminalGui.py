@@ -76,7 +76,7 @@ class SvTerminalGui(SvTerminal):
             license: LicenseInfo = LicenseInfo.parse_file(TermFilesPath.LICENSE_INFO)
 
         except Exception as license_parsing_error:
-            raise LicenseDataLoadingError(f"GNU license info file parsing error: {license_parsing_error}")
+            raise LicenseDataLoadingError(f"License info file parsing error: {license_parsing_error}")
 
         if license.accepted and not license.show_agreement:
             self.window.show()
@@ -339,7 +339,7 @@ class SvTerminalGui(SvTerminal):
             DataFormats.JSON: lambda: dumps(self.parse_main_window().dict(), indent=4),
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window()),
             DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window()),
-            DataFormats.TERM: lambda: f"{TextConstants.HELLO_MESSAGE}",
+            DataFormats.TERM: lambda: f"{TextConstants.HELLO_MESSAGE}\n",
             DataFormats.SPEC: lambda: dumps(self.spec.spec.dict(), indent=4)
         }
 
@@ -427,7 +427,7 @@ class SvTerminalGui(SvTerminal):
             if int(bit) not in range(1, self.spec.MessageLength.second_bitmap_capacity + 1):
                 continue
 
-            if not (self.window.get_field_data(bit) or bit in self.window.get_fields_to_generate()):
+            if not (self.window.field_has_data(bit) or bit in self.window.get_fields_to_generate()):
                 continue
 
             if int(bit) >= self.spec.MessageLength.first_bitmap_capacity:

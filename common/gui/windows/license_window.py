@@ -52,7 +52,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
 
             license_file.write(dumps(license_data, indent=4))
 
-        debug(f"GNU licence agreement accepted {self.license_info.last_acceptance_date.isoformat()}")
+        debug(f"Licence agreement accepted {self.license_info.last_acceptance_date.isoformat()}")
 
         self.close()
 
@@ -67,7 +67,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
 
             license_file.write(dumps(license_data, indent=4))
 
-        warning("GNU license agreement rejected, exit")
+        warning("License agreement rejected, exit")
 
         exit()
 

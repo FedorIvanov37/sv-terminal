@@ -351,7 +351,7 @@ class JsonView(TreeView):
                 error(f"Parsing error: {parsing_error}")
                 return
 
-        self._parse_fields(fields)
+        self.parse_fields(fields)
         self.set_checkboxes(transaction)
 
         if self.config.fields.validation:
@@ -384,7 +384,7 @@ class JsonView(TreeView):
 
         try:
             fields: RawFieldSet = Parser.split_complex_field(item.field_number, item.field_data)
-            self._parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
+            self.parse_fields(fields, parent=item, specification=self.spec.fields.get(item.field_number))
 
         except Exception as parsing_error:
             error(f"{parsing_error_text}: {parsing_error}")
@@ -429,7 +429,7 @@ class JsonView(TreeView):
 
             item.set_checkbox(is_checked)
 
-    def _parse_fields(self, input_json: dict, parent: QTreeWidgetItem = None, specification=None):
+    def parse_fields(self, input_json: dict, parent: QTreeWidgetItem = None, specification=None):
         if parent is None:
             parent = self.root
 
@@ -444,7 +444,7 @@ class JsonView(TreeView):
             if isinstance(field_data, dict):
                 child = FieldItem([field])
                 child.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, description)
-                self._parse_fields(field_data, parent=child, specification=specification.fields.get(field))
+                self.parse_fields(field_data, parent=child, specification=specification.fields.get(field))
 
             else:
                 string_data = [field, str(field_data), None, description]
@@ -506,10 +506,7 @@ class JsonView(TreeView):
             if item.field_data:
                 return item.field_data
 
-            if self.spec.is_field_complex([field_number]) or item.childCount():
-                field_data = "".join([data.field_data for data in item.get_children()])
-                field_data = f"{item.field_data}{field_data}"
+            if self.spec.is_field_complex([field_number]):
+                return self.generate_fields(parent=item)
 
-                return field_data
-
-            return item.field_data
+            return ""
