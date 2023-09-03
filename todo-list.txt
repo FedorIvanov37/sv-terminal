@@ -101,6 +101,7 @@
 ? Validation after edit doesn't work sometimes
 
 v0.16
+
 + Fix all problems around old JSON files incompatibility
 + Transaction field max_amount has no effect
 + Correct default message according to mandatory changes 22Q4
@@ -115,13 +116,13 @@ v0.16
 + Field names don't appear in message constructor
 + Abstract JSON view
 + Fix the search
++ 47.120=0601 terminal is down (WFT) - wrong exception handling ValueError | TypeError as parsing error
++ Non-spec fields in flat mode
 
 
-• 47.120=0601 terminal is down (WFT)
-• Non-spec fields in flat mode
 • Parser of complex fields WINDOW
 • Console mode
-• API mode
+• API console mode
 
 
 • Change name to SIGNAL

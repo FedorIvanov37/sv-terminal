@@ -98,7 +98,7 @@ class Parser:
         spec: EpaySpecification = EpaySpecification()
 
         if not isinstance(field_data, dict):
-            raise TypeError("Wrong type of field data")
+            raise TypeError(f"Incorrect field value {'.'.join(path) if path else field}")
 
         if path is None:
             path = [field]

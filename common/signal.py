@@ -1,9 +1,9 @@
 #
-# SvTerminal starting file
+# SIGNAL starting file
 #
-# This file runs SvTerminal GUI. The GUI runs once the file is imported, no additional actions are required
+# This file runs SIGNAL GUI. The GUI runs once the file is imported, no additional actions are required
 #
-# e.g.: "import common.sv_terminal" or "from common import sv_terminal"
+# e.g.: "import common.signal" or "from common import signal"
 #
 
 
