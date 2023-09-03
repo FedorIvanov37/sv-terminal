@@ -2,33 +2,66 @@ from sys import exit
 from json import dumps
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog
-from common.lib.data_models.Config import Config
 from common.gui.forms.license_window import Ui_LicenseWindow
 from common.gui.decorators.window_settings import set_window_icon, frameless_window
 from common.lib.constants.TermFilesPath import TermFilesPath
+from common.lib.data_models.License import LicenseInfo
+from datetime import datetime
+from logging import warning, debug
+from common.lib.constants.TextConstants import TextConstants
 
 
 class LicenseWindow(Ui_LicenseWindow, QDialog):
-    def __init__(self, config: Config):
+    def __init__(self):
         super(LicenseWindow, self).__init__()
-        self.config = config
         self.setupUi(self)
-        self.setup()
+        self._setup()
 
     @frameless_window
     @set_window_icon
-    def setup(self):
-        self.block_acceptance()
+    def _setup(self):
+        self.InfoBoard.setText(TextConstants.LICENSE_AGREEMENT)
+        self.license_info: LicenseInfo = LicenseInfo.parse_file(TermFilesPath.LICENSE_INFO)
         self.CheckBoxAgreement.stateChanged.connect(self.block_acceptance)
-        self.rejected.connect(exit)
+        self.rejected.connect(self.reject_license)
         self.accepted.connect(self.accept_license)
-        self.accepted.connect(self.close)
+        self.block_acceptance()
 
     def accept_license(self):
-        self.config.license.accepted = bool(self.CheckBoxDontShowAgain.checkState().value)
+        self.license_info.accepted = bool(self.CheckBoxAgreement.checkState().value)
 
-        with open(TermFilesPath.CONFIG, 'w') as config_file:
-            config_file.write(dumps(self.config.dict(), indent=4))
+        if not self.license_info.accepted:
+            return
+
+        self.license_info.last_acceptance_date = datetime.utcnow()
+        self.license_info.show_agreement = not bool(self.CheckBoxDontShowAgain.checkState().value)
+
+        with open(TermFilesPath.LICENSE_INFO, 'w') as license_file:
+            license_data = dict(
+                accepted=self.license_info.accepted,
+                show_agreement=self.license_info.show_agreement,
+                last_acceptance_date=self.license_info.last_acceptance_date.isoformat()
+            )
+
+            license_file.write(dumps(license_data, indent=4))
+
+        debug(f"GNU licence agreement accepted {self.license_info.last_acceptance_date.isoformat()}")
+
+        self.close()
+
+    def reject_license(self):
+        with open(TermFilesPath.LICENSE_INFO, 'w') as license_file:
+            license_data = dict(
+                accepted=False,
+                show_agreement=True,
+                last_acceptance_date=None
+            )
+
+            license_file.write(dumps(license_data, indent=4))
+
+        warning("GNU license agreement rejected, exit")
+
+        exit()
 
     def block_acceptance(self):
         accepted = bool(self.CheckBoxAgreement.checkState().value)

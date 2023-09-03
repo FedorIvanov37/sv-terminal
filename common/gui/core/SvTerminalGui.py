@@ -1,3 +1,4 @@
+from sys import exit
 from json import dumps
 from copy import deepcopy
 from logging import error, info, warning
@@ -25,6 +26,8 @@ from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.core.Terminal import SvTerminal
 from common.gui.windows.license_window import LicenseWindow
+from common.lib.data_models.License import LicenseInfo
+
 
 """
 The core of the GUI backend
@@ -69,8 +72,24 @@ class SvTerminalGui(SvTerminal):
             interval = self.config.smartvista.keep_alive_interval
             self.set_keep_alive_interval(interval_name=KeepAliveInterval.KEEP_ALIVE_DEFAULT % interval)
 
-        # self.window.show()
-        self.show_license_window()
+        self.show_license_dialog()
+
+    def show_license_dialog(self):
+        try:
+            license: LicenseInfo = LicenseInfo.parse_file(TermFilesPath.LICENSE_INFO)
+
+        except Exception as license_parsing_error:
+            error(f"GNU license info parsing error: {license_parsing_error}")
+            exit()
+            return
+
+        if license.accepted and not license.show_agreement:
+            self.window.show()
+            return
+
+        license_window = LicenseWindow()
+        license_window.accepted.connect(self.window.show)
+        license_window.exec()
 
     def connect_widgets(self):
         window = self.window
@@ -106,15 +125,6 @@ class SvTerminalGui(SvTerminal):
 
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
-
-    def show_license_window(self):
-        if self.config.license.accepted:
-            self.window.show()
-            return
-
-        license_window = LicenseWindow(self.config)
-        license_window.accepted.connect(self.window.show)
-        license_window.exec()
 
     def run_specification_window(self):
         spec_window = SpecWindow()

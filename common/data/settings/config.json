@@ -3,7 +3,7 @@
         "host": "172.21.30.5",
         "port": "16677",
         "keep_alive_mode": false,
-        "keep_alive_interval": "300"
+        "keep_alive_interval": 300
     },
     "terminal": {
         "process_default_dump": true,
@@ -15,14 +15,11 @@
         "parse_subfields": false
     },
     "fields": {
-        "max_amount": "100",
+        "max_amount": 100,
         "build_fld_90": true,
         "send_internal_id": true,
         "validation": true,
         "json_mode": true,
         "hide_secrets": true
-    },
-    "license": {
-        "accepted": true
     }
 }

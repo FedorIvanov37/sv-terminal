@@ -37,13 +37,8 @@ class Fields(BaseModel):
         return max_amount
 
 
-class LicenseInfo(BaseModel):
-    accepted: bool = False
-
-
 class Config(BaseModel):
     smartvista: SmartVista
     terminal: Terminal
     debug: Debug
     fields: Fields | None = None
-    license: LicenseInfo = LicenseInfo()
