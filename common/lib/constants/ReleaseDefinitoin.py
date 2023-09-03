@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class ReleaseDefinition(object):
-    EMAIL = "f.ivanov@unlimit.com"
-    AUTHOR = "Fedor Ivanov | Unlimit"
+    EMAIL = "fedornivanov@gmail.com"
+    AUTHOR = "Fedor Ivanov"
     VERSION = "v0.16"
     RELEASE = "Nov 2023"
     CONTACT = f'<a href="mailto:{EMAIL}?subject=SvTerminal\'s user request&body=Dear Fedor,\n\n\n' \

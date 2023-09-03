@@ -13,4 +13,5 @@ class TermFilesPath(object):
     KEEP_ALIVE: FilePath = f"{DATA_DIR}/settings/keep-alive.json"
     DEFAULT_FILE: FilePath = f"{DATA_DIR}/settings/default.json"
     SPECIFICATION: FilePath = f"{DATA_DIR}/settings/specification.json"
+    LICENSE_INFO: FilePath = f"{DATA_DIR}/settings/license_info.json"
     LOG_FILE_NAME: FilePath = f"{LOG_DIR}/signal.log"
