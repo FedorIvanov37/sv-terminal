@@ -8,6 +8,7 @@ class TextConstants:
     SYSTEM_NAME = "SIGNAL"
 
     HELLO_MESSAGE = f"""
+    
   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
@@ -16,10 +17,12 @@ class TextConstants:
  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
   ########  ###########  ########   ###    ####  ###     ###  ########## 
  
- Simplified ISO generation algorithm {ReleaseDefinition.VERSION}
- """
+  Simplified ISO generation algorithm {ReleaseDefinition.VERSION}"""
 
-    LICENSE_AGREEMENT: str = """                    GNU GENERAL PUBLIC LICENSE
+    LICENSE_AGREEMENT: str = f"""{HELLO_MESSAGE} | GNU/GPL license agreement
+
+    
+                    GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
