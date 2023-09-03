@@ -395,6 +395,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def get_field_data(self, field_number: str) -> str:
         return self.json_view.get_field_data(field_number)
 
+    def field_has_data(self, field_number: str) -> bool:
+        return bool(self.json_view.get_field_data(field_number))
+
     # Set value of specific field
     def set_field_value(self, field, field_data) -> None:
         self.json_view.set_field_value(field, field_data)

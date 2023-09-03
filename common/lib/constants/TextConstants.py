@@ -8,7 +8,6 @@ class TextConstants:
     SYSTEM_NAME = "SIGNAL"
 
     HELLO_MESSAGE = f"""
-    
   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
@@ -19,7 +18,7 @@ class TextConstants:
  
   Simplified ISO generation algorithm {ReleaseDefinition.VERSION}"""
 
-    LICENSE_AGREEMENT: str = f"""{HELLO_MESSAGE} | GNU/GPL license agreement
+    LICENSE_AGREEMENT: str = f"""\n{HELLO_MESSAGE} | GNU/GPL license agreement
 
     
                     GNU GENERAL PUBLIC LICENSE

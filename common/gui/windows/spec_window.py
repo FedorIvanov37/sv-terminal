@@ -87,9 +87,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         connection_map = {
             self.SpecView.itemChanged: self.item_changed,
             self.SpecView.status_changed: lambda status, error: self.set_status(status, error),
+            self.SpecView.search_finished: self.hide_reserved_for_future,
             self.CheckBoxReadOnly.stateChanged: lambda state: self.set_read_only(bool(state)),
             self.CheckBoxHideReverved.stateChanged: self.hide_reserved_for_future,
-            self.SpecView.search_finished: self.hide_reserved_for_future,
             self.ParseFile.pressed: self.parse_file,
             self.spec_accepted: lambda name: self.set_status(f"Specification applied - {name}"),
             self.SearchLine.textChanged: self.SpecView.search,
