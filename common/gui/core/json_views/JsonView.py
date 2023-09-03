@@ -215,13 +215,13 @@ class JsonView(TreeView):
             self.validate_all(parent_item=child_item)
 
     def plus(self):
+        if not (current_item := self.currentItem()):
+            return
+
+        if not (parent := current_item.parent()):
+            parent = self.root
+
         item = FieldItem([])
-        parent = None
-
-        if current_item := self.currentItem():
-            if not (parent := current_item.parent()):
-                parent = self.root
-
         index = parent.indexOfChild(current_item) + 1
         parent.insertChild(index, item)
 
@@ -497,16 +497,16 @@ class JsonView(TreeView):
 
         return checkboxes
 
-    def get_field_data(self, field_number):
-        for item in self.root.get_children():
+    def field_has_data(self, field_number: str, parent: FieldItem | None = None):
+        if parent is None:
+            parent = self.root
 
+        item: FieldItem
+
+        for item in parent.get_children():
             if item.field_number != field_number:
                 continue
 
-            if item.field_data:
-                return item.field_data
+            return bool(int(item.get_field_length()))
 
-            if self.spec.is_field_complex([field_number]):
-                return self.generate_fields(parent=item)
-
-            return ""
+        return False

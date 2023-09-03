@@ -7,7 +7,7 @@
     },
     "terminal": {
         "process_default_dump": true,
-        "connect_on_startup": true
+        "connect_on_startup": false
     },
     "debug": {
         "level": "INFO",

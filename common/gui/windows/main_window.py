@@ -391,12 +391,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for mti in mti_list:
             self.msgtype.addItem(mti)
 
-    # Get value of specific field
-    def get_field_data(self, field_number: str) -> str:
-        return self.json_view.get_field_data(field_number)
-
     def field_has_data(self, field_number: str) -> bool:
-        return bool(self.json_view.get_field_data(field_number))
+        return self.json_view.field_has_data(field_number)
 
     # Set value of specific field
     def set_field_value(self, field, field_data) -> None:
