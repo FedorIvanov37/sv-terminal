@@ -22,13 +22,23 @@ class FieldsGenerator:
         return f"{mti}{stan}{date}"
 
     def set_trans_id(self, transaction: Transaction) -> Transaction:
-        if not transaction.data_fields.get(self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD):
+        if not (de047 := transaction.data_fields.get(self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD)):
             return transaction
 
-        try:  # TODO
-            transaction.data_fields[self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD]["072"] = transaction.trans_id
-        except KeyError | TypeError:
-            pass
+        if isinstance(de047, str):
+            if not (spec := self.spec.get_field_spec([self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD])):
+                return transaction
+
+            de047 = f"{de047}072{str(len(transaction.trans_id)).zfill(spec.tag_length)}{transaction.trans_id}"
+            transaction.data_fields[self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD] = de047
+
+            return transaction
+
+        if isinstance(de047, dict):
+            de047["072"] = transaction.trans_id
+            transaction.data_fields[self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD] = de047
+
+            return transaction
 
         return transaction
 

@@ -32,7 +32,7 @@ class TransactionQueue(QObject):
 
         try:
             transaction_dump: bytes = Parser.create_dump(request)
-        except ValueError | TypeError as parsing_error:
+        except (ValueError, TypeError) as parsing_error:
             error(f"Parsing error: {parsing_error}")
             return
 

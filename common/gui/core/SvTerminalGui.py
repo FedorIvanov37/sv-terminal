@@ -286,7 +286,6 @@ class SvTerminalGui(SvTerminal):
             try:
                 transaction: Transaction = self.parse_main_window()
                 sender = self.window
-
             except Exception as building_error:
                 error(f"Transaction building error")
                 [error(err) for err in str(building_error).splitlines()]

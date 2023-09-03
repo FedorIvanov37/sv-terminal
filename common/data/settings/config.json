@@ -21,5 +21,8 @@
         "validation": true,
         "json_mode": true,
         "hide_secrets": true
+    },
+    "license": {
+        "accepted": true
     }
 }
