@@ -9,6 +9,7 @@ from common.lib.data_models.License import LicenseInfo
 from datetime import datetime
 from logging import warning, debug
 from common.lib.constants.TextConstants import TextConstants
+from common.lib.exceptions.exceptions import LicenseDataLoadingError
 
 
 class LicenseWindow(Ui_LicenseWindow, QDialog):
@@ -21,7 +22,12 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
     @set_window_icon
     def _setup(self):
         self.InfoBoard.setText(TextConstants.LICENSE_AGREEMENT)
-        self.license_info: LicenseInfo = LicenseInfo.parse_file(TermFilesPath.LICENSE_INFO)
+
+        try:
+            self.license_info: LicenseInfo = LicenseInfo.parse_file(TermFilesPath.LICENSE_INFO)
+        except Exception as license_parsing_error:
+            raise LicenseDataLoadingError(f"GNU license info file parsing error: {license_parsing_error}")
+
         self.CheckBoxAgreement.stateChanged.connect(self.block_acceptance)
         self.rejected.connect(self.reject_license)
         self.accepted.connect(self.accept_license)
@@ -40,7 +46,8 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
             license_data = dict(
                 accepted=self.license_info.accepted,
                 show_agreement=self.license_info.show_agreement,
-                last_acceptance_date=self.license_info.last_acceptance_date.isoformat()
+                last_acceptance_date=self.license_info.last_acceptance_date.isoformat(),
+                license_id=self.license_info.license_id,
             )
 
             license_file.write(dumps(license_data, indent=4))
@@ -54,7 +61,8 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
             license_data = dict(
                 accepted=False,
                 show_agreement=True,
-                last_acceptance_date=None
+                last_acceptance_date=None,
+                license_id=self.license_info.license_id,
             )
 
             license_file.write(dumps(license_data, indent=4))

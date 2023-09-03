@@ -1,5 +1,6 @@
 {
-    "accepted": false,
+    "accepted": true,
     "show_agreement": true,
-    "last_acceptance_date": null
+    "last_acceptance_date": "2023-09-03T05:48:38.243963",
+    "license_id": "d8f31e24-5c09-4363-93cd-d707cfaa0f03"
 }
