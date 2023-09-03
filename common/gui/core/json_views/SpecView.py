@@ -27,19 +27,14 @@ class SpecView(TreeView):
         self.window = window
         self.validator = SpecValidator()
         self.setItemDelegate(QItemDelegate())
-        self.setup()
+        self._setup()
 
-    def setup(self):
+    def _setup(self):
         self.setHeaderLabels(SpecFieldDefinition.COLUMNS)
         self.addTopLevelItem(self.root)
         self.itemDoubleClicked.connect(self.edit_item)
         self.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
         self.itemChanged.connect(self.process_item_change)
-        self.setFont(QFont("Calibri", 12))
-        self.setAllColumnsShowFocus(True)
-        self.setAlternatingRowColors(True)
-        self.setEditTriggers(self.EditTrigger.NoEditTriggers)
-        self.setSortingEnabled(False)
         self.parse_spec()
         self.make_order()
 
