@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QTreeWidget
-from PyQt6.QtGui import QUndoStack
+from PyQt6.QtGui import QUndoStack, QFont
 from PyQt6.QtCore import pyqtSignal
 from common.gui.decorators.void_qt_signals import void_qt_signals
 
@@ -14,6 +14,14 @@ class TreeView(QTreeWidget):
     def __init__(self):
         super(TreeView, self).__init__()
         self.undo_stack = QUndoStack()
+        self.setup()
+
+    def setup(self):
+        self.setFont(QFont("Calibri", 12))
+        self.setAllColumnsShowFocus(True)
+        self.setAlternatingRowColors(True)
+        self.setEditTriggers(self.EditTrigger.NoEditTriggers)
+        self.setSortingEnabled(False)
 
     def plus(self):
         ...

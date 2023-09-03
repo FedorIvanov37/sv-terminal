@@ -114,6 +114,7 @@ v0.16
 + Add SvEmulator
 + Field names don't appear in message constructor
 + Abstract JSON view
++ Fix the search
 
 
 • 47.120=0601 terminal is down (WFT)
@@ -121,15 +122,14 @@ v0.16
 • Parser of complex fields WINDOW
 • Console mode
 • API mode
-• Fix the search
 
 
 • Change name to SIGNAL
     • Document
     • Text constants
     • Windows titles
+    • Lic window
     • Code?
-
 
 
 • SpecWindow key sequences
@@ -146,7 +146,7 @@ v0.16
     • Change the name
     • Prepare code
     • Get Unlimit's disclaimer
-    • License window
+    + License window
 
 • Change approach to fields path
 • No data in socket if delete field in spec

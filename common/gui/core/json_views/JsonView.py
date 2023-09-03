@@ -1,7 +1,6 @@
 from copy import deepcopy
 from logging import error, warning
 from collections import OrderedDict
-from PyQt6.QtGui import QFont
 from PyQt6.QtCore import pyqtSignal, QModelIndex
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QLineEdit
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -63,11 +62,7 @@ class JsonView(TreeView):
         self.itemChanged.connect(self.process_change_item)
         self.itemChanged.connect(self.disable_next_level)
         self.currentItemChanged.connect(self.disable_next_level)
-        self.setFont(QFont("Calibri", 12))
-        self.setAllColumnsShowFocus(True)
-        self.setAlternatingRowColors(True)
         self.setHeaderLabels(FieldsSpec.columns)
-        self.setEditTriggers(self.EditTrigger.NoEditTriggers)
         self.addTopLevelItem(self.root)
         self.make_order()
 
