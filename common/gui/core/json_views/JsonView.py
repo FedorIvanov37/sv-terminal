@@ -111,7 +111,7 @@ class JsonView(TreeView):
 
             self.set_item_description(child_item)
 
-            child_item.set_length()
+            # child_item.set_length()
 
     def hide_secrets(self, parent=None):
         if parent is None:
