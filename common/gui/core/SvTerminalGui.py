@@ -68,8 +68,8 @@ class SvTerminalGui(SvTerminal):
         if self.config.terminal.process_default_dump:
             self.set_default_values()
 
-        if self.config.smartvista.keep_alive_mode:
-            interval = self.config.smartvista.keep_alive_interval
+        if self.config.host.keep_alive_mode:
+            interval = self.config.host.keep_alive_interval
             self.set_keep_alive_interval(interval_name=KeepAliveInterval.KEEP_ALIVE_DEFAULT % interval)
 
         try:
@@ -177,18 +177,18 @@ class SvTerminalGui(SvTerminal):
     def process_config_change(self, old_config: Config):
         self.read_config()
 
-        if "" in (self.config.smartvista.host, self.config.smartvista.port):
+        if "" in (self.config.host.host, self.config.host.port):
             warning("Lost SV address or SV port! Check the parameters")
 
         try:
-            if not self.config.smartvista.port:
+            if not self.config.host.port:
                 raise ValueError
 
-            if int(self.config.smartvista.port) > 65535:
+            if int(self.config.host.port) > 65535:
                 raise ValueError
 
         except ValueError:
-            warning(f'Incorrect SV port value: "{self.config.smartvista.port}". '
+            warning(f'Incorrect SV port value: "{self.config.host.port}". '
                     f'Must be a number in the range of 0 to 65535')
 
         info("Settings applied")
@@ -206,11 +206,11 @@ class SvTerminalGui(SvTerminal):
         if old_config.fields.hide_secrets != self.config.fields.hide_secrets:
             self.window.hide_secrets()
 
-        if old_config.smartvista.keep_alive_mode != self.config.smartvista.keep_alive_mode:
+        if old_config.host.keep_alive_mode != self.config.host.keep_alive_mode:
             interval_name = KeepAliveInterval.KEEP_ALIVE_STOP
 
-            if self.config.smartvista.keep_alive_mode:
-                interval_name = KeepAliveInterval.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
+            if self.config.host.keep_alive_mode:
+                interval_name = KeepAliveInterval.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
 
             self.set_keep_alive_interval(interval_name)
 

@@ -21,7 +21,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
 
     def send_transaction_data(self, trans_id: str, transaction_data: bytes):
         if not self.state() == self.SocketState.ConnectedState:
-            warning("SmartVista disconnected. Trying to established the connection")
+            warning("Host disconnected. Trying to established the connection")
 
             try:
                 self.reconnect_sv()
@@ -53,8 +53,8 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
         self.incoming_transaction_data.emit(incoming_data)
 
     def connect_sv(self):
-        host = self.config.smartvista.host
-        port = self.config.smartvista.port
+        host = self.config.host.host
+        port = self.config.host.port
 
         if "" in (host, port):
             error("Lost SV host address or port number. Check the configuration.")
@@ -91,7 +91,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
             self.disconnect_sv()
 
         else:
-            error("Cannot disconnect SmartVista host")
+            error("Cannot disconnect the host")
             return
 
         try:

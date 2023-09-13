@@ -59,7 +59,7 @@ class FieldItem(Item):
     def __init__(self, item_data: list[str], spec=None):
         super(FieldItem, self).__init__(item_data)
         self.spec = spec if spec else self.spec
-        self.setTextAlignment(FieldsSpec.ColumnsOrder.LENGTH, Qt.AlignmentFlag.AlignCenter)
+        self.setTextAlignment(FieldsSpec.ColumnsOrder.LENGTH, Qt.AlignmentFlag.AlignLeft)
 
     def addChild(self, item):
         item.spec = self.epay_spec.get_field_spec(item.get_field_path())

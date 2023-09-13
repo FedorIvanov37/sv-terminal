@@ -455,8 +455,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         button_action_menu = deepcopy(self.buttons_menu_structure.get(self.ButtonKeepAlive))
 
-        if self.config.smartvista.keep_alive_mode:  # Add custom interval
-            interval: str = ButtonAction.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
+        if self.config.host.keep_alive_mode:  # Add custom interval
+            interval: str = ButtonAction.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
             button_action_menu[interval] = lambda: self.keep_alive.emit(interval)
 
         for action, function in button_action_menu.items():

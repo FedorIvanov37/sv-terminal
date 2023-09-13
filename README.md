@@ -81,22 +81,24 @@ of SvTerminal evolution.
 
 * New features
   * Transactions repeat loop
-  * Hiding of secrets in logs and transaction constructor
   * Main / Spec Window search line, key sequence 
-  * Console mode, read more here
+  * Console mode - run without window
+  
 
 * Updates
-  * User doc update: the specification, files format, and many other things are reflected in the document
+  * Changed name to SIGNAL
+  * Hiding of secrets in logs and transaction constructor now possible for every field
+  * Simplified JSON mode, work without specification
   * Default message corrected according to mandatory changes 23Q4
   * Lines wrap on log display 
   * Checkboxes and Tag Length cascading in the Spec Window
   * Transaction constructor improvements: improved checkboxes, instant field length counting
-  * Pydantic native data validation
 
 
 * Fixed
   * All problems around old JSON files incompatibility  
   * Transaction field max_amount has no effect
+  * SIGNAL fall down in some cases of fields validation
   * Code optimization, minor bug fixes
   
 

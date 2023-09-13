@@ -43,8 +43,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
     def process_config(self):
         self.DebugLevel.setCurrentText(self.config.debug.level)
-        self.SvAddress.setText(self.config.smartvista.host)
-        self.SvPort.setText(self.config.smartvista.port)
+        self.SvAddress.setText(self.config.host.host)
+        self.SvPort.setText(self.config.host.port)
         self.MaxAmount.setText(str(self.config.fields.max_amount))
         self.ProcessDefaultDump.setChecked(self.config.terminal.process_default_dump)
         self.ConnectOnStartup.setChecked(self.config.terminal.connect_on_startup)
@@ -54,8 +54,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.SendInternalId.setChecked(self.config.fields.send_internal_id)
         self.ValidationEnabled.setChecked(self.config.fields.validation)
         self.JsonMode.setChecked(self.config.fields.json_mode)
-        self.KeepAliveMode.setChecked(self.config.smartvista.keep_alive_mode)
-        self.KeepAliveInterval.setText(str(self.config.smartvista.keep_alive_interval))
+        self.KeepAliveMode.setChecked(self.config.host.keep_alive_mode)
+        self.KeepAliveInterval.setText(str(self.config.host.keep_alive_interval))
         self.KeepAliveInterval.setEnabled(self.KeepAliveMode.isChecked())
         self.HideSecrets.setChecked(self.config.fields.hide_secrets)
 
@@ -86,10 +86,10 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
             error("Empty Keep Alive Interval, set default value 300 sec")
             self.KeepAliveInterval.setText("300")
 
-        self.config.smartvista.host = self.SvAddress.text()
-        self.config.smartvista.port = self.SvPort.text()
-        self.config.smartvista.keep_alive_mode = self.KeepAliveMode.isChecked()
-        self.config.smartvista.keep_alive_interval = self.KeepAliveInterval.text()
+        self.config.host.host = self.SvAddress.text()
+        self.config.host.port = self.SvPort.text()
+        self.config.host.keep_alive_mode = self.KeepAliveMode.isChecked()
+        self.config.host.keep_alive_interval = self.KeepAliveInterval.text()
         self.config.terminal.process_default_dump = self.ProcessDefaultDump.isChecked()
         self.config.terminal.connect_on_startup = self.ConnectOnStartup.isChecked()
         self.config.debug.clear_log = self.ClearLog.isChecked()

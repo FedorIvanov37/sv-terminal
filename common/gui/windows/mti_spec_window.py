@@ -112,7 +112,15 @@ class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):
                 mti_list.append(item_data)
 
             mti: Mti = Mti()
+
             mti.description, mti.request, mti.response, mti.is_reversible, mti.reversal_mti = mti_list
+
+            if not all((mti.request, mti.response)):
+                continue
+
+            if mti.is_reversible and not mti.reversal_mti:
+                continue
+
             result.append(mti)
 
         return result

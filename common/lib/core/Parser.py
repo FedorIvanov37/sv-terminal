@@ -169,7 +169,7 @@ class Parser:
         return result
 
     @staticmethod
-    def parse_dump(data) -> Transaction:
+    def parse_dump(data, flat: bool = False) -> Transaction:
         spec: EpaySpecification = EpaySpecification()
         fields: RawFieldSet = {}
         position = int()
@@ -208,17 +208,23 @@ class Parser:
 
             position += length
 
-        for field in fields:
-            if spec.is_field_complex([field]):
-                try:
-                    fields[field]: RawFieldSet = Parser.split_complex_field(field, fields[field])
-                except ValueError:
-                    raise ValueError("Incorrect transaction message or wrong Specification settings")
-
         transaction: Transaction = Transaction(
             message_type=message_type_indicator,
             data_fields=fields
         )
+
+        if flat:
+            return transaction
+
+        for field, field_data in fields.items():
+            if not spec.is_field_complex([field]):
+                continue
+            try:
+                fields[field]: RawFieldSet = Parser.split_complex_field(field, field_data)
+            except ValueError:
+                raise ValueError("Incorrect transaction message or wrong Specification settings")
+
+        transaction.data_fields = fields
 
         return transaction
 

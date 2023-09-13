@@ -1,7 +1,7 @@
 from pydantic import BaseModel, validator
 
 
-class SmartVista(BaseModel):
+class Host(BaseModel):
     host: str = str()
     port: str = str()
     keep_alive_mode: bool = False
@@ -38,7 +38,7 @@ class Fields(BaseModel):
 
 
 class Config(BaseModel):
-    smartvista: SmartVista
+    host: Host
     terminal: Terminal
     debug: Debug
     fields: Fields | None = None

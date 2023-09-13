@@ -9,9 +9,9 @@ class ConnectionDefinitions:
 
     @dataclass(frozen=True)
     class ConnectionStatuses:
-        CONNECTED: str = "SVFE Connected"
-        DISCONNECTED: str = "SVFE Disconnected"
-        IN_PROGRESS: str = "SVFE Connection In Progress"
+        CONNECTED: str = "Connected"
+        DISCONNECTED: str = "Disconnected"
+        IN_PROGRESS: str = "Connection In Progress"
         UNKNOWN: str = "Unknown"
 
         GREY: FilePath = GuiFilesPath.GREY_CIRCLE

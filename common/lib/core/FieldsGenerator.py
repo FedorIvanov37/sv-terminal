@@ -84,11 +84,6 @@ class FieldsGenerator:
         if transaction.is_request:
             return transaction
 
-        try:  # TODO
-            transaction.utrnno = transaction.data_fields["47"]["064"]
-        except KeyError:
-            transaction.utrnno = ""
-
         if transaction.data_fields.get(self.spec.FIELD_SET.FIELD_039_AUTHORIZATION_RESPONSE_CODE) == "00":
             transaction.success = True
 
