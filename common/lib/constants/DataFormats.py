@@ -9,7 +9,7 @@ class DataFormats(object):
     SPEC: str = "SPEC"
     TXT: str = "TXT"
     OTHER: str = "OTHER"
-    TERM: str = "TERMINAL"
+    TERM: str = "SIGNAL"
 
     @staticmethod
     def get_print_data_formats():

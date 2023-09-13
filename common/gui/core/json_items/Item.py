@@ -35,7 +35,10 @@ class Item(QTreeWidgetItem):
         item = self
 
         while item.parent() is not None:
-            path.insert(int(), item.field_number)
+            if not (field_number := item.field_number) and string:
+                field_number: str = "<empty>"
+
+            path.insert(int(), field_number)
             item = item.parent()
 
         if string:
@@ -53,8 +56,12 @@ class Item(QTreeWidgetItem):
         return tuple(self.child(child_id) for child_id in range(self.childCount()))
 
     @void_tree_signals
-    def set_item_color(self, red=False):
-        color = "#ff0000" if red else "#000000"
+    def set_item_color(self, red=False, color: str | None = None):
+        if color is None:
+            color = "#000000"
+
+        if red:
+            color = "#ff0000"
 
         for column in range(self.columnCount()):
             self.setForeground(column, QtGui.QBrush(QtGui.QColor(color)))

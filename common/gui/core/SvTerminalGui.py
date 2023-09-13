@@ -191,8 +191,14 @@ class SvTerminalGui(SvTerminal):
             warning(f'Incorrect SV port value: "{self.config.smartvista.port}". '
                     f'Must be a number in the range of 0 to 65535')
 
+        info("Settings applied")
+
         if old_config.fields.validation != self.config.fields.validation:
-            self.window.validate_fields()
+            try:
+                self.window.validate_fields()
+                self.window.refresh_fields()
+            except ValueError as validation_error:
+                error(validation_error)
 
         if old_config.fields.json_mode != self.config.fields.json_mode:
             self.window.set_json_mode(self.config.fields.json_mode)
@@ -207,8 +213,6 @@ class SvTerminalGui(SvTerminal):
                 interval_name = KeepAliveInterval.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval
 
             self.set_keep_alive_interval(interval_name)
-
-        info("Settings applied")
 
     def read_config(self):
         try:
@@ -269,8 +273,8 @@ class SvTerminalGui(SvTerminal):
 
         SvTerminal.reverse_transaction(self, original_trans)
 
-    def parse_main_window(self) -> Transaction:
-        data_fields: TypeFields = self.window.get_fields()
+    def parse_main_window(self, flat_fields=True, clean=False) -> Transaction:
+        data_fields: TypeFields = self.window.get_fields(flat=flat_fields)
 
         if not data_fields:
             raise ValueError("No transaction data found")
@@ -279,11 +283,23 @@ class SvTerminalGui(SvTerminal):
             raise ValueError("Invalid MTI")
 
         transaction = Transaction(
+            generate_fields=self.window.get_fields_to_generate(),
+            data_fields=data_fields,
             message_type=message_type,
             max_amount=self.config.fields.max_amount,
-            generate_fields=self.window.get_fields_to_generate(),
-            data_fields=data_fields
         )
+
+        if clean:
+            del (
+                transaction.resp_time_seconds,
+                transaction.match_id,
+                transaction.utrnno,
+                transaction.matched,
+                transaction.success,
+                transaction.is_request,
+                transaction.is_reversal,
+                transaction.is_keep_alive,
+            )
 
         return transaction
 
@@ -323,7 +339,7 @@ class SvTerminalGui(SvTerminal):
             return
 
         try:
-            transaction = self.parse_main_window()
+            transaction = self.parse_main_window(flat_fields=False, clean=True)
         except Exception as file_saving_error:
             error("File saving error: %s", file_saving_error)
             return
@@ -336,10 +352,10 @@ class SvTerminalGui(SvTerminal):
             return
 
         data_processing_map = {
-            DataFormats.JSON: lambda: dumps(self.parse_main_window().dict(), indent=4),
+            DataFormats.JSON: self.prepare_json_to_print,
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window()),
             DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window()),
-            DataFormats.TERM: lambda: f"{TextConstants.HELLO_MESSAGE}\n",
+            DataFormats.TERM: lambda: TextConstants.HELLO_MESSAGE + "\n",
             DataFormats.SPEC: lambda: dumps(self.spec.spec.dict(), indent=4)
         }
 
@@ -351,6 +367,24 @@ class SvTerminalGui(SvTerminal):
             self.window.set_log_data(function())
         except (ValidationError, ValueError, LookupError) as validation_error:
             error(f"{validation_error}")
+
+    def prepare_json_to_print(self) -> str:
+        transaction: Transaction = self.parse_main_window(flat_fields=False, clean=True)
+
+        if self.config.fields.send_internal_id:
+            transaction: Transaction = self.generator.set_trans_id(transaction)
+
+        json: dict = dict(
+            trans_id=transaction.trans_id,
+            message_type=transaction.message_type,
+            max_amount=transaction.max_amount,
+            generate_fields=transaction.generate_fields,
+            data_fields=transaction.data_fields,
+        )
+
+        json: str = dumps(json, indent=4)
+
+        return json
 
     def copy_log(self):
         self.set_clipboard_text(self.window.get_log_data())
