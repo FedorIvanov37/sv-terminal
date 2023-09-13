@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QTreeWidget
 from PyQt6.QtGui import QUndoStack, QFont
 from PyQt6.QtCore import pyqtSignal
 from common.gui.decorators.void_qt_signals import void_qt_signals
+from common.gui.constants.MainFieldSpec import MainFieldSpec
 
 
 class TreeView(QTreeWidget):
@@ -32,15 +33,18 @@ class TreeView(QTreeWidget):
     def next_level(self):
         ...
 
-    def resize_all(self):
+    def resize_all(self, exceptions: list[int] | None = None):
         for column in range(self.columnCount()):
+            if column in exceptions:
+                continue
+
             self.resizeColumnToContents(column)
 
     def make_order(self):
         self.collapseAll()
         self.expandToDepth(-1)
         self.expandAll()
-        self.resize_all()
+        self.resize_all(exceptions=[MainFieldSpec.ColumnsOrder.DESCRIPTION])
 
     def setFocus(self) -> None:
         if not (item := self.currentItem()):
