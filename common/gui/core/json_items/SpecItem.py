@@ -90,6 +90,7 @@ class SpecItem(Item):
 
     def setup(self, checkboxes=None):
         self.set_checkboxes(checkboxes)
+        # self.setTextAlignment(SpecFieldDefinition.ColumnsOrder.ALPHA, Qt.AlignmentFlag.AlignCenter)
 
     def set_checkboxes(self, checkboxes: dict[str, bool]):
         if self.text(SpecFieldDefinition.ColumnsOrder.FIELD) == SpecFieldDefinition.SPECIFICATION:

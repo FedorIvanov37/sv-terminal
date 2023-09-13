@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1458, 959)
+        MainWindow.resize(1392, 959)
         MainWindow.setMouseTracking(False)
         MainWindow.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
@@ -328,7 +328,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.LogArea, 5, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1458, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1392, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)

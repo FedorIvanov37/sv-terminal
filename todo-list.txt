@@ -118,12 +118,13 @@ v0.16
 + Fix the search
 + 47.120=0601 terminal is down (WFT) - wrong exception handling ValueError | TypeError as parsing error
 + Non-spec fields in flat mode
++ Simplified JSON mode
 
 
 • Parser of complex fields WINDOW
 • Console mode
 • API console mode
-
+• Remote spec
 
 • Change name to SIGNAL
     • Document

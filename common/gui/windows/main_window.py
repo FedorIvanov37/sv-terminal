@@ -347,12 +347,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def validate_fields(self) -> None:
         self.json_view.validate_all()
 
+    def refresh_fields(self):
+        self.json_view.refresh_fields()
+
     def clean_window_log(self) -> None:
         self.LogArea.setText(str())
 
     # Return transaction data fields in dict-representation
-    def get_fields(self) -> TypeFields:
-        return self.json_view.generate_fields()
+    def get_fields(self, flat=False) -> TypeFields:
+        return self.json_view.generate_fields(flat=flat)
 
     # Return fields list, no subfields included
     def get_top_level_field_numbers(self) -> list[str]:

@@ -73,9 +73,17 @@ class SvEmulator:
         for _ in range(self.spec.get_field_length(self.spec.FIELD_SET.FIELD_038_AUTHORIZATION_ID_CODE)):
             auth_code += letters[randint(int(), len(letters) - 1)]
 
-        request.data_fields[self.spec.FIELD_SET.FIELD_038_AUTHORIZATION_ID_CODE] = auth_code
-        request.data_fields[self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD]['064'] = utrnno
-        request.data_fields[self.spec.FIELD_SET.FIELD_039_AUTHORIZATION_RESPONSE_CODE] = '00'
+        resp_fields_data = {
+            self.spec.FIELD_SET.FIELD_038_AUTHORIZATION_ID_CODE: auth_code,
+            self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD: utrnno,
+            self.spec.FIELD_SET.FIELD_039_AUTHORIZATION_RESPONSE_CODE: '00',
+        }
+
+        for field_number, field_data in resp_fields_data.items():
+            try:
+                request.data_fields[field_number] = field_data
+            except KeyError:
+                pass
 
         return request
 

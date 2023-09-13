@@ -111,8 +111,7 @@ class Parser:
             path.append(subfield)
 
             if not (subfield_spec := spec.get_field_spec(path)):
-                raise ValueError(f"Lost specification for field {'.'.join(path)}. " 
-                                 "Set parameters in the Specification tool. ")
+                raise ValueError(f"Lost specification for field {'.'.join(path)}")
 
             if subfield_spec.fields:
                 result += Parser.join_complex_field(subfield, subfield_data, path, hide_secrets=hide_secrets)
@@ -129,6 +128,43 @@ class Parser:
         if len(path) > 1:
             field_spec: IsoField = spec.get_field_spec(path)
             result = f"{field}{len(result):0{field_spec.var_length}}{result}"
+
+        return result
+
+    @staticmethod
+    def join_complex_item(parent):
+        if not parent.field_number:
+            raise ValueError(f"Lost field number for field {parent.get_field_path(string=True)}")
+
+        result: str = str()
+
+        for child_item in parent.get_children():
+            if child_item.childCount():
+                result = Parser.join_complex_item(parent=child_item)
+                continue
+
+            if not child_item.field_data:
+                raise ValueError(f"Lost field value for field {child_item.get_field_path(string=True)}")
+
+            if not child_item.field_number:
+                raise ValueError(f"Lost field number for field {child_item.get_field_path(string=True)}")
+
+            length = child_item.field_length
+
+            if child_item.spec:
+                length = str(int(length))
+                length = length.zfill(child_item.spec.var_length)
+
+            result = f"{result}{child_item.field_number}{length}{child_item.field_data}"
+
+        if parent.get_field_depth() > 1:
+            try:
+                parent_length = str(len(result))
+                parent_length = parent_length.zfill(parent.spec.var_length)
+            except AttributeError:
+                parent_length = parent.field_length
+
+            result = f"{parent.field_number}{parent_length}{result}"
 
         return result
 

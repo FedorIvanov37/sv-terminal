@@ -1,3 +1,4 @@
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QTreeWidgetItem, QCheckBox, QWidget
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.lib.toolkit.toolkit import mask_pan, mask_secret
@@ -36,6 +37,10 @@ class FieldItem(Item):
         self.hide_secret()
 
     @property
+    def field_length(self):
+        return self.text(FieldsSpec.ColumnsOrder.LENGTH)
+
+    @property
     def field_number(self):
         return self.text(FieldsSpec.ColumnsOrder.FIELD)
 
@@ -54,6 +59,7 @@ class FieldItem(Item):
     def __init__(self, item_data: list[str], spec=None):
         super(FieldItem, self).__init__(item_data)
         self.spec = spec if spec else self.spec
+        self.setTextAlignment(FieldsSpec.ColumnsOrder.LENGTH, Qt.AlignmentFlag.AlignCenter)
 
     def addChild(self, item):
         item.spec = self.epay_spec.get_field_spec(item.get_field_path())
@@ -146,29 +152,38 @@ class FieldItem(Item):
     def process_change_item(self):
         self.set_spec()
         self.set_item_color()
-        self.set_length()
         self.set_description()
+        self.set_length()
 
     @void_tree_signals
-    def set_description(self):
+    def set_description(self, text: str | None = None):
+        if text is not None:
+            self.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, str(text))
+            return
+
         if not self.spec:
             self.set_spec()
 
-        if not self.spec:
-            return
-
-        self.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, self.spec.description)
+        self.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, self.spec.description if self.spec else str())
 
     @void_tree_signals
-    def set_length(self, length: int | None = None) -> None:
+    def set_length(self, length: int | None = None, fill_length: int | None = None) -> None:
         column = FieldsSpec.ColumnsOrder.LENGTH
+
+        if not self.spec:
+            self.set_spec()
 
         if length is None:
             length = self.get_field_length()
 
-        length: str = f"{length:03}"
+        if fill_length is None:
+            fill_length = 3
 
-        self.setText(column, length)
+        if not self.spec and self.field_length:
+            fill_length = len(self.text(FieldsSpec.ColumnsOrder.LENGTH))
+
+        length: str = str(length).zfill(fill_length)
+        self.setText(column, str(length))
 
         if not (parent := self.parent()):
             return
@@ -178,6 +193,7 @@ class FieldItem(Item):
     def get_field_length(self):
         if self.childCount():
             length = sum([item.get_field_length() for item in self.get_children()])
+
         else:
             length = len(self.field_data)
 

@@ -1,6 +1,5 @@
 from copy import deepcopy
 from logging import error, warning
-from collections import OrderedDict
 from PyQt6.QtCore import pyqtSignal, QModelIndex
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QLineEdit
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -52,10 +51,6 @@ class JsonView(TreeView):
     def _setup(self):
         self.setTabKeyNavigation(True)
         self.setAnimated(True)
-
-        for action in (self.itemCollapsed, self.itemExpanded, self.itemChanged):
-            action.connect(self.resize_all)
-
         self.header().setMaximumSectionSize(700)
         self.validator = ItemsValidator(self.config)
         self.itemDoubleClicked.connect(self.edit_item)
@@ -78,7 +73,10 @@ class JsonView(TreeView):
         if not (item := self.currentItem()):
             return
 
-        if column != FieldsSpec.ColumnsOrder.VALUE:
+        if column not in (FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.LENGTH):
+            return
+
+        if column == FieldsSpec.ColumnsOrder.LENGTH and not self.config.fields.validation:
             return
 
         item.set_length(len(text))
@@ -92,6 +90,26 @@ class JsonView(TreeView):
         for child_item in parent.get_children():
             if child_item.childCount():
                 self.set_all_items_length(child_item)
+
+            if not child_item.field_length.isdigit():
+                continue
+
+            if child_item.childCount():
+                continue
+
+            child_item.set_length()
+
+    def refresh_fields(self, parent: FieldItem | None = None):
+        if parent is None:
+            parent = self.root
+
+        child_item: FieldItem
+
+        for child_item in parent.get_children():
+            if child_item.childCount():
+                self.refresh_fields(child_item)
+
+            self.set_item_description(child_item)
 
             child_item.set_length()
 
@@ -129,44 +147,104 @@ class JsonView(TreeView):
 
         self.setCurrentItem(item)
 
+    def edit_item(self, item, column):
+        if item is self.root:
+            return
+
+        if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.LENGTH):
+            return
+
+        if column == FieldsSpec.ColumnsOrder.LENGTH and self.config.fields.validation:
+            return
+
+        if column == FieldsSpec.ColumnsOrder.VALUE:
+            if item.childCount():
+                return
+
+            item.hide_secret(False)
+
+        if column == FieldsSpec.ColumnsOrder.LENGTH and item.spec:
+            return
+
+        self.editItem(item, column)
+
+    def generate_item_data(self, item):
+        if not item.checkbox_checked(CheckBoxesDefinition.GENERATE):
+            return
+
+        item.field_data = FieldsGenerator.generate_field(item.field_number, self.config.fields.max_amount)
+
+    def process_change_property(self, item):
+        try:
+            text = self.itemWidget(item, FieldsSpec.ColumnsOrder.PROPERTY).text()
+        except AttributeError | ValueError:
+            text = ""
+
+        if text == CheckBoxesDefinition.JSON_MODE:
+            if item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
+                self.set_json_mode(item)
+            else:
+                self.set_flat_mode(item)
+
     @void_qt_signals
     def process_change_item(self, item: FieldItem, column):
         if item is self.root:
             return
 
-        if column in (FieldsSpec.ColumnsOrder.PROPERTY, FieldsSpec.ColumnsOrder.VALUE):
-            if item.checkbox_checked(CheckBoxesDefinition.GENERATE):
-                item.field_data = FieldsGenerator.generate_field(item.field_number, self.config.fields.max_amount)
-
-        if column == FieldsSpec.ColumnsOrder.PROPERTY:
-            try:
-                text = self.itemWidget(item, FieldsSpec.ColumnsOrder.PROPERTY).text()
-            except AttributeError | ValueError:
-                text = ""
-
-            if text  == CheckBoxesDefinition.JSON_MODE:
-                if item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
-                    self.set_json_mode(item)
-                else:
-                    self.set_flat_mode(item)
+        item.set_spec()
 
         try:
-            item.process_change_item()
+            match column:
 
-        except LookupError as spec_error:
-            item.set_item_color(red=True)
-            warning(spec_error)
-            return
+                case FieldsSpec.ColumnsOrder.VALUE:
+                    self.generate_item_data(item)
+                    self.validate(item, column)
 
-        if column == FieldsSpec.ColumnsOrder.FIELD:
-            item.set_checkbox()
+                case FieldsSpec.ColumnsOrder.PROPERTY:
+                    self.generate_item_data(item)
+                    self.process_change_property(item)
 
-        try:
-            self.validate(item, column)
+                case FieldsSpec.ColumnsOrder.FIELD:
+                    item.set_checkbox()
+                    self.validate(item, column)
 
         except ValueError as validation_error:
             item.set_item_color(red=True)
             [warning(err) for err in str(validation_error).splitlines()]
+            return
+
+        item.set_item_color()
+
+        if column == FieldsSpec.ColumnsOrder.PROPERTY:
+            return
+
+        self.set_item_description(item)
+
+    def set_item_description(self, item: FieldItem):
+        try:
+            item.set_spec()
+        except Exception:
+            pass
+
+        specification_found = any((item.spec, self.config.fields.validation))
+
+        if specification_found:
+            item.set_description()
+
+        if not specification_found:
+            warn_text = f"⚠ ️No specification for field {item.get_field_path(string=True)}, set field length manually"
+
+            if not item.field_number:
+                error(f"Lost field number for field {item.get_field_path(string=True)}")
+                return
+
+            item.set_description(warn_text)
+            item.set_item_color(color="#800000")
+
+        for child in item.get_children():
+            self.set_item_description(child)
+
+        # self.resize_all()
 
     def edit_column(self, column: int):
         if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE):
@@ -190,29 +268,27 @@ class JsonView(TreeView):
             if item.checkbox_checked(CheckBoxesDefinition.GENERATE):
                 return
 
-        if column == FieldsSpec.ColumnsOrder.FIELD:
-            if all((item.field_number, not item.field_data, not item.childCount())):
-                self.validator.validate_field_path(item.get_field_path())
-                self.validator.validate_duplicates(item)
-                return
-
         self.validator.validate_item(item)
 
     def validate_all(self, parent_item: FieldItem | None = None):
         if parent_item is None:
             parent_item = self.root
 
+        child_item: FieldItem
+
         for child_item in parent_item.get_children():
             child_item.set_item_color(red=False)
 
+            if child_item.childCount():
+                self.validate_all(parent_item=child_item)
+
             try:
                 self.validate(child_item)
-
             except ValueError as validation_error:
                 child_item.set_item_color(red=True)
-                warning(validation_error)
+                raise validation_error
 
-            self.validate_all(parent_item=child_item)
+        self.set_all_items_length()
 
     def plus(self):
         if not (current_item := self.currentItem()):
@@ -315,21 +391,6 @@ class JsonView(TreeView):
 
             item.field_data = value
 
-    def edit_item(self, item, column):
-        if item is self.root:
-            return
-
-        if item.childCount():
-            return
-
-        if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE):
-            return
-
-        if column == FieldsSpec.ColumnsOrder.VALUE:
-            item.hide_secret(False)
-
-        self.editItem(item, column)
-
     def parse_transaction(self, transaction: Transaction) -> None:
         self.clean()
 
@@ -367,11 +428,11 @@ class JsonView(TreeView):
 
             item.set_checkbox(json_mode)
 
+            if json_mode:
+                self.set_json_mode(item)
+
             if not json_mode:
                 self.set_flat_mode(item)
-                continue
-
-            self.set_json_mode(item)
 
     def set_json_mode(self, item: FieldItem):
         parsing_error_text: str = "Cannot change JSON mode due to parsing error(s)"
@@ -402,10 +463,8 @@ class JsonView(TreeView):
             return
 
         try:
-            fields: RawFieldSet = self.generate_fields(parent=item)
-            field_data: str = Parser.join_complex_field(item.field_number, fields)
+            item.field_data = Parser.join_complex_item(item)
             item.takeChildren()
-            item.field_data = field_data
 
         except Exception as parsing_error:
             error(parsing_error_text)
@@ -451,8 +510,8 @@ class JsonView(TreeView):
                 child: FieldItem = FieldItem(string_data)
 
             parent.addChild(child)
-
             child.set_spec(field_spec)
+            child.set_length()
 
     def get_top_level_field_numbers(self) -> list[str]:
         field_numbers: list[str] = list()
@@ -463,20 +522,29 @@ class JsonView(TreeView):
 
         return field_numbers
 
-    def generate_fields(self, parent=None):
+    def generate_fields(self, parent=None, flat: bool = False):
+        if self.config.fields.validation:
+            self.validate_all()
+
         result: TypeFields = dict()
 
         if parent is None:
             parent = self.root
 
-        for row in parent.get_children():
-            result[row.field_number] = self.generate_fields(row) if row.childCount() else row.field_data
+        row: FieldItem
 
-            if self.config.fields.validation:
-                self.validator.validate_item(row)
+        for row in parent.get_children():
+            if row.childCount():
+                if flat:
+                    result[row.field_number] = Parser.join_complex_item(row)
+                else:
+                    result[row.field_number] = self.generate_fields(row, flat=flat)
+
+            if not row.childCount():
+                result[row.field_number] = row.field_data
 
         if parent is self.root:
-            fields = OrderedDict({k: result[k] for k in sorted(result.keys(), key=int)})
+            fields = {field: result[field] for field in sorted(result, key=int)}
 
             if not self.config.fields.validation:
                 return fields
