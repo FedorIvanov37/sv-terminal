@@ -68,21 +68,21 @@ class SvTerminal(QObject):
 
     @staticmethod
     def sv_connected():
-        info("SmartVista host connection ESTABLISHED")
+        info("Connection ESTABLISHED")
 
     @staticmethod
     def sv_disconnected():
-        info("SmartVista host connection DISCONNECTED")
+        info("Connection DISCONNECTED")
 
     @staticmethod
     def got_timeout(transaction, timeout_secs):
-        error(f"Transaction [{transaction.trans_id}] timeout after {int(timeout_secs)} seconds of waiting SmartVista")
+        error(f"Transaction [{transaction.trans_id}] timeout after {int(timeout_secs)} seconds of waiting answer")
 
     def socket_error(self):
         if self.connector.error() == QTcpSocket.SocketError.UnknownSocketError:  # TODO
             return
 
-        error(f"Received a socket error from SmartVista host: {self.connector.errorString()}")
+        error(f"Received a socket error from host: {self.connector.errorString()}")
 
     def disconnect(self):
         self.connector.disconnect_sv()
@@ -169,8 +169,8 @@ class SvTerminal(QObject):
 
         info(f"Set KeepAlive mode to {interval_name}")
 
-        if interval_name == KeepAliveInterval.KEEP_ALIVE_DEFAULT % self.config.smartvista.keep_alive_interval:
-            self.run_keep_alive_loop(self.config.smartvista.keep_alive_interval)
+        if interval_name == KeepAliveInterval.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval:
+            self.run_keep_alive_loop(self.config.host.keep_alive_interval)
             return
 
         if interval := KeepAliveInterval.get_interval_time(interval_name):
@@ -205,7 +205,7 @@ class SvTerminal(QObject):
                   f"Network management code: "\
                   f"[{transaction.data_fields.get(self.spec.FIELD_SET.FIELD_070_NETWORK_MANAGEMENT_CODE)}]"
 
-        info(f"Sending Keep Alive message to SmartVista - {message}")
+        info(f"Sending Keep Alive message - {message}")
 
         self.send(transaction)
 

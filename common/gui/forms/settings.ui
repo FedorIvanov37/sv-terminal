@@ -46,7 +46,7 @@
         <item>
          <widget class="QLineEdit" name="SvAddress">
           <property name="placeholderText">
-           <string>SV address</string>
+           <string>Hostname or address</string>
           </property>
          </widget>
         </item>
@@ -117,7 +117,7 @@
       <item>
        <widget class="QCheckBox" name="ConnectOnStartup">
         <property name="text">
-         <string>Open SV connection</string>
+         <string>Open connection</string>
         </property>
        </widget>
       </item>

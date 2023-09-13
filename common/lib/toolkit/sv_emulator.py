@@ -54,7 +54,7 @@ class SvEmulator:
 
             data = data[2:]  # Cut the header
 
-            request: Transaction = self.parser.parse_dump(data)
+            request: Transaction = self.parser.parse_dump(data, flat=True)
             response: Transaction = self.generate_resp(request)
             response.message_type = self.spec.get_resp_mti(request.message_type)
             response: bytes = self.parser.create_dump(response)

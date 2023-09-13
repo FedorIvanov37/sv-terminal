@@ -201,7 +201,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             specification: EpaySpecModel = EpaySpecModel.parse_file(filename)
 
         except ValidationError as validation_error:
-            error_text = str(validation_error.json(indent=4))
+            error_text = str(validation_error)  # .json(indent=4)
             self.set_status("File validation error: %s" % error_text, error=True)
 
         except Exception as parsing_error:

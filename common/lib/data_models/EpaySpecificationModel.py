@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 
 FieldSet = dict[str, "IsoField"]
@@ -31,6 +31,13 @@ class IsoField(BaseModel):
     description: str = str()
     is_secret: bool = False
     fields: FieldSet | None = None
+
+    @validator("is_secret", pre=True)
+    def substitute_none(cls, val):
+        if val is None:
+            return False
+
+        return val
 
 
 class EpaySpecModel(BaseModel):

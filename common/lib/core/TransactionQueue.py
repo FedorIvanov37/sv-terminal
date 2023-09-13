@@ -40,7 +40,7 @@ class TransactionQueue(QObject):
 
     def receive_transaction_data(self, transaction_data: bytes):
         try:
-            transaction: Transaction = Parser.parse_dump(transaction_data)
+            transaction: Transaction = Parser.parse_dump(transaction_data, flat=True)
 
         except Exception as parsing_error:
             error(f"Incoming transaction parsing error: {parsing_error}")
@@ -62,12 +62,24 @@ class TransactionQueue(QObject):
         if response.is_request:
             raise TypeError("Wrong MTI")
 
-        if self.match_transaction(response):
-            response.resp_time_seconds = self.stop_transaction_timer(response)
-            request = self.get_transaction(response.match_id)
-            self.generator.merge_trans_data(request, response)
+        if not self.match_transaction(response):
+            self.incoming_transaction.emit(response)
+            return
 
+        response = self.set_utrnno(response)
+        response.resp_time_seconds = self.stop_transaction_timer(response)
+        request = self.get_transaction(response.match_id)
+        self.generator.merge_trans_data(request, response)
         self.incoming_transaction.emit(response)
+
+    def set_utrnno(self, response: Transaction):
+        if not (de047 := response.data_fields.get(self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD)):
+            return response
+
+        de047 = Parser.split_complex_field(self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD, de047)
+        response.utrnno = de047.get("064") # TODO
+
+        return response
 
     def start_transaction_timer(self, transaction: Transaction, timeout=60):
         timer: QTimer = QTimer()

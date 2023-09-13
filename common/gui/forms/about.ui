@@ -274,7 +274,7 @@
         </font>
        </property>
        <property name="text">
-        <string>SmartVista Electronic Commerce Terminal</string>
+        <string>SIGNAL - Simplified ISO generation algorithm</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>

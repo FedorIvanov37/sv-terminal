@@ -1,5 +1,5 @@
 {
-    "smartvista": {
+    "host": {
         "host": "172.21.30.5",
         "port": "16677",
         "keep_alive_mode": false,
