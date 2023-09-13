@@ -140,7 +140,7 @@ class Parser:
 
         for child_item in parent.get_children():
             if child_item.childCount():
-                result = Parser.join_complex_item(parent=child_item)
+                result += Parser.join_complex_item(parent=child_item)
                 continue
 
             if not child_item.field_data:
@@ -149,22 +149,26 @@ class Parser:
             if not child_item.field_number:
                 raise ValueError(f"Lost field number for field {child_item.get_field_path(string=True)}")
 
-            length = child_item.field_length
+            length = str(int(child_item.field_length))
 
             if child_item.spec:
-                length = str(int(length))
                 length = length.zfill(child_item.spec.var_length)
+            else:
+                length = length.zfill(len(child_item.field_length))
 
             result = f"{result}{child_item.field_number}{length}{child_item.field_data}"
 
-        if parent.get_field_depth() > 1:
-            try:
-                parent_length = str(len(result))
-                parent_length = parent_length.zfill(parent.spec.var_length)
-            except AttributeError:
-                parent_length = parent.field_length
+        if parent.get_field_depth() <= 1:
+            return result
 
-            result = f"{parent.field_number}{parent_length}{result}"
+        parent_length = str(len(result))
+
+        try:
+            parent_length = parent_length.zfill(parent.spec.var_length)
+        except AttributeError:
+            parent_length = parent_length.zfill(len(parent.field_length))
+
+        result = f"{parent.field_number}{parent_length}{result}"
 
         return result
 

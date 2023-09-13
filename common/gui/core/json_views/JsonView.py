@@ -51,7 +51,6 @@ class JsonView(TreeView):
     def _setup(self):
         self.setTabKeyNavigation(True)
         self.setAnimated(True)
-        self.header().setMaximumSectionSize(700)
         self.validator = ItemsValidator(self.config)
         self.itemDoubleClicked.connect(self.edit_item)
         self.itemChanged.connect(self.process_change_item)
@@ -59,6 +58,8 @@ class JsonView(TreeView):
         self.currentItemChanged.connect(self.disable_next_level)
         self.setHeaderLabels(FieldsSpec.columns)
         self.addTopLevelItem(self.root)
+        self.header().setMaximumSectionSize(700)
+        self.header().resizeSection(FieldsSpec.ColumnsOrder.DESCRIPTION, 470)
         self.make_order()
 
     def search(self, text: str, parent = None) -> None:
@@ -186,6 +187,37 @@ class JsonView(TreeView):
             else:
                 self.set_flat_mode(item)
 
+    def set_subfields_length(self, item: FieldItem):
+        parent: FieldItem
+        child_item: FieldItem
+
+        if not (parent := item.parent()):
+            return
+
+        if parent is self.root:
+            return
+
+        item_length: int = len(item.field_length)
+
+        for child_item in parent.get_children():
+            if child_item is item:
+                continue
+
+            if child_item.spec:
+                continue
+
+            child_length = len(child_item.field_length)
+
+            if item_length > child_length:
+                child_item.setText(FieldsSpec.ColumnsOrder.LENGTH, child_item.field_length.zfill(item_length))
+                continue
+
+            diff = child_length - item_length
+            prefix = '0' * diff
+
+            if child_item.field_length.startswith(prefix):
+                child_item.setText(FieldsSpec.ColumnsOrder.LENGTH, child_item.field_length[-item_length:])
+
     @void_qt_signals
     def process_change_item(self, item: FieldItem, column):
         if item is self.root:
@@ -206,7 +238,16 @@ class JsonView(TreeView):
 
                 case FieldsSpec.ColumnsOrder.FIELD:
                     item.set_checkbox()
-                    self.validate(item, column)
+
+                    if item.childCount():
+                        self.validate_all(item)
+                        self.validate(item)
+
+                    if not item.childCount():
+                        self.validate(item, column)
+
+                case FieldsSpec.ColumnsOrder.LENGTH:
+                    self.set_subfields_length(item)
 
         except ValueError as validation_error:
             item.set_item_color(red=True)
@@ -243,8 +284,6 @@ class JsonView(TreeView):
 
         for child in item.get_children():
             self.set_item_description(child)
-
-        # self.resize_all()
 
     def edit_column(self, column: int):
         if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE):
@@ -286,7 +325,7 @@ class JsonView(TreeView):
                 self.validate(child_item)
             except ValueError as validation_error:
                 child_item.set_item_color(red=True)
-                raise validation_error
+                error(validation_error)
 
         self.set_all_items_length()
 

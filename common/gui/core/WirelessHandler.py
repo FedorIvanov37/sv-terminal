@@ -1,10 +1,11 @@
 from PyQt6.QtCore import QObject, pyqtSignal
-from logging import StreamHandler
+from logging import StreamHandler, LogRecord
 from logging import error
 
 
 class WirelessHandler(StreamHandler, QObject):
     _new_record_appeared = pyqtSignal(str)
+    _last_message: str = str()
 
     @property
     def new_record_appeared(self):
@@ -14,7 +15,12 @@ class WirelessHandler(StreamHandler, QObject):
         StreamHandler.__init__(self)
         QObject.__init__(self)
 
-    def emit(self, record):
+    def emit(self, record: LogRecord):
+        # if record.message == self._last_message:
+        #     return
+        #
+        # self._last_message = record.message
+
         try:
             self.new_record_appeared.emit(self.format(record))
         except Exception as exc:

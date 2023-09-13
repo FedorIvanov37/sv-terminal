@@ -13,7 +13,6 @@ class LogStream:
     def write(self, data):
         self.log_browser.append(data)
 
-
 class Logger:
     _spec = EpaySpecification()
     _stream = None
