@@ -34,6 +34,9 @@ class TreeView(QTreeWidget):
         ...
 
     def resize_all(self, exceptions: list[int] | None = None):
+        if exceptions is None:
+            exceptions = []
+
         for column in range(self.columnCount()):
             if column in exceptions:
                 continue
