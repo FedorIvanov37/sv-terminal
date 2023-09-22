@@ -45,7 +45,6 @@ class TreeView(QTreeWidget):
 
     def make_order(self):
         self.collapseAll()
-        self.expandToDepth(-1)
         self.expandAll()
         self.resize_all(exceptions=[MainFieldSpec.ColumnsOrder.DESCRIPTION])
 

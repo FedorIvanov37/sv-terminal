@@ -34,6 +34,7 @@ class FieldItem(Item):
     def field_data(self, field_data):
         self.setText(FieldsSpec.ColumnsOrder.VALUE, field_data)
         self._secret = ""
+        self.set_spec()
         self.hide_secret()
 
     @property
@@ -59,12 +60,12 @@ class FieldItem(Item):
     def __init__(self, item_data: list[str], spec=None):
         super(FieldItem, self).__init__(item_data)
         self.spec = spec if spec else self.spec
-        self.setTextAlignment(FieldsSpec.ColumnsOrder.LENGTH, Qt.AlignmentFlag.AlignLeft)
+        self.setTextAlignment(FieldsSpec.ColumnsOrder.LENGTH, Qt.AlignmentFlag.AlignRight)
 
-    def addChild(self, item):
+    def addChild(self, item, fill_len=None):
         item.spec = self.epay_spec.get_field_spec(item.get_field_path())
         QTreeWidgetItem.addChild(self, item)
-        item.set_length()
+        item.set_length(fill_length=fill_len)
 
     def hide_secret(self, hide_the_secret: bool | None = None):
         tree = self.treeWidget()
@@ -139,6 +140,8 @@ class FieldItem(Item):
         if not (tree := self.treeWidget()):
             return
 
+        tree.removeItemWidget(self, FieldsSpec.ColumnsOrder.PROPERTY)
+
         if self.field_number in FieldsSpec.generated_fields:
             checkbox.setText(CheckBoxesDefinition.GENERATE)
             tree.setItemWidget(self, column_number, checkbox)
@@ -174,21 +177,24 @@ class FieldItem(Item):
             self.set_spec()
 
         if length is None:
-            length = self.get_field_length()
+            length: int = self.get_field_length()
 
         if fill_length is None:
-            fill_length = 3
+            try:
+                fill_length = self.spec.var_length
+
+            except AttributeError:
+                fill_length = int()
 
         if not self.spec and self.field_length:
             fill_length = len(self.text(FieldsSpec.ColumnsOrder.LENGTH))
 
         length: str = str(length).zfill(fill_length)
+
         self.setText(column, str(length))
 
-        if not (parent := self.parent()):
-            return
-
-        parent.set_length()
+        if parent := self.parent():
+            parent.set_length()
 
     def get_field_length(self):
         if self.childCount():

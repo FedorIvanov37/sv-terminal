@@ -15,6 +15,7 @@ from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
 from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
 from common.gui.decorators.void_qt_signals import void_qt_signals
 from common.gui.core.json_views.TreeView import TreeView
+from common.gui.constants.Colors import Colors
 
 
 class JsonView(TreeView):
@@ -33,6 +34,10 @@ class JsonView(TreeView):
     need_enable_next_level: pyqtSignal = pyqtSignal()
     root: FieldItem = FieldItem([FieldsSpec.MESSAGE])
     spec: EpaySpecification = EpaySpecification()
+
+    @property
+    def len_fill(self):
+        return 3 if self.config.fields.validation else None
 
     @property
     def hide_secret_fields(self):
@@ -62,12 +67,13 @@ class JsonView(TreeView):
         self.header().resizeSection(FieldsSpec.ColumnsOrder.DESCRIPTION, 470)
         self.make_order()
 
-    def search(self, text: str, parent = None) -> None:
+    def search(self, text: str, parent: FieldItem | None = None) -> None:
         TreeView.search(self, text, parent)
 
         if text == str():
             self.resize_all()
 
+    @void_qt_signals
     def set_item_length(self, text, column):
         item: QTreeWidgetItem | FieldItem
 
@@ -80,7 +86,7 @@ class JsonView(TreeView):
         if column == FieldsSpec.ColumnsOrder.LENGTH and not self.config.fields.validation:
             return
 
-        item.set_length(len(text))
+        item.set_length(len(text), fill_length=self.len_fill)
 
     def set_all_items_length(self, parent: FieldItem | None = None):
         if parent is None:
@@ -95,10 +101,7 @@ class JsonView(TreeView):
             if not child_item.field_length.isdigit():
                 continue
 
-            if child_item.childCount():
-                continue
-
-            child_item.set_length()
+            child_item.set_length(fill_length=self.len_fill)
 
     def refresh_fields(self, parent: FieldItem | None = None):
         if parent is None:
@@ -111,8 +114,6 @@ class JsonView(TreeView):
                 self.refresh_fields(child_item)
 
             self.set_item_description(child_item)
-
-            # child_item.set_length()
 
     def hide_secrets(self, parent=None):
         if parent is None:
@@ -187,6 +188,9 @@ class JsonView(TreeView):
             else:
                 self.set_flat_mode(item)
 
+        if text == CheckBoxesDefinition.GENERATE:
+            item.set_length(fill_length=self.len_fill)
+
     def set_subfields_length(self, item: FieldItem):
         parent: FieldItem
         child_item: FieldItem
@@ -206,17 +210,16 @@ class JsonView(TreeView):
             if child_item.spec:
                 continue
 
-            child_length = len(child_item.field_length)
+            child_length: int = len(child_item.field_length)
 
             if item_length > child_length:
                 child_item.setText(FieldsSpec.ColumnsOrder.LENGTH, child_item.field_length.zfill(item_length))
                 continue
 
-            diff = child_length - item_length
-            prefix = '0' * diff
+            prefix: str = '0' * (child_length - item_length)
 
             if child_item.field_length.startswith(prefix):
-                child_item.setText(FieldsSpec.ColumnsOrder.LENGTH, child_item.field_length[-item_length:])
+                child_item.setText(FieldsSpec.ColumnsOrder.LENGTH, child_item.field_length.removeprefix(prefix))
 
     @void_qt_signals
     def process_change_item(self, item: FieldItem, column):
@@ -231,6 +234,7 @@ class JsonView(TreeView):
                 case FieldsSpec.ColumnsOrder.VALUE:
                     self.generate_item_data(item)
                     self.validate(item, column)
+                    item.set_item_color()
 
                 case FieldsSpec.ColumnsOrder.PROPERTY:
                     self.generate_item_data(item)
@@ -238,23 +242,15 @@ class JsonView(TreeView):
 
                 case FieldsSpec.ColumnsOrder.FIELD:
                     item.set_checkbox()
-
-                    if item.childCount():
-                        self.validate_all(item)
-                        self.validate(item)
-
-                    if not item.childCount():
-                        self.validate(item, column)
+                    self.validate_all(item)
 
                 case FieldsSpec.ColumnsOrder.LENGTH:
                     self.set_subfields_length(item)
 
         except ValueError as validation_error:
-            item.set_item_color(red=True)
+            item.set_item_color(Colors.RED)
             [warning(err) for err in str(validation_error).splitlines()]
             return
-
-        item.set_item_color()
 
         if column == FieldsSpec.ColumnsOrder.PROPERTY:
             return
@@ -280,7 +276,7 @@ class JsonView(TreeView):
                 return
 
             item.set_description(warn_text)
-            item.set_item_color(color="#800000")
+            item.set_item_color(color=Colors.DEEP_RED)
 
         for child in item.get_children():
             self.set_item_description(child)
@@ -303,31 +299,45 @@ class JsonView(TreeView):
         if not self.config.fields.validation:
             return
 
+        if item is self.root:
+            return
+
         if self.spec.can_be_generated(item.get_field_path()):
             if item.checkbox_checked(CheckBoxesDefinition.GENERATE):
                 return
 
         self.validator.validate_item(item)
 
-    def validate_all(self, parent_item: FieldItem | None = None):
-        if parent_item is None:
-            parent_item = self.root
+    def validate_all(self, parent: FieldItem | None = None):
+        def set_error(item: FieldItem, exception: Exception):
+            item.set_item_color(Colors.RED)
+            warning(exception)
 
-        child_item: FieldItem
+        if parent is None:
+            parent = self.root
 
-        for child_item in parent_item.get_children():
-            child_item.set_item_color(red=False)
+        try:
+            self.validate(parent)
 
+        except ValueError as validation_error:
+            set_error(parent, validation_error)
+
+        else:
+            parent.set_item_color()
+
+        for child_item in parent.get_children():
             if child_item.childCount():
-                self.validate_all(parent_item=child_item)
+                self.validate_all(parent=child_item)
+                continue
 
             try:
                 self.validate(child_item)
-            except ValueError as validation_error:
-                child_item.set_item_color(red=True)
-                error(validation_error)
 
-        self.set_all_items_length()
+            except ValueError as validation_error:
+                set_error(child_item, validation_error)
+
+            else:
+                child_item.set_item_color(Colors.BLACK)
 
     def plus(self):
         if not (current_item := self.currentItem()):
@@ -413,10 +423,10 @@ class JsonView(TreeView):
             try:
                 self.validate(item)
             except ValueError:
-                item.set_item_color(red=True)
+                item.set_item_color(Colors.RED)
                 return
 
-            item.set_item_color(red=False)
+            item.set_item_color()
 
     def clean(self):
         TreeView.clean(self)
@@ -435,30 +445,20 @@ class JsonView(TreeView):
 
         fields = deepcopy(transaction.data_fields)
 
-        for field, field_data in fields.items():
-            if self.config.fields.json_mode:
-                break
-
-            if not self.spec.is_field_complex([field]):
-                continue
-
-            if not isinstance(field_data, dict):
-                continue
-
-            try:
-                fields[field] = Parser.join_complex_field(field, field_data)
-            except Exception as parsing_error:
-                error(f"Parsing error: {parsing_error}")
-                return
-
         self.parse_fields(fields)
         self.set_checkboxes(transaction)
-
-        if self.config.fields.validation:
-            self.validate_all()
-
         self.make_order()
         self.hide_secrets()
+        self.validate_all()
+
+        for item in self.root.get_children():
+            if item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
+                self.set_json_mode(item)
+                break
+
+            self.set_flat_mode(item)
+
+        self.set_all_items_length()
 
     def switch_json_mode(self, json_mode):
         for item in self.root.get_children():
@@ -492,7 +492,7 @@ class JsonView(TreeView):
             return
 
         item.field_data = ""
-        # item.setExpanded(True)
+
         self.hide_secrets(parent=item)
 
     def set_flat_mode(self, item):
@@ -548,9 +548,10 @@ class JsonView(TreeView):
                 string_data = [field, str(field_data), None, description]
                 child: FieldItem = FieldItem(string_data)
 
-            parent.addChild(child)
+            parent.addChild(child, fill_len=self.len_fill)
             child.set_spec(field_spec)
-            child.set_length()
+
+        self.set_all_items_length()
 
     def get_top_level_field_numbers(self) -> list[str]:
         field_numbers: list[str] = list()
@@ -562,8 +563,8 @@ class JsonView(TreeView):
         return field_numbers
 
     def generate_fields(self, parent=None, flat: bool = False):
-        if self.config.fields.validation:
-            self.validate_all()
+        # if self.config.fields.validation:
+        #     self.validate_all()
 
         result: TypeFields = dict()
 
@@ -573,6 +574,9 @@ class JsonView(TreeView):
         row: FieldItem
 
         for row in parent.get_children():
+            if self.config.fields.validation:
+                self.validate(row)
+
             if row.childCount():
                 if flat:
                     result[row.field_number] = Parser.join_complex_item(row)

@@ -8,6 +8,7 @@ from common.gui.core.json_items.SpecItem import SpecItem
 from common.gui.core.validators.SpecValidator import SpecValidator
 from common.gui.decorators.void_qt_signals import void_qt_signals
 from common.gui.core.json_views.TreeView import TreeView
+from common.gui.constants.Colors import Colors
 
 
 class SpecView(TreeView):
@@ -37,6 +38,9 @@ class SpecView(TreeView):
         self.currentItemChanged.connect(self.set_path_status)
         self.parse_spec()
         self.make_order()
+        self.collapseAll()
+        self.root.setExpanded(True)
+        self.resizeColumnToContents(SpecFieldDefinition.ColumnsOrder.DESCRIPTION)
 
     def set_path_status(self):
         item: SpecItem
@@ -63,7 +67,7 @@ class SpecView(TreeView):
 
         self.validate_item(item, column, validate_all=True)
 
-    def search(self, text: str, parent = None) -> None:
+    def search(self, text: str, parent: SpecItem | None = None) -> None:
         TreeView.search(self, text, parent)
         self.search_finished.emit()
 
@@ -105,10 +109,10 @@ class SpecView(TreeView):
 
         except ValueError as validation_error:
             self.status_changed.emit(str(validation_error), True)
-            item.set_item_color(red=True)
+            item.set_item_color(Colors.RED)
             return
 
-        item.set_item_color(red=False)
+        item.set_item_color()
 
     def hide_reserved(self, hide=True):
         item: SpecItem
