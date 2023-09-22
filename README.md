@@ -83,7 +83,7 @@ of SvTerminal evolution.
   * Transactions repeat loop
   * Main / Spec Window search line, key sequence 
   * Console mode - run without window
-  
+  * Incoming message header length settings 
 
 * Updates
   * Changed name to SIGNAL

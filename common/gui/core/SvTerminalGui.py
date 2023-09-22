@@ -169,10 +169,13 @@ class SvTerminalGui(SvTerminal):
             error(sending_error)
 
     def settings(self):
-        old_config: Config = Config.parse_obj(deepcopy(self.config.dict()))
-        settings_window: SettingsWindow = SettingsWindow(self.config)
-        settings_window.accepted.connect(lambda: self.process_config_change(old_config))
-        settings_window.exec()
+        try:
+            old_config: Config = Config.parse_obj(deepcopy(self.config.dict()))
+            settings_window: SettingsWindow = SettingsWindow(self.config)
+            settings_window.accepted.connect(lambda: self.process_config_change(old_config))
+            settings_window.exec()
+        except Exception as settings_error:
+            error(settings_error)
 
     def process_config_change(self, old_config: Config):
         self.read_config()

@@ -1,7 +1,7 @@
 from json import dumps
 from logging import info, warning, error, getLogger, getLevelName
 from PyQt6.QtWidgets import QDialog
-from PyQt6.QtGui import QIntValidator, QRegularExpressionValidator, QIcon, QPixmap
+from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap
 from PyQt6.QtCore import QRegularExpression
 from common.lib.constants.LogDefinition import LogDefinition
 from common.lib.data_models.Config import Config
@@ -23,18 +23,18 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
     @has_close_button_only
     def setup(self):
         self.ButtonAbout.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
-        self.SvPort.setValidator(QIntValidator(1, 65535))
-        self.SvPort.setValidator(QRegularExpressionValidator(QRegularExpression(r"[^\D]\d+")))
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){1,3}\d+")))
-        self.KeepAliveInterval.setValidator(QRegularExpressionValidator(QRegularExpression(r"[^0|\D]\d+")))
         self.MaxAmount.setValidator(QRegularExpressionValidator(QRegularExpression(r"[^0|\D]\d+")))
         self.DebugLevel.addItems(LogDefinition.LOG_LEVEL)
         self.ParseSubfields.setHidden(True)  # TODO
         self.buttonBox.accepted.connect(self.ok)
         self.buttonBox.rejected.connect(self.cancel)
         self.ButtonAbout.pressed.connect(self.about)
+        self.HeaderLength.textChanged.connect(self.validate_header_length)
+        self.HeaderLengthMode.stateChanged.connect(lambda: self.HeaderLength.setValue(2 if self.HeaderLengthMode.isChecked() else int()))
         self.DebugLevel.currentIndexChanged.connect(self.process_debug_level_change)
         self.KeepAliveMode.stateChanged.connect(lambda state: self.KeepAliveInterval.setEnabled(bool(state)))
+        self.HeaderLengthMode.stateChanged.connect(lambda state: self.HeaderLength.setEnabled(bool(state)))
         self.process_config()
 
     @staticmethod
@@ -44,7 +44,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
     def process_config(self):
         self.DebugLevel.setCurrentText(self.config.debug.level)
         self.SvAddress.setText(self.config.host.host)
-        self.SvPort.setText(self.config.host.port)
+        self.SvPort.setValue(int(self.config.host.port))
         self.MaxAmount.setText(str(self.config.fields.max_amount))
         self.ProcessDefaultDump.setChecked(self.config.terminal.process_default_dump)
         self.ConnectOnStartup.setChecked(self.config.terminal.connect_on_startup)
@@ -55,9 +55,21 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.ValidationEnabled.setChecked(self.config.fields.validation)
         self.JsonMode.setChecked(self.config.fields.json_mode)
         self.KeepAliveMode.setChecked(self.config.host.keep_alive_mode)
-        self.KeepAliveInterval.setText(str(self.config.host.keep_alive_interval))
+        self.KeepAliveInterval.setValue(int(self.config.host.keep_alive_interval))
         self.KeepAliveInterval.setEnabled(self.KeepAliveMode.isChecked())
+        self.HeaderLengthMode.setChecked(self.config.host.header_length_exists)
+        self.HeaderLength.setEnabled(self.config.host.header_length_exists)
+        self.HeaderLength.setValue(int(self.config.host.header_length))
         self.HideSecrets.setChecked(self.config.fields.hide_secrets)
+
+    def validate_header_length(self):
+        header_length: int = int(self.HeaderLength.text())
+
+        if self.HeaderLengthMode.isChecked() and self.HeaderLength.value() < 2:
+            self.HeaderLength.setValue(2)
+
+        if header_length % 2 != int():
+            self.HeaderLength.setValue(header_length - 1)
 
     def process_debug_level_change(self):
         disabled = False
@@ -90,6 +102,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.config.host.port = self.SvPort.text()
         self.config.host.keep_alive_mode = self.KeepAliveMode.isChecked()
         self.config.host.keep_alive_interval = self.KeepAliveInterval.text()
+        self.config.host.header_length = self.HeaderLength.text()
+        self.config.host.header_length_exists = self.HeaderLengthMode.isChecked()
         self.config.terminal.process_default_dump = self.ProcessDefaultDump.isChecked()
         self.config.terminal.connect_on_startup = self.ConnectOnStartup.isChecked()
         self.config.debug.clear_log = self.ClearLog.isChecked()
@@ -101,7 +115,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.config.fields.validation = self.ValidationEnabled.isChecked()
         self.config.fields.json_mode = self.JsonMode.isChecked()
         self.config.fields.hide_secrets = self.HideSecrets.isChecked()
-        
+
         with open(TermFilesPath.CONFIG, "w") as file:
             file.write(dumps(self.config.dict(), indent=4))
 

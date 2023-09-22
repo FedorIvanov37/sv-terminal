@@ -1,7 +1,7 @@
 {
   "message_type": "0800",
   "generate_fields": [
-    7,
+    "7",
     "11"
   ],
   "data_fields": {

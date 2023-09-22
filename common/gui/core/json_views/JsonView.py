@@ -260,6 +260,7 @@ class JsonView(TreeView):
 
         self.set_item_description(item)
 
+    @void_qt_signals
     def set_item_description(self, item: FieldItem):
         try:
             item.set_spec()
@@ -280,6 +281,9 @@ class JsonView(TreeView):
 
             item.set_description(warn_text)
             item.set_item_color(color=Colors.DEEP_RED)
+
+        if not item.childCount():
+            return
 
         for child in item.get_children():
             self.set_item_description(child)
@@ -560,6 +564,8 @@ class JsonView(TreeView):
 
             parent.addChild(child, fill_len=self.len_fill)
             child.set_spec(field_spec)
+            self.set_item_description(child)
+            # self.process_change_item(child, FieldsSpec.ColumnsOrder.FIELD)
 
         self.set_all_items_length()
 
