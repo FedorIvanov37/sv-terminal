@@ -345,11 +345,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     # Validate whole transaction data, presented on MainWindow
     def validate_fields(self) -> None:
-        self.json_view.validate_all()
+        self.json_view.check_all_items()
 
     def refresh_fields(self):
         self.json_view.refresh_fields()
-        self.json_view.set_all_items_length()
 
     def clean_window_log(self) -> None:
         self.LogArea.setText(str())

@@ -112,8 +112,11 @@ class JsonView(TreeView):
         for child_item in parent.get_children():
             if child_item.childCount():
                 self.refresh_fields(child_item)
+                continue
 
             self.set_item_description(child_item)
+
+        self.set_all_items_length(self.root)
 
     def hide_secrets(self, parent=None):
         if parent is None:
@@ -233,7 +236,7 @@ class JsonView(TreeView):
 
                 case FieldsSpec.ColumnsOrder.VALUE:
                     self.generate_item_data(item)
-                    self.validate(item, column)
+                    self.validate_item(item, column)
                     item.set_item_color()
 
                 case FieldsSpec.ColumnsOrder.PROPERTY:
@@ -242,7 +245,7 @@ class JsonView(TreeView):
 
                 case FieldsSpec.ColumnsOrder.FIELD:
                     item.set_checkbox()
-                    self.validate_all(item)
+                    self.check_all_items(item)
 
                 case FieldsSpec.ColumnsOrder.LENGTH:
                     self.set_subfields_length(item)
@@ -295,7 +298,7 @@ class JsonView(TreeView):
 
         self.edit_item(item, column)
 
-    def validate(self, item, column=None):
+    def validate_item(self, item, column=None):  # Validate single item, no auto children validate
         if not self.config.fields.validation:
             return
 
@@ -308,7 +311,14 @@ class JsonView(TreeView):
 
         self.validator.validate_item(item)
 
-    def validate_all(self, parent: FieldItem | None = None):
+    def validate_items(self, parent: FieldItem):  # Validate item and child-items when the item has children
+        for row in parent.get_children():
+            self.validate_item(row)
+
+            if row.childCount():
+                self.validate_items(row)
+
+    def check_all_items(self, parent: FieldItem | None = None):  # Validate and paint item without raising ValueError
         def set_error(item: FieldItem, exception: Exception):
             item.set_item_color(Colors.RED)
             warning(exception)
@@ -317,7 +327,7 @@ class JsonView(TreeView):
             parent = self.root
 
         try:
-            self.validate(parent)
+            self.validate_item(parent)
 
         except ValueError as validation_error:
             set_error(parent, validation_error)
@@ -327,11 +337,11 @@ class JsonView(TreeView):
 
         for child_item in parent.get_children():
             if child_item.childCount():
-                self.validate_all(parent=child_item)
+                self.check_all_items(parent=child_item)
                 continue
 
             try:
-                self.validate(child_item)
+                self.validate_item(child_item)
 
             except ValueError as validation_error:
                 set_error(child_item, validation_error)
@@ -372,7 +382,7 @@ class JsonView(TreeView):
 
         parent.removeChild(item)
         cursor_position = removed_item_index if removed_item_index == 0 else removed_item_index - 1
-        parent.set_length()
+        parent.set_length(fill_length=self.len_fill)
 
         if not (new_position_item := parent.child(cursor_position)):
             new_position_item = parent
@@ -421,7 +431,7 @@ class JsonView(TreeView):
                 continue
 
             try:
-                self.validate(item)
+                self.validate_item(item)
             except ValueError:
                 item.set_item_color(Colors.RED)
                 return
@@ -449,7 +459,7 @@ class JsonView(TreeView):
         self.set_checkboxes(transaction)
         self.make_order()
         self.hide_secrets()
-        self.validate_all()
+        self.check_all_items()
 
         for item in self.root.get_children():
             if item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
@@ -572,7 +582,7 @@ class JsonView(TreeView):
 
         for row in parent.get_children():
             if self.config.fields.validation:
-                self.validate(row)
+                self.validate_items(row)
 
             if row.childCount():
                 if flat:
