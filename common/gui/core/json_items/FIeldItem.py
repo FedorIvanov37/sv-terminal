@@ -182,7 +182,6 @@ class FieldItem(Item):
         if fill_length is None:
             try:
                 fill_length = self.spec.var_length
-
             except AttributeError:
                 fill_length = int()
 
