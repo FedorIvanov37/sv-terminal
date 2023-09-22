@@ -12,19 +12,19 @@ from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.spec_window import SpecWindow
 from common.gui.windows.hotkeys_hint_window import HotKeysHintWindow
 from common.gui.windows.about_window import AboutWindow
+from common.gui.constants.ButtonActions import ButtonAction
+from common.gui.core.WirelessHandler import WirelessHandler
+from common.gui.core.ConnectionThread import ConnectionThread
+from common.gui.windows.license_window import LicenseWindow
 from common.lib.constants.TextConstants import TextConstants
 from common.lib.constants.DataFormats import DataFormats
 from common.lib.constants.TermFilesPath import TermFilesPath
-from common.gui.constants.ButtonActions import ButtonAction
 from common.lib.constants.KeepAliveIntervals import KeepAliveInterval
-from common.gui.core.WirelessHandler import WirelessHandler
-from common.gui.core.ConnectionThread import ConnectionThread
 from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.lib.constants.LogDefinition import LogDefinition
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.core.Terminal import SvTerminal
-from common.gui.windows.license_window import LicenseWindow
 from common.lib.data_models.License import LicenseInfo
 from common.lib.exceptions.exceptions import LicenseDataLoadingError
 
@@ -197,6 +197,7 @@ class SvTerminalGui(SvTerminal):
             try:
                 self.window.validate_fields()
                 self.window.refresh_fields()
+
             except ValueError as validation_error:
                 error(validation_error)
 

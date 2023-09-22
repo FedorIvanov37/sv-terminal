@@ -349,6 +349,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def refresh_fields(self):
         self.json_view.refresh_fields()
+        self.json_view.set_all_items_length()
 
     def clean_window_log(self) -> None:
         self.LogArea.setText(str())

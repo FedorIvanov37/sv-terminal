@@ -5,6 +5,7 @@ from common.lib.data_models.Types import FieldPath
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.decorators.void_qt_signals import void_tree_signals
 from common.lib.data_models.EpaySpecificationModel import IsoField
+from common.gui.constants.Colors import Colors
 
 
 class Item(QTreeWidgetItem):
@@ -52,16 +53,13 @@ class Item(QTreeWidgetItem):
 
         self.spec = spec
 
+        for child in self.get_children():
+            child.set_spec()
+
     def get_children(self) -> tuple:
         return tuple(self.child(child_id) for child_id in range(self.childCount()))
 
     @void_tree_signals
-    def set_item_color(self, red=False, color: str | None = None):
-        if color is None:
-            color = "#000000"
-
-        if red:
-            color = "#ff0000"
-
+    def set_item_color(self, color=Colors.BLACK):
         for column in range(self.columnCount()):
             self.setForeground(column, QtGui.QBrush(QtGui.QColor(color)))
