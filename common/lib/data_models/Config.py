@@ -3,9 +3,11 @@ from pydantic import BaseModel, validator
 
 class Host(BaseModel):
     host: str = str()
-    port: str = str()
+    port: int = int()
     keep_alive_mode: bool = False
-    keep_alive_interval: int
+    keep_alive_interval: int = 300
+    header_length: int
+    header_length_exists: bool = True
 
 
 class Terminal(BaseModel):

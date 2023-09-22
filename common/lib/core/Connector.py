@@ -49,7 +49,6 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
         debug("Socket has %d bytes of an incoming data", self.bytesAvailable())
         incoming_data = self.readAll()
         incoming_data = incoming_data.data()
-        incoming_data = incoming_data[2:]  # Cut the header
         self.incoming_transaction_data.emit(incoming_data)
 
     def connect_sv(self):

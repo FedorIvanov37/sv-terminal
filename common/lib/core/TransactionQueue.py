@@ -40,12 +40,13 @@ class TransactionQueue(QObject):
 
     def receive_transaction_data(self, transaction_data: bytes):
         try:
-            transaction: Transaction = Parser.parse_dump(transaction_data, flat=True)
+            transactions: list[Transaction] = Parser.parse_raw_data(transaction_data, flat=True)
 
         except Exception as parsing_error:
             error(f"Incoming transaction parsing error: {parsing_error}")
+            return
 
-        else:
+        for transaction in transactions:
             self.put_transaction(transaction)
 
     def put_transaction(self, transaction, send=True):

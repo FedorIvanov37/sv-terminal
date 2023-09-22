@@ -1,7 +1,7 @@
 from json import loads
 from pathlib import Path
 from pydantic import FilePath
-from binascii import hexlify, unhexlify
+from binascii import hexlify, unhexlify, b2a_hex
 from logging import error, warning, info
 from configparser import ConfigParser, NoSectionError, NoOptionError
 from common.lib.toolkit.generate_trans_id import generate_trans_id
@@ -16,6 +16,7 @@ from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet, Ra
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.core.JsonConverter import JsonConverter
 from common.lib.core.FieldsGenerator import FieldsGenerator
+from common.lib.constants.TermFilesPath import TermFilesPath
 
 
 class Parser:
@@ -173,12 +174,56 @@ class Parser:
         return result
 
     @staticmethod
+    def parse_raw_data(raw_data: bytes, flat=False) -> list[Transaction]:
+        config: Config = Config.parse_file(TermFilesPath.CONFIG)
+
+        messages = list()
+
+        while raw_data:
+            try:
+                if len(raw_data) < config.host.header_length:
+                    raise IndexError
+
+                message_length: bytes = raw_data[:config.host.header_length]
+                message_length: int = int(b2a_hex(message_length).decode(), 16)
+                raw_data = raw_data[config.host.header_length:]
+
+                if len(raw_data) < message_length:
+                    raise IndexError
+
+                if len(message_data := raw_data[:message_length]) < message_length:
+                    raise IndexError
+
+                raw_data = raw_data[message_length:]
+
+            except (ValueError, IndexError):
+                main_message = "Invalid incoming message length"
+
+                if config.host.header_length == int():
+                    main_message = f"{main_message}. No header length set, ordinary header length is 2 or 4"
+
+                if config.host.header_length not in (0, 2, 4):
+                    header_error = f"Unusual header length {config.host.header_length}, ordinary it is 2 or 4"
+                    main_message = f"{main_message}. {header_error}. Check the settings"
+
+                raise ValueError(main_message)
+
+            try:
+                transaction: Transaction = Parser.parse_dump(message_data, flat=flat)
+            except ValueError:
+                raise ValueError("Cannot parse incoming message due to format error")
+
+            messages.append(transaction)
+
+        return messages
+
+    @staticmethod
     def parse_dump(data, flat: bool = False) -> Transaction:
         spec: EpaySpecification = EpaySpecification()
         fields: RawFieldSet = {}
         position = int()
         message_type_indicator = data[position:spec.MessageLength.message_type_length].decode()
-        position += len(message_type_indicator)
+        position += spec.MessageLength.message_type_length
         bitmap: str = data[position: position + spec.MessageLength.bitmap_length]
         position += len(bitmap)
         second_bitmap_exists = Bitmap(bitmap, bytes).second_bitmap_exists()
