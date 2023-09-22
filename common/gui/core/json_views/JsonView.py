@@ -563,9 +563,6 @@ class JsonView(TreeView):
         return field_numbers
 
     def generate_fields(self, parent=None, flat: bool = False):
-        # if self.config.fields.validation:
-        #     self.validate_all()
-
         result: TypeFields = dict()
 
         if parent is None:
