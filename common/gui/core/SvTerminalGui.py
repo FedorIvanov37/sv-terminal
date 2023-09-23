@@ -210,7 +210,12 @@ class SvTerminalGui(SvTerminal):
         if old_config.fields.hide_secrets != self.config.fields.hide_secrets:
             self.window.hide_secrets()
 
-        if old_config.host.keep_alive_mode != self.config.host.keep_alive_mode:
+        keep_alive_change_conditions = (
+            old_config.host.keep_alive_mode != self.config.host.keep_alive_mode,
+            old_config.host.keep_alive_interval != self.config.host.keep_alive_interval
+        )
+
+        if any(keep_alive_change_conditions):
             interval_name = KeepAliveInterval.KEEP_ALIVE_STOP
 
             if self.config.host.keep_alive_mode:
@@ -324,7 +329,11 @@ class SvTerminalGui(SvTerminal):
         if not transaction.is_keep_alive:
             info(f"Processing transaction ID [{transaction.trans_id}]")
 
-        SvTerminal.send(self, transaction)  # SvTerminal always used to real data processing
+        try:
+            SvTerminal.send(self, transaction)  # SvTerminal always used to real data processing
+        except Exception as sending_error:
+            error(f"Transaction sending error: {sending_error}")
+            return
 
         if sender is self.window:
             self.set_generated_fields(transaction)
@@ -433,9 +442,6 @@ class SvTerminalGui(SvTerminal):
         except Exception as parsing_error:
             error(f"File parsing error: {parsing_error}")
             return
-
-        if transaction.max_amount:
-            self.config.fields.max_amount = transaction.max_amount
 
         if not transaction.max_amount:
             transaction.max_amount = self.config.fields.max_amount

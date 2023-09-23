@@ -123,6 +123,7 @@ class SvTerminal(QObject):
 
         if not request.is_keep_alive:
             info(f"Transaction [{request.trans_id}] was sent ")
+            info(str())
 
     def transaction_received(self, response: Transaction):
         try:

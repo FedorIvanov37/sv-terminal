@@ -1,7 +1,7 @@
 from json import dumps
-from logging import info, warning, error, getLogger, getLevelName
+from logging import info, getLogger, getLevelName
 from PyQt6.QtWidgets import QDialog
-from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap
+from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap, QIntValidator
 from PyQt6.QtCore import QRegularExpression
 from common.lib.constants.LogDefinition import LogDefinition
 from common.lib.data_models.Config import Config
@@ -24,17 +24,18 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
     def setup(self):
         self.ButtonAbout.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){1,3}\d+")))
-        self.MaxAmount.setValidator(QRegularExpressionValidator(QRegularExpression(r"[^0|\D]\d+")))
+        self.MaxAmount.setEditable(True)
+        self.MaxAmount.setValidator(QIntValidator(1, 2100000000, self.MaxAmount))
         self.DebugLevel.addItems(LogDefinition.LOG_LEVEL)
         self.ParseSubfields.setHidden(True)  # TODO
         self.buttonBox.accepted.connect(self.ok)
         self.buttonBox.rejected.connect(self.cancel)
         self.ButtonAbout.pressed.connect(self.about)
         self.HeaderLength.textChanged.connect(self.validate_header_length)
-        self.HeaderLengthMode.stateChanged.connect(lambda: self.HeaderLength.setValue(2 if self.HeaderLengthMode.isChecked() else int()))
         self.DebugLevel.currentIndexChanged.connect(self.process_debug_level_change)
         self.KeepAliveMode.stateChanged.connect(lambda state: self.KeepAliveInterval.setEnabled(bool(state)))
         self.HeaderLengthMode.stateChanged.connect(lambda state: self.HeaderLength.setEnabled(bool(state)))
+        self.MaxAmountBox.stateChanged.connect(lambda state: self.MaxAmount.setEnabled(bool(state)))
         self.process_config()
 
     @staticmethod
@@ -45,7 +46,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.DebugLevel.setCurrentText(self.config.debug.level)
         self.SvAddress.setText(self.config.host.host)
         self.SvPort.setValue(int(self.config.host.port))
-        self.MaxAmount.setText(str(self.config.fields.max_amount))
+        self.MaxAmountBox.setChecked(self.config.fields.max_amount_limited)
+        self.MaxAmount.setEnabled(self.MaxAmountBox.isChecked())
         self.ProcessDefaultDump.setChecked(self.config.terminal.process_default_dump)
         self.ConnectOnStartup.setChecked(self.config.terminal.connect_on_startup)
         self.ClearLog.setChecked(self.config.debug.clear_log)
@@ -62,8 +64,19 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.HeaderLength.setValue(int(self.config.host.header_length))
         self.HideSecrets.setChecked(self.config.fields.hide_secrets)
 
+        if not self.config.fields.max_amount_limited:
+            return
+
+        max_amount = str(self.config.fields.max_amount)
+
+        if (index := self.MaxAmount.findText(max_amount)) < int():  # If the max_amount from config is not found
+            index: int = int()
+            self.MaxAmount.insertItem(index, max_amount)
+
+        self.MaxAmount.setCurrentIndex(index)
+
     def validate_header_length(self):
-        header_length: int = int(self.HeaderLength.text())
+        header_length: int = int(self.HeaderLength.value())
 
         if self.HeaderLengthMode.isChecked() and self.HeaderLength.value() < 2:
             self.HeaderLength.setValue(2)
@@ -85,36 +98,27 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
     def ok(self):
         getLogger().setLevel(getLevelName(self.DebugLevel.currentText()))
 
-        try:  # Raise ValueError when max_amount is less than one or has a non-int value
-            if int(self.MaxAmount.text()) < 1:
-                raise ValueError
-        except ValueError:
-            warning(f"Incorrect max amount. Set the default value of 100 instead")
-            self.MaxAmount.setText("100")  # When max_amount is less than one or has a non-int value
-
-        try:
-            int(self.KeepAliveInterval.text())
-        except ValueError:
-            error("Empty Keep Alive Interval, set default value 300 sec")
-            self.KeepAliveInterval.setText("300")
-
         self.config.host.host = self.SvAddress.text()
-        self.config.host.port = self.SvPort.text()
+        self.config.host.port = self.SvPort.value()
         self.config.host.keep_alive_mode = self.KeepAliveMode.isChecked()
-        self.config.host.keep_alive_interval = self.KeepAliveInterval.text()
-        self.config.host.header_length = self.HeaderLength.text()
+        self.config.host.keep_alive_interval = self.KeepAliveInterval.value()
+        self.config.host.header_length = self.HeaderLength.value()
         self.config.host.header_length_exists = self.HeaderLengthMode.isChecked()
         self.config.terminal.process_default_dump = self.ProcessDefaultDump.isChecked()
         self.config.terminal.connect_on_startup = self.ConnectOnStartup.isChecked()
         self.config.debug.clear_log = self.ClearLog.isChecked()
         self.config.debug.level = self.DebugLevel.currentText()
         self.config.debug.parse_subfields = self.ParseSubfields.isChecked()
-        self.config.fields.max_amount = self.MaxAmount.text()
+        self.config.fields.max_amount_limited = self.MaxAmountBox.isChecked()
+        self.config.fields.max_amount = int(self.MaxAmount.currentText())
         self.config.fields.build_fld_90 = self.BuildFld90.isChecked()
         self.config.fields.send_internal_id = self.SendInternalId.isChecked()
         self.config.fields.validation = self.ValidationEnabled.isChecked()
         self.config.fields.json_mode = self.JsonMode.isChecked()
         self.config.fields.hide_secrets = self.HideSecrets.isChecked()
+
+        if not self.config.fields.max_amount_limited:
+            self.config.fields.max_amount = 999999999
 
         with open(TermFilesPath.CONFIG, "w") as file:
             file.write(dumps(self.config.dict(), indent=4))
