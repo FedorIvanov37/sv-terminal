@@ -565,7 +565,6 @@ class JsonView(TreeView):
             parent.addChild(child, fill_len=self.len_fill)
             child.set_spec(field_spec)
             self.set_item_description(child)
-            # self.process_change_item(child, FieldsSpec.ColumnsOrder.FIELD)
 
         self.set_all_items_length()
 

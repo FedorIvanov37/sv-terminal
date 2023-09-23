@@ -31,14 +31,13 @@ class Transaction(BaseModel):
 
     @validator("max_amount", pre=True)
     def check_amount(cls, val):
-        if val is None:
-            return val
+        error_message = f"Wrong max_amount {val}. Amount must be digit in range from 0 to 999 999 999"
 
         if not str(val).isdigit():
-            raise TypeError(f"Wrong max_amount {val}. Amount must be digit in range from 1 to 999 999 999 999")
+            raise TypeError(error_message)
 
-        if int(val) not in range(1, 999999999999):
-            raise ValueError(f"Wrong max_amount {val}. Amount must be digit in range from 1 to 999 999 999 999")
+        if int(val) not in range(0, 1000000000):
+            raise ValueError(error_message)
 
         return val
 

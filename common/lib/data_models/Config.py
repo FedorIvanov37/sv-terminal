@@ -6,7 +6,7 @@ class Host(BaseModel):
     port: int = int()
     keep_alive_mode: bool = False
     keep_alive_interval: int = 300
-    header_length: int
+    header_length: int = 0
     header_length_exists: bool = True
 
 
@@ -22,21 +22,20 @@ class Debug(BaseModel):
 
 
 class Fields(BaseModel):
-    max_amount: int = 100
+    max_amount: int
+    max_amount_limited: bool
     build_fld_90: bool = True
     send_internal_id: bool = True
     validation: bool = True
     json_mode: bool = True
     hide_secrets: bool = True
 
-    @validator("max_amount")
+    @validator("max_amount", pre=True)
     def amount_should_be_digit(cls, max_amount: str):
-        max_amount = str(max_amount)
-
-        if not max_amount.isdigit():
+        if not str(max_amount).isdigit():
             raise ValueError("Max transaction amount should be digits only")
 
-        return max_amount
+        return int(max_amount)
 
 
 class Config(BaseModel):

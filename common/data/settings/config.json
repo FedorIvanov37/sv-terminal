@@ -1,15 +1,15 @@
 {
     "host": {
         "host": "172.21.30.5",
-        "port": "16677",
-        "keep_alive_mode": true,
-        "keep_alive_interval": "300",
-        "header_length": "2",
+        "port": 16677,
+        "keep_alive_mode": false,
+        "keep_alive_interval": 300,
+        "header_length": 2,
         "header_length_exists": true
     },
     "terminal": {
         "process_default_dump": true,
-        "connect_on_startup": true
+        "connect_on_startup": false
     },
     "debug": {
         "level": "INFO",
@@ -17,7 +17,8 @@
         "parse_subfields": false
     },
     "fields": {
-        "max_amount": "100",
+        "max_amount": 100,
+        "max_amount_limited": true,
         "build_fld_90": true,
         "send_internal_id": true,
         "validation": true,

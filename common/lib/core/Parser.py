@@ -176,17 +176,18 @@ class Parser:
     @staticmethod
     def parse_raw_data(raw_data: bytes, flat=False) -> list[Transaction]:
         config: Config = Config.parse_file(TermFilesPath.CONFIG)
+        header_length = config.host.header_length if config.host.header_length_exists else int()
 
         messages = list()
 
         while raw_data:
             try:
-                if len(raw_data) < config.host.header_length:
+                if len(raw_data) < header_length:
                     raise IndexError
 
-                message_length: bytes = raw_data[:config.host.header_length]
+                message_length: bytes = raw_data[:header_length]
                 message_length: int = int(b2a_hex(message_length).decode(), 16)
-                raw_data = raw_data[config.host.header_length:]
+                raw_data = raw_data[header_length:]
 
                 if len(raw_data) < message_length:
                     raise IndexError
@@ -197,19 +198,18 @@ class Parser:
                 raw_data = raw_data[message_length:]
 
             except (ValueError, IndexError):
-                main_message = "Invalid incoming message length"
+                if not config.host.header_length_exists:
+                    warning("No message header length set, ordinary header length is 2 or 4. Check the settings")
 
-                if config.host.header_length == int():
-                    main_message = f"{main_message}. No header length set, ordinary header length is 2 or 4"
+                if config.host.header_length_exists and config.host.header_length not in (2, 4):
+                    warning(f"Unusual message header length {config.host.header_length}, "
+                            f"ordinary it is 2 or 4. Check the settings")
 
-                if config.host.header_length not in (0, 2, 4):
-                    header_error = f"Unusual header length {config.host.header_length}, ordinary it is 2 or 4"
-                    main_message = f"{main_message}. {header_error}. Check the settings"
-
-                raise ValueError(main_message)
+                raise ValueError("Invalid incoming message length")
 
             try:
                 transaction: Transaction = Parser.parse_dump(message_data, flat=flat)
+
             except ValueError:
                 raise ValueError("Cannot parse incoming message due to format error")
 

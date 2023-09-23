@@ -58,14 +58,27 @@ class FieldsGenerator:
     @staticmethod
     def generate_field(field: str, max_amount: int = 100):
         spec = EpaySpecification()
-        max_amount: str = str(max_amount)
 
         if field == spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT:
-            max_amount = str(randint(1, int(max_amount) * 100))
-            field_length = spec.get_field_length(spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT)
-            max_amount = max_amount.zfill(field_length)
+            try:
+                max_amount: int = int(max_amount)
+            except ValueError:
+                raise TypeError(f"Max amount contains letters: {max_amount}")
 
-            return max_amount
+            match max_amount:
+                case max_amount if max_amount < int():
+                    raise ValueError(f"Wrong max amount value. Expected be positive integer, got: {max_amount}")
+
+                case max_amount if max_amount > int():
+                    amount: str = str(randint(1, max_amount * 100))
+
+                case _:
+                    amount: str = str()
+
+            if not (field_length := spec.get_field_length(spec.FIELD_SET.FIELD_004_TRANSACTION_AMOUNT)):
+                raise LookupError("Lost amount field length")
+
+            return str(amount).zfill(field_length)
 
         if date_format := spec.get_field_date_format(field):
             return f"{datetime.now():{date_format}}"
