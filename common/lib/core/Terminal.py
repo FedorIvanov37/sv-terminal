@@ -124,7 +124,7 @@ class SvTerminal(QObject):
             error(f"Data parsing error: {parsing_error}")
             return
 
-        self.log_printer.print_transaction(request, level=LogDefinition.get_level_by_name(self.config.debug.level))
+        self.log_printer.print_transaction(request)
 
         if not request.is_keep_alive:
             info(f"Transaction [{request.trans_id}] was sent ")
@@ -137,7 +137,7 @@ class SvTerminal(QObject):
             debug(f"Cannot print transaction dump, data parsing error: {parsing_error}")
 
         try:
-            self.log_printer.print_transaction(response, level=LogDefinition.get_level_by_name(self.config.debug.level))
+            self.log_printer.print_transaction(response)
         except Exception as parsing_error:
             error(f"Cannot print transaction, data parsing error: {parsing_error}")
 

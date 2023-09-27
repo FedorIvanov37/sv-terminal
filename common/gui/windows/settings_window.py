@@ -105,8 +105,9 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
             checked = False
             disabled = True
 
-        self.ClearLog.setChecked(checked)
-        self.ClearLog.setDisabled(disabled)
+        for checkbox in self.ClearLog, self.HideSecrets:
+            checkbox.setChecked(checked)
+            checkbox.setDisabled(disabled)
 
     def ok(self):
         getLogger().setLevel(getLevelName(self.DebugLevel.currentText()))

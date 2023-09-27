@@ -35,11 +35,11 @@ class LogPrinter:
         self.print_multi_row(dump, level)
 
     def print_transaction(self, transaction: Transaction, level=default_level):
-        if transaction.is_keep_alive:
-            return
-        
         def put(string: str, size=0):
             return f"[{string.zfill(size)}]"
+
+        if transaction.is_keep_alive:
+            return
 
         level("")
 
@@ -61,9 +61,17 @@ class LogPrinter:
             if field == self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
                 continue
 
+            hide_secrets: bool = self.config.fields.hide_secrets
+
+            if all((hide_secrets, self.spec.is_field_complex([field]), isinstance(field_data, str))):
+                try:
+                    field_data = Parser.split_complex_field(field, field_data)
+                except ValueError | AttributeError | TypeError:
+                    pass
+
             if isinstance(field_data, dict):
                 try:
-                    field_data = Parser.join_complex_field(field, field_data, hide_secrets=self.config.fields.hide_secrets)
+                    field_data: str = Parser.join_complex_field(field, field_data, hide_secrets=hide_secrets)
                 except Exception as parsing_error:
                     error(f"Cannot print field {field}")
                     error(f"data parsing error: {parsing_error}")
