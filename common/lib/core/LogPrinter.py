@@ -35,9 +35,6 @@ class LogPrinter:
         self.print_multi_row(dump, level)
 
     def print_transaction(self, transaction: Transaction, level=default_level):
-        def put(string: str, size=0):
-            return f"[{string.zfill(size)}]"
-
         if transaction.is_keep_alive:
             return
 
@@ -66,7 +63,7 @@ class LogPrinter:
             if all((hide_secrets, self.spec.is_field_complex([field]), isinstance(field_data, str))):
                 try:
                     field_data = Parser.split_complex_field(field, field_data)
-                except ValueError | AttributeError | TypeError:
+                except Exception:
                     pass
 
             if isinstance(field_data, dict):
@@ -77,14 +74,22 @@ class LogPrinter:
                     error(f"data parsing error: {parsing_error}")
                     continue
 
-            if field == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-                field_data = mask_pan(field_data)
+            match field:
+                case self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+                    field_data: str = mask_pan(field_data)
 
-            if field != self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-                if self.config.fields.hide_secrets and self.spec.is_secret([field]):
-                    field_data = mask_secret(field_data)
+                case _:
+                    if all((hide_secrets, self.spec.is_secret([field]))):
+                        field_data: str = mask_secret(field_data)
 
             length = str(len(field_data))
-            level(f"{put(field, size=3)}{put(length, size=3)}{put(field_data)}")
+
+            message = str()
+
+            for element in field, length, field_data:
+                size: int = int() if element is field_data else 3
+                message: str = message + f"[{element.zfill(size)}]"
+
+            level(message)
 
         level("")
