@@ -101,6 +101,11 @@ class SvTerminal(QObject):
             transaction: Transaction = self.generator.set_generated_fields(transaction)
 
         if self.config.fields.send_internal_id:
+            try:
+                transaction: Transaction = self.parser.remove_trans_id(transaction)
+            except Exception as parsing_error:
+                warning(f"Cannot remove old transaction ID due to parsing error: {parsing_error}")
+
             transaction: Transaction = self.generator.set_trans_id(transaction)
 
         if self.config.fields.validation:
@@ -152,11 +157,6 @@ class SvTerminal(QObject):
             warning(f"Non-matched Transaction received. Transaction ID [{response.trans_id}]")
             warning(f"Fields {match_fields} from the response don't correspond to any requests in the current session "
                     f"or request was matched before")
-            return
-
-        if not response.resp_time_seconds:
-            warning(f"Transaction ID [{response.match_id}] received and matched after timeout 60 seconds")
-            return
 
     def set_keep_alive_interval(self, interval_name: str):
         if interval_name == KeepAliveInterval.KEEP_ALIVE_ONCE:
@@ -242,12 +242,9 @@ class SvTerminal(QObject):
 
         try:
             reversal: Transaction = self.build_reversal(original_trans)
-
-        except LookupError as lookup_error:
-            error(lookup_error)
-
-        else:
             self.send(reversal)
+        except Exception as sending_error:
+            error(sending_error)
 
     def build_reversal(self, original_transaction: Transaction) -> Transaction:
         if not (original_transaction.matched and original_transaction.match_id):

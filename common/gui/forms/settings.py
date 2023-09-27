@@ -184,6 +184,9 @@ class Ui_SettingsWindow(object):
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Cancel|QtWidgets.QDialogButtonBox.StandardButton.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.horizontalLayout_5.addWidget(self.buttonBox)
+        self.ButtonDefault = QtWidgets.QPushButton(parent=SettingsWindow)
+        self.ButtonDefault.setObjectName("ButtonDefault")
+        self.horizontalLayout_5.addWidget(self.ButtonDefault)
         spacerItem1 = QtWidgets.QSpacerItem(54, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem1)
         self.ButtonAbout = QtWidgets.QPushButton(parent=SettingsWindow)
@@ -245,6 +248,7 @@ class Ui_SettingsWindow(object):
         self.JsonMode.setText(_translate("SettingsWindow", "JSON-like fields representation "))
         self.ValidationEnabled.setText(_translate("SettingsWindow", "Fields validation"))
         self.HideSecrets.setText(_translate("SettingsWindow", "Hide secret fields"))
+        self.ButtonDefault.setText(_translate("SettingsWindow", "Set default"))
 
 
 if __name__ == "__main__":

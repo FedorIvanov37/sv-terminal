@@ -3,18 +3,18 @@ from logging import error, warning
 from PyQt6.QtCore import pyqtSignal, QModelIndex
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QLineEdit
 from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.core.FieldsGenerator import FieldsGenerator
+from common.lib.core.Parser import Parser
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
-from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.data_models.EpaySpecificationModel import RawFieldSet
-from common.lib.core.Parser import Parser
 from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.gui.core.json_items.FIeldItem import FieldItem
 from common.gui.core.validators.ItemsValidator import ItemsValidator
+from common.gui.core.json_views.TreeView import TreeView
 from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
 from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
 from common.gui.decorators.void_qt_signals import void_qt_signals
-from common.gui.core.json_views.TreeView import TreeView
 from common.gui.constants.Colors import Colors
 
 
@@ -86,6 +86,9 @@ class JsonView(TreeView):
         if column == FieldsSpec.ColumnsOrder.LENGTH and not self.config.fields.validation:
             return
 
+        if item.childCount():
+            return
+
         item.set_length(len(text), fill_length=self.len_fill)
 
     def set_all_items_length(self, parent: FieldItem | None = None):
@@ -130,7 +133,7 @@ class JsonView(TreeView):
 
             child.hide_secret()
 
-    def disable_next_level(self, item: FieldItem):
+    def disable_next_level(self, item: FieldItem):  # Disable button NextLevel in case when flat-mode active
         current_item: FieldItem
 
         if not (current_item := self.currentItem()):
@@ -179,20 +182,27 @@ class JsonView(TreeView):
 
         item.field_data = FieldsGenerator.generate_field(item.field_number, self.config.fields.max_amount)
 
-    def process_change_property(self, item):
+    def process_change_property(self, item: FieldItem) -> None:
         try:
-            text = self.itemWidget(item, FieldsSpec.ColumnsOrder.PROPERTY).text()
+            checkbox_type: str = self.itemWidget(item, FieldsSpec.ColumnsOrder.PROPERTY).text()
         except AttributeError | ValueError:
-            text = ""
+            return
 
-        if text == CheckBoxesDefinition.JSON_MODE:
-            if item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
-                self.set_json_mode(item)
-            else:
+        match checkbox_type:
+            case CheckBoxesDefinition.JSON_MODE:
+                if item.checkbox_checked(checkbox_type):
+                    self.set_json_mode(item)
+                    return
+
                 self.set_flat_mode(item)
 
-        if text == CheckBoxesDefinition.GENERATE:
-            item.set_length(fill_length=self.len_fill)
+            case CheckBoxesDefinition.GENERATE:
+                item.set_length(fill_length=self.len_fill)
+
+                if not item.checkbox_checked(checkbox_type):
+                    return
+
+                item.set_item_color(Colors.BLACK)
 
     def set_subfields_length(self, item: FieldItem):
         parent: FieldItem
@@ -221,8 +231,7 @@ class JsonView(TreeView):
 
             prefix: str = '0' * (child_length - item_length)
 
-            if child_item.field_length.startswith(prefix):
-                child_item.setText(FieldsSpec.ColumnsOrder.LENGTH, child_item.field_length.removeprefix(prefix))
+            child_item.setText(FieldsSpec.ColumnsOrder.LENGTH, child_item.field_length.removeprefix(prefix))
 
     @void_qt_signals
     def process_change_item(self, item: FieldItem, column):
@@ -236,7 +245,7 @@ class JsonView(TreeView):
 
                 case FieldsSpec.ColumnsOrder.VALUE:
                     self.generate_item_data(item)
-                    self.validate_item(item, column)
+                    self.validate_item(item)
                     item.set_item_color()
 
                 case FieldsSpec.ColumnsOrder.PROPERTY:
@@ -302,7 +311,7 @@ class JsonView(TreeView):
 
         self.edit_item(item, column)
 
-    def validate_item(self, item, column=None):  # Validate single item, no auto children validate
+    def validate_item(self, item):  # Validate single item, no auto children validate
         if not self.config.fields.validation:
             return
 
@@ -506,6 +515,9 @@ class JsonView(TreeView):
             return
 
         item.field_data = ""
+
+        if self.config.fields.validation:
+            self.check_all_items(item)
 
         self.hide_secrets(parent=item)
 

@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, Field, validator
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.toolkit.generate_trans_id import generate_trans_id
@@ -17,7 +18,7 @@ class Transaction(BaseModel):
     trans_id: str = Field(default_factory=generate_trans_id)
     message_type: str
     data_fields: TypeFields
-    max_amount: int | None = None
+    max_amount: int = 100
     generate_fields: list[generated_field] = []
 
     match_id: str = str()
@@ -25,6 +26,7 @@ class Transaction(BaseModel):
     matched: bool | None = None
     success: bool | None = None
     resp_time_seconds: float | None = None
+    sending_time: datetime | None = None
     is_request: bool | None = None
     is_reversal: bool | None = None
     is_keep_alive: bool = False

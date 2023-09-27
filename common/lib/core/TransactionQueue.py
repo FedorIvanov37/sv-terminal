@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from logging import error
 from collections import deque
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -54,6 +55,7 @@ class TransactionQueue(QObject):
         self.queue.append(transaction)
 
         if send and transaction.is_request:
+            transaction.sending_time = datetime.now()
             self.send_transaction_data(transaction)
             return
 
@@ -95,10 +97,20 @@ class TransactionQueue(QObject):
             return
 
         if not timer.isActive():
-            return
+            if not (request := self.get_transaction(response.match_id)):
+                return
+
+            if not request.sending_time:
+                return
+
+            time_spend: timedelta = datetime.now() - request.sending_time
+            time_spend: float = round(time_spend.microseconds / 1000000, 3)
+
+            return time_spend
 
         time_spend = (timer.interval() - timer.remainingTime()) / 1000
         timer.stop()
+
         return time_spend
 
     def process_timeout(self, transaction):

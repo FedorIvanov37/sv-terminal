@@ -217,6 +217,38 @@ class Parser:
 
         return messages
 
+    def remove_trans_id(self, transaction: Transaction) -> Transaction:
+        def remove_id_tag(de047: dict) -> dict:
+            trans_id_tag_number = "072"  # TODO
+
+            try:
+                de047.pop(trans_id_tag_number)
+            except KeyError:
+                pass
+
+            return de047
+
+        field_number: str = self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD
+
+        if not (de047 := transaction.data_fields.get(field_number)):
+            return transaction
+
+        if isinstance(de047, str):
+            try:
+                de047: dict = self.split_complex_field(field_number, de047)
+                de047: dict = remove_id_tag(de047)
+                de047: str = self.join_complex_field(field_number, de047)
+
+            except Exception as parsing_error:
+                raise ValueError(str(parsing_error))
+
+        if isinstance(de047, dict):
+            de047: dict = remove_id_tag(de047)
+
+        transaction.data_fields[field_number] = de047
+
+        return transaction
+
     @staticmethod
     def parse_dump(data, flat: bool = False) -> Transaction:
         spec: EpaySpecification = EpaySpecification()

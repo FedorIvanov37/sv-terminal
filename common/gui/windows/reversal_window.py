@@ -1,5 +1,4 @@
 from re import search
-from typing import Optional
 from PyQt6.QtWidgets import QDialog
 from common.lib.data_models.Transaction import Transaction
 from common.gui.forms.reversal import Ui_ReversalWindow
@@ -7,7 +6,7 @@ from common.gui.decorators.window_settings import set_window_icon, has_close_but
 
 
 class ReversalWindow(Ui_ReversalWindow, QDialog):
-    _reversal_id: Optional[str] = None
+    _reversal_id: str | None = None
     _accepted: bool = False
 
     @property
@@ -46,7 +45,7 @@ class ReversalWindow(Ui_ReversalWindow, QDialog):
         value = search("ID:\s+?(\S+)", self.ComboBoxId.currentText())
         value = value.group(1) if value else value
         self.TransactionIdField.setText(str())
-        self.TransactionIdField.setDisabled(bool(value))
+        self.TransactionIdField.setReadOnly(bool(value))
         self.TransactionIdField.setText(value)
 
     def set_reversal_id(self):

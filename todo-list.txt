@@ -122,6 +122,10 @@ v0.16
 + Parser of complex fields WINDOW
 + Clan JSON in print menu
 + Flat transaction fields, split when need
++ Add default settings
++ Try to remove old order ID from message
+
+
 
 
 • Console mode

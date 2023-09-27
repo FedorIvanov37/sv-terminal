@@ -84,6 +84,8 @@ of SvTerminal evolution.
   * Main / Spec Window search line, key sequence 
   * Console mode - run without window
   * Incoming message header length settings 
+  * Button "Set default" in settings window
+
 
 * Updates
   * Changed name to SIGNAL
