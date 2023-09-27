@@ -272,7 +272,12 @@ class SvTerminalGui(SvTerminal):
             error(lost_transaction_message)
             return
 
-        if not (transaction_id := transaction_source()):
+        try:
+            transaction_id: str = transaction_source()
+        except LookupError:
+            return
+
+        if not transaction_id:
             error(lost_transaction_message)
             return
 
@@ -280,7 +285,10 @@ class SvTerminalGui(SvTerminal):
             error(lost_transaction_message)
             return
 
-        SvTerminal.reverse_transaction(self, original_trans)
+        try:
+            SvTerminal.reverse_transaction(self, original_trans)
+        except Exception as reversal_error:
+            error(reversal_error)
 
     def parse_main_window(self, flat_fields=True, clean=False) -> Transaction:
         data_fields: TypeFields = self.window.get_fields(flat=flat_fields)
@@ -411,8 +419,12 @@ class SvTerminalGui(SvTerminal):
     def show_reversal_window(self):
         reversible_transactions_list: list[Transaction] = self.trans_queue.get_reversible_transactions()
         reversal_window = ReversalWindow(reversible_transactions_list)
-        reversal_window.exec()
-        return reversal_window.reversal_id
+        accepted = reversal_window.exec()
+
+        if bool(accepted):
+            return reversal_window.reversal_id
+
+        raise LookupError
 
     def set_default_values(self):
         try:

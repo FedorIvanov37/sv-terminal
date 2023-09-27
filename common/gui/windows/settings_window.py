@@ -1,5 +1,5 @@
 from json import dumps
-from logging import info, getLogger, getLevelName
+from logging import info, error, getLogger, getLevelName
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap, QIntValidator
 from PyQt6.QtCore import QRegularExpression
@@ -36,44 +36,57 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.KeepAliveMode.stateChanged.connect(lambda state: self.KeepAliveInterval.setEnabled(bool(state)))
         self.HeaderLengthMode.stateChanged.connect(lambda state: self.HeaderLength.setEnabled(bool(state)))
         self.MaxAmountBox.stateChanged.connect(lambda state: self.MaxAmount.setEnabled(bool(state)))
-        self.process_config()
+        self.ButtonDefault.clicked.connect(self.set_default_settings)
+        self.process_config(self.config)
 
     @staticmethod
     def about():
         AboutWindow()
 
-    def process_config(self):
-        self.DebugLevel.setCurrentText(self.config.debug.level)
-        self.SvAddress.setText(self.config.host.host)
-        self.SvPort.setValue(int(self.config.host.port))
-        self.MaxAmountBox.setChecked(self.config.fields.max_amount_limited)
-        self.MaxAmount.setEnabled(self.MaxAmountBox.isChecked())
-        self.ProcessDefaultDump.setChecked(self.config.terminal.process_default_dump)
-        self.ConnectOnStartup.setChecked(self.config.terminal.connect_on_startup)
-        self.ClearLog.setChecked(self.config.debug.clear_log)
-        self.ParseSubfields.setChecked(self.config.debug.parse_subfields)
-        self.BuildFld90.setChecked(self.config.fields.build_fld_90)
-        self.SendInternalId.setChecked(self.config.fields.send_internal_id)
-        self.ValidationEnabled.setChecked(self.config.fields.validation)
-        self.JsonMode.setChecked(self.config.fields.json_mode)
-        self.KeepAliveMode.setChecked(self.config.host.keep_alive_mode)
-        self.KeepAliveInterval.setValue(int(self.config.host.keep_alive_interval))
+    def process_config(self, config: Config):
+        self.DebugLevel.setCurrentText(config.debug.level)
+        self.SvAddress.setText(config.host.host)
+        self.SvPort.setValue(int(config.host.port))
+        self.MaxAmountBox.setChecked(config.fields.max_amount_limited)
+        self.ProcessDefaultDump.setChecked(config.terminal.process_default_dump)
+        self.ConnectOnStartup.setChecked(config.terminal.connect_on_startup)
+        self.ClearLog.setChecked(config.debug.clear_log)
+        self.ParseSubfields.setChecked(config.debug.parse_subfields)
+        self.BuildFld90.setChecked(config.fields.build_fld_90)
+        self.SendInternalId.setChecked(config.fields.send_internal_id)
+        self.ValidationEnabled.setChecked(config.fields.validation)
+        self.JsonMode.setChecked(config.fields.json_mode)
+        self.KeepAliveMode.setChecked(config.host.keep_alive_mode)
+        self.KeepAliveInterval.setValue(int(config.host.keep_alive_interval))
+        self.HeaderLengthMode.setChecked(config.host.header_length_exists)
+        self.HeaderLength.setEnabled(config.host.header_length_exists)
+        self.HeaderLength.setValue(int(config.host.header_length))
+        self.HideSecrets.setChecked(config.fields.hide_secrets)
         self.KeepAliveInterval.setEnabled(self.KeepAliveMode.isChecked())
-        self.HeaderLengthMode.setChecked(self.config.host.header_length_exists)
-        self.HeaderLength.setEnabled(self.config.host.header_length_exists)
-        self.HeaderLength.setValue(int(self.config.host.header_length))
-        self.HideSecrets.setChecked(self.config.fields.hide_secrets)
+        self.MaxAmount.setEnabled(self.MaxAmountBox.isChecked())
 
-        if not self.config.fields.max_amount_limited:
+        if not config.fields.max_amount_limited:
             return
 
-        max_amount = str(self.config.fields.max_amount)
+        max_amount = str(config.fields.max_amount)
 
         if (index := self.MaxAmount.findText(max_amount)) < int():  # If the max_amount from config is not found
             index: int = int()
             self.MaxAmount.insertItem(index, max_amount)
 
         self.MaxAmount.setCurrentIndex(index)
+
+    def set_default_settings(self):
+        try:
+            default_config = Config.parse_file(TermFilesPath.DEFAULT_CONFIG)
+        except Exception as parsing_error:
+            error(parsing_error)
+            return
+
+        default_config.host.host = self.config.host.host
+        default_config.host.port = self.config.host.port
+
+        self.process_config(default_config)
 
     def validate_header_length(self):
         header_length: int = int(self.HeaderLength.value())
