@@ -1,0 +1,47 @@
+{
+  "webhook_type": "TRANSACTION_INFO",
+  "data": {
+    "card": {
+      "id": "9a15d0f3-4d68-4667-8556-5acedb6cec04",
+      "expiration_date": "09/2025",
+      "type": "VIRTUAL",
+      "brand": "MASTERCARD",
+      "masked_pan": "530518%4200"
+    },
+    "transaction": {
+      "id": "651416975aa890ba21090372",
+      "type": "purchase",
+      "type_description": "POS operation",
+      "status": "success",
+      "status_description": "Transaction completed",
+      "financial_status": "ON_HOLD",
+      "region": null
+    },
+    "merchant": {
+      "id": "352971261      ",
+      "name": "IKEA ZARAGOZA HFB",
+      "mcc": "5200",
+      "country": null,
+      "city": null
+    },
+    "amount": "194.93",
+    "currency": "EUR",
+    "exchange_rate": "1.0",
+    "fee_amount": "0.00",
+    "fee_currency": "EUR",
+    "cashback_amount": "0.00",
+    "cashback_currency": "EUR",
+    "clearing_date": null,
+    "clearing_amount": null,
+    "clearing_exchange_rate": null,
+    "clearing_currency": null,
+    "direction": "DEBIT",
+    "is_reversal": false,
+    "cof_type": null,
+    "auth_code": "477368",
+    "rrn": "000000004389",
+    "created_at": "2023-09-27T11:48:25Z"
+  },
+  "webhook_id": "9a3bc6f9-b7de-4c76-acf9-eaedc50a6b7f",
+  "date_time": "2023-09-27T11:48:40Z"
+}
