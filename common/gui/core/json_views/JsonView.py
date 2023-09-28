@@ -80,13 +80,13 @@ class JsonView(TreeView):
         if not (item := self.currentItem()):
             return
 
+        if item.childCount():
+            return
+
         if column not in (FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.LENGTH):
             return
 
         if column == FieldsSpec.ColumnsOrder.LENGTH and not self.config.fields.validation:
-            return
-
-        if item.childCount():
             return
 
         item.set_length(len(text), fill_length=self.len_fill)
@@ -244,6 +244,10 @@ class JsonView(TreeView):
             match column:
 
                 case FieldsSpec.ColumnsOrder.VALUE:
+                    if item.childCount():
+                        item.field_data = str()
+                        return
+
                     self.generate_item_data(item)
                     self.validate_item(item)
                     item.set_item_color()
