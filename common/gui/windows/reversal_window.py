@@ -45,7 +45,6 @@ class ReversalWindow(Ui_ReversalWindow, QDialog):
         value = search("ID:\s+?(\S+)", self.ComboBoxId.currentText())
         value = value.group(1) if value else value
         self.TransactionIdField.setText(str())
-        self.TransactionIdField.setReadOnly(bool(value))
         self.TransactionIdField.setText(value)
 
     def set_reversal_id(self):
