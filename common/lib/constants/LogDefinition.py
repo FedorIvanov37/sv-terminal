@@ -1,9 +1,7 @@
-from dataclasses import dataclass
 from logging import _levelToName as Levels
 from logging import debug, info, warning, error, critical
 
 
-@dataclass(frozen=True)
 class LogDefinition(object):
     DEBUG = "DEBUG"
     INFO = "INFO"

@@ -1,7 +1,3 @@
-from dataclasses import dataclass
-
-
-@dataclass(frozen=True)
 class KeySequence:
     CTRL_T = 'Ctrl+T'
     CTRL_R = 'Ctrl+R'

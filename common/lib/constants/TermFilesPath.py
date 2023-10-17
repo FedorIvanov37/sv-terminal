@@ -1,8 +1,6 @@
-from dataclasses import dataclass
 from pydantic import DirectoryPath, FilePath
 
 
-@dataclass(frozen=True)
 class TermFilesPath(object):
     DATA_DIR: DirectoryPath = "common/data"
     LOG_DIR: DirectoryPath = "common/log"

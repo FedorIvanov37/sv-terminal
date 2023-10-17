@@ -1,7 +1,3 @@
-from dataclasses import dataclass
-
-
-@dataclass
 class DumpDefinition:
     LINE_LENGTH = 32
     HEX_LINE_LENGTH = 51

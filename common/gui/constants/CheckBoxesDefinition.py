@@ -1,8 +1,6 @@
-from dataclasses import dataclass
 from PyQt6.QtCore import Qt
 
 
-@dataclass(frozen=True)
 class CheckBoxesDefinition:
     GENERATE = "Generate"
     JSON_MODE = "JSON mode"

@@ -1,9 +1,7 @@
-from dataclasses import dataclass
 from pydantic import DirectoryPath, FilePath
 from common.lib.constants.TermFilesPath import TermFilesPath
 
 
-@dataclass(frozen=True)
 class GuiFilesPath(object):
     STYLE_DIR: DirectoryPath = f"{TermFilesPath.DATA_DIR}/style"
 

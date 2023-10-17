@@ -1,7 +1,3 @@
-from dataclasses import dataclass
-
-
-@dataclass
 class IniMessageDefinition(object):
     MTI = "MTI"
     MESSAGE = "MESSAGE"

@@ -1,8 +1,6 @@
-from dataclasses import dataclass
 from common.lib.constants.ReleaseDefinitoin import ReleaseDefinition
 
 
-@dataclass(frozen=True)
 class TextConstants:
 
     SYSTEM_NAME = "SIGNAL"
