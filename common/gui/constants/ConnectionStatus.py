@@ -1,13 +1,10 @@
-from dataclasses import dataclass
 from pydantic import FilePath
 from PyQt6.QtNetwork import QTcpSocket
 from common.gui.constants.GuiFilesPath import GuiFilesPath
 
 
-@dataclass(frozen=True)
 class ConnectionDefinitions:
 
-    @dataclass(frozen=True)
     class ConnectionStatuses:
         CONNECTED: str = "Connected"
         DISCONNECTED: str = "Disconnected"

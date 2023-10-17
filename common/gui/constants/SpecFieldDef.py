@@ -1,11 +1,7 @@
 from enum import Enum
-from dataclasses import dataclass
 
 
-@dataclass
 class SpecFieldDefinition:
-    SPECIFICATION = "Specification"
-
 
     class _Columns(Enum):
         FIELD = "Field"
@@ -22,8 +18,6 @@ class SpecFieldDefinition:
         CAN_BE_GENERATED = "Generated"
         SECRET = "Secret"
 
-
-    @dataclass
     class ColumnsOrder:
         FIELD = 0
         DESCRIPTION = 1
@@ -39,9 +33,7 @@ class SpecFieldDefinition:
         CAN_BE_GENERATED = 11
         SECRET = 12
 
-
     COLUMNS = tuple(column.value for column in _Columns)
-
 
     CHECKBOXES = (
             ColumnsOrder.USE_FOR_MATCHING,
@@ -52,3 +44,5 @@ class SpecFieldDefinition:
             ColumnsOrder.SPECIAL,
             ColumnsOrder.SECRET,
     )
+
+    SPECIFICATION = "Specification"

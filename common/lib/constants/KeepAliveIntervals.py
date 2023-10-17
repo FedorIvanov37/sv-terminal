@@ -1,7 +1,3 @@
-from dataclasses import dataclass
-
-
-@dataclass
 class KeepAliveInterval:
     KEEP_ALIVE_1S = "1 second"
     KEEP_ALIVE_5S = "5 seconds"

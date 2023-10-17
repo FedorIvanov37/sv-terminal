@@ -1,12 +1,9 @@
 from enum import Enum
-from dataclasses import dataclass, field
 from common.lib.core.EpaySpecification import EpaySpecification
 
 
 class MainFieldSpec:
-    MESSAGE = "Message"
 
-    @dataclass(frozen=True)
     class ColumnsOrder:
         FIELD = 0
         VALUE = 1
@@ -20,6 +17,8 @@ class MainFieldSpec:
         LENGTH = "Length"
         DESCRIPTION = "Description"
         PROPERTY = "Property"
+
+    MESSAGE = "Message"
 
     spec: EpaySpecification = EpaySpecification()
 
