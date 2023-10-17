@@ -21,7 +21,9 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
     @frameless_window
     @set_window_icon
     def _setup(self):
+        self.LogoContainer.setText(f"{TextConstants.HELLO_MESSAGE} | GNU/GPL license agreement\n")
         self.InfoBoard.setText(TextConstants.LICENSE_AGREEMENT)
+        self.CheckBoxAgreement.setFocus()
 
         try:
             with open(TermFilesPath.LICENSE_INFO) as json_file:
@@ -58,8 +60,6 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
              f"{self.license_info.last_acceptance_date.strftime('%d/%m/%Y %T')} | "
              f"Unique SIGNAL ID {self.license_info.license_id}")
         info(f"Thank you for using SIGNAL")
-
-        self.close()
 
     def reject_license(self):
         with open(TermFilesPath.LICENSE_INFO, 'w') as license_file:
