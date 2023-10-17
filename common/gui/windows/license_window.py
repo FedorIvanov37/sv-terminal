@@ -1,5 +1,5 @@
 from sys import exit
-from json import dumps
+from json import dumps, load
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog
 from common.gui.forms.license_window import Ui_LicenseWindow
@@ -24,7 +24,9 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
         self.InfoBoard.setText(TextConstants.LICENSE_AGREEMENT)
 
         try:
-            self.license_info: LicenseInfo = LicenseInfo.parse_file(TermFilesPath.LICENSE_INFO)
+            with open(TermFilesPath.LICENSE_INFO) as json_file:
+                self.license_info: LicenseInfo = LicenseInfo.model_validate(load(json_file))
+
         except Exception as license_parsing_error:
             raise LicenseDataLoadingError(f"GNU license info file parsing error: {license_parsing_error}")
 

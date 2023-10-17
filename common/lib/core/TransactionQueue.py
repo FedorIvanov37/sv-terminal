@@ -165,6 +165,39 @@ class TransactionQueue(QObject):
 
         return transaction
 
+    def get_original_transaction(self, reversal: Transaction):
+        if not reversal.is_reversal:
+            return
+
+        reversal_fields: list[str] = list(self.spec.get_reversal_fields())
+        reversal_fields.sort()
+
+        for transaction in self.queue:
+            matched_fields = list()
+
+            if transaction.is_reversal:
+                continue
+
+            # if not transaction.is_request:
+            #     continue
+
+            for field in reversal_fields:
+                if not (reversal_field := reversal.data_fields.get(field)):
+                    break
+
+                if not (transaction_field := transaction.data_fields.get(field)):
+                    break
+
+                if not reversal_field == transaction_field:
+                    break
+
+                matched_fields.append(field)
+
+            matched_fields.sort()
+
+            if matched_fields == reversal_fields:
+                return transaction
+
     def is_matched(self, request: Transaction, response: Transaction) -> bool:
         if request.matched or response.matched:
             return False

@@ -1,4 +1,4 @@
-from json import loads
+from json import loads, load
 from pathlib import Path
 from pydantic import FilePath
 from binascii import hexlify, unhexlify, b2a_hex
@@ -175,7 +175,9 @@ class Parser:
 
     @staticmethod
     def parse_raw_data(raw_data: bytes, flat=False) -> list[Transaction]:
-        config: Config = Config.parse_file(TermFilesPath.CONFIG)
+        with open(TermFilesPath.CONFIG) as json_file:
+            config: Config = Config.model_validate(load(json_file))
+
         header_length = config.host.header_length if config.host.header_length_exists else int()
 
         messages = list()
@@ -216,38 +218,6 @@ class Parser:
             messages.append(transaction)
 
         return messages
-
-    def remove_trans_id(self, transaction: Transaction) -> Transaction:
-        def remove_id_tag(de047: dict) -> dict:
-            trans_id_tag_number = "072"  # TODO
-
-            try:
-                de047.pop(trans_id_tag_number)
-            except KeyError:
-                pass
-
-            return de047
-
-        field_number: str = self.spec.FIELD_SET.FIELD_047_PROPRIETARY_FIELD
-
-        if not (de047 := transaction.data_fields.get(field_number)):
-            return transaction
-
-        if isinstance(de047, str):
-            try:
-                de047: dict = self.split_complex_field(field_number, de047)
-                de047: dict = remove_id_tag(de047)
-                de047: str = self.join_complex_field(field_number, de047)
-
-            except Exception as parsing_error:
-                raise ValueError(str(parsing_error))
-
-        if isinstance(de047, dict):
-            de047: dict = remove_id_tag(de047)
-
-        transaction.data_fields[field_number] = de047
-
-        return transaction
 
     @staticmethod
     def parse_dump(data, flat: bool = False) -> Transaction:
@@ -423,7 +393,9 @@ class Parser:
     def _parse_json_file(filename: str) -> Transaction:
         JsonConverter.convert(filename)  # TODO: Temporary solution for transfer period
 
-        transaction: Transaction = Transaction.parse_file(filename)
+        with open(filename) as json_file:
+            transaction: Transaction = Transaction.model_validate(load(json_file))
+
         transaction.trans_id = generate_trans_id()
 
         return transaction

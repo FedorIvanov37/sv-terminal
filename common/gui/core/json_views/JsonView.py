@@ -46,21 +46,21 @@ class JsonView(TreeView):
     def __init__(self, config: Config):
         super(JsonView, self).__init__()
         self.config: Config = config
-        self._setup()
         self.delegate = JsonView.Delegate()
-        self.delegate.closeEditor.connect(lambda: self.hide_secrets())
-        self.delegate.closeEditor.connect(lambda: self.set_all_items_length())
-        self.delegate.text_edited.connect(self.set_item_length)
-        self.setItemDelegate(self.delegate)
+        self.validator = ItemsValidator(self.config)
+        self._setup()
 
     def _setup(self):
         self.setTabKeyNavigation(True)
         self.setAnimated(True)
-        self.validator = ItemsValidator(self.config)
         self.itemDoubleClicked.connect(self.edit_item)
         self.itemChanged.connect(self.process_change_item)
         self.itemChanged.connect(self.disable_next_level)
+        self.delegate.closeEditor.connect(lambda: self.hide_secrets())
+        self.delegate.closeEditor.connect(lambda: self.set_all_items_length())
+        self.delegate.text_edited.connect(self.set_item_length)
         self.currentItemChanged.connect(self.disable_next_level)
+        self.setItemDelegate(self.delegate)
         self.setHeaderLabels(FieldsSpec.columns)
         self.addTopLevelItem(self.root)
         self.header().setMaximumSectionSize(700)
@@ -293,7 +293,6 @@ class JsonView(TreeView):
                 return
 
             item.set_description(warn_text)
-            item.set_item_color(color=Colors.DEEP_RED)
 
         if not item.childCount():
             return
@@ -374,7 +373,11 @@ class JsonView(TreeView):
             parent = self.root
 
         item = FieldItem([])
-        index = parent.indexOfChild(current_item) + 1
+        index = parent.indexOfChild(current_item)
+
+        if current_item is self.root:
+            index = index + 1
+
         parent.insertChild(index, item)
 
         self.set_new_item(item)
@@ -384,6 +387,7 @@ class JsonView(TreeView):
     @void_qt_signals
     def minus(self, *args):
         item: FieldItem | QTreeWidgetItem
+        item: FieldItem
 
         if not (item := self.currentItem()):
             return
@@ -392,19 +396,14 @@ class JsonView(TreeView):
             self.setFocus()
             return
 
-        parent: FieldItem = item.parent()
-        removed_item_index = parent.indexOfChild(item)
+        if not (parent := item.parent()):
+            return
 
         self.undo_stack.push(UndoRemoveChildCommand(item, parent))
 
         parent.removeChild(item)
-        cursor_position = removed_item_index if removed_item_index == 0 else removed_item_index - 1
         parent.set_length(fill_length=self.len_fill)
 
-        if not (new_position_item := parent.child(cursor_position)):
-            new_position_item = parent
-
-        self.setCurrentItem(new_position_item)
         self.check_duplicates_after_remove(item, parent)
         self.setFocus()
         self.field_removed.emit()
@@ -481,7 +480,7 @@ class JsonView(TreeView):
         for item in self.root.get_children():
             if item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
                 self.set_json_mode(item)
-                break
+                continue
 
             self.set_flat_mode(item)
 
@@ -579,7 +578,9 @@ class JsonView(TreeView):
                 child: FieldItem = FieldItem(string_data)
 
             parent.addChild(child, fill_len=self.len_fill)
+
             child.set_spec(field_spec)
+
             self.set_item_description(child)
 
         self.set_all_items_length()

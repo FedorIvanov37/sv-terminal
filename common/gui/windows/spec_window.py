@@ -1,4 +1,4 @@
-from json import dumps
+from json import dumps, load
 from typing import Optional
 from datetime import datetime
 from pydantic import ValidationError
@@ -198,7 +198,8 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             return
 
         try:
-            specification: EpaySpecModel = EpaySpecModel.parse_file(filename)
+            with open(filename) as json_file:
+                specification: EpaySpecModel = EpaySpecModel.model_validate(load(json_file))
 
         except ValidationError as validation_error:
             error_text = str(validation_error)  # .json(indent=4)

@@ -290,6 +290,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonReverse: {
                 ButtonAction.LAST: lambda: self.reverse.emit(ButtonAction.LAST),
                 ButtonAction.OTHER: lambda: self.reverse.emit(ButtonAction.OTHER),
+                ButtonAction.SET_REVERSAL: lambda: self.reverse.emit(ButtonAction.SET_REVERSAL),
             },
 
             self.ButtonPrintData: {
@@ -409,9 +410,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         self.msgtype.setCurrentIndex(index)
 
-    def set_fields(self, transaction: Transaction) -> None:
+    def set_transaction_fields(self, transaction: Transaction) -> None:
         self.json_view.parse_transaction(transaction)
-        self.set_bitmap()
+        self.json_view.expandAll()
+        self.json_view.resize_all()
 
     def clear_message(self) -> None:
         self.msgtype.setCurrentIndex(-1)

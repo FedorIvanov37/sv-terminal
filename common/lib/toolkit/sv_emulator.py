@@ -1,3 +1,4 @@
+from json import load
 from time import sleep
 from copy import deepcopy
 from struct import pack
@@ -32,7 +33,9 @@ class SvEmulator:
         self._stop = stop
 
     def __init__(self):
-        self.config: Config = Config.parse_file(TermFilesPath.CONFIG)
+        with open(TermFilesPath.CONFIG) as json_file:
+            self.config: Config = Config.model_validate(load(json_file))
+
         self.parser: Parser = Parser(self.config)
         self.spec: EpaySpecification = EpaySpecification()
 

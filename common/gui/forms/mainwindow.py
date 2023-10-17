@@ -342,7 +342,7 @@ class Ui_MainWindow(object):
         self.ButtonCopyBitmap.setText(_translate("MainWindow", "Copy"))
         self.ButtonSend.setText(_translate("MainWindow", "Send"))
         self.ButtonRepeat.setText(_translate("MainWindow", "Repeat"))
-        self.ButtonReverse.setText(_translate("MainWindow", "Reverse"))
+        self.ButtonReverse.setText(_translate("MainWindow", "Reversal"))
         self.ButtonClearLog.setText(_translate("MainWindow", "Clear log"))
         self.ButtonCopyLog.setText(_translate("MainWindow", "Copy log"))
         self.ButtonParseDump.setText(_translate("MainWindow", "Parse file"))

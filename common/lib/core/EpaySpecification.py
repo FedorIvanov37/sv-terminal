@@ -1,4 +1,4 @@
-from json import dumps
+from json import dumps, load
 from dataclasses import asdict
 from pydantic import FilePath
 from common.lib.decorators.singleton import singleton
@@ -19,7 +19,9 @@ class EpaySpecification(EpaySpecificationData):
             filename: FilePath = TermFilesPath.SPECIFICATION
 
         self.filename: FilePath = filename
-        self._specification_model: EpaySpecModel = EpaySpecModel.parse_file(self.filename)
+
+        with open(filename) as json_file:
+            self._specification_model: EpaySpecModel = EpaySpecModel.model_validate(load(json_file))
 
     @property
     def spec(self) -> EpaySpecModel:

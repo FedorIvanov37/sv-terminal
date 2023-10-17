@@ -1,4 +1,4 @@
-from json import dumps
+from json import dumps, load
 from pydantic import ValidationError
 from common.lib.data_models.Transaction import Transaction, OldTransactionModel
 
@@ -19,7 +19,8 @@ class JsonConverter:
 
     @staticmethod
     def convert_json(filename: str):
-        old_transaction = OldTransactionModel.parse_file(filename)
+        with open(filename) as json_file:
+            old_transaction = OldTransactionModel.model_validate(load(json_file))
 
         transaction = Transaction(
             trans_id=old_transaction.transaction.id,
@@ -38,7 +39,9 @@ class JsonConverter:
     def get_transaction_model(filename):  # Gues the file format
 
         try:  # Try to parse in old style
-            OldTransactionModel.parse_file(filename)
+            with open(filename) as json_file:
+                OldTransactionModel.model_validate(load(json_file))
+
             return OldTransactionModel
 
         except ValidationError as validation_error:  # Check the result in case of fail
@@ -47,7 +50,7 @@ class JsonConverter:
             err = validation_error.errors()[0]
 
             try:
-                if err["loc"][0] == 'config' and err["msg"] == 'field required':
+                if err["loc"][0].lower() == 'config' and err["msg"].lower() == 'field required':
                     return Transaction
 
             except KeyError:

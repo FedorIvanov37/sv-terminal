@@ -1,4 +1,4 @@
-from json import dumps
+from json import dumps, load
 from logging import info, error, getLogger, getLevelName
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap, QIntValidator
@@ -78,7 +78,9 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
     def set_default_settings(self):
         try:
-            default_config = Config.parse_file(TermFilesPath.DEFAULT_CONFIG)
+            with open(TermFilesPath.DEFAULT_CONFIG) as json_file:
+                default_config: Config = Config.model_validate(load(json_file))
+
         except Exception as parsing_error:
             error(parsing_error)
             return

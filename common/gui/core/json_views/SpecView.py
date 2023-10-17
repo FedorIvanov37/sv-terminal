@@ -210,6 +210,8 @@ class SpecView(TreeView):
         self.clean()
         self.root.setText(SpecFieldDefinition.ColumnsOrder.DESCRIPTION, spec.name)
         self.parse_spec_fields(spec.fields)
+        self.collapseAll()
+        self.expandItem(self.root)
 
     def parse_spec_fields(self, input_json, parent: QTreeWidgetItem = None):
         if parent is None or parent == self.root:

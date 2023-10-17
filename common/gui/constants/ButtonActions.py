@@ -2,10 +2,11 @@ from dataclasses import dataclass
 from common.lib.constants.KeepAliveIntervals import KeepAliveInterval
 
 
-@dataclass
+@dataclass(frozen=True)
 class ButtonAction(object):
-    LAST = "Last"
-    OTHER = "Other"
+    LAST = "Reverse last"
+    OTHER = "Reverse other"
+    SET_REVERSAL = "Set Reversal fields"
     #
     ONE_SESSION = "For current session"
     PERMANENTLY = "Permanently"

@@ -80,7 +80,9 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
             return
 
         self.disconnectFromHost()
-        self.waitForDisconnected(msecs=10000)
+
+        if not self.state() == QTcpSocket.SocketState.UnconnectedState:
+            self.waitForDisconnected(msecs=10000)
 
     def reconnect_sv(self):
         for retry in range(3):

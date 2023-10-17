@@ -1,4 +1,4 @@
-from json import dumps
+from json import dumps, load
 from copy import deepcopy
 from logging import error, info, warning
 from pydantic import ValidationError
@@ -73,7 +73,8 @@ class SvTerminalGui(SvTerminal):
             self.set_keep_alive_interval(interval_name=KeepAliveInterval.KEEP_ALIVE_DEFAULT % interval)
 
         try:
-            license: LicenseInfo = LicenseInfo.parse_file(TermFilesPath.LICENSE_INFO)
+            with open(TermFilesPath.LICENSE_INFO) as json_file:
+                license: LicenseInfo = LicenseInfo.model_validate(load(json_file))
 
         except Exception as license_parsing_error:
             raise LicenseDataLoadingError(f"License info file parsing error: {license_parsing_error}")
@@ -170,7 +171,7 @@ class SvTerminalGui(SvTerminal):
 
     def settings(self):
         try:
-            old_config: Config = Config.parse_obj(deepcopy(self.config.dict()))
+            old_config: Config = Config.model_validate(deepcopy(self.config.dict()))
             settings_window: SettingsWindow = SettingsWindow(self.config)
             settings_window.accepted.connect(lambda: self.process_config_change(old_config))
             settings_window.exec()
@@ -225,7 +226,9 @@ class SvTerminalGui(SvTerminal):
 
     def read_config(self):
         try:
-            config = Config.parse_file(TermFilesPath.CONFIG)
+            with open(TermFilesPath.CONFIG) as json_file:
+                config: Config = Config.model_validate(load(json_file))
+
         except ValidationError as parsing_error:
             error(f"Cannot parse configuration file: {parsing_error}")
             return
@@ -260,35 +263,45 @@ class SvTerminalGui(SvTerminal):
         logger = getLogger()
         logger.addHandler(wireless_handler)
 
-    def perform_reversal(self, id_source: str):
-        lost_transaction_message = "Cannot reverse transaction, lost transaction ID or non-reversible MTI"
-
+    def perform_reversal(self, command: str):
         transaction_source_map = {
             ButtonAction.LAST: self.trans_queue.get_last_reversible_transaction_id,
-            ButtonAction.OTHER: self.show_reversal_window
+            ButtonAction.OTHER: self.show_reversal_window,
+            ButtonAction.SET_REVERSAL: self.show_reversal_window,
         }
 
-        if not (transaction_source := transaction_source_map.get(id_source)):
-            error(lost_transaction_message)
-            return
-
         try:
-            transaction_id: str = transaction_source()
-        except LookupError:
+            if not (transaction_source := transaction_source_map.get(command)):
+                raise LookupError
+
+            if not (transaction_id := transaction_source()):
+                raise LookupError
+
+            if not (original_trans := self.trans_queue.get_transaction(transaction_id)):
+                raise LookupError
+
+            if not self.spec.get_reversal_mti(original_trans.message_type):
+                raise LookupError
+
+            if not (reversal := self.build_reversal(original_trans)):
+                raise LookupError
+
+        except Exception as reversal_building_error:
+            error(f"Cannot reverse transaction, lost transaction ID or non-reversible MTI {reversal_building_error}")
             return
 
-        if not transaction_id:
-            error(lost_transaction_message)
-            return
+        match command:
+            case ButtonAction.SET_REVERSAL:
+                self.parse_transaction(reversal)
 
-        if not (original_trans := self.trans_queue.get_transaction(transaction_id)):
-            error(lost_transaction_message)
-            return
+            case ButtonAction.LAST | ButtonAction.OTHER:
+                try:
+                    self.send(reversal)
+                except Exception as sending_error:
+                    error(sending_error)
 
-        try:
-            SvTerminal.reverse_transaction(self, original_trans)
-        except Exception as reversal_error:
-            error(reversal_error)
+            case _:
+                error("Cannot reverse transaction")
 
     def parse_main_window(self, flat_fields=True, clean=False) -> Transaction:
         data_fields: TypeFields = self.window.get_fields(flat=flat_fields)
@@ -304,8 +317,9 @@ class SvTerminalGui(SvTerminal):
             data_fields=data_fields,
             message_type=message_type,
             max_amount=self.config.fields.max_amount,
+            is_reversal = self.spec.is_reversal(message_type)
         )
-
+        
         if clean:
             del (
                 transaction.resp_time_seconds,
@@ -325,8 +339,9 @@ class SvTerminalGui(SvTerminal):
 
         if not transaction:
             try:
-                transaction: Transaction = self.parse_main_window()
                 sender = self.window
+                transaction: Transaction = self.parse_main_window()
+
             except Exception as building_error:
                 [error(err) for err in str(building_error).splitlines()]
                 return
@@ -459,18 +474,26 @@ class SvTerminalGui(SvTerminal):
             transaction.max_amount = self.config.fields.max_amount
 
         try:
-            self.window.set_mti_value(transaction.message_type)
-            self.window.set_fields(transaction)
-            self.set_bitmap()
+            self.parse_transaction(transaction)
 
-        except ValueError as fields_settings_error:
-            error(fields_settings_error)
+        except ValueError as fields_setting_error:
+            error(fields_setting_error)
             return
 
         if not filename_found:
             return
 
         info(f"File parsed: {filename}")
+
+    def parse_transaction(self, transaction: Transaction):
+        try:
+            self.window.set_mti_value(transaction.message_type)
+            self.window.set_transaction_fields(transaction)
+            self.set_bitmap()
+
+        except Exception as transaction_parsing_error:
+            error(f"Cannot set transaction fields: {transaction_parsing_error}")
+            return
 
     def set_bitmap(self):
         bitmap: set[str] = set()
