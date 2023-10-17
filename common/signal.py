@@ -9,11 +9,11 @@
 
 # Correct way to run
 if __name__ != "__main__":  # Runs only by import command
+    from sys import exit
+    from json import load
     from common.gui.core.SvTerminalGui import SvTerminalGui
     from common.lib.constants.TermFilesPath import TermFilesPath
     from common.lib.data_models.Config import Config
-    from json import load
-    from sys import exit
 
     with open(TermFilesPath.CONFIG) as json_file:
         config: Config = Config.model_validate(load(json_file))
