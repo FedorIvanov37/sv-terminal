@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>LicenseWindow</class>
  <widget class="QDialog" name="LicenseWindow">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -30,6 +33,9 @@
   </property>
   <property name="windowTitle">
    <string>SIGNAL terms and conditions</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="3" column="0">
@@ -95,70 +101,6 @@
    </item>
    <item row="1" column="0">
     <widget class="QTextEdit" name="InfoBoard">
-     <property name="palette">
-      <palette>
-       <active>
-        <colorrole role="Text">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>255</red>
-           <green>255</green>
-           <blue>255</blue>
-          </color>
-         </brush>
-        </colorrole>
-        <colorrole role="Base">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>109</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </active>
-       <inactive>
-        <colorrole role="Text">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>255</red>
-           <green>255</green>
-           <blue>255</blue>
-          </color>
-         </brush>
-        </colorrole>
-        <colorrole role="Base">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>109</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </inactive>
-       <disabled>
-        <colorrole role="Text">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>120</red>
-           <green>120</green>
-           <blue>120</blue>
-          </color>
-         </brush>
-        </colorrole>
-        <colorrole role="Base">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>240</red>
-           <green>240</green>
-           <blue>240</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </disabled>
-      </palette>
-     </property>
      <property name="font">
       <font>
        <family>Courier New</family>
@@ -218,12 +160,12 @@ p, li { white-space: pre-wrap; }
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>16</x>
+     <x>63</x>
      <y>881</y>
     </hint>
     <hint type="destinationlabel">
-     <x>648</x>
-     <y>874</y>
+     <x>388</x>
+     <y>879</y>
     </hint>
    </hints>
   </connection>
@@ -234,12 +176,12 @@ p, li { white-space: pre-wrap; }
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>147</x>
-     <y>880</y>
+     <x>143</x>
+     <y>874</y>
     </hint>
     <hint type="destinationlabel">
-     <x>384</x>
-     <y>882</y>
+     <x>505</x>
+     <y>866</y>
     </hint>
    </hints>
   </connection>

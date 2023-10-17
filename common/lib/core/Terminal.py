@@ -49,11 +49,7 @@ class SvTerminal(QObject):
         return self.connector.is_connected()
 
     def run(self):
-        if self.config.terminal.connect_on_startup:
-            self.reconnect()
-
         status = self.pyqt_application.exec()
-
         return status
 
     def connect_interfaces(self):

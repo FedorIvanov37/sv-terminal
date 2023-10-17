@@ -1,13 +1,13 @@
 from sys import exit
 from json import dumps, load
+from logging import warning, info
+from datetime import datetime
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog
 from common.gui.forms.license_window import Ui_LicenseWindow
 from common.gui.decorators.window_settings import set_window_icon, frameless_window
 from common.lib.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.License import LicenseInfo
-from datetime import datetime
-from logging import warning, debug
 from common.lib.constants.TextConstants import TextConstants
 from common.lib.exceptions.exceptions import LicenseDataLoadingError
 
@@ -54,7 +54,10 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
 
             license_file.write(dumps(license_data, indent=4))
 
-        debug(f"Licence agreement accepted {self.license_info.last_acceptance_date.isoformat()}")
+        info(f"Licence agreement accepted "
+             f"{self.license_info.last_acceptance_date.strftime('%d/%m/%Y %T')} | "
+             f"Unique SIGNAL ID {self.license_info.license_id}")
+        info(f"Thank you for using SIGNAL")
 
         self.close()
 

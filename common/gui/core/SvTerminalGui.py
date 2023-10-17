@@ -5,7 +5,7 @@ from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QFileDialog
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QTimer, Qt
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
@@ -58,12 +58,21 @@ class SvTerminalGui(SvTerminal):
         self.setup()
 
     def setup(self):
-        self.create_window_logger()
         self.log_printer.print_startup_info()
+        self.create_window_logger()
         self.connect_widgets()
         self.window.set_mti_values(self.spec.get_mti_list())
         self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
+        self.window.show()
+
+    def on_startup(self, app_state):
+        if not app_state == Qt.ApplicationState.ApplicationActive:
+            return
+
         self.print_data(DataFormats.TERM)
+
+        if self.config.terminal.connect_on_startup:
+            self.reconnect()
 
         if self.config.terminal.process_default_dump:
             self.set_default_values()
@@ -71,19 +80,6 @@ class SvTerminalGui(SvTerminal):
         if self.config.host.keep_alive_mode:
             interval = self.config.host.keep_alive_interval
             self.set_keep_alive_interval(interval_name=KeepAliveInterval.KEEP_ALIVE_DEFAULT % interval)
-
-        try:
-            with open(TermFilesPath.LICENSE_INFO) as json_file:
-                license: LicenseInfo = LicenseInfo.model_validate(load(json_file))
-
-        except Exception as license_parsing_error:
-            raise LicenseDataLoadingError(f"License info file parsing error: {license_parsing_error}")
-
-        if license.accepted and not license.show_agreement:
-            self.window.show()
-
-        else:
-            self.show_license_dialog()
 
     def connect_widgets(self):
         window = self.window
@@ -120,9 +116,25 @@ class SvTerminalGui(SvTerminal):
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
 
-    def show_license_dialog(self):
+        for slot in self.show_license_dialog, self.on_startup:
+            self.pyqt_application.applicationStateChanged.connect(slot)
+
+    @staticmethod
+    def show_license_dialog(app_state):
+        if app_state != Qt.ApplicationState.ApplicationActive:
+            return
+
+        try:
+            with open(TermFilesPath.LICENSE_INFO) as json_file:
+                license_info: LicenseInfo = LicenseInfo.model_validate(load(json_file))
+
+        except Exception as license_parsing_error:
+            raise LicenseDataLoadingError(f"License info file parsing error: {license_parsing_error}")
+
+        if license_info.accepted and not license_info.show_agreement:
+            return
+
         license_window = LicenseWindow()
-        license_window.accepted.connect(self.window.show)
         license_window.exec()
 
     def run_specification_window(self):
@@ -317,7 +329,7 @@ class SvTerminalGui(SvTerminal):
             data_fields=data_fields,
             message_type=message_type,
             max_amount=self.config.fields.max_amount,
-            is_reversal = self.spec.is_reversal(message_type)
+            is_reversal=self.spec.is_reversal(message_type)
         )
         
         if clean:
@@ -391,7 +403,7 @@ class SvTerminalGui(SvTerminal):
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window()),
             DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window()),
             DataFormats.TERM: lambda: TextConstants.HELLO_MESSAGE + "\n",
-            DataFormats.SPEC: lambda: dumps(self.spec.spec.dict(), indent=4)
+            DataFormats.SPEC: lambda: dumps(self.spec.spec.model_dump(), indent=4)
         }
 
         if not (function := data_processing_map.get(data_format)):
