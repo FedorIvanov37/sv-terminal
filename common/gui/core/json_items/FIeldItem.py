@@ -193,7 +193,7 @@ class FieldItem(Item):
         self.setText(column, str(length))
 
         if parent := self.parent():
-            parent.set_length(fill_length=fill_length)
+            parent.set_length()
 
     def get_field_length(self):
         if self.childCount():

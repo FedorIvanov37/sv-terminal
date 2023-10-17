@@ -1,9 +1,9 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 FieldSet = dict[str, "IsoField"]
 RawFieldSet = dict[str, str | dict]
-MtiValue = Field(default="", max_length=4, regex=r"^\d{4}|$")
+MtiValue = Field(default="", max_length=4, pattern=r"^\d{4}|$")
 
 
 class Mti(BaseModel):
@@ -32,7 +32,7 @@ class IsoField(BaseModel):
     is_secret: bool = False
     fields: FieldSet | None = None
 
-    @validator("is_secret", pre=True)
+    @field_validator("is_secret", mode='before')
     def substitute_none(cls, val):
         if val is None:
             return False

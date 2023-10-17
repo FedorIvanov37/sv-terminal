@@ -124,13 +124,9 @@ v0.16
 + Flat transaction fields, split when need
 + Add default settings
 + Try to remove old order ID from message
++ Set reversal fields
++ Update pydantic
 
-
-
-
-• Console mode
-• API console mode
-• Remote spec
 
 • Change name to SIGNAL
     • Document
@@ -162,3 +158,10 @@ v0.16
 • Correct and publish the Specification
 • Publish on confluence
 • Spec explanation
+
+
+v0.17
+    • Console mode
+    • API console mode
+    • Remote spec
+    • Python 3.12

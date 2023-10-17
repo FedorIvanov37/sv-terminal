@@ -243,7 +243,7 @@ class Ui_SettingsWindow(object):
         self.MaxAmount.setItemText(2, _translate("SettingsWindow", "1500"))
         self.MaxAmount.setItemText(3, _translate("SettingsWindow", "10000"))
         self.MaxAmount.setItemText(4, _translate("SettingsWindow", "100000"))
-        self.SendInternalId.setText(_translate("SettingsWindow", "Send internal transaction ID to SV"))
+        self.SendInternalId.setText(_translate("SettingsWindow", "Send internal transaction ID to Host"))
         self.BuildFld90.setText(_translate("SettingsWindow", "Build field 90 in reversal"))
         self.JsonMode.setText(_translate("SettingsWindow", "JSON-like fields representation "))
         self.ValidationEnabled.setText(_translate("SettingsWindow", "Fields validation"))

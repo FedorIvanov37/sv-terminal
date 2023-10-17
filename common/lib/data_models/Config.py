@@ -1,4 +1,4 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 
 
 class Host(BaseModel):
@@ -30,7 +30,7 @@ class Fields(BaseModel):
     json_mode: bool = True
     hide_secrets: bool = True
 
-    @validator("max_amount", pre=True)
+    @field_validator("max_amount", mode='before')
     def amount_should_be_digit(cls, max_amount: str):
         if not str(max_amount).isdigit():
             raise ValueError("Max transaction amount should be digits only")

@@ -93,8 +93,8 @@ class ConnectionThread(ConnectionInterface, QObject, metaclass=QObjectAbcMeta):
             QCoreApplication.processEvents()  # Processes events instead of direct interaction
             QThread.msleep(10)
 
-        self.disconnect_sv()
         self.thread.terminate()
+        self.disconnect_sv()
 
     def stop_thread(self):  # Once the self.stop become True the connection will be dropped and the thread terminated
         self.stop = True

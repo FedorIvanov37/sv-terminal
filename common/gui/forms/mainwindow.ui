@@ -114,7 +114,7 @@
          <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
-         <string>Reverse</string>
+         <string>Reversal</string>
         </property>
        </widget>
       </item>

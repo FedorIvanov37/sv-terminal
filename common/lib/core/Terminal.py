@@ -1,4 +1,4 @@
-from json import dumps
+from json import dumps, load
 from logging import error, info, warning, debug
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject, QTimer
@@ -6,7 +6,6 @@ from PyQt6.QtNetwork import QTcpSocket
 from common.lib.constants.DataFormats import DataFormats
 from common.lib.constants.TermFilesPath import TermFilesPath
 from common.lib.constants.KeepAliveIntervals import KeepAliveInterval
-from common.lib.constants.LogDefinition import LogDefinition
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.core.Parser import Parser
 from common.lib.core.Logger import Logger
@@ -23,7 +22,10 @@ from common.lib.core.LogPrinter import LogPrinter
 class SvTerminal(QObject):
     pyqt_application = QtWidgets.QApplication([])
     spec: EpaySpecification = EpaySpecification(TermFilesPath.CONFIG)
-    config: Config = Config.parse_file(TermFilesPath.CONFIG)
+
+    with open(TermFilesPath.CONFIG) as json_file:
+        config: Config = Config.model_validate(load(json_file))
+
     validator = Validator()
     need_reconnect: pyqtSignal = pyqtSignal()
     keep_alive_timer: QTimer = QTimer()
@@ -101,11 +103,6 @@ class SvTerminal(QObject):
             transaction: Transaction = self.generator.set_generated_fields(transaction)
 
         if self.config.fields.send_internal_id:
-            try:
-                transaction: Transaction = self.parser.remove_trans_id(transaction)
-            except Exception as parsing_error:
-                warning(f"Cannot remove old transaction ID due to parsing error: {parsing_error}")
-
             transaction: Transaction = self.generator.set_trans_id(transaction)
 
         if self.config.fields.validation:
@@ -235,17 +232,6 @@ class SvTerminal(QObject):
 
         info(f"The transaction was saved successfully to {file_name}")
 
-    def reverse_transaction(self, original_trans: Transaction):
-        if not self.spec.get_reversal_mti(original_trans.message_type):
-            error("Cannot reverse transaction, lost transaction ID or non-reversible MTI")
-            return
-
-        try:
-            reversal: Transaction = self.build_reversal(original_trans)
-            self.send(reversal)
-        except Exception as sending_error:
-            error(sending_error)
-
     def build_reversal(self, original_transaction: Transaction) -> Transaction:
         if not (original_transaction.matched and original_transaction.match_id):
             raise LookupError(f"Lost response for transaction {original_transaction.trans_id}. Cannot build reversal")
@@ -255,7 +241,7 @@ class SvTerminal(QObject):
 
         if existed_reversal:
             self.trans_queue.remove_from_queue(existed_reversal)
-            transaction: Transaction = Transaction.parse_obj(existed_reversal)
+            transaction: Transaction = Transaction.model_validate(existed_reversal)
             transaction.matched = None
             transaction.generate_fields = []
             return transaction
@@ -276,8 +262,11 @@ class SvTerminal(QObject):
             data_fields=fields,
             trans_id=reversal_trans_id,
             generate_fields=list(),
-            utrnno=original_transaction.utrnno
+            utrnno=original_transaction.utrnno,
+            is_reversal=True,
         )
+
+        reversal: Transaction = self.generator.set_trans_id(reversal)
 
         return reversal
 
