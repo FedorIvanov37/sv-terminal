@@ -203,7 +203,7 @@ class SvTerminal(QObject):
 
     def save_transaction(self, transaction: Transaction, file_format: str, file_name) -> None:
         data_processing_map = {
-            DataFormats.JSON: lambda _trans: dumps(_trans.dict(), indent=4),
+            DataFormats.JSON: lambda _trans: dumps(_trans.model_dump(), indent=4),
             DataFormats.INI: lambda _trans: self.parser.transaction_to_ini_string(_trans),
             DataFormats.DUMP: lambda _trans: self.parser.create_sv_dump(_trans)[1:]
         }

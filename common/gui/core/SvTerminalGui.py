@@ -1,5 +1,5 @@
-from json import dumps, load
 from copy import deepcopy
+from json import dumps, load
 from logging import error, info, warning
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
@@ -15,24 +15,13 @@ from common.gui.windows.about_window import AboutWindow
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread
 from common.gui.windows.license_window import LicenseWindow
+from common.gui.constants import ButtonActions
 from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.lib.core.Terminal import SvTerminal
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
-from common.lib.data_models.License import LicenseInfo
-from common.lib.exceptions.exceptions import LicenseDataLoadingError
-
-from common.gui.constants import ButtonActions
-
-from common.lib.constants import (
-    TextConstants,
-    DataFormats,
-    TermFilesPath,
-    KeepAliveIntervals,
-    LogDefinition
-)
-
-
+from common.lib.exceptions.exceptions import LicenceAlreadyAccepted, LicenseDataLoadingError, LicenseRejected
+from common.lib.constants import TextConstants, DataFormats, TermFilesPath, KeepAliveIntervals, LogDefinition
 
 
 """
@@ -131,17 +120,15 @@ class SvTerminalGui(SvTerminal):
             return
 
         try:
-            with open(TermFilesPath.LICENSE_INFO) as json_file:
-                license_info: LicenseInfo = LicenseInfo.model_validate(load(json_file))
+            license_window: LicenseWindow = LicenseWindow()
+            license_window.exec()
 
-        except Exception as license_parsing_error:
-            raise LicenseDataLoadingError(f"License info file parsing error: {license_parsing_error}")
-
-        if license_info.accepted and not license_info.show_agreement:
+        except LicenceAlreadyAccepted:
             return
 
-        license_window = LicenseWindow()
-        license_window.exec()
+        except LicenseDataLoadingError as license_data_loading_error:
+            error(license_data_loading_error)
+            exit(100)
 
     def run_specification_window(self):
         spec_window = SpecWindow()
@@ -189,7 +176,7 @@ class SvTerminalGui(SvTerminal):
 
     def settings(self):
         try:
-            old_config: Config = Config.model_validate(deepcopy(self.config.dict()))
+            old_config: Config = Config.model_validate(deepcopy(self.config.model_dump()))
             settings_window: SettingsWindow = SettingsWindow(self.config)
             settings_window.accepted.connect(lambda: self.process_config_change(old_config))
             settings_window.exec()
@@ -283,9 +270,9 @@ class SvTerminalGui(SvTerminal):
 
     def perform_reversal(self, command: str):
         transaction_source_map = {
-            ButtonAction.LAST: self.trans_queue.get_last_reversible_transaction_id,
-            ButtonAction.OTHER: self.show_reversal_window,
-            ButtonAction.SET_REVERSAL: self.show_reversal_window,
+            ButtonActions.LAST: self.trans_queue.get_last_reversible_transaction_id,
+            ButtonActions.OTHER: self.show_reversal_window,
+            ButtonActions.SET_REVERSAL: self.show_reversal_window,
         }
 
         try:
@@ -309,10 +296,10 @@ class SvTerminalGui(SvTerminal):
             return
 
         match command:
-            case ButtonAction.SET_REVERSAL:
+            case ButtonActions.SET_REVERSAL:
                 self.parse_transaction(reversal)
 
-            case ButtonAction.LAST | ButtonAction.OTHER:
+            case ButtonActions.LAST | ButtonActions.OTHER:
                 try:
                     self.send(reversal)
                 except Exception as sending_error:
@@ -370,6 +357,10 @@ class SvTerminalGui(SvTerminal):
         if not transaction.is_keep_alive:
             info(f"Processing transaction ID [{transaction.trans_id}]")
 
+        if self.connector.connection_in_progress():
+            error("Cannot send the transaction while the host connection is in progress")
+            return
+        
         try:
             SvTerminal.send(self, transaction)  # SvTerminal always used to real data processing
         except Exception as sending_error:

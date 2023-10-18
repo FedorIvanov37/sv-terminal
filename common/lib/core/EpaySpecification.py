@@ -115,7 +115,7 @@ class EpaySpecification(EpaySpecificationData):
             return
 
         with open(self.filename, "w") as spec_file:
-            spec_file.write(dumps(self.spec.dict(), indent=4))
+            spec_file.write(dumps(self.spec.model_dump(), indent=4))
 
     def get_reversal_fields(self):
         return (field for field, value in self.fields.items() if value.reversal)

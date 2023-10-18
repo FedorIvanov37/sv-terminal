@@ -136,7 +136,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
             self.config.fields.max_amount = 999999999
 
         with open(TermFilesPath.CONFIG, "w") as file:
-            file.write(dumps(self.config.dict(), indent=4))
+            file.write(dumps(self.config.model_dump(), indent=4))
 
         self.accepted.emit()
         self.close()

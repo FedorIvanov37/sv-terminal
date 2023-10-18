@@ -10,7 +10,7 @@ from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.decorators.window_settings import set_window_icon
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Config import Config
-from common.lib.constants import TextConstants, DataFormats, ReleaseDefinitoin as ReleaseDefinition
+from common.lib.constants import TextConstants, DataFormats, ReleaseDefinition
 from common.gui.constants import ButtonActions, KeySequence, ConnectionStatus, MainFieldSpec as FieldsSpec, GuiFilesPath
 
 
@@ -310,7 +310,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for button, slot in buttons_connection_map.items():
             button.clicked.connect(slot)
 
-        for connection_map in json_view_connection_map, main_window_connection_map:  # Signals, activated by key press event
+        for connection_map in json_view_connection_map, main_window_connection_map:  # Signals, activated by key event
             for signal, slot in connection_map.items():
                 signal.connect(slot)
 

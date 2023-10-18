@@ -1,7 +1,7 @@
 from os import getcwd, path
 from common.gui.forms.about import Ui_AboutWindow
 from common.gui.constants import GuiFilesPath
-from common.lib.constants import ReleaseDefinitoin as ReleaseDefinition
+from common.lib.constants import ReleaseDefinition
 from common.gui.decorators.window_settings import frameless_window
 from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PyQt6.QtCore import Qt, QUrl
