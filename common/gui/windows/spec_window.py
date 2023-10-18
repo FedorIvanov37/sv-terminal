@@ -149,7 +149,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def apply(self, commit: bool | str):
         if isinstance(commit, str):
-            commit: bool = True if commit == ButtonAction.PERMANENTLY else False
+            commit: bool = True if commit == ButtonActions.PERMANENTLY else False
 
         try:
             self.SpecView.reload_spec(commit)
