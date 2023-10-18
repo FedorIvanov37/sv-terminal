@@ -180,7 +180,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         filename = f"spec_backup_{datetime.now():{date_format}}.json"
 
         with open(f'{TermFilesPath.SPEC_BACKUP_DIR}/{filename}', "w") as file:
-            file.write(dumps(spec.dict(), indent=4))
+            file.write(dumps(spec.model_dump(), indent=4))
 
         self.set_status("Backup done! Filename: %s" % filename)
 

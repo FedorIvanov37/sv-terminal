@@ -31,7 +31,7 @@ class JsonConverter:
         )
 
         with open(filename, 'w') as file:
-            file.write(dumps(transaction.dict(), indent=4))
+            file.write(dumps(transaction.model_dump(), indent=4))
 
         return transaction
 

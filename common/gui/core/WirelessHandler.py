@@ -16,12 +16,8 @@ class WirelessHandler(StreamHandler, QObject):
         QObject.__init__(self)
 
     def emit(self, record: LogRecord):
-        # if record.message == self._last_message:
-        #     return
-        #
-        # self._last_message = record.message
-
         try:
             self.new_record_appeared.emit(self.format(record))
+
         except Exception as exc:
             error("Log writing error: %s" % str(exc))

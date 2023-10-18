@@ -1,6 +1,8 @@
 from sys import exit
 from json import dumps, load
+from json.decoder import JSONDecodeError
 from logging import warning, info
+from pydantic import ValidationError
 from datetime import datetime
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog
@@ -8,7 +10,7 @@ from common.gui.forms.license_window import Ui_LicenseWindow
 from common.gui.decorators.window_settings import set_window_icon, frameless_window
 from common.lib.constants import TermFilesPath, TextConstants
 from common.lib.data_models.License import LicenseInfo
-from common.lib.exceptions.exceptions import LicenseDataLoadingError
+from common.lib.exceptions.exceptions import LicenseDataLoadingError, LicenceAlreadyAccepted
 
 
 class LicenseWindow(Ui_LicenseWindow, QDialog):
@@ -28,8 +30,15 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
             with open(TermFilesPath.LICENSE_INFO) as json_file:
                 self.license_info: LicenseInfo = LicenseInfo.model_validate(load(json_file))
 
+        except (ValueError, ValidationError, JSONDecodeError, FileNotFoundError):
+            self.license_info: LicenseInfo = LicenseInfo()
+
         except Exception as license_parsing_error:
             raise LicenseDataLoadingError(f"GNU license info file parsing error: {license_parsing_error}")
+
+        if self.license_info.accepted and not self.license_info.show_agreement:
+            self.print_acceptance_info()
+            raise LicenceAlreadyAccepted
 
         self.CheckBoxAgreement.stateChanged.connect(self.block_acceptance)
         self.rejected.connect(self.reject_license)
@@ -54,11 +63,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
             )
 
             license_file.write(dumps(license_data, indent=4))
-
-        info(f"Licence agreement accepted "
-             f"{self.license_info.last_acceptance_date.strftime('%d/%m/%Y %T')} | "
-             f"Unique SIGNAL ID {self.license_info.license_id}")
-        info(f"Thank you for using SIGNAL")
+            self.print_acceptance_info()
 
     def reject_license(self):
         with open(TermFilesPath.LICENSE_INFO, 'w') as license_file:
@@ -73,7 +78,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
 
         warning("License agreement rejected, exit")
 
-        exit()
+        exit(100)
 
     def block_acceptance(self):
         accepted = bool(self.CheckBoxAgreement.checkState().value)
@@ -83,3 +88,8 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
 
         self.CheckBoxDontShowAgain.setEnabled(accepted)
         self.ButtonAccept.setEnabled(accepted)
+
+    def print_acceptance_info(self):
+        info(f"Licence agreement accepted {self.license_info.last_acceptance_date.strftime('%d/%m/%Y %T')} | "
+             f"License ID {self.license_info.license_id}")
+        info(f"Thank you for using SIGNAL")

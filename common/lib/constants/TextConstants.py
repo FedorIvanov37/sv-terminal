@@ -1,5 +1,5 @@
-from common.lib.constants import ReleaseDefinitoin as ReleaseDefinition
-from common.lib.constants.LicenseAgreement import AGREEMENT
+from common.lib.constants import ReleaseDefinition
+from common.lib.constants import LicenseAgreement
 
 SYSTEM_NAME = "SIGNAL"
 
@@ -14,4 +14,4 @@ HELLO_MESSAGE = f"""
 
   Simplified ISO generation algorithm {ReleaseDefinition.VERSION}"""
 
-LICENSE_AGREEMENT = AGREEMENT
+LICENSE_AGREEMENT = LicenseAgreement.AGREEMENT
