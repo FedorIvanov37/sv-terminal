@@ -23,8 +23,8 @@ class Bitmap:
         self.second_bitmap = dict()
 
         for bit, exists in self.bitmap.items():
-            first_bitmap_capacity = self.spec.MessageLength.first_bitmap_capacity + 1
-            second_bitmap_capacity = self.spec.MessageLength.second_bitmap_capacity + 1
+            first_bitmap_capacity = self.spec.MessageLength.FIRST_BITMAP_CAPACITY + 1
+            second_bitmap_capacity = self.spec.MessageLength.SECOND_BITMAP_CAPACITY + 1
 
             match int(bit):
                 case bit if bit in range(1, first_bitmap_capacity):
@@ -47,7 +47,7 @@ class Bitmap:
             for bit, value in bitmap.items():
                 parsed_bitmap[bit] = bool(value)
 
-                if int(bit) > self.spec.MessageLength.first_bitmap_capacity:
+                if int(bit) > self.spec.MessageLength.FIRST_BITMAP_CAPACITY:
                     parsed_bitmap[self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY] = True
 
             return parsed_bitmap
@@ -56,18 +56,18 @@ class Bitmap:
             return self._parse_bitmap(b2a_hex(bitmap), hex)
 
         if bitmap_type is hex:
-            if len(bitmap) not in (self.spec.MessageLength.first_bitmap_length_hex,
-                                   self.spec.MessageLength.second_bitmap_length_hex):
+            if len(bitmap) not in (self.spec.MessageLength.FIRST_BITMAP_LENGTH_HEX,
+                                   self.spec.MessageLength.SECOND_BITMAP_LENGTH_HEX):
                 raise ValueError("Invalid bitmap length")
 
             bitmap = bin(int(bitmap, 16))[2:]
 
-            if len(bitmap) < self.spec.MessageLength.first_bitmap_capacity:
-                bitmap = bitmap.zfill(self.spec.MessageLength.first_bitmap_capacity)
+            if len(bitmap) < self.spec.MessageLength.FIRST_BITMAP_CAPACITY:
+                bitmap = bitmap.zfill(self.spec.MessageLength.FIRST_BITMAP_CAPACITY)
 
         if bitmap_type is bin:
-            if len(bitmap) not in (self.spec.MessageLength.first_bitmap_capacity,
-                                   self.spec.MessageLength.second_bitmap_capacity):
+            if len(bitmap) not in (self.spec.MessageLength.FIRST_BITMAP_CAPACITY,
+                                   self.spec.MessageLength.SECOND_BITMAP_CAPACITY):
                 raise ValueError("Invalid bitmap length")
 
         for pos, bit in enumerate(bitmap, start=1):
@@ -94,15 +94,15 @@ class Bitmap:
             result = "".join(result)
 
             if not self.second_bitmap_exists():
-                result = result[:self.spec.MessageLength.first_bitmap_capacity]
+                result = result[:self.spec.MessageLength.FIRST_BITMAP_CAPACITY]
 
         if bitmap_type is hex:
             result = self.get_bitmap(bin)
             result = hex(int(result, 2))[2:].upper()
-            result = result.zfill(self.spec.MessageLength.bitmap_length)
+            result = result.zfill(self.spec.MessageLength.BITMAP_LENGTH)
 
             if not self.second_bitmap_exists():
-                result = result[:self.spec.MessageLength.first_bitmap_length_hex]
+                result = result[:self.spec.MessageLength.FIRST_BITMAP_LENGTH_HEX]
 
         if bitmap_type is list:
             result = self.get_field_set(filled=True)

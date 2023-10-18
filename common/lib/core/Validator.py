@@ -49,9 +49,9 @@ class Validator(object):
         if not is_top_level_field:
             return
 
-        if field_number not in range(1, self.spec.MessageLength.second_bitmap_capacity):
+        if field_number not in range(1, self.spec.MessageLength.SECOND_BITMAP_CAPACITY):
             error_text = f"Incorrect field number {field_number}. Top level field number must be in range 1 " \
-                         f"- {self.spec.MessageLength.second_bitmap_capacity}"
+                         f"- {self.spec.MessageLength.SECOND_BITMAP_CAPACITY}"
 
             raise ValueError(error_text)
 

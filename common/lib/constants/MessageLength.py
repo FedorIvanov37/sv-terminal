@@ -1,6 +1,7 @@
-message_type_length: int = 4
-bitmap_length: int = 8
-first_bitmap_capacity: int = 64
-second_bitmap_capacity: int = first_bitmap_capacity * 2
-first_bitmap_length_hex: int = 16
-second_bitmap_length_hex: int = first_bitmap_length_hex * 2
+BITMAP_LENGTH: int = 8
+MESSAGE_TYPE_LENGTH: int = 4
+MESSAGE_TYPE_LENGTH_HEX = MESSAGE_TYPE_LENGTH * 2
+FIRST_BITMAP_CAPACITY: int = 64
+SECOND_BITMAP_CAPACITY: int = FIRST_BITMAP_CAPACITY * 2
+FIRST_BITMAP_LENGTH_HEX: int = 16
+SECOND_BITMAP_LENGTH_HEX: int = FIRST_BITMAP_LENGTH_HEX * 2
