@@ -24,6 +24,15 @@
 * [Graphic User Interface](#graphic-user-interface)
   * [GUI overview](#gui-overview)
   * [Main Window hotkeys](#main-window-hotkeys)
+  * [Specification settings](#specification-settings)
+    * [Specification Overview](#specification-overview) 
+    * [Settings description](#settings-description)
+  * [Transaction data files format](#transaction-data-files-format)
+    * [Overview](#overview)
+    * [The data formats description](#the-data-formats-description)
+    * [Loading to the SIGNAL](#loading-to-the-signal)
+    * [Save transaction to file](#save-transaction-to-file)
+
 
 * [Author](#author) 
 
@@ -78,7 +87,12 @@ of SIGNAL evolution.
   * Simplified JSON mode, work without specification
   * Default message corrected according to mandatory changes 23Q4
   * Lines wrap on log display 
-  * Many small useful updates: improved checkboxes, instant field length counting, tag Length cascading, and so on
+  * Many small useful updates such as
+    * Improved checkboxes
+    * Instant field length counting
+    * Tag Length cascading
+    * Lines wrap on log display
+    * Predefined max amounts
   
 
 * Fixed
@@ -97,7 +111,7 @@ Windows 10-11 only
 
 SIGNAL GUI is a friendly interface, based on the SIGNAL library. Since v0.15 SIGNAL GUI is released as a 
 binary `.exe` file. No dependencies need to run the SIGNAL, it is ready to use from the box. No installation or 
-settings are needed to run SIGNAL GUI on a Windows machine. Run "signal.exe" executable file for start the SIGNAL
+settings are needed to run SIGNAL GUI on a Windows machine. Run `signal.exe` executable file for start the SIGNAL
 
 Check the parameters, opened by the "Configuration" button to make your settings  
 
