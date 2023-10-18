@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
-from common.gui.constants.GuiFilesPath import GuiFilesPath
+from common.gui.constants import GuiFilesPath
 
 
 """

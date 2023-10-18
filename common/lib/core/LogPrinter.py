@@ -1,6 +1,6 @@
 from json import dumps
 from logging import debug, info, error
-from common.lib.constants.TextConstants import TextConstants
+from common.lib.constants import TextConstants
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Parser import Parser

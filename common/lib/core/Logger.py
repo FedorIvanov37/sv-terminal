@@ -1,9 +1,8 @@
 from logging import debug, getLevelName, getLogger, Formatter
 from logging.handlers import RotatingFileHandler
-from common.lib.constants.LogDefinition import LogDefinition
+from common.lib.constants import LogDefinition, TermFilesPath
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Config import Config
-from common.lib.constants.TermFilesPath import TermFilesPath
 
 
 class LogStream:

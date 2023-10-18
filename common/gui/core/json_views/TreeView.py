@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QTreeWidget
 from PyQt6.QtGui import QUndoStack, QFont
 from PyQt6.QtCore import pyqtSignal
 from common.gui.decorators.void_qt_signals import void_qt_signals
-from common.gui.constants.MainFieldSpec import MainFieldSpec
+from common.gui.constants import MainFieldSpec
 
 
 class TreeView(QTreeWidget):

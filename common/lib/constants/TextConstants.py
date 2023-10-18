@@ -1,12 +1,9 @@
-from common.lib.constants.ReleaseDefinitoin import ReleaseDefinition
-from common.lib.constants.LicenseAgreement import License
+from common.lib.constants import ReleaseDefinitoin as ReleaseDefinition
+from common.lib.constants.LicenseAgreement import AGREEMENT
 
+SYSTEM_NAME = "SIGNAL"
 
-class TextConstants:
-
-    SYSTEM_NAME = "SIGNAL"
-
-    HELLO_MESSAGE = f"""
+HELLO_MESSAGE = f"""
   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
@@ -14,7 +11,7 @@ class TextConstants:
         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
   ########  ###########  ########   ###    ####  ###     ###  ########## 
- 
+
   Simplified ISO generation algorithm {ReleaseDefinition.VERSION}"""
 
-    LICENSE_AGREEMENT = License.AGREEMENT
+LICENSE_AGREEMENT = AGREEMENT

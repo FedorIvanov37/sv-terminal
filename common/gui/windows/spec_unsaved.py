@@ -3,8 +3,7 @@ from PyQt6.QtWidgets import QDialog, QMenu
 from PyQt6.QtGui import QCloseEvent, QKeyEvent, QPixmap
 from PyQt6.QtCore import Qt, pyqtSignal
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
-from common.gui.constants.GuiFilesPath import GuiFilesPath
-from common.gui.constants.ButtonActions import ButtonAction
+from common.gui.constants import GuiFilesPath, ButtonActions
 
 
 class SpecUnsaved(Ui_SpecUnsaved, QDialog):
@@ -29,13 +28,13 @@ class SpecUnsaved(Ui_SpecUnsaved, QDialog):
     def setup(self):
         self.LogoLabel.setPixmap(QPixmap(GuiFilesPath.MAIN_LOGO))
         self.ButtonSave.setMenu(QMenu())
-        self.ButtonSave.menu().addAction(ButtonAction.ONE_SESSION, lambda: self.need_apply(ButtonAction.ONE_SESSION))
+        self.ButtonSave.menu().addAction(ButtonActions.ONE_SESSION, lambda: self.need_apply(ButtonActions.ONE_SESSION))
         self.ButtonSave.menu().addSeparator()
-        self.ButtonSave.menu().addAction(ButtonAction.PERMANENTLY, lambda: self.need_apply(ButtonAction.PERMANENTLY))
+        self.ButtonSave.menu().addAction(ButtonActions.PERMANENTLY, lambda: self.need_apply(ButtonActions.PERMANENTLY))
         self.ButtonReturn.clicked.connect(self.return_to_spec.emit)
 
     def need_apply(self, commit: str):
-        self.save.emit(commit == ButtonAction.PERMANENTLY)
+        self.save.emit(commit == ButtonActions.PERMANENTLY)
         self.accept()
 
     def closeEvent(self, a0: QCloseEvent) -> None:

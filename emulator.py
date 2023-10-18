@@ -1,5 +1,5 @@
 from json import load
-from common.lib.constants.TermFilesPath import TermFilesPath
+from common.lib.constants import TermFilesPath
 from common.lib.core.Parser import Parser
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction

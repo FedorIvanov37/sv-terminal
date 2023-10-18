@@ -12,21 +12,27 @@ from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.spec_window import SpecWindow
 from common.gui.windows.hotkeys_hint_window import HotKeysHintWindow
 from common.gui.windows.about_window import AboutWindow
-from common.gui.constants.ButtonActions import ButtonAction
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread
 from common.gui.windows.license_window import LicenseWindow
-from common.lib.constants.TextConstants import TextConstants
-from common.lib.constants.DataFormats import DataFormats
-from common.lib.constants.TermFilesPath import TermFilesPath
-from common.lib.constants.KeepAliveIntervals import KeepAliveInterval
 from common.lib.core.Logger import LogStream, getLogger, Formatter
-from common.lib.constants.LogDefinition import LogDefinition
+from common.lib.core.Terminal import SvTerminal
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
-from common.lib.core.Terminal import SvTerminal
 from common.lib.data_models.License import LicenseInfo
 from common.lib.exceptions.exceptions import LicenseDataLoadingError
+
+from common.gui.constants import ButtonActions
+
+from common.lib.constants import (
+    TextConstants,
+    DataFormats,
+    TermFilesPath,
+    KeepAliveIntervals,
+    LogDefinition
+)
+
+
 
 
 """
@@ -79,7 +85,7 @@ class SvTerminalGui(SvTerminal):
 
         if self.config.host.keep_alive_mode:
             interval = self.config.host.keep_alive_interval
-            self.set_keep_alive_interval(interval_name=KeepAliveInterval.KEEP_ALIVE_DEFAULT % interval)
+            self.set_keep_alive_interval(interval_name=KeepAliveIntervals.KEEP_ALIVE_DEFAULT % interval)
 
     def connect_widgets(self):
         window = self.window
@@ -152,11 +158,11 @@ class SvTerminalGui(SvTerminal):
         self.trans_loop_timer.stop()
 
     def set_trans_loop_interval(self, interval_name: str):
-        if interval_name == KeepAliveInterval.KEEP_ALIVE_STOP:
+        if interval_name == KeepAliveIntervals.KEEP_ALIVE_STOP:
             self.stop_transaction_loop()
             info("Transaction loop is deactivated")
 
-        if interval := KeepAliveInterval.get_interval_time(interval_name):
+        if interval := KeepAliveIntervals.get_interval_time(interval_name):
             self.activate_transaction_loop(interval)
             info(f"Transaction repeat set to {interval} second(s)")
 
@@ -229,10 +235,10 @@ class SvTerminalGui(SvTerminal):
         )
 
         if any(keep_alive_change_conditions):
-            interval_name = KeepAliveInterval.KEEP_ALIVE_STOP
+            interval_name = KeepAliveIntervals.KEEP_ALIVE_STOP
 
             if self.config.host.keep_alive_mode:
-                interval_name = KeepAliveInterval.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
+                interval_name = KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
 
             self.set_keep_alive_interval(interval_name)
 

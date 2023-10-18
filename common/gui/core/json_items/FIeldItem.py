@@ -3,9 +3,8 @@ from PyQt6.QtWidgets import QTreeWidgetItem, QCheckBox, QWidget
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.lib.toolkit.toolkit import mask_pan, mask_secret
 from common.lib.core.EpaySpecification import EpaySpecification
-from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
+from common.gui.constants import CheckBoxesDefinition, MainFieldSpec as FieldsSpec
 from common.gui.core.json_items.Item import Item
-from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
 from common.gui.decorators.void_qt_signals import void_tree_signals
 
 

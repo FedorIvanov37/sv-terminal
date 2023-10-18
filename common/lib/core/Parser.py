@@ -8,16 +8,18 @@ from common.lib.toolkit.generate_trans_id import generate_trans_id
 from common.lib.toolkit.toolkit import mask_secret
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Bitmap import Bitmap
-from common.lib.constants.DumpDefinition import DumpDefinition
-from common.lib.constants.IniMessageDefinition import IniMessageDefinition
-from common.lib.constants.DataFormats import DataFormats
 from common.lib.data_models.Config import Config
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet, RawFieldSet
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.core.JsonConverter import JsonConverter
 from common.lib.core.FieldsGenerator import FieldsGenerator
-from common.lib.constants.TermFilesPath import TermFilesPath
 
+from common.lib.constants import(
+    TermFilesPath,
+    DumpDefinition,
+    IniMessageDefinition,
+    DataFormats,
+)
 
 class Parser:
     _spec: EpaySpecification = EpaySpecification()
