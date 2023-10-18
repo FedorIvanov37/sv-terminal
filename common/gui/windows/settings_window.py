@@ -1,4 +1,4 @@
-from json import dumps, load
+from json import load, dump
 from logging import info, error, getLogger, getLevelName
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap, QIntValidator
@@ -24,7 +24,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.ButtonAbout.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){1,3}\d+")))
         self.MaxAmount.setEditable(True)
-        self.MaxAmount.setValidator(QIntValidator(1, 2100000000, self.MaxAmount))
+        self.MaxAmount.setValidator(QIntValidator(1, 2_100_000_000, self.MaxAmount))
         self.DebugLevel.addItems(LogDefinition.LOG_LEVEL)
         self.ParseSubfields.setHidden(True)  # TODO
         self.buttonBox.accepted.connect(self.ok)
@@ -133,10 +133,10 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.config.fields.hide_secrets = self.HideSecrets.isChecked()
 
         if not self.config.fields.max_amount_limited:
-            self.config.fields.max_amount = 999999999
+            self.config.fields.max_amount = 999_999_999
 
         with open(TermFilesPath.CONFIG, "w") as file:
-            file.write(dumps(self.config.model_dump(), indent=4))
+            dump(self.config.model_dump(), file, indent=4)
 
         self.accepted.emit()
         self.close()

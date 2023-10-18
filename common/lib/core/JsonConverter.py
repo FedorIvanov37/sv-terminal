@@ -1,4 +1,4 @@
-from json import dumps, load
+from json import dump, load
 from pydantic import ValidationError
 from common.lib.data_models.Transaction import Transaction, OldTransactionModel
 
@@ -31,7 +31,7 @@ class JsonConverter:
         )
 
         with open(filename, 'w') as file:
-            file.write(dumps(transaction.model_dump(), indent=4))
+            dump(transaction.model_dump(), file, indent=4)
 
         return transaction
 

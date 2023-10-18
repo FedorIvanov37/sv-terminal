@@ -1,4 +1,4 @@
-from json import dumps, load
+from json import dump, load
 from dataclasses import asdict
 from pydantic import FilePath
 from common.lib.decorators.singleton import singleton
@@ -115,7 +115,7 @@ class EpaySpecification(EpaySpecificationData):
             return
 
         with open(self.filename, "w") as spec_file:
-            spec_file.write(dumps(self.spec.model_dump(), indent=4))
+            dump(self.spec.model_dump(), spec_file, indent=4)
 
     def get_reversal_fields(self):
         return (field for field, value in self.fields.items() if value.reversal)

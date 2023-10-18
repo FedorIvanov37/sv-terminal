@@ -1,11 +1,9 @@
 """
+SIGNAL starting file
 
- SIGNAL starting file
+This file runs SIGNAL GUI. The GUI runs once the file is imported, no additional actions are required
 
- This file runs SIGNAL GUI. The GUI runs once the file is imported, no additional actions are required
-
- e.g.: "import common.signal" or "from common import signal"
-
+e.g.: "import common.signal" or "from common import signal"
 """
 
 

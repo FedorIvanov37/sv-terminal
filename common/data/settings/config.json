@@ -5,7 +5,7 @@
         "keep_alive_mode": false,
         "keep_alive_interval": 300,
         "header_length": 2,
-        "header_length_exists": true
+        "header_length_exists": false
     },
     "terminal": {
         "process_default_dump": true,

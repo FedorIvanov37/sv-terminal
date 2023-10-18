@@ -1,5 +1,5 @@
 from sys import exit
-from json import dumps, load
+from json import dump, load
 from json.decoder import JSONDecodeError
 from logging import warning, info
 from pydantic import ValidationError
@@ -62,7 +62,8 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
                 license_id=self.license_info.license_id,
             )
 
-            license_file.write(dumps(license_data, indent=4))
+            dump(license_data, license_file, indent=4)
+
             self.print_acceptance_info()
 
     def reject_license(self):
@@ -74,7 +75,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
                 license_id=self.license_info.license_id,
             )
 
-            license_file.write(dumps(license_data, indent=4))
+            dump(license_data, license_file, indent=4)
 
         warning("License agreement rejected, exit")
 
