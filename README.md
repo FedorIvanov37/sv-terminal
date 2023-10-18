@@ -86,7 +86,6 @@ of SIGNAL evolution.
   * Hiding of secrets in logs and transaction constructor now possible for every field
   * Simplified JSON mode, work without specification
   * Default message corrected according to mandatory changes 23Q4
-  * Lines wrap on log display 
   * Many small useful updates such as
     * Improved checkboxes
     * Instant field length counting
