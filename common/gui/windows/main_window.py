@@ -7,17 +7,11 @@ from PyQt6.QtGui import QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
 from common.gui.core.json_views.JsonView import JsonView
 from common.gui.forms.mainwindow import Ui_MainWindow
-from common.gui.constants.ButtonActions import ButtonAction
-from common.lib.constants.DataFormats import DataFormats
-from common.gui.constants.ConnectionStatus import ConnectionDefinitions
-from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
-from common.gui.constants.GuiFilesPath import GuiFilesPath
 from common.gui.decorators.window_settings import set_window_icon
-from common.gui.constants.KeySequence import KeySequence
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Config import Config
-from common.lib.constants.TextConstants import TextConstants
-from common.lib.constants.ReleaseDefinitoin import ReleaseDefinition
+from common.lib.constants import TextConstants, DataFormats, ReleaseDefinitoin as ReleaseDefinition
+from common.gui.constants import ButtonActions, KeySequence, ConnectionStatus, MainFieldSpec as FieldsSpec, GuiFilesPath
 
 
 """
@@ -169,17 +163,17 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self._connect_all()
         self.setWindowTitle(f"{TextConstants.SYSTEM_NAME} {ReleaseDefinition.VERSION}")
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
-        self.process_keep_alive_change(ButtonAction.KEEP_ALIVE_STOP)
-        self.process_repeat_change(ButtonAction.KEEP_ALIVE_STOP)
+        self.process_keep_alive_change(ButtonActions.KEEP_ALIVE_STOP)
+        self.process_repeat_change(ButtonActions.KEEP_ALIVE_STOP)
         self.ButtonSend.setFocus()
 
     def _add_json_control_buttons(self) -> None:
         # Create and place the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
 
         self.FieldsTreeLayout.addWidget(self.json_view)
-        self.PlusButton = QPushButton(ButtonAction.BUTTON_PLUS_SIGN)
-        self.MinusButton = QPushButton(ButtonAction.BUTTON_MINUS_SIGN)
-        self.NextLevelButton = QPushButton(ButtonAction.BUTTON_NEXT_LEVEL_SIGN)
+        self.PlusButton = QPushButton(ButtonActions.BUTTON_PLUS_SIGN)
+        self.MinusButton = QPushButton(ButtonActions.BUTTON_MINUS_SIGN)
+        self.NextLevelButton = QPushButton(ButtonActions.BUTTON_NEXT_LEVEL_SIGN)
 
         buttons_layouts_map = {
             self.PlusLayout: self.PlusButton,
@@ -250,7 +244,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             # Custom Key Sequences
             # The string argument (modifier) is a hint about a requested data format
             KeySequence.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
-            KeySequence.CTRL_SHIFT_ENTER: lambda: self.reverse.emit(ButtonAction.LAST),
+            KeySequence.CTRL_SHIFT_ENTER: lambda: self.reverse.emit(ButtonActions.LAST),
             KeySequence.CTRL_ENTER: self.send,
             KeySequence.CTRL_R: self.reconnect,
             KeySequence.CTRL_L: self.clear_log,
@@ -267,30 +261,30 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             # The modifiers are used to define the requested data format or as a hint on how to process the data
 
             self.ButtonKeepAlive: {
-                ButtonAction.KEEP_ALIVE_1S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_1S),
-                ButtonAction.KEEP_ALIVE_5S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_5S),
-                ButtonAction.KEEP_ALIVE_10S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_10S),
-                ButtonAction.KEEP_ALIVE_30S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_30S),
-                ButtonAction.KEEP_ALIVE_60S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_60S),
-                ButtonAction.KEEP_ALIVE_300S: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_300S),
-                ButtonAction.KEEP_ALIVE_STOP: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_STOP),
-                ButtonAction.KEEP_ALIVE_ONCE: lambda: self.keep_alive.emit(ButtonAction.KEEP_ALIVE_ONCE),
+                ButtonActions.KEEP_ALIVE_1S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_1S),
+                ButtonActions.KEEP_ALIVE_5S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_5S),
+                ButtonActions.KEEP_ALIVE_10S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_10S),
+                ButtonActions.KEEP_ALIVE_30S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_30S),
+                ButtonActions.KEEP_ALIVE_60S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_60S),
+                ButtonActions.KEEP_ALIVE_300S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_300S),
+                ButtonActions.KEEP_ALIVE_STOP: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_STOP),
+                ButtonActions.KEEP_ALIVE_ONCE: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_ONCE),
             },
 
             self.ButtonRepeat: {
-                ButtonAction.KEEP_ALIVE_1S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_1S),
-                ButtonAction.KEEP_ALIVE_5S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_5S),
-                ButtonAction.KEEP_ALIVE_10S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_10S),
-                ButtonAction.KEEP_ALIVE_30S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_30S),
-                ButtonAction.KEEP_ALIVE_60S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_60S),
-                ButtonAction.KEEP_ALIVE_300S: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_300S),
-                ButtonAction.KEEP_ALIVE_STOP: lambda: self.repeat.emit(ButtonAction.KEEP_ALIVE_STOP),
+                ButtonActions.KEEP_ALIVE_1S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_1S),
+                ButtonActions.KEEP_ALIVE_5S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_5S),
+                ButtonActions.KEEP_ALIVE_10S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_10S),
+                ButtonActions.KEEP_ALIVE_30S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_30S),
+                ButtonActions.KEEP_ALIVE_60S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_60S),
+                ButtonActions.KEEP_ALIVE_300S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_300S),
+                ButtonActions.KEEP_ALIVE_STOP: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_STOP),
             },
 
             self.ButtonReverse: {
-                ButtonAction.LAST: lambda: self.reverse.emit(ButtonAction.LAST),
-                ButtonAction.OTHER: lambda: self.reverse.emit(ButtonAction.OTHER),
-                ButtonAction.SET_REVERSAL: lambda: self.reverse.emit(ButtonAction.SET_REVERSAL),
+                ButtonActions.LAST: lambda: self.reverse.emit(ButtonActions.LAST),
+                ButtonActions.OTHER: lambda: self.reverse.emit(ButtonActions.OTHER),
+                ButtonActions.SET_REVERSAL: lambda: self.reverse.emit(ButtonActions.SET_REVERSAL),
             },
 
             self.ButtonPrintData: {
@@ -421,13 +415,13 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def set_connection_status(self, status) -> None:
         self.ConnectionStatusLabel.setPixmap(QPixmap(GuiFilesPath.GREEN_CIRCLE))
-        self.ConnectionStatus.setText(ConnectionDefinitions.get_state_description(status))
-        self.ConnectionStatusLabel.setPixmap(QPixmap(ConnectionDefinitions.get_state_icon_path(status)))
+        self.ConnectionStatus.setText(ConnectionStatus.get_state_description(status))
+        self.ConnectionStatusLabel.setPixmap(QPixmap(ConnectionStatus.get_state_icon_path(status)))
 
     def process_repeat_change(self, interval_name: str) -> None:
         icon_file: FilePath = GuiFilesPath.GREEN_CIRCLE
 
-        if interval_name == ButtonAction.KEEP_ALIVE_STOP:
+        if interval_name == ButtonActions.KEEP_ALIVE_STOP:
             icon_file: FilePath = GuiFilesPath.GREY_CIRCLE
 
         self.ButtonRepeat.setIcon(QIcon(QPixmap(icon_file)))
@@ -437,19 +431,19 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         for action, function in button_action_menu.items():
             if action == interval_name:
-                action = f"{ButtonAction.CURRENT_ACTION_MARK} {action}"  # Set checked
+                action = f"{ButtonActions.CURRENT_ACTION_MARK} {action}"  # Set checked
 
             self.ButtonRepeat.menu().addAction(action, function)
             self.ButtonRepeat.menu().addSeparator()
 
     # Change KeepAlive loop status
     def process_keep_alive_change(self, interval_name: str) -> None:
-        if interval_name == ButtonAction.KEEP_ALIVE_ONCE:
+        if interval_name == ButtonActions.KEEP_ALIVE_ONCE:
             return
 
         icon_file: FilePath = GuiFilesPath.GREEN_CIRCLE
 
-        if interval_name == ButtonAction.KEEP_ALIVE_STOP:
+        if interval_name == ButtonActions.KEEP_ALIVE_STOP:
             icon_file: FilePath = GuiFilesPath.GREY_CIRCLE
 
         self.ButtonKeepAlive.setIcon(QIcon(QPixmap(icon_file)))
@@ -458,12 +452,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         button_action_menu = deepcopy(self.buttons_menu_structure.get(self.ButtonKeepAlive))
 
         if self.config.host.keep_alive_mode:  # Add custom interval
-            interval: str = ButtonAction.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
+            interval: str = ButtonActions.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
             button_action_menu[interval] = lambda: self.keep_alive.emit(interval)
 
         for action, function in button_action_menu.items():
             if action == interval_name:
-                action = f"{ButtonAction.CURRENT_ACTION_MARK} {action}"  # Set checked
+                action = f"{ButtonActions.CURRENT_ACTION_MARK} {action}"  # Set checked
 
             self.ButtonKeepAlive.menu().addAction(action, function)
             self.ButtonKeepAlive.menu().addSeparator()

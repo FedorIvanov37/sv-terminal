@@ -5,7 +5,7 @@ from common.lib.data_models.Types import FieldPath
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.decorators.void_qt_signals import void_tree_signals
 from common.lib.data_models.EpaySpecificationModel import IsoField
-from common.gui.constants.Colors import Colors
+from common.gui.constants import Colors
 
 
 class Item(QTreeWidgetItem):

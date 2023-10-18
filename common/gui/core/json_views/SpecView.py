@@ -3,12 +3,11 @@ from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
-from common.gui.constants.SpecFieldDef import SpecFieldDefinition
 from common.gui.core.json_items.SpecItem import SpecItem
 from common.gui.core.validators.SpecValidator import SpecValidator
 from common.gui.decorators.void_qt_signals import void_qt_signals
 from common.gui.core.json_views.TreeView import TreeView
-from common.gui.constants.Colors import Colors
+from common.gui.constants import Colors, SpecFieldDef
 
 
 class SpecView(TreeView):
@@ -23,14 +22,14 @@ class SpecView(TreeView):
 
     def __init__(self, window):
         super(SpecView, self).__init__()
-        self.root: SpecItem = SpecItem([SpecFieldDefinition.SPECIFICATION])
+        self.root: SpecItem = SpecItem([SpecFieldDef.SPECIFICATION])
         self.window = window
         self.validator = SpecValidator()
         self.setItemDelegate(QItemDelegate())
         self._setup()
 
     def _setup(self):
-        self.setHeaderLabels(SpecFieldDefinition.COLUMNS)
+        self.setHeaderLabels(SpecFieldDef.COLUMNS)
         self.addTopLevelItem(self.root)
         self.itemDoubleClicked.connect(self.edit_item)
         self.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
@@ -40,7 +39,7 @@ class SpecView(TreeView):
         self.make_order()
         self.collapseAll()
         self.root.setExpanded(True)
-        self.resizeColumnToContents(SpecFieldDefinition.ColumnsOrder.DESCRIPTION)
+        self.resizeColumnToContents(SpecFieldDef.ColumnsOrder.DESCRIPTION)
 
     def set_path_status(self):
         item: SpecItem
@@ -59,10 +58,10 @@ class SpecView(TreeView):
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
             self.set_pan_as_secret(item)
 
-        if column == SpecFieldDefinition.ColumnsOrder.SECRET:
+        if column == SpecFieldDef.ColumnsOrder.SECRET:
             self.cascade_checkboxes(item)
 
-        if column == SpecFieldDefinition.ColumnsOrder.TAG_LENGTH:
+        if column == SpecFieldDef.ColumnsOrder.TAG_LENGTH:
             self.cascade_tag_length(item)
 
         self.validate_item(item, column, validate_all=True)
@@ -80,10 +79,10 @@ class SpecView(TreeView):
 
     @void_qt_signals
     def cascade_checkboxes(self, parent: SpecItem):
-        check_state = parent.checkState(SpecFieldDefinition.ColumnsOrder.SECRET)
+        check_state = parent.checkState(SpecFieldDef.ColumnsOrder.SECRET)
 
         for item in parent.get_children():
-            item.setCheckState(SpecFieldDefinition.ColumnsOrder.SECRET, check_state)
+            item.setCheckState(SpecFieldDef.ColumnsOrder.SECRET, check_state)
 
             if item.childCount():
                 self.cascade_checkboxes(item)
@@ -92,7 +91,7 @@ class SpecView(TreeView):
         if item.field_number != self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
             return
 
-        item.setCheckState(SpecFieldDefinition.ColumnsOrder.SECRET, Qt.CheckState.PartiallyChecked)
+        item.setCheckState(SpecFieldDef.ColumnsOrder.SECRET, Qt.CheckState.PartiallyChecked)
 
     def validate_item(self, item: SpecItem, column: int, validate_all=False):
         if item is self.root:
@@ -134,10 +133,10 @@ class SpecView(TreeView):
         self.hide_reserved()
 
     def edit_item(self, item, column):
-        if item is self.root and column != SpecFieldDefinition.ColumnsOrder.DESCRIPTION:
+        if item is self.root and column != SpecFieldDef.ColumnsOrder.DESCRIPTION:
             return
 
-        if column > SpecFieldDefinition.ColumnsOrder.TAG_LENGTH:
+        if column > SpecFieldDef.ColumnsOrder.TAG_LENGTH:
             return
 
         if self.window.read_only:
@@ -208,7 +207,7 @@ class SpecView(TreeView):
             spec = self.spec
 
         self.clean()
-        self.root.setText(SpecFieldDefinition.ColumnsOrder.DESCRIPTION, spec.name)
+        self.root.setText(SpecFieldDef.ColumnsOrder.DESCRIPTION, spec.name)
         self.parse_spec_fields(spec.fields)
         self.collapseAll()
         self.expandItem(self.root)
@@ -234,13 +233,13 @@ class SpecView(TreeView):
             ]
 
             checkboxes: dict[str, bool] = {
-                SpecFieldDefinition.ColumnsOrder.USE_FOR_MATCHING: field_data.matching,
-                SpecFieldDefinition.ColumnsOrder.USE_FOR_REVERSAL: field_data.reversal,
-                SpecFieldDefinition.ColumnsOrder.CAN_BE_GENERATED: field_data.generate,
-                SpecFieldDefinition.ColumnsOrder.ALPHA: field_data.alpha,
-                SpecFieldDefinition.ColumnsOrder.NUMERIC: field_data.numeric,
-                SpecFieldDefinition.ColumnsOrder.SPECIAL: field_data.special,
-                SpecFieldDefinition.ColumnsOrder.SECRET: field_data.is_secret
+                SpecFieldDef.ColumnsOrder.USE_FOR_MATCHING: field_data.matching,
+                SpecFieldDef.ColumnsOrder.USE_FOR_REVERSAL: field_data.reversal,
+                SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED: field_data.generate,
+                SpecFieldDef.ColumnsOrder.ALPHA: field_data.alpha,
+                SpecFieldDef.ColumnsOrder.NUMERIC: field_data.numeric,
+                SpecFieldDef.ColumnsOrder.SPECIAL: field_data.special,
+                SpecFieldDef.ColumnsOrder.SECRET: field_data.is_secret
             }
 
             item: SpecItem = SpecItem(field_data_for_item, checkboxes=checkboxes)
@@ -256,7 +255,7 @@ class SpecView(TreeView):
         self.make_order()
 
     def generate_spec(self):
-        name: str = self.root.text(SpecFieldDefinition.ColumnsOrder.DESCRIPTION)
+        name: str = self.root.text(SpecFieldDef.ColumnsOrder.DESCRIPTION)
         fields_set: FieldSet
 
         def generate_fields(spec_item: SpecItem = None) -> FieldSet:

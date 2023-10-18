@@ -1,5 +1,5 @@
 from common.lib.core.EpaySpecification import EpaySpecification
-from common.gui.constants.SpecFieldDef import SpecFieldDefinition
+from common.gui.constants import SpecFieldDef
 from common.gui.core.json_items.SpecItem import SpecItem
 
 
@@ -14,8 +14,8 @@ class SpecValidator:
             validator(row)
 
         num_validation_map = {
-            SpecFieldDefinition.ColumnsOrder.VARIABLE_LENGTH: row.var_length,
-            SpecFieldDefinition.ColumnsOrder.TAG_LENGTH: row.tag_length
+            SpecFieldDef.ColumnsOrder.VARIABLE_LENGTH: row.var_length,
+            SpecFieldDef.ColumnsOrder.TAG_LENGTH: row.tag_length
         }
 
         for name, number in num_validation_map.items():
@@ -26,14 +26,14 @@ class SpecValidator:
 
     def validate_column(self, item: SpecItem, column):
         validation_map = {
-            SpecFieldDefinition.ColumnsOrder.FIELD: lambda: self.validate_field_number(item),
-            SpecFieldDefinition.ColumnsOrder.MIN_LENGTH: lambda: self.validate_field_length(item),
-            SpecFieldDefinition.ColumnsOrder.MAX_LENGTH: lambda: self.validate_field_length(item),
-            SpecFieldDefinition.ColumnsOrder.VARIABLE_LENGTH: lambda: self.validate_number(item.var_length, True),
-            SpecFieldDefinition.ColumnsOrder.TAG_LENGTH: lambda: self.validate_number(item.tag_length, True),
-            SpecFieldDefinition.ColumnsOrder.ALPHA: lambda: self.validate_datatype_checkboxes(item),
-            SpecFieldDefinition.ColumnsOrder.NUMERIC: lambda: self.validate_datatype_checkboxes(item),
-            SpecFieldDefinition.ColumnsOrder.SPECIAL: lambda: self.validate_datatype_checkboxes(item),
+            SpecFieldDef.ColumnsOrder.FIELD: lambda: self.validate_field_number(item),
+            SpecFieldDef.ColumnsOrder.MIN_LENGTH: lambda: self.validate_field_length(item),
+            SpecFieldDef.ColumnsOrder.MAX_LENGTH: lambda: self.validate_field_length(item),
+            SpecFieldDef.ColumnsOrder.VARIABLE_LENGTH: lambda: self.validate_number(item.var_length, True),
+            SpecFieldDef.ColumnsOrder.TAG_LENGTH: lambda: self.validate_number(item.tag_length, True),
+            SpecFieldDef.ColumnsOrder.ALPHA: lambda: self.validate_datatype_checkboxes(item),
+            SpecFieldDef.ColumnsOrder.NUMERIC: lambda: self.validate_datatype_checkboxes(item),
+            SpecFieldDef.ColumnsOrder.SPECIAL: lambda: self.validate_datatype_checkboxes(item),
         }
 
         if not (validator := validation_map.get(column)):
@@ -69,11 +69,11 @@ class SpecValidator:
 
         if item.get_field_depth() == 1:
             if int(item.field_number) < int(self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY):
-                raise ValueError(f"Field {field_path}, column {SpecFieldDefinition.ColumnsOrder.FIELD} - Cannot set "
+                raise ValueError(f"Field {field_path}, column {SpecFieldDef.ColumnsOrder.FIELD} - Cannot set "
                                  f"field number less than {self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY}")
 
             if int(item.field_number) > int(self.spec.FIELD_SET.FIELD_128_SECONDARY_MAC_DATA):
-                raise ValueError(f"Field {field_path}, column {SpecFieldDefinition.ColumnsOrder.FIELD} - Cannot set top "
+                raise ValueError(f"Field {field_path}, column {SpecFieldDef.ColumnsOrder.FIELD} - Cannot set top "
                                  f"level field number greater than {self.spec.FIELD_SET.FIELD_128_SECONDARY_MAC_DATA}")
 
     def validate_field_length(self, item):

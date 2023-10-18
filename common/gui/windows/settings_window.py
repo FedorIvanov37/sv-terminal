@@ -3,11 +3,10 @@ from logging import info, error, getLogger, getLevelName
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap, QIntValidator
 from PyQt6.QtCore import QRegularExpression
-from common.lib.constants.LogDefinition import LogDefinition
+from common.lib.constants import LogDefinition, TermFilesPath
 from common.lib.data_models.Config import Config
-from common.lib.constants.TermFilesPath import TermFilesPath
 from common.gui.forms.settings import Ui_SettingsWindow
-from common.gui.constants.GuiFilesPath import GuiFilesPath
+from common.gui.constants import GuiFilesPath
 from common.gui.windows.about_window import AboutWindow
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 

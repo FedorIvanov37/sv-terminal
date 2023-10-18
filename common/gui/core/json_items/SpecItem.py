@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt
 from common.lib.data_models.EpaySpecificationModel import IsoField
-from common.gui.constants.SpecFieldDef import SpecFieldDefinition
+from common.gui.constants import SpecFieldDef
 from common.gui.core.json_items.Item import Item
 
 
@@ -10,27 +10,27 @@ class SpecItem(Item):
 
     @property
     def tag_length(self):
-        return self.text(SpecFieldDefinition.ColumnsOrder.TAG_LENGTH)
+        return self.text(SpecFieldDef.ColumnsOrder.TAG_LENGTH)
 
     @property
     def min_length(self):
-        return self.text(SpecFieldDefinition.ColumnsOrder.MIN_LENGTH)
+        return self.text(SpecFieldDef.ColumnsOrder.MIN_LENGTH)
 
     @property
     def max_length(self):
-        return self.text(SpecFieldDefinition.ColumnsOrder.MAX_LENGTH)
+        return self.text(SpecFieldDef.ColumnsOrder.MAX_LENGTH)
 
     @property
     def var_length(self):
-        return self.text(SpecFieldDefinition.ColumnsOrder.VARIABLE_LENGTH)
+        return self.text(SpecFieldDef.ColumnsOrder.VARIABLE_LENGTH)
 
     @var_length.setter
     def var_length(self, var_length):
-        self.setText(SpecFieldDefinition.ColumnsOrder.VARIABLE_LENGTH, var_length)
+        self.setText(SpecFieldDef.ColumnsOrder.VARIABLE_LENGTH, var_length)
 
     @property
     def description(self):
-        return self.text(SpecFieldDefinition.ColumnsOrder.DESCRIPTION)
+        return self.text(SpecFieldDef.ColumnsOrder.DESCRIPTION)
 
     @property
     def reserved_for_future(self):
@@ -46,27 +46,27 @@ class SpecItem(Item):
 
     @property
     def generate(self):
-        return self.is_checked(SpecFieldDefinition.ColumnsOrder.CAN_BE_GENERATED)
+        return self.is_checked(SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED)
 
     @property
     def reversal(self):
-        return self.is_checked(SpecFieldDefinition.ColumnsOrder.USE_FOR_REVERSAL)
+        return self.is_checked(SpecFieldDef.ColumnsOrder.USE_FOR_REVERSAL)
 
     @property
     def matching(self):
-        return self.is_checked(SpecFieldDefinition.ColumnsOrder.USE_FOR_MATCHING)
+        return self.is_checked(SpecFieldDef.ColumnsOrder.USE_FOR_MATCHING)
 
     @property
     def alpha(self):
-        return self.is_checked(SpecFieldDefinition.ColumnsOrder.ALPHA)
+        return self.is_checked(SpecFieldDef.ColumnsOrder.ALPHA)
 
     @property
     def numeric(self):
-        return self.is_checked(SpecFieldDefinition.ColumnsOrder.NUMERIC)
+        return self.is_checked(SpecFieldDef.ColumnsOrder.NUMERIC)
 
     @property
     def special(self):
-        return self.is_checked(SpecFieldDefinition.ColumnsOrder.SPECIAL)
+        return self.is_checked(SpecFieldDef.ColumnsOrder.SPECIAL)
 
     @property
     def spec(self):
@@ -78,11 +78,11 @@ class SpecItem(Item):
 
     @property
     def field_number(self):
-        return self.text(SpecFieldDefinition.ColumnsOrder.FIELD)
+        return self.text(SpecFieldDef.ColumnsOrder.FIELD)
 
     @property
     def is_secret(self):
-        return self.is_checked(SpecFieldDefinition.ColumnsOrder.SECRET)
+        return self.is_checked(SpecFieldDef.ColumnsOrder.SECRET)
 
     def __init__(self, field_data: list[str], checkboxes: dict[str, bool] = None):
         super(SpecItem, self).__init__(field_data)
@@ -90,10 +90,10 @@ class SpecItem(Item):
 
     def setup(self, checkboxes=None):
         self.set_checkboxes(checkboxes)
-        # self.setTextAlignment(SpecFieldDefinition.ColumnsOrder.ALPHA, Qt.AlignmentFlag.AlignCenter)
+        # self.setTextAlignment(SpecFieldDef.ColumnsOrder.ALPHA, Qt.AlignmentFlag.AlignCenter)
 
     def set_checkboxes(self, checkboxes: dict[str, bool]):
-        if self.text(SpecFieldDefinition.ColumnsOrder.FIELD) == SpecFieldDefinition.SPECIFICATION:
+        if self.text(SpecFieldDef.ColumnsOrder.FIELD) == SpecFieldDef.SPECIFICATION:
             return
 
         if self.field_number == self.epay_spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
@@ -102,7 +102,7 @@ class SpecItem(Item):
         if checkboxes is None:
             checkboxes: dict[str, bool] = dict()
 
-            for box in SpecFieldDefinition.CHECKBOXES:
+            for box in SpecFieldDef.CHECKBOXES:
                 checkboxes[box] = False
 
         for column, state in checkboxes.items():

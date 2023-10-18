@@ -3,9 +3,7 @@ from logging import error, info, warning, debug
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject, QTimer
 from PyQt6.QtNetwork import QTcpSocket
-from common.lib.constants.DataFormats import DataFormats
-from common.lib.constants.TermFilesPath import TermFilesPath
-from common.lib.constants.KeepAliveIntervals import KeepAliveInterval
+from common.lib.constants import DataFormats, TermFilesPath, KeepAliveIntervals
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.core.Parser import Parser
 from common.lib.core.Logger import Logger
@@ -152,22 +150,22 @@ class SvTerminal(QObject):
                     f"or request was matched before")
 
     def set_keep_alive_interval(self, interval_name: str):
-        if interval_name == KeepAliveInterval.KEEP_ALIVE_ONCE:
+        if interval_name == KeepAliveIntervals.KEEP_ALIVE_ONCE:
             self.keep_alive()
             return
 
-        if interval_name == KeepAliveInterval.KEEP_ALIVE_STOP:
+        if interval_name == KeepAliveIntervals.KEEP_ALIVE_STOP:
             info("Stop Keep Alive mode")
             self.stop_keep_alive_loop()
             return
 
         info(f"Set KeepAlive mode to {interval_name}")
 
-        if interval_name == KeepAliveInterval.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval:
+        if interval_name == KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval:
             self.run_keep_alive_loop(self.config.host.keep_alive_interval)
             return
 
-        if interval := KeepAliveInterval.get_interval_time(interval_name):
+        if interval := KeepAliveIntervals.get_interval_time(interval_name):
             self.run_keep_alive_loop(interval)
 
     def run_keep_alive_loop(self, interval: int = 300):

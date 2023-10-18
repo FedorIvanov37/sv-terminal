@@ -8,15 +8,12 @@ from common.lib.core.Parser import Parser
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
 from common.lib.data_models.EpaySpecificationModel import RawFieldSet
-from common.gui.constants.MainFieldSpec import MainFieldSpec as FieldsSpec
 from common.gui.core.json_items.FIeldItem import FieldItem
 from common.gui.core.validators.ItemsValidator import ItemsValidator
 from common.gui.core.json_views.TreeView import TreeView
 from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
-from common.gui.constants.CheckBoxesDefinition import CheckBoxesDefinition
 from common.gui.decorators.void_qt_signals import void_qt_signals
-from common.gui.constants.Colors import Colors
-
+from common.gui.constants import Colors, CheckBoxesDefinition, MainFieldSpec as FieldsSpec
 
 class JsonView(TreeView):
     class Delegate(QItemDelegate):

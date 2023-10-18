@@ -2,16 +2,15 @@ from json import dumps, load
 from dataclasses import asdict
 from pydantic import FilePath
 from common.lib.decorators.singleton import singleton
-from common.lib.constants.MessageLength import MessageLength
+from common.lib.constants import MessageLength, TermFilesPath
 from common.lib.constants.EpaySpecificationData import EpaySpecificationData
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField
-from common.lib.constants.TermFilesPath import TermFilesPath
 from common.lib.data_models.Types import FieldPath
 
 
 @singleton
 class EpaySpecification(EpaySpecificationData):
-    _MessageLength: MessageLength = MessageLength()
+    _MessageLength: MessageLength = MessageLength
     _specification_model: EpaySpecModel = None
 
     def __init__(self, filename: FilePath | None = None):

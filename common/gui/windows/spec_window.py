@@ -7,14 +7,13 @@ from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog, QPushButton
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
-from common.lib.constants.TermFilesPath import TermFilesPath
+from common.lib.constants import TermFilesPath
 from common.gui.windows.spec_unsaved import SpecUnsaved
 from common.gui.forms.spec import Ui_SpecificationWindow
 from common.gui.core.json_views.SpecView import SpecView
 from common.gui.windows.mti_spec_window import MtiSpecWindow
-from common.gui.constants.ButtonActions import ButtonAction
+from common.gui.constants import ButtonActions, SpecFieldDef
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
-from common.gui.constants.SpecFieldDef import SpecFieldDefinition
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):
@@ -61,9 +60,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     @set_window_icon
     @has_close_button_only
     def _setup(self):
-        self.PlusButton: QPushButton = QPushButton(ButtonAction.BUTTON_PLUS_SIGN)
-        self.MinusButton: QPushButton = QPushButton(ButtonAction.BUTTON_MINUS_SIGN)
-        self.NextLevelButton: QPushButton = QPushButton(ButtonAction.BUTTON_NEXT_LEVEL_SIGN)
+        self.PlusButton: QPushButton = QPushButton(ButtonActions.BUTTON_PLUS_SIGN)
+        self.MinusButton: QPushButton = QPushButton(ButtonActions.BUTTON_MINUS_SIGN)
+        self.NextLevelButton: QPushButton = QPushButton(ButtonActions.BUTTON_NEXT_LEVEL_SIGN)
         self.SpecView: SpecView = SpecView(self)
         #
         self.PlusLayout.addWidget(self.PlusButton)
@@ -75,9 +74,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.ButtonApply.setMenu(QMenu())
         self.set_status(">")
         self.connect_all()
-        self.ButtonApply.menu().addAction(ButtonAction.ONE_SESSION, lambda: self.apply(ButtonAction.ONE_SESSION))
+        self.ButtonApply.menu().addAction(ButtonActions.ONE_SESSION, lambda: self.apply(ButtonActions.ONE_SESSION))
         self.ButtonApply.menu().addSeparator()
-        self.ButtonApply.menu().addAction(ButtonAction.PERMANENTLY, lambda: self.apply(ButtonAction.PERMANENTLY))
+        self.ButtonApply.menu().addAction(ButtonActions.PERMANENTLY, lambda: self.apply(ButtonActions.PERMANENTLY))
 
         for box in (self.CheckBoxHideReverved, self.CheckBoxReadOnly):
             box.setChecked(bool(Qt.CheckState.Checked))
@@ -170,7 +169,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def item_changed(self, item, column):
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER and \
-                column == SpecFieldDefinition.ColumnsOrder.SECRET:
+                column == SpecFieldDef.ColumnsOrder.SECRET:
             return
 
         self.changed = True
