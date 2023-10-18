@@ -1,10 +1,16 @@
-#
-# SIGNAL starting file
-#
-# This file runs SIGNAL GUI. The GUI runs once the file is imported, no additional actions are required
-#
-# e.g.: "import common.signal" or "from common import signal"
-#
+"""
+
+ SIGNAL starting file
+
+ This file runs SIGNAL GUI. The GUI runs once the file is imported, no additional actions are required
+
+ e.g.: "import common.signal" or "from common import signal"
+
+"""
+
+
+__author__ = "Fedor Ivanov"
+__version__ = "v0.16"
 
 
 # Correct way to run

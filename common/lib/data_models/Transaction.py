@@ -32,8 +32,8 @@ class Transaction(BaseModel):
     is_reversal: bool | None = None
     is_keep_alive: bool = False
 
-    @field_validator("max_amount", mode='before')
     @classmethod
+    @field_validator("max_amount", mode='before')
     def check_amount(cls, val):
         error_message = f"Wrong max_amount {val}. Amount must be digit in range from 0 to 999 999 999"
 
@@ -48,23 +48,24 @@ class Transaction(BaseModel):
 
         return val
 
+    @classmethod
     @field_validator("generate_fields", mode='before')
     def field_to_str(cls, val):
         return [str(field) for field in val]
 
-    @field_validator("trans_id")
     @classmethod
+    @field_validator("trans_id")
     def generate_transaction_id(cls, val):
         if not val:
             return generate_trans_id()
 
         return val
 
-    @field_validator("message_type")
     @classmethod
+    @field_validator("message_type")
     def valid_mti(cls, val: str):
-        if len(str(val)) != MessageLength.message_type_length:
-            raise ValueError(f"Incorrect MTI length. Expected {MessageLength.message_type_length}, got {len(str(val))}")
+        if len(str(val)) != MessageLength.MESSAGE_TYPE_LENGTH:
+            raise ValueError(f"Incorrect MTI length. Expected {MessageLength.MESSAGE_TYPE_LENGTH}, got {len(str(val))}")
 
         if not val.isdigit():
             raise ValueError(f"Wrong MTI value {val}. MTI must contain digits only")
@@ -74,16 +75,16 @@ class Transaction(BaseModel):
 
         return val
 
-    @field_validator("data_fields")
     @classmethod
+    @field_validator("data_fields")
     def top_level_fields_in_range(cls, val: TypeFields):
         for field in val.keys():
             if not field.isdigit():
                 raise ValueError(f"Incorrect field number {field}. Field numbers must contain digits only")
 
-            if int(field) not in range(1, MessageLength.second_bitmap_capacity + 1):
+            if int(field) not in range(1, MessageLength.SECOND_BITMAP_CAPACITY + 1):
                 raise ValueError(f"Wrong field number {field}. " 
-                                 f"Top level fields must be in range 1 - {MessageLength.second_bitmap_capacity}")
+                                 f"Top level fields must be in range 1 - {MessageLength.SECOND_BITMAP_CAPACITY}")
         return val
 
 
@@ -102,8 +103,8 @@ class OldTransactionConfig(BaseModel):
     generate_fields: list[generated_field] = []
     max_amount: int | None = None
 
-    @field_validator("generate_fields", mode='before')
     @classmethod
+    @field_validator("generate_fields", mode='before')
     def field_to_str(cls, val):
         return [str(field) for field in val]
 

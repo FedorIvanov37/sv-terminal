@@ -13,13 +13,8 @@ from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet, Ra
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.core.JsonConverter import JsonConverter
 from common.lib.core.FieldsGenerator import FieldsGenerator
+from common.lib.constants import TermFilesPath, DumpDefinition, IniMessageDefinition, DataFormats
 
-from common.lib.constants import(
-    TermFilesPath,
-    DumpDefinition,
-    IniMessageDefinition,
-    DataFormats,
-)
 
 class Parser:
     _spec: EpaySpecification = EpaySpecification()
@@ -226,9 +221,9 @@ class Parser:
         spec: EpaySpecification = EpaySpecification()
         fields: RawFieldSet = {}
         position = int()
-        message_type_indicator = data[position:spec.MessageLength.message_type_length].decode()
-        position += spec.MessageLength.message_type_length
-        bitmap: str = data[position: position + spec.MessageLength.bitmap_length]
+        message_type_indicator = data[position:spec.MessageLength.MESSAGE_TYPE_LENGTH].decode()
+        position += spec.MessageLength.MESSAGE_TYPE_LENGTH
+        bitmap: str = data[position: position + spec.MessageLength.BITMAP_LENGTH]
         position += len(bitmap)
         second_bitmap_exists = Bitmap(bitmap, bytes).second_bitmap_exists()
 
@@ -468,9 +463,9 @@ class Parser:
                 line = line.replace(DumpDefinition.SEPARATOR, "")
                 string += line
 
-        mti = string[:self.spec.MessageLength.message_type_length * 2]
+        mti = string[:self.spec.MessageLength.MESSAGE_TYPE_LENGTH_HEX]
         string = string[len(mti):]
-        bitmap = string[:self.spec.MessageLength.first_bitmap_length_hex]
+        bitmap = string[:self.spec.MessageLength.FIRST_BITMAP_LENGTH_HEX]
         string = string[len(bitmap):]
         bitmap = Bitmap(bitmap, hex).get_bitmap(bytes)
         pre_message = unhexlify(mti) + bitmap + unhexlify(string)

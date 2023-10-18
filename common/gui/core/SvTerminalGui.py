@@ -20,7 +20,7 @@ from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.lib.core.Terminal import SvTerminal
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
-from common.lib.exceptions.exceptions import LicenceAlreadyAccepted, LicenseDataLoadingError, LicenseRejected
+from common.lib.exceptions.exceptions import LicenceAlreadyAccepted, LicenseDataLoadingError
 from common.lib.constants import TextConstants, DataFormats, TermFilesPath, KeepAliveIntervals, LogDefinition
 
 
@@ -47,6 +47,9 @@ class SvTerminalGui(SvTerminal):
     connector: ConnectionThread
     trans_loop_timer: QTimer = QTimer()
 
+    _license_demonstrated: bool = False
+    _startup_finished: bool = False
+
     def __init__(self, config: Config):
         super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
         self.window: MainWindow = MainWindow(self.config)
@@ -64,6 +67,9 @@ class SvTerminalGui(SvTerminal):
         if not app_state == Qt.ApplicationState.ApplicationActive:
             return
 
+        if self._startup_finished:
+            return
+
         self.print_data(DataFormats.TERM)
 
         if self.config.terminal.connect_on_startup:
@@ -75,6 +81,8 @@ class SvTerminalGui(SvTerminal):
         if self.config.host.keep_alive_mode:
             interval = self.config.host.keep_alive_interval
             self.set_keep_alive_interval(interval_name=KeepAliveIntervals.KEEP_ALIVE_DEFAULT % interval)
+
+        self._startup_finished = True
 
     def connect_widgets(self):
         window = self.window
@@ -114,9 +122,11 @@ class SvTerminalGui(SvTerminal):
         for slot in self.show_license_dialog, self.on_startup:
             self.pyqt_application.applicationStateChanged.connect(slot)
 
-    @staticmethod
-    def show_license_dialog(app_state):
+    def show_license_dialog(self, app_state):
         if app_state != Qt.ApplicationState.ApplicationActive:
+            return
+
+        if self._license_demonstrated:
             return
 
         try:
@@ -124,11 +134,14 @@ class SvTerminalGui(SvTerminal):
             license_window.exec()
 
         except LicenceAlreadyAccepted:
+            self._license_demonstrated = True
             return
 
         except LicenseDataLoadingError as license_data_loading_error:
             error(license_data_loading_error)
             exit(100)
+
+        self._license_demonstrated = True
 
     def run_specification_window(self):
         spec_window = SpecWindow()
@@ -314,7 +327,7 @@ class SvTerminalGui(SvTerminal):
         if not data_fields:
             raise ValueError("No transaction data found")
 
-        if not (message_type := self.window.get_mti(self.spec.MessageLength.message_type_length)):
+        if not (message_type := self.window.get_mti(self.spec.MessageLength.MESSAGE_TYPE_LENGTH)):
             raise ValueError("Invalid MTI")
 
         transaction = Transaction(
@@ -511,13 +524,13 @@ class SvTerminalGui(SvTerminal):
             if not bit.isdigit():
                 continue
 
-            if int(bit) not in range(1, self.spec.MessageLength.second_bitmap_capacity + 1):
+            if int(bit) not in range(1, self.spec.MessageLength.SECOND_BITMAP_CAPACITY + 1):
                 continue
 
             if not (self.window.field_has_data(bit) or bit in self.window.get_fields_to_generate()):
                 continue
 
-            if int(bit) >= self.spec.MessageLength.first_bitmap_capacity:
+            if int(bit) >= self.spec.MessageLength.FIRST_BITMAP_CAPACITY:
                 bitmap.add(self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY)
 
             bitmap.add(bit)
