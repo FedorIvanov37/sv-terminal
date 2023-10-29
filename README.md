@@ -40,7 +40,7 @@
 
 ## SIGNAL Overview
 
-SIGNAL simplifies sending of banking card e-commerce transactions to banking card processing systems using a useful 
+SIGNAL simplifies the sending of banking card e-commerce transactions to banking card processing systems using a useful 
 visual interface making simple things simple to achieve
 
 The SIGNAL uses ISO-8583 E-pay protocol for transactions sending, instead of PSP. It can be used during the Payment 
@@ -57,7 +57,7 @@ SIGNAL is not an emulator of PSP or SmartVista. It doesn't try to be similar to 
 positioned as a simplified version card payment terminal, developed with respect for the everyday needs of the Card 
 Processing Support Team
 
-Written on Python 3.10 with using of PyQt6 and pydantic packages
+Written on Python 3.10 with the use of PyQt6 and Pydantic packages
 
 
 In case of any questions about SIGNAL [contact author](#author). Your feedback and suggestions are general drivers 
@@ -73,18 +73,17 @@ of SIGNAL evolution.
 ## Release info
 
 * New features
-  * Need to accept the license agreement on first run  
   * Transactions repeat loop button
   * Main / Spec Window search line, key sequence 
   * Incoming message header length settings 
-  * Button "Set default" in settings window
-  * Command "Set reversal fields" in Reversal button menu
-
+  * Button "Set default" in the settings window
+  * Command "Set reversal fields" in the Reversal button menu
+  * Need to accept the license agreement on the first run  
 
 * Updates
   * Changed name to SIGNAL
-  * Hiding of secrets in logs and transaction constructor now possible for every field
-  * Simplified JSON mode, work without specification
+  * Hiding of secrets in logs and transaction constructors now possible for every field
+  * Simplified JSON mode, works without specification
   * Default message corrected according to mandatory changes 23Q4
   * Many small useful updates such as
     * Improved checkboxes
@@ -95,9 +94,9 @@ of SIGNAL evolution.
   
 
 * Fixed
-  * All problems around old JSON files incompatibility  
+  * All problems around old JSON file incompatibility  
   * Transaction field max_amount has no effect
-  * SIGNAL fall down in some cases of fields validation
+  * SIGNAL fall down in some cases of field validation
   * Code optimization, minor bug fixes
   
 
@@ -110,7 +109,7 @@ Windows 10-11 only
 
 SIGNAL GUI is a friendly interface, based on the SIGNAL library. Since v0.15 SIGNAL GUI is released as a 
 binary `.exe` file. No dependencies need to run the SIGNAL, it is ready to use from the box. No installation or 
-settings are needed to run SIGNAL GUI on a Windows machine. Run `signal.exe` executable file for start the SIGNAL
+settings are needed to run SIGNAL GUI on a Windows machine. Run the `signal.exe` executable file to start the SIGNAL
 
 Check the parameters, opened by the "Configuration" button to make your settings  
 
@@ -118,7 +117,7 @@ Check the parameters, opened by the "Configuration" button to make your settings
 
 ## Main Window hotkeys
 
-The list of key sequence and corresponding actions 
+The list of key sequences and corresponding actions 
 
 | Key sequence          | Action                    |
 |-----------------------|---------------------------|
@@ -167,8 +166,8 @@ The table below describes the settings window columns from left to right
 | Description | Free text field purpose explanation                                                                                                                                                                                                                    | Show field description on MainWindow transaction constructor | Text, no min or max length | No           |
 | Min Len     | Field value minimum length                                                                                                                                                                                                                             | Fields validation during data processing                     | Number, min value is 1     | Yes          |
 | Max Len     | Field value maximum length                                                                                                                                                                                                                             | Fields validation during data processing                     | Number, min value is 1     | Yes          | 
-| Data Len    | Applicable for variable-length fields. How many numbers marks the field own length. Should ba take from E-pay specification document. In the specification usually marks as `LLVAR` - 2 digits, `LLLVAR` - 3 digits, and so on                         | Message construction, Fields validation, Message parsing     | Number, min value is 0     | Yes          |
-| Tag Len     | For complex fields only (field should contain subfields). How many numbers marks each subfield length. In the specification usually marks as `LLVAR` - 2 digits, `LLLVAR` - 3 digits, and so on. Tag Len of field should equal to field's own Data Len | Message construction, Fields validation, Message parsing     | Number, min value is 0     | Yes          |
+| Data Len    | Applicable for variable-length fields. This means count numbers mark the field's own length. Should be taken from the E-pay specification document. In the specification usually marks as `LLVAR` - 2 digits, `LLLVAR` - 3 digits, and so on                         | Message construction, Fields validation, Message parsing     | Number, min value is 0     | Yes          |
+| Tag Len     | For complex fields only (field should contain subfields). This means count numbers mark. In the specification usually marked as `LLVAR` - 2 digits, `LLLVAR` - 3 digits, and so on. Tag Len of the field should be equal to the field's own Data Len | Message construction, Fields validation, Message parsing     | Number, min value is 0     | Yes          |
 | Alpha       | Are the alphabetic letters allowed in this field                                                                                                                                                                                                       | Fields validation                                            | Checkbox                   | Yes          |
 | Numeric     | Are the digits  allowed in this field                                                                                                                                                                                                                  | Fields validation                                            | Checkbox                   | Yes          |
 | Special     | Are the special characters allowed in this field                                                                                                                                                                                                       | Fields validation                                            | Checkbox                   | Yes          |
@@ -186,7 +185,7 @@ The table below describes the settings window columns from left to right
 
 ### Overview
 
-The SIGNAL supports multiple representations of transaction-data files. The data can be put to the SIGNAL using 
+The SIGNAL supports multiple representations of transaction data files. The data can be put to the SIGNAL using 
 one of three formats - `JSON`, `INI`, and `DUMP`. The data is stored in text files, which can be read or written 
 by SIGNAL. This chapter describes each format's features and purpose
 
@@ -194,17 +193,17 @@ by SIGNAL. This chapter describes each format's features and purpose
 
 | Format | File extension | Incoming  | Outgoing | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 |--------|----------------|-----------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| JSON   | `.json`        | Yes       | Yes      | Equally well suited for operator reading and machine analysis. The main goal is to make complex fields not so complicated, through structure-readable decomposition. Fields and subfields lengths are left out because they will be calculated later according to the Specification. All the transactions, incoming and outgoing stored in memory in JSON representation. Strictly requires Specification settings for each subfield                                                          | 
+| JSON   | `.json`        | Yes       | Yes      | Equally well suited for operator reading and machine analysis. The main goal is to make complex fields not so complicated, through structure-readable decomposition. Fields and subfield lengths are left out because they will be calculated later according to the Specification. All the transactions, incoming and outgoing stored in memory in JSON representation. Strictly requires Specification settings for each subfield                                                          | 
 | INI    | `.ini`         | Yes       | Yes      | Flat format, where each field is written in one string. Fields fill in Tag-Length-Value (TLV) style with no separators. All the lengths have to be calculated and set by the operator. The format skips the data validation process. Recommended when you definitely understand what you do. Requires specification for top-level fields only, subfields specification is not required                                                                                                        | 
-| DUMP   | `.txt`         | Yes       | Yes      | Raw SV-dump format. Used for loading and generating SVFE-compatible dump messages for parsing incoming and generating outgoing SV messages. Low-level data exchange with SVFE makes using this format. The DUMP is the fully ready-read message for the SVFE epayint module. For the sv-dump building recommended set fields data through the transaction constructor using JSON or INI style, then generating the dump by SIGNAL interface. Manual analysis or generation is not recommended | 
+| DUMP   | `.txt`         | Yes       | Yes      | Raw SV-dump format. Used for loading and generating SVFE-compatible dump messages for parsing incoming and generating outgoing SV messages. Low-level data exchange with SVFE makes using this format. The DUMP is the fully ready-read message for the SVFE epayint module. For the sv-dump building recommended setting field data through the transaction constructor using JSON or INI style, then generate the dump by SIGNAL interface. Manual analysis or generation is not recommended | 
 
 ### Loading to the SIGNAL
 
 To read the incoming data file in the open SIGNAL window press `CTRL + O`, or hit the button "Parse file" on the 
 MainWindow bottom, then choose the file using the file-navigation window. SIGNAL recognizes the incoming file format 
 by file extension. When the extension is absent or unknown the SIGNAL will try to parse the file using each format 
-pattern one by one. Better to set correct extension for each format. Refer to the
-[data formats description](#the-data-formats-description) to define correct extension for each file format
+pattern one by one. Better to set the correct extension for each format. Refer to the
+[data formats description](#the-data-formats-description) to define the correct extension for each file format
 
 ### Save transaction to file
 
