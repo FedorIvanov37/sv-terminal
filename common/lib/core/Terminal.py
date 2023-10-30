@@ -19,7 +19,7 @@ from common.lib.core.LogPrinter import LogPrinter
 
 class SvTerminal(QObject):
     pyqt_application = QtWidgets.QApplication([])
-    spec: EpaySpecification = EpaySpecification(TermFilesPath.CONFIG)
+    spec: EpaySpecification = EpaySpecification(TermFilesPath.SPECIFICATION)
 
     with open(TermFilesPath.CONFIG) as json_file:
         config: Config = Config.model_validate(load(json_file))

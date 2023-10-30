@@ -42,5 +42,5 @@ class IsoField(BaseModel):
 
 class EpaySpecModel(BaseModel):
     name: str | None = "ISO-8583 E-pay Specification"
-    mti: list[Mti] = Field(min_items=1, alias="mti")
+    mti: list[Mti] = [] # Field(min_items=1, alias="mti")
     fields: FieldSet = {}

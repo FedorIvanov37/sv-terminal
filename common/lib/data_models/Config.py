@@ -38,8 +38,15 @@ class Fields(BaseModel):
         return int(max_amount)
 
 
+class RemoteSpec(BaseModel):
+    use_remote_spec: bool = False
+    rewrite_local_spec: bool = False
+    remote_spec_url: str = ''
+
+
 class Config(BaseModel):
     host: Host
     terminal: Terminal
     debug: Debug
     fields: Fields | None = None
+    remote_spec: RemoteSpec = RemoteSpec()

@@ -22,5 +22,10 @@
         "validation": true,
         "json_mode": true,
         "hide_secrets": true
+    },
+    "remote_spec": {
+        "use_remote_spec": false,
+        "rewrite_local_spec": false,
+        "remote_spec_url": ""
     }
 }

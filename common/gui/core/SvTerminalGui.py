@@ -113,14 +113,15 @@ class SvTerminalGui(SvTerminal):
             window.about: lambda: AboutWindow(),
             window.keep_alive: self.set_keep_alive_interval,
             window.repeat: self.set_trans_loop_interval,
-            self.connector.stateChanged: self.set_connection_status,
         }
 
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
 
-        for slot in self.show_license_dialog, self.on_startup:
+        for slot in self.show_license_dialog, self.on_startup, self.connector.set_remote_spec:
             self.pyqt_application.applicationStateChanged.connect(slot)
+
+        self.connector.stateChanged.connect(self.set_connection_status)
 
     def show_license_dialog(self, app_state):
         if app_state != Qt.ApplicationState.ApplicationActive:

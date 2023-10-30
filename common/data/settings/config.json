@@ -5,7 +5,7 @@
         "keep_alive_mode": false,
         "keep_alive_interval": 300,
         "header_length": 2,
-        "header_length_exists": false
+        "header_length_exists": true
     },
     "terminal": {
         "process_default_dump": true,
@@ -24,5 +24,10 @@
         "validation": true,
         "json_mode": true,
         "hide_secrets": true
+    },
+    "remote_spec": {
+        "use_remote_spec": true,
+        "rewrite_local_spec": true,
+        "remote_spec_url": "http://localhost:4242/"
     }
 }
