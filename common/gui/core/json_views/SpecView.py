@@ -1,3 +1,4 @@
+from logging import info, error, warning
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -13,7 +14,6 @@ from common.gui.constants import Colors, SpecFieldDef
 class SpecView(TreeView):
     _spec: EpaySpecification = EpaySpecification()
     item_changed = pyqtSignal(SpecItem, int)
-    status_changed = pyqtSignal(str, bool)
     search_finished = pyqtSignal()
 
     @property
@@ -50,9 +50,7 @@ class SpecView(TreeView):
         if not (path := item.get_field_path(string=True)):
             return
 
-        path = f"{path} {item.description}"
-
-        self.status_changed.emit(path, False)
+        info(f"{path} - {item.description}")
 
     def process_item_change(self, item, column):
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
@@ -107,7 +105,7 @@ class SpecView(TreeView):
                 self.validator.validate_column(item, column)
 
         except ValueError as validation_error:
-            self.status_changed.emit(str(validation_error), True)
+            error(validation_error)
             item.set_item_color(Colors.RED)
             return
 
@@ -140,12 +138,13 @@ class SpecView(TreeView):
             return
 
         if self.window.read_only:
-            self.window.set_status("Read only mode", error=True)
+            warning("Read only mode. Uncheck the checkbox on top of the window")
             return
 
         self.editItem(item, column)
 
-    def set_field_path(self, item):
+    @staticmethod
+    def set_field_path(item):
         try:
             if not (path := item.get_field_path(string=True)):
                 path = str()
@@ -154,8 +153,6 @@ class SpecView(TreeView):
 
         except AttributeError:
             path = str()
-
-        self.status_changed.emit(path, False)
 
     def minus(self):
         item: SpecItem = self.currentItem()

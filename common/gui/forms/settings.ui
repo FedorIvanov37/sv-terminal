@@ -460,7 +460,7 @@
       <item row="1" column="0" colspan="2">
        <widget class="QCheckBox" name="RewriteLocalSpec">
         <property name="text">
-         <string>Rewrite local spec by remote</string>
+         <string>Overwrite local spec by remote one</string>
         </property>
        </widget>
       </item>

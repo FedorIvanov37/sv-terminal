@@ -24,6 +24,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.ButtonAbout.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){1,3}\d+")))
         self.MaxAmount.setEditable(True)
+        self.RemoteSpecUrl.editingFinished.connect(lambda: self.RemoteSpecUrl.setCursorPosition(int()))
         self.MaxAmount.setValidator(QIntValidator(1, 2_100_000_000, self.MaxAmount))
         self.DebugLevel.addItems(LogDefinition.LOG_LEVEL)
         self.ParseSubfields.setHidden(True)  # TODO
@@ -68,6 +69,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.MaxAmount.setEnabled(self.MaxAmountBox.isChecked())
         self.UseRemoteSpec.setChecked(config.remote_spec.use_remote_spec)
         self.RemoteSpecUrl.setText(config.remote_spec.remote_spec_url)
+        self.RemoteSpecUrl.setCursorPosition(int())
         self.RewriteLocalSpec.setChecked(config.remote_spec.rewrite_local_spec)
         self.StorageDepth.setValue(config.remote_spec.backup_storage_depth)
         self.BackupStorageCheckbox.setChecked(config.remote_spec.backup_storage)

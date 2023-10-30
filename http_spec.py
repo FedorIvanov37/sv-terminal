@@ -3,7 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from common.lib.constants import TermFilesPath
 
 
-SERVER_ADDRESS = 'localhost'
+SERVER_ADDRESS = '127.0.0.1'
 PORT = 4242
 PATH = '/specification'
 
@@ -19,7 +19,7 @@ class HttpSpec(BaseHTTPRequestHandler):
         self.send_header("Content-type", "application/json")
         self.end_headers()
 
-        with open(TermFilesPath.SPECIFICATION) as json_file:
+        with open('common/data/settings/specification1.json') as json_file:
             self.wfile.write(json_file.read().encode())
 
 

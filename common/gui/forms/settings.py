@@ -277,7 +277,7 @@ class Ui_SettingsWindow(object):
         self.SpecBox.setTitle(_translate("SettingsWindow", "Specification"))
         self.UseRemoteSpec.setText(_translate("SettingsWindow", "Use remote spec"))
         self.RemoteSpecUrl.setPlaceholderText(_translate("SettingsWindow", "Remote specification URL"))
-        self.RewriteLocalSpec.setText(_translate("SettingsWindow", "Rewrite local spec by remote"))
+        self.RewriteLocalSpec.setText(_translate("SettingsWindow", "Overwrite local spec by remote one"))
         self.BackupStorageCheckbox.setText(_translate("SettingsWindow", "Specification backup storage depth"))
         self.ButtonDefault.setText(_translate("SettingsWindow", "Set default"))
 

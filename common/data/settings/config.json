@@ -26,10 +26,10 @@
         "hide_secrets": true
     },
     "remote_spec": {
-        "use_remote_spec": false,
-        "rewrite_local_spec": true,
-        "remote_spec_url": "http://localhost:4242/specification",
-        "backup_storage_depth": 100,
+        "use_remote_spec": true,
+        "rewrite_local_spec": false,
+        "remote_spec_url": "http://127.0.0.1:4242/specification",
+        "backup_storage_depth": 50,
         "backup_storage": true
     }
 }

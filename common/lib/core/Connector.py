@@ -1,6 +1,7 @@
-from struct import pack
 from json import loads
-from requests import get
+from struct import pack
+from http import HTTPStatus
+from urllib.request import urlopen
 from logging import error, debug, warning, info
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtCore import pyqtSignal
@@ -15,6 +16,7 @@ from common.lib.constants import TermFilesPath
 class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
     incoming_transaction_data: pyqtSignal = pyqtSignal(bytes)
     transaction_sent: pyqtSignal = pyqtSignal(str)
+    got_remote_spec: pyqtSignal = pyqtSignal()
 
     def __init__(self, config: Config):
         QTcpSocket.__init__(self)
@@ -109,34 +111,44 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
     def is_connected(self):
         return self.state() == self.SocketState.ConnectedState
 
-    def set_remote_spec(self):
+    def set_remote_spec(self, commit=None):
+        if commit is None:
+            commit = self.config.remote_spec.rewrite_local_spec
+
         info(f"Getting remote spec using url: {self.config.remote_spec.remote_spec_url}")
 
         use_local_spec_text = "Local specification will be used instead"
 
         try:
             try:
-                resp = get(self.config.remote_spec.remote_spec_url)
+                resp = urlopen(self.config.remote_spec.remote_spec_url)
             except Exception as spec_loading_error:
                 error(f"Cannot get remote specification: {spec_loading_error}")
                 warning(use_local_spec_text)
                 return
 
-            if not resp.ok:
+            if resp.getcode() != HTTPStatus.OK:
                 error(f"Cannot get remote specification: Non-success http-code {resp.status_code}")
                 warning(use_local_spec_text)
                 return
 
             spec: EpaySpecification = EpaySpecification()
 
-            if self.config.remote_spec.rewrite_local_spec and self.config.remote_spec.backup_storage:
+            if commit and self.config.remote_spec.backup_storage:
                 backup_filename: str = spec.backup()
                 info(f"Backup local specification file name: {TermFilesPath.SPEC_BACKUP_DIR}/{backup_filename}")
 
             try:
-                spec_data: EpaySpecModel = EpaySpecModel.model_validate(loads(resp.text))
-                spec.reload_spec(spec=spec_data, commit=self.config.remote_spec.rewrite_local_spec)
+                json_data = resp.read()
+                json_data = json_data.decode()
+                json_data = loads(json_data)
+
+                spec_data: EpaySpecModel = EpaySpecModel.model_validate(json_data)
+                spec.reload_spec(spec=spec_data, commit=commit)
+
                 info(f"Remote specification loaded {spec.spec.name}")
+
+                self.got_remote_spec.emit()
 
             except Exception as loading_error:
                 error(f"Cannot load remote specification: {loading_error}")
