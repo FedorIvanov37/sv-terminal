@@ -8,6 +8,9 @@ SET_REVERSAL = "Set Reversal fields"
 ONE_SESSION = "For current session"
 PERMANENTLY = "Permanently"
 
+REMOTE_SPEC = "Set remote specification"
+LOCAL_SPEC = "Set local specification"
+
 BUTTON_PLUS_SIGN = "✚"
 BUTTON_MINUS_SIGN = "━"
 BUTTON_NEXT_LEVEL_SIGN = "🡾"

@@ -53,7 +53,8 @@ class SvTerminalGui(SvTerminal):
     _startup_finished: bool = False
 
     def __init__(self, config: Config):
-        super(SvTerminalGui, self).__init__(config, ConnectionThread(config))
+        self.connector = ConnectionThread(config)
+        super(SvTerminalGui, self).__init__(config, self.connector)  # ConnectionThread(config)
         self.window: MainWindow = MainWindow(self.config)
         self.setup()
 
@@ -182,7 +183,7 @@ class SvTerminalGui(SvTerminal):
         self._license_demonstrated = True
 
     def run_specification_window(self):
-        spec_window = SpecWindow()
+        spec_window = SpecWindow(self.connector)
         spec_window.accepted.connect(self.window.hide_secrets)
         spec_window.exec()
 
@@ -266,6 +267,11 @@ class SvTerminalGui(SvTerminal):
 
         if old_config.fields.hide_secrets != self.config.fields.hide_secrets:
             self.window.hide_secrets()
+
+        if self.config.remote_spec.use_remote_spec:
+            if any((old_config.remote_spec.remote_spec_url != self.config.remote_spec.remote_spec_url,
+                    not old_config.remote_spec.use_remote_spec)):
+                self.set_remote_spec.emit()
 
         keep_alive_change_conditions = (
             old_config.host.keep_alive_mode != self.config.host.keep_alive_mode,

@@ -73,6 +73,10 @@ class ConnectionThread(ConnectionInterface, QObject, metaclass=QObjectAbcMeta):
         return self.connector.transaction_sent
 
     @property
+    def got_remote_spec(self):
+        return self.connector.got_remote_spec
+
+    @property
     def stateChanged(self):
         return self.connector.stateChanged
 

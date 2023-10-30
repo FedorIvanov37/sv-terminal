@@ -1,10 +1,10 @@
-from json import dump, load
+from logging import error, info
+from json import load
 from typing import Optional
-from datetime import datetime
 from pydantic import ValidationError
 from PyQt6.QtGui import QCloseEvent, QKeyEvent, QKeySequence, QShortcut
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog, QPushButton
+from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog, QPushButton, QApplication
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.constants import TermFilesPath
@@ -14,6 +14,10 @@ from common.gui.core.json_views.SpecView import SpecView
 from common.gui.windows.mti_spec_window import MtiSpecWindow
 from common.gui.constants import ButtonActions, SpecFieldDef
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
+from common.lib.constants import TextConstants
+from common.gui.core.WirelessHandler import WirelessHandler
+from common.lib.core.Logger import LogStream, getLogger, Formatter
+from common.lib.constants import LogDefinition
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):
@@ -23,6 +27,11 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     _spec: EpaySpecification = EpaySpecification()
     _spec_accepted: pyqtSignal = pyqtSignal(str)
     _spec_rejected: pyqtSignal = pyqtSignal()
+    _reset_spec: pyqtSignal = pyqtSignal(str)
+
+    @property
+    def reset_spec(self):
+        return self._reset_spec
 
     @property
     def spec_accepted(self):
@@ -52,8 +61,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def read_only(self, checked):
         self._read_only = checked
 
-    def __init__(self):
+    def __init__(self, connector):
         super(SpecWindow, self).__init__()
+        self.connector = connector
         self.setupUi(self)
         self._setup()
 
@@ -69,30 +79,39 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.MinusLayout.addWidget(self.MinusButton)
         self.NextLevelLayout.addWidget(self.NextLevelButton)
         self.SpecTreeLayout.addWidget(self.SpecView)
-        #
-        self.StatusLabel.setText(str())
         self.ButtonApply.setMenu(QMenu())
-        self.set_status(">")
-        self.connect_all()
+        #
         self.ButtonApply.menu().addAction(ButtonActions.ONE_SESSION, lambda: self.apply(ButtonActions.ONE_SESSION))
         self.ButtonApply.menu().addSeparator()
         self.ButtonApply.menu().addAction(ButtonActions.PERMANENTLY, lambda: self.apply(ButtonActions.PERMANENTLY))
+        self.ButtonReset.setMenu(QMenu())
+        self.ButtonReset.menu().addAction(ButtonActions.REMOTE_SPEC, lambda: self.reset_spec.emit(ButtonActions.REMOTE_SPEC))
+        self.ButtonApply.menu().addSeparator()
+        self.ButtonReset.menu().addAction(ButtonActions.LOCAL_SPEC, lambda: self.reset_spec.emit(ButtonActions.LOCAL_SPEC))
+
+        self.LogArea.setText(f"{TextConstants.HELLO_MESSAGE}\n")
 
         for box in (self.CheckBoxHideReverved, self.CheckBoxReadOnly):
             box.setChecked(bool(Qt.CheckState.Checked))
+
+        self.create_spec_logger()
+
+        self.connect_all()
 
     def connect_all(self):
 
         connection_map = {
             self.SpecView.itemChanged: self.item_changed,
-            self.SpecView.status_changed: lambda status, error: self.set_status(status, error),
             self.SpecView.search_finished: self.hide_reserved_for_future,
             self.CheckBoxReadOnly.stateChanged: lambda state: self.set_read_only(bool(state)),
             self.CheckBoxHideReverved.stateChanged: self.hide_reserved_for_future,
             self.ParseFile.pressed: self.parse_file,
-            self.spec_accepted: lambda name: self.set_status(f"Specification applied - {name}"),
+            self.spec_accepted: lambda name: info(f"Specification applied - {name}"),
             self.SearchLine.textChanged: self.SpecView.search,
             self.SearchLine.editingFinished: self.SpecView.setFocus,
+            self.ButtonClearLog.clicked: lambda: self.LogArea.setText(str()),
+            self.ButtonCopyLog.clicked: self.copy_log,
+
             QShortcut(QKeySequence(QKeySequence.StandardKey.Find), self).activated: self.SearchLine.setFocus,
         }
 
@@ -102,6 +121,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.NextLevelButton: self.SpecView.next_level,
             self.ButtonClose: self.close,
             self.ButtonReset: self.reload,
+
             self.ButtonClean: self.clean,
             self.ButtonSetMti: self.set_mti,
             self.ButtonBackup: self.backup,
@@ -112,6 +132,30 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
         for button, function in buttons_connection_map.items():
             button.clicked.connect(function)
+
+        self.reset_spec.connect(self.reload_spec)
+        self.connector.got_remote_spec.connect(self.process_remote_spec)
+
+    def create_spec_logger(self):
+        formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
+        wireless_handler = WirelessHandler()
+        stream = LogStream(self.LogArea)
+        wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
+        wireless_handler.setFormatter(formatter)
+        logger = getLogger()
+        logger.addHandler(wireless_handler)
+
+    def reload_spec(self, spec_type: str):
+        if spec_type == ButtonActions.LOCAL_SPEC:
+            self.parse_file(TermFilesPath.SPECIFICATION)
+
+        if spec_type == ButtonActions.REMOTE_SPEC:
+            self.connector.set_remote_spec(commit=False)
+
+        self.reload()
+
+    def process_remote_spec(self):
+        self.SpecView.parse_spec(self.spec.spec)
 
     def hide_reserved_for_future(self):
         if self.SearchLine.text():
@@ -133,6 +177,12 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         mti_window.changed.connect(self.set_mti_changed)
         mti_window.rejected.connect(lambda: self.set_mti_changed(changed=False))
         mti_window.exec()
+    @staticmethod
+    def set_clipboard_text(data: str = str()) -> None:
+        QApplication.clipboard().setText(data)
+
+    def copy_log(self):
+        self.set_clipboard_text(self.LogArea.toPlainText())
 
     def set_mti_changed(self, changed=True):
         self._mti_changed = changed
@@ -144,7 +194,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             button.setDisabled(checked)
 
     def clean(self):
-        self.StatusLabel.setText(str())
+        # self.StatusLabel.setText(str())
         self.SpecView.clean()
 
     def apply(self, commit: bool | str):
@@ -155,7 +205,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.SpecView.reload_spec(commit)
 
         except Exception as apply_error:
-            self.set_status(str(apply_error), error=True)
+            error(apply_error)
             self.spec_rejected.emit()
             return
 
@@ -176,18 +226,18 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def backup(self):
         backup_filename = self.spec.backup()
-        self.set_status(f"Backup done! Filename: {backup_filename}")
+        info(f"Backup done! Filename: {backup_filename}")
 
     def parse_file(self, filename: Optional[str] = None) -> None:
         if filename is None:
             try:
                 filename = QFileDialog.getOpenFileName()[0]
             except Exception as get_file_error:
-                self.set_status("Filename get error: %s" % get_file_error, error=True)
+                error(f"Filename get error: {get_file_error}")
                 return
 
         if not filename:
-            self.set_status("No input filename recognized")
+            info("No input filename recognized")
             return
 
         try:
@@ -196,10 +246,10 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
         except ValidationError as validation_error:
             error_text = str(validation_error)  # .json(indent=4)
-            self.set_status("File validation error: %s" % error_text, error=True)
+            error(f"File validation error: {error_text}")
 
         except Exception as parsing_error:
-            self.set_status("File parsing error: %s" % parsing_error)
+            error(f"File parsing error: {parsing_error}")
 
         else:
             self.SpecView.parse_spec(specification)
@@ -207,7 +257,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def reload(self):
         self.SpecView.reload()
-        self.set_status(str())
         self.CheckBoxHideReverved.setCheckState(Qt.CheckState.Checked)
         self.SpecView.hide_reserved()
 
@@ -224,20 +273,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.spec_rejected.connect(close_event.ignore)
 
         window.exec()
-
-    def set_status(self, text: str, error: bool = False) -> None:
-        text_message = list()
-
-        for position in range(0, len(text), 150):
-            text_message.append(f"{text[position: position + 150]}")
-
-        if error:
-            self.StatusLabel.setStyleSheet("color: red")
-            text_message[int()] = f"Error: {text_message[int()]}"
-        else:
-            self.StatusLabel.setStyleSheet("color: black")
-
-        self.StatusLabel.setText("\n".join(text_message))
 
     def keyPressEvent(self, a0: QKeyEvent) -> None:
         if a0.key() == Qt.Key.Key_Escape:
