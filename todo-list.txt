@@ -100,7 +100,7 @@
 + Check Transaction.max_amount usage
 ? Validation after edit doesn't work sometimes
 
-v0.16
+# v0.16
 
 + Fix all problems around old JSON files incompatibility
 + Transaction field max_amount has no effect
@@ -126,11 +126,12 @@ v0.16
 + Try to remove old order ID from message
 + Set reversal fields
 + Update pydantic
-#
-+ SpecWindow key sequences
-+ Remote spec
 + License window
 
+# v0.17
++ SpecWindow key sequences
++ SpecWindow log
++ Remote spec - settings, SpecWindow
 
 • Change name to SIGNAL
     • Document
