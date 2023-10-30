@@ -175,14 +175,8 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.changed = True
 
     def backup(self):
-        spec = self.SpecView.generate_spec()
-        date_format = "%Y%m%d_%H%M%S"
-        filename = f"spec_backup_{datetime.now():{date_format}}.json"
-
-        with open(f'{TermFilesPath.SPEC_BACKUP_DIR}/{filename}', "w") as file:
-            dump(spec.model_dump(), file, indent=4)
-
-        self.set_status("Backup done! Filename: %s" % filename)
+        backup_filename = self.spec.backup()
+        self.set_status(f"Backup done! Filename: {backup_filename}")
 
     def parse_file(self, filename: Optional[str] = None) -> None:
         if filename is None:
