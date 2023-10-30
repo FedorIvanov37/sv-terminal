@@ -8,8 +8,8 @@
         "header_length_exists": true
     },
     "terminal": {
-        "process_default_dump": false,
-        "connect_on_startup": false
+        "process_default_dump": true,
+        "connect_on_startup": true
     },
     "debug": {
         "level": "INFO",
