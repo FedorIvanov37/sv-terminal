@@ -12,7 +12,7 @@ from common.gui.windows.spec_unsaved import SpecUnsaved
 from common.gui.forms.spec import Ui_SpecificationWindow
 from common.gui.core.json_views.SpecView import SpecView
 from common.gui.windows.mti_spec_window import MtiSpecWindow
-from common.gui.constants import ButtonActions, SpecFieldDef
+from common.gui.constants import ButtonActions, SpecFieldDef, KeySequence
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 from common.lib.constants import TextConstants
 from common.gui.core.WirelessHandler import WirelessHandler
@@ -89,14 +89,12 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.ButtonApply.menu().addSeparator()
         self.ButtonReset.menu().addAction(ButtonActions.LOCAL_SPEC, lambda: self.reset_spec.emit(ButtonActions.LOCAL_SPEC))
 
-        self.LogArea.setText(f"{TextConstants.HELLO_MESSAGE}\n")
-
         for box in (self.CheckBoxHideReverved, self.CheckBoxReadOnly):
             box.setChecked(bool(Qt.CheckState.Checked))
 
         self.create_spec_logger()
-
         self.connect_all()
+        self.set_hello_message()
 
     def connect_all(self):
 
@@ -109,10 +107,10 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.spec_accepted: lambda name: info(f"Specification applied - {name}"),
             self.SearchLine.textChanged: self.SpecView.search,
             self.SearchLine.editingFinished: self.SpecView.setFocus,
-            self.ButtonClearLog.clicked: lambda: self.LogArea.setText(str()),
+            self.ButtonClearLog.clicked: self.clear_log,
             self.ButtonCopyLog.clicked: self.copy_log,
-
-            QShortcut(QKeySequence(QKeySequence.StandardKey.Find), self).activated: self.SearchLine.setFocus,
+            self.reset_spec: self.reload_spec,
+            self.connector.got_remote_spec: self.process_remote_spec,
         }
 
         buttons_connection_map = {
@@ -121,20 +119,32 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.NextLevelButton: self.SpecView.next_level,
             self.ButtonClose: self.close,
             self.ButtonReset: self.reload,
-
             self.ButtonClean: self.clean,
             self.ButtonSetMti: self.set_mti,
             self.ButtonBackup: self.backup,
         }
 
+        keys_connection_map = {
+            QKeySequence.StandardKey.Find: self.SearchLine.setFocus,
+            QKeySequence.StandardKey.New: self.SpecView.plus,
+            QKeySequence.StandardKey.Delete: self.SpecView.minus,
+            QKeySequence.StandardKey.Open: self.parse_file,
+            QKeySequence.StandardKey.Save: self.backup,
+            KeySequence.CTRL_SHIFT_N: self.SpecView.next_level,
+            KeySequence.CTRL_W: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.FIELD),
+            KeySequence.CTRL_E: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.DESCRIPTION),
+            KeySequence.CTRL_T: self.set_hello_message,
+            KeySequence.CTRL_L: self.clear_log,
+        }
+
         for signal, slot in connection_map.items():
             signal.connect(slot)
 
+        for combination, function in keys_connection_map.items():  # Key sequences
+            QShortcut(QKeySequence(combination), self).activated.connect(function)
+
         for button, function in buttons_connection_map.items():
             button.clicked.connect(function)
-
-        self.reset_spec.connect(self.reload_spec)
-        self.connector.got_remote_spec.connect(self.process_remote_spec)
 
     def create_spec_logger(self):
         formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
@@ -153,6 +163,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.connector.set_remote_spec(commit=False)
 
         self.reload()
+
+    def set_hello_message(self):
+        self.LogArea.setText(f"{TextConstants.HELLO_MESSAGE}\n")
 
     def process_remote_spec(self):
         self.SpecView.parse_spec(self.spec.spec)
@@ -194,8 +207,10 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             button.setDisabled(checked)
 
     def clean(self):
-        # self.StatusLabel.setText(str())
         self.SpecView.clean()
+
+    def clear_log(self):
+        self.LogArea.setText(str())
 
     def apply(self, commit: bool | str):
         if isinstance(commit, str):

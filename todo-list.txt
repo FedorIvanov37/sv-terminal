@@ -126,6 +126,10 @@ v0.16
 + Try to remove old order ID from message
 + Set reversal fields
 + Update pydantic
+#
++ SpecWindow key sequences
++ Remote spec
++ License window
 
 
 • Change name to SIGNAL
@@ -136,11 +140,9 @@ v0.16
     • Code?
 
 
-• SpecWindow key sequences
 • Reflect in the document - Main settings, the specification+, files format+
 • Set complex fields full expanding when switch JSON mode
 • QTabWidget
-
 
 • Licensing preparation
     • Change the framework to pyside
@@ -150,7 +152,7 @@ v0.16
     • Change the name
     • Prepare code
     • Get Unlimit's disclaimer
-    + License window
+
 
 • Change approach to fields path
 • No data in socket if delete field in spec
@@ -159,9 +161,6 @@ v0.16
 • Publish on confluence
 • Spec explanation
 
-
-v0.17
-    • Console mode
-    • API console mode
-    • Remote spec
-    • Python 3.12
+• Console mode
+• API console mode
+• Python 3.12

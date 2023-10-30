@@ -47,10 +47,13 @@ class SpecView(TreeView):
         if not (item := self.currentItem()):
             return
 
-        if not (path := item.get_field_path(string=True)):
+        if not (path := item.get_field_path()):
             return
 
-        info(f"{path} - {item.description}")
+        description: str = self.spec.get_field_description(path, string=True)
+        path: str = item.get_field_path(string=True)
+
+        info(f"{path} - {description}")
 
     def process_item_change(self, item, column):
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:

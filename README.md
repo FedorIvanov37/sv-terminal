@@ -126,7 +126,6 @@ The list of key sequences and corresponding actions
 | Ctrl + Shift + Enter  | Reverse last transaction  |
 | Ctrl + Alt + Enter    | Send Echo-Test            |
 | Ctrl + N              | Add new field             |
-| Ctrl + N              | Add new field             |
 | Ctrl + Shift + N      | Add new subfield          |
 | Ctrl + F              | Search                    |
 | Delete                | Remove field              |
@@ -139,6 +138,7 @@ The list of key sequences and corresponding actions
 | Ctrl + P              | Print transaction         |
 | Ctrl + T              | Print SIGNAL logo         |
 | Ctrl + Alt + Q        | Quit SIGNAL               |
+
 
 ## Specification settings
 
