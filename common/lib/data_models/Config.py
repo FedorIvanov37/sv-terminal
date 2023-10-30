@@ -42,7 +42,8 @@ class RemoteSpec(BaseModel):
     use_remote_spec: bool = False
     rewrite_local_spec: bool = False
     remote_spec_url: str = ''
-
+    backup_storage_depth: int = 100
+    backup_storage: bool = True
 
 class Config(BaseModel):
     host: Host

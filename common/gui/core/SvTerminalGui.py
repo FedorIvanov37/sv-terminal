@@ -1,3 +1,4 @@
+from os import remove, listdir
 from copy import deepcopy
 from json import dumps, load
 from logging import error, info, warning
@@ -5,7 +6,7 @@ from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QFileDialog
-from PyQt6.QtCore import QTimer, Qt
+from PyQt6.QtCore import QTimer, Qt, pyqtSignal
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
@@ -46,6 +47,7 @@ Starts MainWindow when starting its work, being a kind of low-level adapter betw
 class SvTerminalGui(SvTerminal):
     connector: ConnectionThread
     trans_loop_timer: QTimer = QTimer()
+    set_remote_spec: pyqtSignal = pyqtSignal()
 
     _license_demonstrated: bool = False
     _startup_finished: bool = False
@@ -81,6 +83,11 @@ class SvTerminalGui(SvTerminal):
         if self.config.host.keep_alive_mode:
             interval = self.config.host.keep_alive_interval
             self.set_keep_alive_interval(interval_name=KeepAliveIntervals.KEEP_ALIVE_DEFAULT % interval)
+
+        if self.config.remote_spec.use_remote_spec:
+            self.set_remote_spec.emit()
+
+        self.clear_spec_backup()
 
         self._startup_finished = True
 
@@ -118,10 +125,40 @@ class SvTerminalGui(SvTerminal):
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
 
-        for slot in self.show_license_dialog, self.on_startup, self.connector.set_remote_spec:
+        for slot in self.show_license_dialog, self.on_startup:
             self.pyqt_application.applicationStateChanged.connect(slot)
 
         self.connector.stateChanged.connect(self.set_connection_status)
+        self.set_remote_spec.connect(self.connector.set_remote_spec)
+
+    def clear_spec_backup(self):
+        storage_debt = self.config.remote_spec.backup_storage_depth
+
+        if not self.config.remote_spec.backup_storage:
+            storage_debt = int()
+
+        try:
+            files = listdir(TermFilesPath.SPEC_BACKUP_DIR)
+        except Exception as dir_access_error:
+            error(f"Cannot get specification backup files list: {dir_access_error}")
+            return
+
+        files.sort(reverse=True)
+
+        while files:
+            if len(files) < storage_debt:
+                return
+
+            file = files.pop()
+
+            if not (file.startswith('spec_backup_20') and file.endswith('.json')):
+                continue
+
+            try:
+                remove(f"{TermFilesPath.SPEC_BACKUP_DIR}/{file}")
+            except Exception as remove_error:
+                error(f"Cannot cleanup specification backup directory: {remove_error}")
+                return
 
     def show_license_dialog(self, app_state):
         if app_state != Qt.ApplicationState.ApplicationActive:

@@ -26,6 +26,8 @@
     "remote_spec": {
         "use_remote_spec": false,
         "rewrite_local_spec": false,
-        "remote_spec_url": ""
+        "remote_spec_url": "",
+        "backup_storage_depth": 100,
+        "backup_storage":  true
     }
 }
