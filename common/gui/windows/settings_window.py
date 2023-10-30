@@ -34,9 +34,11 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.DebugLevel.currentIndexChanged.connect(self.process_debug_level_change)
         self.KeepAliveMode.stateChanged.connect(lambda state: self.KeepAliveInterval.setEnabled(bool(state)))
         self.HeaderLengthMode.stateChanged.connect(lambda state: self.HeaderLength.setEnabled(bool(state)))
+        self.BackupStorageCheckbox.stateChanged.connect(lambda state: self.StorageDepth.setEnabled(bool(state)))
         self.MaxAmountBox.stateChanged.connect(lambda state: self.MaxAmount.setEnabled(bool(state)))
+        self.UseRemoteSpec.stateChanged.connect(lambda state: self.RemoteSpecUrl.setEnabled(bool(state)))
+        self.UseRemoteSpec.stateChanged.connect(lambda state: self.RewriteLocalSpec.setEnabled(bool(state)))
         self.ButtonDefault.clicked.connect(self.set_default_settings)
-        self.UseRemoteSpec.stateChanged.connect(self.process_remote_spec_change)
         self.process_config(self.config)
 
     @staticmethod
@@ -67,8 +69,11 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.UseRemoteSpec.setChecked(config.remote_spec.use_remote_spec)
         self.RemoteSpecUrl.setText(config.remote_spec.remote_spec_url)
         self.RewriteLocalSpec.setChecked(config.remote_spec.rewrite_local_spec)
-
-        self.process_remote_spec_change()
+        self.StorageDepth.setValue(config.remote_spec.backup_storage_depth)
+        self.BackupStorageCheckbox.setChecked(config.remote_spec.backup_storage)
+        self.StorageDepth.setEnabled(self.BackupStorageCheckbox.isChecked())
+        self.RemoteSpecUrl.setEnabled(self.UseRemoteSpec.isChecked())
+        self.RewriteLocalSpec.setEnabled(self.UseRemoteSpec.isChecked())
 
         if not config.fields.max_amount_limited:
             return
@@ -118,12 +123,6 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
             checkbox.setChecked(checked)
             checkbox.setDisabled(disabled)
 
-    def process_remote_spec_change(self):
-        spec_elements = (self.RemoteSpecUrl, self.RewriteLocalSpec)
-
-        for element in spec_elements:
-            element.setEnabled(self.UseRemoteSpec.isChecked())
-
     def ok(self):
         getLogger().setLevel(getLevelName(self.DebugLevel.currentText()))
 
@@ -148,6 +147,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.config.remote_spec.use_remote_spec = self.UseRemoteSpec.isChecked()
         self.config.remote_spec.remote_spec_url = self.RemoteSpecUrl.text()
         self.config.remote_spec.rewrite_local_spec = self.RewriteLocalSpec.isChecked()
+        self.config.remote_spec.backup_storage = self.BackupStorageCheckbox.isChecked()
+        self.config.remote_spec.backup_storage_depth = self.StorageDepth.value()
 
         if not self.config.fields.max_amount_limited:
             self.config.fields.max_amount = 999_999_999

@@ -3,18 +3,18 @@ from json import loads
 from requests import get
 from logging import error, debug, warning, info
 from PyQt6.QtNetwork import QTcpSocket
-from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtCore import pyqtSignal
 from common.lib.data_models.Config import Config
 from common.lib.interfaces.MetaClasses import QObjectAbcMeta
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.constants import TermFilesPath
 
 
 class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
     incoming_transaction_data: pyqtSignal = pyqtSignal(bytes)
     transaction_sent: pyqtSignal = pyqtSignal(str)
-    startup_finished: bool = False
 
     def __init__(self, config: Config):
         QTcpSocket.__init__(self)
@@ -109,44 +109,38 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
     def is_connected(self):
         return self.state() == self.SocketState.ConnectedState
 
-    def set_remote_spec(self, app_state):
-        if app_state != Qt.ApplicationState.ApplicationActive:
-            return
-
-        if self.startup_finished:
-            return
-
-        if not self.config.remote_spec.use_remote_spec:
-            return
-
+    def set_remote_spec(self):
         info(f"Getting remote spec using url: {self.config.remote_spec.remote_spec_url}")
 
-        try:
-            resp = get(self.config.remote_spec.remote_spec_url)
-        except Exception as spec_loading_error:
-            error(f"Cannot get remote spec: {spec_loading_error}")
-            self.startup_finished = True
-            return
-
-        if not resp.ok:
-            error(f"Cannot get remote spec: Non-success http-code {resp.status_code}")
-            self.startup_finished = True
-            return
-
-        spec: EpaySpecification = EpaySpecification()
-
-        if self.config.remote_spec.rewrite_local_spec:
-            backup_filename: str = spec.backup()
-            info(f"Local spec will be rewritten. Backup filename: {backup_filename}")
+        use_local_spec_text = "Local specification will be used instead"
 
         try:
-            spec_data: EpaySpecModel = EpaySpecModel.model_validate(loads(resp.text))
-            spec.reload_spec(spec=spec_data, commit=self.config.remote_spec.rewrite_local_spec)
-            info(f"Remote specification loaded {spec.spec.name}")
+            try:
+                resp = get(self.config.remote_spec.remote_spec_url)
+            except Exception as spec_loading_error:
+                error(f"Cannot get remote specification: {spec_loading_error}")
+                warning(use_local_spec_text)
+                return
 
-        except Exception as loading_error:
-            error(f"Cannot load remote Specification: {loading_error}")
-            info("Use local specification instead")
+            if not resp.ok:
+                error(f"Cannot get remote specification: Non-success http-code {resp.status_code}")
+                warning(use_local_spec_text)
+                return
 
-        finally:
-            self.startup_finished = True
+            spec: EpaySpecification = EpaySpecification()
+
+            if self.config.remote_spec.rewrite_local_spec and self.config.remote_spec.backup_storage:
+                backup_filename: str = spec.backup()
+                info(f"Backup local specification file name: {TermFilesPath.SPEC_BACKUP_DIR}/{backup_filename}")
+
+            try:
+                spec_data: EpaySpecModel = EpaySpecModel.model_validate(loads(resp.text))
+                spec.reload_spec(spec=spec_data, commit=self.config.remote_spec.rewrite_local_spec)
+                info(f"Remote specification loaded {spec.spec.name}")
+
+            except Exception as loading_error:
+                error(f"Cannot load remote specification: {loading_error}")
+                warning(use_local_spec_text)
+
+        except Exception as spec_error:
+            error(f"Cannot load remote specification: {spec_error}")
