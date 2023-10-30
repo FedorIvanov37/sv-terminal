@@ -1,11 +1,12 @@
 from json import dump, load
+from copy import deepcopy
 from dataclasses import asdict
 from datetime import datetime
 from pydantic import FilePath
 from common.lib.decorators.singleton import singleton
 from common.lib.constants import MessageLength, TermFilesPath
 from common.lib.constants.EpaySpecificationData import EpaySpecificationData
-from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField, FieldSet
 from common.lib.data_models.Types import FieldPath
 
 
@@ -79,6 +80,24 @@ class EpaySpecification(EpaySpecificationData):
             return False
 
         return field_spec.generate
+
+    def get_field_description(self, field_path: FieldPath, string: bool = False) -> str | list[str]:
+        description: list[str] = list()
+        spec_fields: FieldSet = deepcopy(self.spec.fields)
+
+        for field in field_path:
+            if not (field_spec := spec_fields.get(field)):
+                break
+
+            description.append(field_spec.description)
+
+            if not (spec_fields := field_spec.fields):
+                break
+
+        if not string:
+            return description
+
+        return ' / '.join(description)
 
     def get_mti_codes(self) -> list[str]:
         message_type_identifiers: set[str] = set()

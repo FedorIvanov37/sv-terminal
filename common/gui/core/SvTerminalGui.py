@@ -48,7 +48,7 @@ class SvTerminalGui(SvTerminal):
     connector: ConnectionThread
     trans_loop_timer: QTimer = QTimer()
     set_remote_spec: pyqtSignal = pyqtSignal()
-
+    wireless_handler: WirelessHandler
     _license_demonstrated: bool = False
     _startup_finished: bool = False
 
@@ -185,7 +185,9 @@ class SvTerminalGui(SvTerminal):
     def run_specification_window(self):
         spec_window = SpecWindow(self.connector)
         spec_window.accepted.connect(self.window.hide_secrets)
+        getLogger().removeHandler(self.wireless_handler)
         spec_window.exec()
+        self.create_window_logger()
 
     def activate_transaction_loop(self, interval: int):
         self.stop_transaction_loop()
@@ -318,12 +320,12 @@ class SvTerminalGui(SvTerminal):
 
     def create_window_logger(self):
         formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
-        wireless_handler = WirelessHandler()
+        self.wireless_handler = WirelessHandler()
         stream = LogStream(self.window.log_browser)
-        wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
-        wireless_handler.setFormatter(formatter)
+        self.wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
+        self.wireless_handler.setFormatter(formatter)
         logger = getLogger()
-        logger.addHandler(wireless_handler)
+        logger.addHandler(self.wireless_handler)
 
     def perform_reversal(self, command: str):
         transaction_source_map = {
