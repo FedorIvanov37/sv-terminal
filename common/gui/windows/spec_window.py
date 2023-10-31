@@ -80,11 +80,11 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.NextLevelLayout.addWidget(self.NextLevelButton)
         self.SpecTreeLayout.addWidget(self.SpecView)
         self.ButtonApply.setMenu(QMenu())
+        self.ButtonReset.setMenu(QMenu())
         #
         self.ButtonApply.menu().addAction(ButtonActions.ONE_SESSION, lambda: self.apply(ButtonActions.ONE_SESSION))
         self.ButtonApply.menu().addSeparator()
         self.ButtonApply.menu().addAction(ButtonActions.PERMANENTLY, lambda: self.apply(ButtonActions.PERMANENTLY))
-        self.ButtonReset.setMenu(QMenu())
         self.ButtonReset.menu().addAction(ButtonActions.REMOTE_SPEC, lambda: self.reset_spec.emit(ButtonActions.REMOTE_SPEC))
         self.ButtonApply.menu().addSeparator()
         self.ButtonReset.menu().addAction(ButtonActions.LOCAL_SPEC, lambda: self.reset_spec.emit(ButtonActions.LOCAL_SPEC))
@@ -107,13 +107,13 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.spec_accepted: lambda name: info(f"Specification applied - {name}"),
             self.SearchLine.textChanged: self.SpecView.search,
             self.SearchLine.editingFinished: self.SpecView.setFocus,
-            self.ButtonClearLog.clicked: self.clear_log,
-            self.ButtonCopyLog.clicked: self.copy_log,
             self.reset_spec: self.reload_spec,
             self.connector.got_remote_spec: self.process_remote_spec,
         }
 
         buttons_connection_map = {
+            self.ButtonClearLog: self.clear_log,
+            self.ButtonCopyLog: self.copy_log,
             self.PlusButton: self.SpecView.plus,
             self.MinusButton: self.minus,
             self.NextLevelButton: self.SpecView.next_level,
@@ -146,53 +146,15 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         for button, function in buttons_connection_map.items():
             button.clicked.connect(function)
 
-    def create_spec_logger(self):
-        formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
-        wireless_handler = WirelessHandler()
-        stream = LogStream(self.LogArea)
-        wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
-        wireless_handler.setFormatter(formatter)
-        logger = getLogger()
-        logger.addHandler(wireless_handler)
-
-    def reload_spec(self, spec_type: str):
-        if spec_type == ButtonActions.LOCAL_SPEC:
-            self.parse_file(TermFilesPath.SPECIFICATION)
-
-        if spec_type == ButtonActions.REMOTE_SPEC:
-            self.connector.set_remote_spec(commit=False)
-
-        self.reload()
+    def backup(self):
+        backup_filename = self.spec.backup()
+        info(f"Backup done! Filename: {backup_filename}")
 
     def set_hello_message(self):
         self.LogArea.setText(f"{TextConstants.HELLO_MESSAGE}\n")
 
     def process_remote_spec(self):
         self.SpecView.parse_spec(self.spec.spec)
-
-    def hide_reserved_for_future(self):
-        if self.SearchLine.text():
-            return
-
-        self.SpecView.hide_reserved(bool(self.CheckBoxHideReverved.checkState().value))
-
-    def minus(self):
-        self.changed = True
-        self.SpecView.minus()
-
-    def set_mti_list(self, mti_list):
-        self.spec.spec.mti = mti_list
-        self.changed = True
-
-    def set_mti(self):
-        mti_window = MtiSpecWindow()
-        mti_window.need_to_set_mti.connect(self.set_mti_list)
-        mti_window.changed.connect(self.set_mti_changed)
-        mti_window.rejected.connect(lambda: self.set_mti_changed(changed=False))
-        mti_window.exec()
-    @staticmethod
-    def set_clipboard_text(data: str = str()) -> None:
-        QApplication.clipboard().setText(data)
 
     def copy_log(self):
         self.set_clipboard_text(self.LogArea.toPlainText())
@@ -211,6 +173,48 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def clear_log(self):
         self.LogArea.setText(str())
+    def hide_reserved_for_future(self):
+        if self.SearchLine.text():
+            return
+
+        self.SpecView.hide_reserved(bool(self.CheckBoxHideReverved.checkState().value))
+
+    def minus(self):
+        self.changed = True
+        self.SpecView.minus()
+
+    def create_spec_logger(self):
+        formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
+        wireless_handler = WirelessHandler()
+        stream = LogStream(self.LogArea)
+        wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
+        wireless_handler.setFormatter(formatter)
+        logger = getLogger()
+        logger.addHandler(wireless_handler)
+
+    def reload_spec(self, spec_type: str):
+        if spec_type == ButtonActions.LOCAL_SPEC:
+            self.parse_file(TermFilesPath.SPECIFICATION)
+
+        if spec_type == ButtonActions.REMOTE_SPEC:
+            self.connector.set_remote_spec(commit=False)
+
+        self.reload()
+
+    def set_mti_list(self, mti_list):
+        self.spec.spec.mti = mti_list
+        self.changed = True
+
+    def set_mti(self):
+        mti_window = MtiSpecWindow()
+        mti_window.need_to_set_mti.connect(self.set_mti_list)
+        mti_window.changed.connect(self.set_mti_changed)
+        mti_window.rejected.connect(lambda: self.set_mti_changed(changed=False))
+        mti_window.exec()
+
+    @staticmethod
+    def set_clipboard_text(data: str = str()) -> None:
+        QApplication.clipboard().setText(data)
 
     def apply(self, commit: bool | str):
         if isinstance(commit, str):
@@ -238,10 +242,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             return
 
         self.changed = True
-
-    def backup(self):
-        backup_filename = self.spec.backup()
-        info(f"Backup done! Filename: {backup_filename}")
 
     def parse_file(self, filename: Optional[str] = None) -> None:
         if filename is None:

@@ -1,6 +1,6 @@
 EMAIL = "fedornivanov@gmail.com"
 AUTHOR = "Fedor Ivanov"
-VERSION = "v0.16"
+VERSION = "v0.17"
 RELEASE = "Oct 2023"
 CONTACT = f'<a href="mailto:{EMAIL}?subject=SIGNAL\'s user request&body=Dear Fedor,\n\n\n' \
           f'> Put your request here < \n\n\n\n'\
