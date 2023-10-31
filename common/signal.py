@@ -8,7 +8,7 @@ e.g.: "import common.signal" or "from common import signal"
 
 
 __author__ = "Fedor Ivanov"
-__version__ = "v0.16"
+__version__ = "v0.17"
 
 
 # Correct way to run

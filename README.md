@@ -9,7 +9,7 @@
  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
   ########  ###########  ########   ###    ####  ###     ###  ########## 
                                                                                                                       
- Simplified ISO generation algorithm | v0.16 Oct 2023
+ Simplified ISO generation algorithm | v0.17 Oct 2023
 ```
 
 
@@ -57,7 +57,7 @@ SIGNAL is not an emulator of PSP or SmartVista. It doesn't try to be similar to 
 positioned as a simplified version card payment terminal, developed with respect for the everyday needs of the Card 
 Processing Support Team
 
-Written on Python 3.10 with the use of PyQt6 and Pydantic packages
+Written on Python 3.11 with the use of PyQt6 and Pydantic packages
 
 
 In case of any questions about SIGNAL [contact author](#author). Your feedback and suggestions are general drivers 
@@ -79,6 +79,7 @@ of SIGNAL evolution.
   * Button "Set default" in the settings window
   * Command "Set reversal fields" in the Reversal button menu
   * Need to accept the license agreement on the first run  
+
 
 * Updates
   * Changed name to SIGNAL
@@ -119,25 +120,25 @@ Check the parameters, opened by the "Configuration" button to make your settings
 
 The list of key sequences and corresponding actions 
 
-| Key sequence          | Action                    |
-|-----------------------|---------------------------|
-| F1                    | About SIGNAL              |
-| Ctrl + Enter          | Send transaction          |
-| Ctrl + Shift + Enter  | Reverse last transaction  |
-| Ctrl + Alt + Enter    | Send Echo-Test            |
-| Ctrl + N              | Add new field             |
-| Ctrl + Shift + N      | Add new subfield          |
-| Ctrl + F              | Search                    |
-| Delete                | Remove field              |
-| Ctrl + E              | Edit current field data   |
-| Ctrl + W              | Edit current field number |
-| Ctrl + R              | Reconnect to host         |
-| Ctrl + L              | Clear log                 |
-| Ctrl + O              | Open transaction file     |
-| Ctrl + S              | Save transaction to file  |
-| Ctrl + P              | Print transaction         |
-| Ctrl + T              | Print SIGNAL logo         |
-| Ctrl + Alt + Q        | Quit SIGNAL               |
+| Key sequence          | MainWindow                | SpecWindow                     |
+|-----------------------|---------------------------|--------------------------------|
+| F1                    | About SIGNAL              | -                              |
+| Ctrl + Enter          | Send transaction          | -                              |
+| Ctrl + Shift + Enter  | Reverse last transaction  | -                              |
+| Ctrl + Alt + Enter    | Send Echo-Test            | -                              |
+| Ctrl + N              | Add new field             | Add new field                  |
+| Ctrl + Shift + N      | Add new subfield          | Add new subfield               |
+| Ctrl + F              | Search                    | Search                         |
+| Delete                | Remove field              | Remove field                   |
+| Ctrl + E              | Edit current field data   | Edit current field description |
+| Ctrl + W              | Edit current field number | Edit current field number      |
+| Ctrl + R              | Reconnect to host         | -                              |
+| Ctrl + L              | Clear log                 | Clear log                      |
+| Ctrl + O              | Open transaction file     | Open specification file        |
+| Ctrl + S              | Save transaction to file  | Backup current specification   |
+| Ctrl + P              | Print transaction         | -                              |
+| Ctrl + T              | Print SIGNAL logo         | Print SIGNAL logo              |
+| Ctrl + Alt + Q        | Quit SIGNAL               | -                              |
 
 
 ## Specification settings
@@ -156,7 +157,7 @@ by the author.
 
 ### Settings description
 
-![image](https://i.imgur.com/DZOImP4.png)
+![image](https://i.imgur.com/nLS8XXq.png)
 
 The table below describes the settings window columns from left to right
 
@@ -213,4 +214,4 @@ pattern one by one. Better to set the correct extension for each format. Refer t
 
 Designed and developed by Fedor Ivanov   
 
-In case of any question contract [fedornivanov@gmail.com](mailto:fedornivanov@gmail.com?subject=SIGNAL%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SIGNAL%20version%20is%20v0.16%20%7C%20Released%20in%20Oct%202023%0A)
+In case of any question contract [fedornivanov@gmail.com](mailto:fedornivanov@gmail.com?subject=SIGNAL%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SIGNAL%20version%20is%20v0.17%20%7C%20Released%20in%20Oct%202023%0A)
