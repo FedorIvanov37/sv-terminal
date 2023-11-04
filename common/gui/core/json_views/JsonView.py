@@ -50,7 +50,7 @@ class JsonView(TreeView):
     def _setup(self):
         self.setTabKeyNavigation(True)
         self.setAnimated(True)
-        self.itemDoubleClicked.connect(self.edit_item)
+        self.itemDoubleClicked.connect(self.editItem)
         self.itemChanged.connect(self.process_change_item)
         self.itemChanged.connect(self.disable_next_level)
         self.delegate.closeEditor.connect(lambda: self.hide_secrets())
@@ -152,7 +152,7 @@ class JsonView(TreeView):
 
         self.setCurrentItem(item)
 
-    def edit_item(self, item, column):
+    def editItem(self, item, column):
         if item is self.root:
             return
 
@@ -171,7 +171,7 @@ class JsonView(TreeView):
         if column == FieldsSpec.ColumnsOrder.LENGTH and item.spec:
             return
 
-        self.editItem(item, column)
+        TreeView.editItem(self, item, column)
 
     def generate_item_data(self, item):
         if not item.checkbox_checked(CheckBoxesDefinition.GENERATE):
@@ -265,10 +265,8 @@ class JsonView(TreeView):
             [warning(err) for err in str(validation_error).splitlines()]
             return
 
-        if column == FieldsSpec.ColumnsOrder.PROPERTY:
-            return
-
-        self.set_item_description(item)
+        if column != FieldsSpec.ColumnsOrder.PROPERTY:
+            self.set_item_description(item)
 
     @void_qt_signals
     def set_item_description(self, item: FieldItem):
@@ -296,20 +294,6 @@ class JsonView(TreeView):
 
         for child in item.get_children():
             self.set_item_description(child)
-
-    def edit_column(self, column: int):
-        if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE):
-            return
-
-        if not self.hasFocus():
-            self.setFocus()
-
-        item: FieldItem | QTreeWidgetItem
-
-        if not (item := self.currentItem()):
-            return
-
-        self.edit_item(item, column)
 
     def validate_item(self, item):  # Validate single item, no auto children validate
         if not self.config.fields.validation:

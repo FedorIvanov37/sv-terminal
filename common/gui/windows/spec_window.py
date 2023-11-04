@@ -21,8 +21,6 @@ from common.lib.constants import LogDefinition
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):
-    _changed: bool = False
-    _mti_changed: bool = False
     _read_only: bool = True
     _spec: EpaySpecification = EpaySpecification()
     _spec_accepted: pyqtSignal = pyqtSignal(str)
@@ -40,14 +38,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     @property
     def spec_rejected(self):
         return self._spec_rejected
-
-    @property
-    def changed(self):
-        return self._changed
-
-    @changed.setter
-    def changed(self, changed):
-        self._changed = changed
 
     @property
     def spec(self):
@@ -94,12 +84,12 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
         self.create_spec_logger()
         self.connect_all()
+        self.set_read_only(self.CheckBoxReadOnly.isChecked())
         self.set_hello_message()
 
     def connect_all(self):
 
         connection_map = {
-            self.SpecView.itemChanged: self.item_changed,
             self.SpecView.search_finished: self.hide_reserved_for_future,
             self.CheckBoxReadOnly.stateChanged: lambda state: self.set_read_only(bool(state)),
             self.CheckBoxHideReverved.stateChanged: self.hide_reserved_for_future,
@@ -159,9 +149,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def copy_log(self):
         self.set_clipboard_text(self.LogArea.toPlainText())
 
-    def set_mti_changed(self, changed=True):
-        self._mti_changed = changed
-
     def set_read_only(self, checked: bool):
         self.read_only = checked
 
@@ -180,7 +167,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.SpecView.hide_reserved(bool(self.CheckBoxHideReverved.checkState().value))
 
     def minus(self):
-        self.changed = True
         self.SpecView.minus()
 
     def create_spec_logger(self):
@@ -203,13 +189,10 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def set_mti_list(self, mti_list):
         self.spec.spec.mti = mti_list
-        self.changed = True
 
     def set_mti(self):
         mti_window = MtiSpecWindow()
         mti_window.need_to_set_mti.connect(self.set_mti_list)
-        mti_window.changed.connect(self.set_mti_changed)
-        mti_window.rejected.connect(lambda: self.set_mti_changed(changed=False))
         mti_window.exec()
 
     @staticmethod
@@ -229,19 +212,10 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             return
 
         self.spec_accepted.emit(self.spec.name)
-        self.changed = False
-        self._mti_changed = False
         self.accepted.emit()
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         self.process_close(a0)
-
-    def item_changed(self, item, column):
-        if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER and \
-                column == SpecFieldDef.ColumnsOrder.SECRET:
-            return
-
-        self.changed = True
 
     def parse_file(self, filename: Optional[str] = None) -> None:
         if filename is None:
@@ -268,7 +242,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
         else:
             self.SpecView.parse_spec(specification)
-            self.changed = True
 
     def reload(self):
         self.SpecView.reload()
@@ -276,7 +249,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.SpecView.hide_reserved()
 
     def process_close(self, close_event):
-        if not any((self.changed, self._mti_changed)):
+        if self.SpecView.generate_spec() == self.spec.spec:
             close_event.accept()
             return
 
