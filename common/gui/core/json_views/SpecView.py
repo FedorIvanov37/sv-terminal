@@ -69,6 +69,14 @@ class SpecView(TreeView):
 
     @void_qt_signals
     def process_item_change(self, item, column):
+        if column > SpecFieldDef.ColumnsOrder.TAG_LENGTH and self.window.read_only:
+            warning("Read only mode. Uncheck the checkbox on top of the window")
+            state = item.checkState(column)
+            state = Qt.CheckState.Checked if state == Qt.CheckState.Unchecked else Qt.CheckState.Unchecked
+            item.setCheckState(column, state)
+            self.set_pan_as_secret(item)
+            return
+
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
             self.set_pan_as_secret(item)
 

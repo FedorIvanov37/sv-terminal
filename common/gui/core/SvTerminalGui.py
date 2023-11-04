@@ -187,6 +187,7 @@ class SvTerminalGui(SvTerminal):
         spec_window.accepted.connect(self.window.hide_secrets)
         getLogger().removeHandler(self.wireless_handler)
         spec_window.exec()
+        getLogger().removeHandler(spec_window.wireless_handler)
         self.create_window_logger()
 
     def activate_transaction_loop(self, interval: int):
