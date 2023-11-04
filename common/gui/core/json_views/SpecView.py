@@ -1,4 +1,5 @@
 from logging import info, error, warning
+from typing import Callable
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -13,8 +14,19 @@ from common.gui.constants import Colors, SpecFieldDef
 
 class SpecView(TreeView):
     _spec: EpaySpecification = EpaySpecification()
-    item_changed = pyqtSignal(SpecItem, int)
     search_finished = pyqtSignal()
+
+    def reject_in_read_only_mode(fuction: Callable, *args):  # Reject function execution when read only mode is active
+        def wrapper(self, *args, **kwargs):
+            if not self.window.read_only:
+                return fuction(self, *args, **kwargs)
+
+            if not self.hasFocus():
+                self.setFocus()
+
+            warning("Read only mode. Uncheck the checkbox on top of the window")
+
+        return wrapper
 
     @property
     def spec(self):
@@ -31,17 +43,17 @@ class SpecView(TreeView):
     def _setup(self):
         self.setHeaderLabels(SpecFieldDef.COLUMNS)
         self.addTopLevelItem(self.root)
-        self.itemDoubleClicked.connect(self.edit_item)
+        self.itemDoubleClicked.connect(self.editItem)
         self.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
         self.itemChanged.connect(self.process_item_change)
-        self.currentItemChanged.connect(self.set_path_status)
+        self.currentItemChanged.connect(self.print_path)
         self.parse_spec()
         self.make_order()
         self.collapseAll()
         self.root.setExpanded(True)
         self.resizeColumnToContents(SpecFieldDef.ColumnsOrder.DESCRIPTION)
 
-    def set_path_status(self):
+    def print_path(self):
         item: SpecItem
 
         if not (item := self.currentItem()):
@@ -55,6 +67,7 @@ class SpecView(TreeView):
 
         info(f"{path} - {description}")
 
+    @void_qt_signals
     def process_item_change(self, item, column):
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
             self.set_pan_as_secret(item)
@@ -93,6 +106,19 @@ class SpecView(TreeView):
             return
 
         item.setCheckState(SpecFieldDef.ColumnsOrder.SECRET, Qt.CheckState.PartiallyChecked)
+
+    def editItem(self, item, column):
+        if item is self.root and column not in (SpecFieldDef.ColumnsOrder.DESCRIPTION, SpecFieldDef.ColumnsOrder.FIELD):
+            return
+
+        if column > SpecFieldDef.ColumnsOrder.TAG_LENGTH:
+            return
+
+        if self.window.read_only:
+            warning("Read only mode. Uncheck the checkbox on top of the window")
+            return
+
+        TreeView.editItem(self, item, column)
 
     def validate_item(self, item: SpecItem, column: int, validate_all=False):
         if item is self.root:
@@ -133,19 +159,6 @@ class SpecView(TreeView):
         TreeView.make_order(self)
         self.hide_reserved()
 
-    def edit_item(self, item, column):
-        if item is self.root and column != SpecFieldDef.ColumnsOrder.DESCRIPTION:
-            return
-
-        if column > SpecFieldDef.ColumnsOrder.TAG_LENGTH:
-            return
-
-        if self.window.read_only:
-            warning("Read only mode. Uncheck the checkbox on top of the window")
-            return
-
-        self.editItem(item, column)
-
     @staticmethod
     def set_field_path(item):
         try:
@@ -157,6 +170,7 @@ class SpecView(TreeView):
         except AttributeError:
             path = str()
 
+    @reject_in_read_only_mode
     def minus(self):
         item: SpecItem = self.currentItem()
 
@@ -174,6 +188,7 @@ class SpecView(TreeView):
 
         parent.takeChild(parent.indexOfChild(item))
 
+    @reject_in_read_only_mode
     def plus(self):
         item = SpecItem([])
 
@@ -188,9 +203,10 @@ class SpecView(TreeView):
         current_index = parent.indexOfChild(current_item)
         parent.insertChild(current_index + 1, item)
         self.scrollToItem(item)
-        self.edit_item(item, 0)
+        self.editItem(item, 0)
         self.setCurrentItem(item)
 
+    @reject_in_read_only_mode
     def next_level(self):
         item = SpecItem([])
         current_item: SpecItem = self.currentItem()
@@ -200,7 +216,7 @@ class SpecView(TreeView):
 
         self.currentItem().addChild(item)
         self.setCurrentItem(item)
-        self.edit_item(item, int())
+        self.editItem(item, int())
 
     def parse_spec(self, spec=None):
         if spec is None:

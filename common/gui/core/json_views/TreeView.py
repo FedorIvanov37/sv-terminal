@@ -60,6 +60,15 @@ class TreeView(QTreeWidget):
 
         QTreeWidget.setFocus(self)
 
+    def edit_column(self, column: int):
+        if not self.hasFocus():
+            self.setFocus()
+
+        if not (item := self.currentItem()):
+            return
+
+        self.editItem(item, column)
+
     def search(self, text: str, parent = None) -> None:
         if not text:
             self.unhide_all()
