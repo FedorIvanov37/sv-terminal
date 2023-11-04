@@ -26,6 +26,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     _spec_accepted: pyqtSignal = pyqtSignal(str)
     _spec_rejected: pyqtSignal = pyqtSignal()
     _reset_spec: pyqtSignal = pyqtSignal(str)
+    wireless_handler: WirelessHandler
 
     @property
     def reset_spec(self):
@@ -171,12 +172,12 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def create_spec_logger(self):
         formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
-        wireless_handler = WirelessHandler()
+        self.wireless_handler = WirelessHandler()
         stream = LogStream(self.LogArea)
-        wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
-        wireless_handler.setFormatter(formatter)
+        self.wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
+        self.wireless_handler.setFormatter(formatter)
         logger = getLogger()
-        logger.addHandler(wireless_handler)
+        logger.addHandler(self.wireless_handler)
 
     def reload_spec(self, spec_type: str):
         if spec_type == ButtonActions.LOCAL_SPEC:
