@@ -25,6 +25,9 @@
 * [Graphic User Interface](#graphic-user-interface)
   * [GUI overview](#gui-overview)
   * [Windows hotkeys](#windows-hotkeys)
+
+
+* [Settings](#settings) 
   * [Specification settings](#specification-settings)
     * [Specification Overview](#specification-overview) 
     * [Settings description](#settings-description)
@@ -73,7 +76,9 @@ of SIGNAL evolution.
 
 * Allowed usage on test environment only. SIGNAL only implements basic security checks
 * At the moment SIGNAL doesn't support byte-fields
-* Logfile rotation included in the build. SIGNAL stores 10 logfiles by 10M each
+* GUI tests were made on Windows 10/11 x64 only
+
+[//]: # (* Logfile rotation included in the build. SIGNAL stores 10 logfiles by 10M each)
 
 
 ## Release info
@@ -134,6 +139,7 @@ The list of key sequences and corresponding actions
 | Ctrl + T              | Print SIGNAL logo         | Print SIGNAL logo              |
 | Ctrl + Alt + Q        | Quit SIGNAL               | -                              |
 
+# Settings
 
 ## Specification settings
 
@@ -295,4 +301,4 @@ SIGNAL is distributed under the GNU/GPL license as free software. See more on [G
 
 Designed and developed by Fedor Ivanov   
 
-In case of any question contract [fedornivanov@gmail.com](mailto:fedornivanov@gmail.com?subject=SIGNAL%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SIGNAL%20version%20is%20v0.17%20%7C%20Released%20in%20Oct%202023%0A)
+In case of any question feel free to [contract author](mailto:fedornivanov@gmail.com?subject=SIGNAL%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SIGNAL%20version%20is%20v0.17%20%7C%20Released%20in%20Oct%202023%0A) directly
