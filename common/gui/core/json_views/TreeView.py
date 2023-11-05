@@ -9,7 +9,6 @@ class TreeView(QTreeWidget):
     field_removed: pyqtSignal = pyqtSignal()
     field_changed: pyqtSignal = pyqtSignal()
     field_added: pyqtSignal = pyqtSignal()
-    fields_unhided: pyqtSignal = pyqtSignal()
     root = None
 
     def __init__(self):

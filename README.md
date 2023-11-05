@@ -73,32 +73,20 @@ of SIGNAL evolution.
 ## Release info
 
 * New features
-  * Transactions repeat loop button
-  * Main / Spec Window search line, key sequence 
-  * Incoming message header length settings 
-  * Button "Set default" in the settings window
-  * Command "Set reversal fields" in the Reversal button menu
-  * Need to accept the license agreement on the first run  
+  * Remote Specification in Settings and SpecWindow. See [Remote specification](#remote-specification)
+  * Log screen on SpecWindow 
 
 
 * Updates
-  * Changed name to SIGNAL
-  * Hiding of secrets in logs and transaction constructors now possible for every field
-  * Simplified JSON mode, works without specification
-  * Default message corrected according to mandatory changes 23Q4
-  * Many small useful updates such as
-    * Improved checkboxes
-    * Instant field length counting
-    * Tag Length cascading
-    * Lines wrap on log display
-    * Predefined max amounts
-  
+  * JSON constructors color scheme optimization 
+  * Added key sequences on SpecWindow
+  * SpecWindow checkboxes are protected in read-only mode
+  * Spec backup storage depth
+  * Transaction constructor color scheme optimization
+
 
 * Fixed
-  * All problems around old JSON file incompatibility  
-  * Transaction field max_amount has no effect
-  * SIGNAL fall down in some cases of field validation
-  * Code optimization, minor bug fixes
+  * Small code optimization
   
 
 # Graphic User Interface
@@ -182,33 +170,53 @@ The table below describes the settings window columns from left to right
 ² Due to security reasons, it is impossible to set Primary Account Number (Field 2) as non-secret. The field has a non-removable "secret" mark  
 
 ### Remote specification
-
-SIGNAL can get general specification JSON remotely on the startup stage and by the user's request in SpecWindow. The specification URL should be set in the settings.
+The local specification `JSON` file always is at the path `common/data/settings/specification.json`, however, SIGNAL can get general specification `JSON` remotely on the startup stage and by the user's request in SpecWindow. The specification URL should be set in the settings. In case when the remote specification is set by settings but the SIGNAL is unable to get remote specification data the local spec data will be taken instead from the "settings" directory
 
 In general, the specification endpoint has to return the Spec JSON by GET request without any additional actions
 
 The conditions for the remote spec endpoint:
 
-* Available when SIGNAL starts
-* Supports GET request
-* Responds by HTTP-status 200
-* Sends header "Content-type": "application/json"
-* Returns specification in response-body
+* Be available when SIGNAL starts
+* Support GET requests with no additional actions
+* Respond by HTTP-status 200
+* Send header "Content-type": "application/json" in the response
+* Return valid specification data in response-body
 
-In case when the remote specification is set by settings but the SIGNAL is unable to get remote specification data the local spec data will be taken instead
 
 ### Remote specification endpoint example
-The following endpoint is fully ready to start. In this example, endpoint http://127.0.0.1:4242/specification will return specification file data /opt/spec/specification.json
+The following code illustrates the endpoint example. In this example, endpoint http://127.0.0.1:4242/specification returns specification file data `/opt/spec/specification.json`
+
+  
+**To begin remote specification endpoint**
+
+1. Prepare specification.json file. You can get it from the directory `common/data/settings` or save a copy using SpecWindow which executes by button `Specification` on the MainWindow 
+2. Prepare file `signal_spec.py`, containing endpoint script below
+3. Set `SERVER_ADDRESS`, `PORT`, `FILE` parameters in the file `signal_spec.py`
+4. Put both files `specification.json` and `signal_spec.py` to remote server
+5. Run `signal_spec.py`
+6. For checking open specified URL in browser, it should show the specification `JSON`. In example below the URL is http://127.0.0.1:4242/specification
+
+
+
 
 ```python
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+"""
+Basic realization of SIGNAL Specification remote endpoint. This endpoint returns specification.json by GET request
 
-SERVER_ADDRESS = '127.0.0.1'  # Specify the correct address
-PORT = 4242
-PATH = '/specification'
-FILE = '/opt/spec/specification.json'
+Check and set the required configuration parameters below before run 
+
+Was tested on Python3 only
+"""
+
+SERVER_ADDRESS = '127.0.0.1'  # The address of the server machine
+PORT = 4242  # Port for incoming connection
+PATH = '/specification'  # URL path to get the specification file
+FILE = '/opt/spec/specification.json'  # The Specification file path, the file should be returned by GET request
+
+# By these settings we create URL http://127.0.0.1:4242/specification which returns file /opt/spec/specification.json
 
 
 class HttpSpec(BaseHTTPRequestHandler):
@@ -235,6 +243,10 @@ except KeyboardInterrupt:
 
 server.server_close()
 ```
+
+**Test of remote specification endpoint**
+
+![image](https://i.imgur.com/mhjheFj.png)
 
 
 ## Transaction data files format

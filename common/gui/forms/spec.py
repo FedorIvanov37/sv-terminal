@@ -174,7 +174,7 @@ class Ui_SpecificationWindow(object):
         SpecificationWindow.setWindowTitle(_translate("SpecificationWindow", "Specification"))
         self.ButtonSetMti.setText(_translate("SpecificationWindow", "Set MTI"))
         self.ButtonApply.setText(_translate("SpecificationWindow", "Apply"))
-        self.ButtonReset.setText(_translate("SpecificationWindow", "Reset"))
+        self.ButtonReset.setText(_translate("SpecificationWindow", "Set Spec"))
         self.ButtonBackup.setText(_translate("SpecificationWindow", "Backup"))
         self.ParseFile.setText(_translate("SpecificationWindow", "Parse file"))
         self.ButtonClean.setText(_translate("SpecificationWindow", "Clear Spec"))
