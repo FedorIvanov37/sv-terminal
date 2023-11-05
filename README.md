@@ -9,7 +9,7 @@
  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
   ########  ###########  ########   ###    ####  ###     ###  ########## 
                                                                                                                       
- Simplified ISO generation algorithm | v0.17 Oct 2023
+ Simplified ISO generation algorithm | v0.17 Dec 2023
 ```
 
 
@@ -19,6 +19,7 @@
   * [SIGNAL overview](#signal-overview)
   * [Important notes](#important-notes)
   * [Release info](#release-info)
+
 
  
 * [Graphic User Interface](#graphic-user-interface)
@@ -37,7 +38,9 @@
     * [Save transaction to file](#save-transaction-to-file)
 
 
-* [Author](#author) 
+* [About](#about)
+  * [License](#license)
+  * [Author](#author)
 
 # Description
 
@@ -280,6 +283,13 @@ pattern one by one. Better to set the correct extension for each format. Refer t
 ### Save transaction to file
 
 ... 
+
+# About
+
+## License
+
+SIGNAL is distributed under the GNU/GPL license as free software. See more on [GNU page](https://www.gnu.org/licenses/)
+
 
 ## Author
 
