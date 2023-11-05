@@ -183,8 +183,8 @@ The conditions for the remote spec endpoint:
 * Return valid specification data in response-body
 
 
-### Remote specification endpoint example
-The following code illustrates the endpoint example. In this example, endpoint http://127.0.0.1:4242/specification returns specification file data `/opt/spec/specification.json`
+### Remote specification endpoint setting
+The following [code](#remote-spec-endpoint-code-example) illustrates the endpoint example. In this example, endpoint http://127.0.0.1:4242/specification returns specification file data `/opt/spec/specification.json`
 
   
 **To begin remote specification endpoint**
@@ -193,12 +193,12 @@ The following code illustrates the endpoint example. In this example, endpoint h
 2. Prepare file `signal_spec.py`, containing endpoint script below
 3. Set `SERVER_ADDRESS`, `PORT`, `FILE` parameters in the file `signal_spec.py`
 4. Put both files `specification.json` and `signal_spec.py` to remote server
-5. Run `signal_spec.py`
+5. Run the code using command `nohup python signal_spec.py &`
 6. For checking open specified URL in browser, it should show the specification `JSON`. In example below the URL is http://127.0.0.1:4242/specification
 
 
 
-
+### Remote spec endpoint code example
 ```python
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, HTTPServer
