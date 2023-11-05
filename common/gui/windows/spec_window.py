@@ -176,6 +176,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def clear_log(self):
         self.LogArea.setText(str())
+
     def hide_reserved_for_future(self):
         if self.SearchLine.text():
             return
