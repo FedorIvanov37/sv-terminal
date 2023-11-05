@@ -80,12 +80,11 @@ class SpecView(TreeView):
         if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
             self.set_pan_as_secret(item)
 
-        match column:
-            case SpecFieldDef.ColumnsOrder.SECRET:
-                self.cascade_checkboxes(item)
+        if column == SpecFieldDef.ColumnsOrder.SECRET:
+            self.cascade_checkboxes(item)
 
-            case SpecFieldDef.ColumnsOrder.TAG_LENGTH:
-                self.cascade_tag_length(item)
+        if column == SpecFieldDef.ColumnsOrder.TAG_LENGTH:
+            self.cascade_tag_length(item)
 
         self.validate_item(item, column, validate_all=True)
 
