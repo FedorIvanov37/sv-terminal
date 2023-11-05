@@ -23,10 +23,13 @@
  
 * [Graphic User Interface](#graphic-user-interface)
   * [GUI overview](#gui-overview)
-  * [Main Window hotkeys](#main-window-hotkeys)
+  * [Windows hotkeys](#windows-hotkeys)
   * [Specification settings](#specification-settings)
     * [Specification Overview](#specification-overview) 
     * [Settings description](#settings-description)
+    * [Remote specification](#remote-specification)
+    * [Remote specification endpoint setting](#remote-specification-endpoint-setting)
+    * [Remote spec endpoint code example](#remote-spec-endpoint-code-example)
   * [Transaction data files format](#transaction-data-files-format)
     * [Overview](#overview)
     * [The data formats description](#the-data-formats-description)
@@ -104,7 +107,7 @@ Check the parameters, opened by the "Configuration" button to make your settings
 
 ![image](https://i.imgur.com/7kZuHsR.png)
 
-## Main Window hotkeys
+## Windows hotkeys
 
 The list of key sequences and corresponding actions 
 
@@ -190,12 +193,16 @@ The following [code](#remote-spec-endpoint-code-example) illustrates the endpoin
 **To begin remote specification endpoint**
 
 1. Prepare specification.json file. You can get it from the directory `common/data/settings` or save a copy using SpecWindow which executes by button `Specification` on the MainWindow 
-2. Prepare file `signal_spec.py`, containing endpoint script below
+2. Prepare file `signal_spec.py`, containing [endpoint script](#remote-spec-endpoint-code-example)
 3. Set `SERVER_ADDRESS`, `PORT`, `FILE` parameters in the file `signal_spec.py`
 4. Put both files `specification.json` and `signal_spec.py` to remote server
 5. Run the code using command `nohup python signal_spec.py &`
 6. For checking open specified URL in browser, it should show the specification `JSON`. In example below the URL is http://127.0.0.1:4242/specification
 
+
+**Test of remote specification endpoint**
+
+![image](https://i.imgur.com/mhjheFj.png)
 
 
 ### Remote spec endpoint code example
@@ -243,10 +250,6 @@ except KeyboardInterrupt:
 
 server.server_close()
 ```
-
-**Test of remote specification endpoint**
-
-![image](https://i.imgur.com/mhjheFj.png)
 
 
 ## Transaction data files format
