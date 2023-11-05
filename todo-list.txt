@@ -132,6 +132,9 @@
 + SpecWindow key sequences
 + SpecWindow log
 + Remote spec - settings, SpecWindow
++ Full read only mode for spec
++ Spec backup storage settings
+
 
 • Change name to SIGNAL
     • Document

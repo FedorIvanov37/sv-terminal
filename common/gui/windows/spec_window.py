@@ -26,7 +26,12 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     _spec_accepted: pyqtSignal = pyqtSignal(str)
     _spec_rejected: pyqtSignal = pyqtSignal()
     _reset_spec: pyqtSignal = pyqtSignal(str)
+    _load_remote_spec: pyqtSignal = pyqtSignal(bool)
     wireless_handler: WirelessHandler
+
+    @property
+    def load_remote_spec(self):
+        return self._load_remote_spec
 
     @property
     def reset_spec(self):
@@ -70,15 +75,24 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.MinusLayout.addWidget(self.MinusButton)
         self.NextLevelLayout.addWidget(self.NextLevelButton)
         self.SpecTreeLayout.addWidget(self.SpecView)
-        self.ButtonApply.setMenu(QMenu())
-        self.ButtonReset.setMenu(QMenu())
-        #
-        self.ButtonApply.menu().addAction(ButtonActions.ONE_SESSION, lambda: self.apply(ButtonActions.ONE_SESSION))
-        self.ButtonApply.menu().addSeparator()
-        self.ButtonApply.menu().addAction(ButtonActions.PERMANENTLY, lambda: self.apply(ButtonActions.PERMANENTLY))
-        self.ButtonReset.menu().addAction(ButtonActions.REMOTE_SPEC, lambda: self.reset_spec.emit(ButtonActions.REMOTE_SPEC))
-        self.ButtonApply.menu().addSeparator()
-        self.ButtonReset.menu().addAction(ButtonActions.LOCAL_SPEC, lambda: self.reset_spec.emit(ButtonActions.LOCAL_SPEC))
+
+        button_menu_structure = {
+            self.ButtonApply: {
+                ButtonActions.ONE_SESSION: lambda: self.apply(ButtonActions.ONE_SESSION),
+                ButtonActions.PERMANENTLY: lambda: self.apply(ButtonActions.PERMANENTLY),
+            },
+            self.ButtonReset: {
+                ButtonActions.REMOTE_SPEC: lambda: self.reset_spec.emit(ButtonActions.REMOTE_SPEC),
+                ButtonActions.LOCAL_SPEC: lambda: self.reset_spec.emit(ButtonActions.LOCAL_SPEC),
+            },
+        }
+
+        for button, button_actions in button_menu_structure.items():
+            button.setMenu(QMenu())
+
+            for name, action in button_actions.items():
+                button.menu().addAction(name, action)
+                button.menu().addSeparator()
 
         for box in (self.CheckBoxHideReverved, self.CheckBoxReadOnly):
             box.setChecked(bool(Qt.CheckState.Checked))
@@ -100,6 +114,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.SearchLine.editingFinished: self.SpecView.setFocus,
             self.reset_spec: self.reload_spec,
             self.connector.got_remote_spec: self.process_remote_spec,
+            self.load_remote_spec: self.connector.set_remote_spec,
         }
 
         buttons_connection_map = {
@@ -176,15 +191,15 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         stream = LogStream(self.LogArea)
         self.wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
         self.wireless_handler.setFormatter(formatter)
-        logger = getLogger()
-        logger.addHandler(self.wireless_handler)
+        getLogger().addHandler(self.wireless_handler)
 
     def reload_spec(self, spec_type: str):
         if spec_type == ButtonActions.LOCAL_SPEC:
             self.parse_file(TermFilesPath.SPECIFICATION)
+            self.apply(commit=False)
 
         if spec_type == ButtonActions.REMOTE_SPEC:
-            self.connector.set_remote_spec(commit=False)
+            self.load_remote_spec.emit(False)
 
         self.reload()
 
@@ -235,7 +250,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
                 specification: EpaySpecModel = EpaySpecModel.model_validate(load(json_file))
 
         except ValidationError as validation_error:
-            error_text = str(validation_error)  # .json(indent=4)
+            error_text = str(validation_error)
             error(f"File validation error: {error_text}")
 
         except Exception as parsing_error:
@@ -250,7 +265,13 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         self.SpecView.hide_reserved()
 
     def process_close(self, close_event):
-        if self.SpecView.generate_spec() == self.spec.spec:
+        try:
+            current_spec = self.SpecView.generate_spec()
+        except (ValidationError, ValueError):
+            close_event.accept()
+            return
+
+        if current_spec == self.spec.spec:
             close_event.accept()
             return
 
