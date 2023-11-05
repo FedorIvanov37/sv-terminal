@@ -108,7 +108,7 @@ settings are needed to run SIGNAL GUI on a Windows machine. Run the `signal.exe`
 
 Check the parameters, opened by the "Configuration" button to make your settings  
 
-![image](https://i.imgur.com/7kZuHsR.png)
+![image](https://i.imgur.com/Pj49PG1.png)
 
 ## Windows hotkeys
 
@@ -151,7 +151,7 @@ by the author.
 
 ### Settings description
 
-![image](https://i.imgur.com/nLS8XXq.png)
+![image](https://i.imgur.com/Wvg8EuX.png)
 
 The table below describes the settings window columns from left to right
 
