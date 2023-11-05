@@ -1,11 +1,11 @@
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from common.lib.constants import TermFilesPath
 
 
 SERVER_ADDRESS = '127.0.0.1'
 PORT = 4242
 PATH = '/specification'
+FILE = 'common/data/settings/specification1.json'
 
 
 class HttpSpec(BaseHTTPRequestHandler):
@@ -15,12 +15,11 @@ class HttpSpec(BaseHTTPRequestHandler):
             self.end_headers()
             return
 
-        # self.send_response(HTTPStatus.OK)
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-type", "application/json")
         self.end_headers()
 
-        with open('common/data/settings/specification1.json') as json_file:
+        with open(FILE) as json_file:
             self.wfile.write(json_file.read().encode())
 
 

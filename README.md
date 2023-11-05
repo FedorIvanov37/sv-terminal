@@ -167,8 +167,8 @@ The table below describes the settings window columns from left to right
 | Description | Free text field purpose explanation                                                                                                                                                                                                                    | Show field description on MainWindow transaction constructor | Text, no min or max length | No           |
 | Min Len     | Field value minimum length                                                                                                                                                                                                                             | Fields validation during data processing                     | Number, min value is 1     | Yes          |
 | Max Len     | Field value maximum length                                                                                                                                                                                                                             | Fields validation during data processing                     | Number, min value is 1     | Yes          | 
-| Data Len    | Applicable for variable-length fields. This means count numbers mark the field's own length. Should be taken from the E-pay specification document. In the specification usually marks as `LLVAR` - 2 digits, `LLLVAR` - 3 digits, and so on                         | Message construction, Fields validation, Message parsing     | Number, min value is 0     | Yes          |
-| Tag Len     | For complex fields only (field should contain subfields). This means count numbers mark. In the specification usually marked as `LLVAR` - 2 digits, `LLLVAR` - 3 digits, and so on. Tag Len of the field should be equal to the field's own Data Len | Message construction, Fields validation, Message parsing     | Number, min value is 0     | Yes          |
+| Data Len    | Applicable for variable-length fields. This means count numbers mark the field's own length. Should be taken from the E-pay specification document. In the specification usually marks as `LLVAR` - 2 digits, `LLLVAR` - 3 digits, and so on           | Message construction, Fields validation, Message parsing     | Number, min value is 0     | Yes          |
+| Tag Len     | For complex fields only (field should contain subfields). This means count numbers mark. In the specification usually marked as `LLVAR` - 2 digits, `LLLVAR` - 3 digits, and so on. Tag Len of the field should be equal to the field's own Data Len   | Message construction, Fields validation, Message parsing     | Number, min value is 0     | Yes          |
 | Alpha       | Are the alphabetic letters allowed in this field                                                                                                                                                                                                       | Fields validation                                            | Checkbox                   | Yes          |
 | Numeric     | Are the digits  allowed in this field                                                                                                                                                                                                                  | Fields validation                                            | Checkbox                   | Yes          |
 | Special     | Are the special characters allowed in this field                                                                                                                                                                                                       | Fields validation                                            | Checkbox                   | Yes          |
@@ -181,6 +181,62 @@ The table below describes the settings window columns from left to right
 
 ² Due to security reasons, it is impossible to set Primary Account Number (Field 2) as non-secret. The field has a non-removable "secret" mark  
 
+### Remote specification
+
+SIGNAL can get general specification JSON remotely on the startup stage and by the user's request in SpecWindow. The specification URL should be set in the settings.
+
+In general, the specification endpoint has to return the Spec JSON by GET request without any additional actions
+
+The conditions for the remote spec endpoint:
+
+* Available when SIGNAL starts
+* Supports GET request
+* Responds by HTTP-status 200
+* Sends header "Content-type": "application/json"
+* Returns specification in response-body
+
+In case when the remote specification is set by settings but the SIGNAL is unable to get remote specification data the local spec data will be taken instead
+
+### Remote specification endpoint example
+The following endpoint is fully ready to start. In this example, endpoint http://127.0.0.1:4242/specification will return specification file data /opt/spec/specification.json
+
+```python
+from http import HTTPStatus
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+
+SERVER_ADDRESS = '127.0.0.1'  # Specify the correct address
+PORT = 4242
+PATH = '/specification'
+FILE = '/opt/spec/specification.json'
+
+
+class HttpSpec(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path != PATH:
+            self.send_response(HTTPStatus.NOT_FOUND)
+            self.end_headers()
+            return
+
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+
+        with open(FILE) as json_file:
+            self.wfile.write(json_file.read().encode())
+
+
+server = HTTPServer((SERVER_ADDRESS, PORT), HttpSpec)
+
+try:
+    server.serve_forever()
+except KeyboardInterrupt:
+    pass
+
+server.server_close()
+```
+
+
 ## Transaction data files format
 
 
@@ -192,10 +248,10 @@ by SIGNAL. This chapter describes each format's features and purpose
 
 ### The data formats description 
 
-| Format | File extension | Incoming  | Outgoing | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-|--------|----------------|-----------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| JSON   | `.json`        | Yes       | Yes      | Equally well suited for operator reading and machine analysis. The main goal is to make complex fields not so complicated, through structure-readable decomposition. Fields and subfield lengths are left out because they will be calculated later according to the Specification. All the transactions, incoming and outgoing stored in memory in JSON representation. Strictly requires Specification settings for each subfield                                                          | 
-| INI    | `.ini`         | Yes       | Yes      | Flat format, where each field is written in one string. Fields fill in Tag-Length-Value (TLV) style with no separators. All the lengths have to be calculated and set by the operator. The format skips the data validation process. Recommended when you definitely understand what you do. Requires specification for top-level fields only, subfields specification is not required                                                                                                        | 
+| Format | File extension | Incoming  | Outgoing | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|--------|----------------|-----------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| JSON   | `.json`        | Yes       | Yes      | Equally well suited for operator reading and machine analysis. The main goal is to make complex fields not so complicated, through structure-readable decomposition. Fields and subfield lengths are left out because they will be calculated later according to the Specification. All the transactions, incoming and outgoing stored in memory in JSON representation. Strictly requires Specification settings for each subfield                                                            | 
+| INI    | `.ini`         | Yes       | Yes      | Flat format, where each field is written in one string. Fields fill in Tag-Length-Value (TLV) style with no separators. All the lengths have to be calculated and set by the operator. The format skips the data validation process. Recommended when you definitely understand what you do. Requires specification for top-level fields only, subfields specification is not required                                                                                                         | 
 | DUMP   | `.txt`         | Yes       | Yes      | Raw SV-dump format. Used for loading and generating SVFE-compatible dump messages for parsing incoming and generating outgoing SV messages. Low-level data exchange with SVFE makes using this format. The DUMP is the fully ready-read message for the SVFE epayint module. For the sv-dump building recommended setting field data through the transaction constructor using JSON or INI style, then generate the dump by SIGNAL interface. Manual analysis or generation is not recommended | 
 
 ### Loading to the SIGNAL
