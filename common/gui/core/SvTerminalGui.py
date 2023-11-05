@@ -54,7 +54,7 @@ class SvTerminalGui(SvTerminal):
 
     def __init__(self, config: Config):
         self.connector = ConnectionThread(config)
-        super(SvTerminalGui, self).__init__(config, self.connector)  # ConnectionThread(config)
+        super(SvTerminalGui, self).__init__(config, self.connector)
         self.window: MainWindow = MainWindow(self.config)
         self.setup()
 

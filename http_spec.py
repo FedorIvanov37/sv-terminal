@@ -15,6 +15,7 @@ class HttpSpec(BaseHTTPRequestHandler):
             self.end_headers()
             return
 
+        # self.send_response(HTTPStatus.OK)
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-type", "application/json")
         self.end_headers()
