@@ -137,8 +137,6 @@ class SvTerminalGui(SvTerminal):
         for slot in self.show_license_dialog, self.on_startup:
             self.pyqt_application.applicationStateChanged.connect(slot)
 
- 
-
     def show_license_dialog(self, app_state):
         if app_state != Qt.ApplicationState.ApplicationActive:
             return
