@@ -1,3 +1,6 @@
+TRANS_TYPE_TRANSACTION = "Transaction"
+TRANS_TYPE_KEEP_ALIVE = "Keep Alive"
+
 KEEP_ALIVE_1S = "1 second"
 KEEP_ALIVE_5S = "5 seconds"
 KEEP_ALIVE_10S = "10 seconds"

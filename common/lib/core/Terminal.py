@@ -1,9 +1,9 @@
 from json import dumps, load
 from logging import error, info, warning, debug
 from PyQt6 import QtWidgets
-from PyQt6.QtCore import pyqtSignal, QObject, QTimer
+from PyQt6.QtCore import pyqtSignal, QObject
 from PyQt6.QtNetwork import QTcpSocket
-from common.lib.constants import DataFormats, TermFilesPath, KeepAliveIntervals
+from common.lib.constants import DataFormats, TermFilesPath
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.core.Parser import Parser
 from common.lib.core.Logger import Logger
@@ -15,18 +15,20 @@ from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.Connector import Connector
 from common.lib.core.LogPrinter import LogPrinter
+from common.lib.core.TransTimer import TransactionTimer
+from common.lib.constants import KeepAliveIntervals
 
 
 class SvTerminal(QObject):
     pyqt_application = QtWidgets.QApplication([])
     spec: EpaySpecification = EpaySpecification(TermFilesPath.SPECIFICATION)
+    keep_alive_timer: TransactionTimer = TransactionTimer(KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE)
 
     with open(TermFilesPath.CONFIG) as json_file:
         config: Config = Config.model_validate(load(json_file))
 
     validator = Validator()
     need_reconnect: pyqtSignal = pyqtSignal()
-    keep_alive_timer: QTimer = QTimer()
 
     def __init__(self, config: Config, connector: ConnectionInterface | None = None):
         super(SvTerminal, self).__init__()
@@ -58,6 +60,7 @@ class SvTerminal(QObject):
         self.trans_queue.incoming_transaction.connect(self.transaction_received)
         self.trans_queue.outgoing_transaction.connect(self.transaction_sent)
         self.trans_queue.transaction_timeout.connect(self.got_timeout)
+        self.keep_alive_timer.send_transaction.connect(self.keep_alive)
 
     def get_transaction(self, trans_id: str):
         return self.trans_queue.get_transaction(trans_id)
@@ -150,32 +153,7 @@ class SvTerminal(QObject):
                     f"or request was matched before")
 
     def set_keep_alive_interval(self, interval_name: str):
-        if interval_name == KeepAliveIntervals.KEEP_ALIVE_ONCE:
-            self.keep_alive()
-            return
-
-        if interval_name == KeepAliveIntervals.KEEP_ALIVE_STOP:
-            info("Stop Keep Alive mode")
-            self.stop_keep_alive_loop()
-            return
-
-        info(f"Set KeepAlive mode to {interval_name}")
-
-        if interval_name == KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval:
-            self.run_keep_alive_loop(self.config.host.keep_alive_interval)
-            return
-
-        if interval := KeepAliveIntervals.get_interval_time(interval_name):
-            self.run_keep_alive_loop(interval)
-
-    def run_keep_alive_loop(self, interval: int = 300):
-        self.stop_keep_alive_loop()
-        self.keep_alive_timer = QTimer()
-        self.keep_alive_timer.timeout.connect(self.keep_alive)
-        self.keep_alive_timer.start(int(interval) * 1000)
-
-    def stop_keep_alive_loop(self):
-        self.keep_alive_timer.stop()
+        self.keep_alive_timer.set_trans_loop_interval(interval_name)
 
     def keep_alive(self):
         if self.connector.connection_in_progress():
