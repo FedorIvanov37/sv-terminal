@@ -135,15 +135,8 @@ class SvTerminalGui(SvTerminal):
 
         self.connector.stateChanged.connect(self.set_connection_status)
         self.set_remote_spec.connect(self.connector.set_remote_spec)
-        self.trans_timer.send_transaction.connect(self.send_transaction_by_timer)
+        self.trans_timer.send_transaction.connect(self.window.send)
         self.trans_timer.interval_was_set.connect(self.window.process_repeat_change)
-
-    def send_transaction_by_timer(self):
-        if self.connector.connection_in_progress():
-            warning("Cannot repeat transaction while connection is in progress")
-            return
-
-        self.window.send.emit()
 
     def show_license_dialog(self, app_state):
         if app_state != Qt.ApplicationState.ApplicationActive:
