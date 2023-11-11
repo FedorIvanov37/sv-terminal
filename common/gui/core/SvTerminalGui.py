@@ -90,8 +90,8 @@ class SvTerminalGui(SvTerminal):
             self.set_remote_spec.emit()
 
         if self.config.remote_spec.backup_storage:
-            rotator = SpecFilesRotator(self.config)
-            rotator.clear_spec_backup()
+            rotator = SpecFilesRotator()
+            rotator.clear_spec_backup(self.config)
 
         self._startup_finished = True
 
@@ -122,7 +122,7 @@ class SvTerminalGui(SvTerminal):
             window.hotkeys: lambda: HotKeysHintWindow().exec(),
             window.specification: self.run_specification_window,
             window.about: lambda: AboutWindow(),
-            window.keep_alive: self.set_keep_alive_interval,
+            window.keep_alive: self.set_keep_alive,
             window.repeat: self.trans_timer.set_trans_loop_interval,
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
 
@@ -235,7 +235,7 @@ class SvTerminalGui(SvTerminal):
             if self.config.host.keep_alive_mode:
                 interval_name = KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
 
-            self.set_keep_alive_interval(interval_name)
+            self.set_keep_alive(interval_name)
 
     def read_config(self):
         try:
@@ -251,8 +251,8 @@ class SvTerminalGui(SvTerminal):
     def stop_sv_terminal(self):
         self.connector.stop_thread()
 
-    def set_keep_alive_interval(self, interval_name: str):
-        SvTerminal.set_keep_alive_interval(self, interval_name)
+    def set_keep_alive(self, interval_name: str):
+        self.set_keep_alive_interval(interval_name)
         self.window.process_keep_alive_change(interval_name)
 
     def reconnect(self):

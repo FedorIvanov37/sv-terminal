@@ -1,17 +1,30 @@
 from os import remove, listdir
+from json import dump
+from datetime import datetime
 from logging import error
 from common.lib.data_models.Config import Config
 from common.lib.constants import TermFilesPath
+from common.lib.core.EpaySpecification import EpaySpecification
 
 
 class SpecFilesRotator:
-    def __init__(self, config: Config):
-        self.config: Config = config
+    spec: EpaySpecification = EpaySpecification()
+    filename_head = "spec_backup_"
+    filename_tail = ".json"
+    date_format = "%Y%m%d_%H%M%S"
 
-    def clear_spec_backup(self):
-        storage_debt = self.config.remote_spec.backup_storage_depth
+    def backup_spec(self):
+        filename = f"{self.filename_head}{datetime.now():{self.date_format}}{self.filename_tail}"
 
-        if not self.config.remote_spec.backup_storage:
+        with open(f'{TermFilesPath.SPEC_BACKUP_DIR}/{filename}', "w") as file:
+            dump(self.spec.spec.model_dump(), file, indent=4)
+
+        return filename
+
+    def clear_spec_backup(self, config: Config):
+        storage_debt = config.remote_spec.backup_storage_depth
+
+        if not config.remote_spec.backup_storage:
             storage_debt = int()
 
         try:
@@ -28,7 +41,7 @@ class SpecFilesRotator:
 
             file = files.pop()
 
-            if not (file.startswith('spec_backup_20') and file.endswith('.json')):
+            if not (file.startswith(self.filename_head) and file.endswith(self.filename_tail)):
                 continue
 
             try:
