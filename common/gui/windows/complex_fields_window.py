@@ -77,7 +77,7 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
 
             self.ButtonMainWindow: {
                 ButtonActions.GET_DATA: self.get_from_main_window,
-                ButtonActions.SET_DATA: self.set_to_message,
+                ButtonActions.SET_DATA: self.set_on_main_windows,
             },
         }
 
@@ -155,7 +155,7 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
     def set_clipboard_text(data: str = str()) -> None:
         QApplication.clipboard().setText(data)
 
-    def set_to_message(self):
+    def set_on_main_windows(self):
         try:
             field_number = self.get_field_number()
         except LookupError as lookup_error:
@@ -234,7 +234,15 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
             error("Lost field data")
             return
 
+        if isinstance(field_data, dict):
+            try:
+                field_data: str = Parser.join_complex_field(field_number, field_data)
+            except Exception as parsing_error:
+                error(parsing_error)
+                return
+
         self.TextData.setText(field_data)
+
         self.parse_string()
 
         info(f"Got field {field_number} data from MainWindow")
