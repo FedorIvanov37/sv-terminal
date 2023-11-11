@@ -125,6 +125,7 @@ class SvTerminalGui(SvTerminal):
             window.keep_alive: self.set_keep_alive_interval,
             window.repeat: self.trans_timer.set_trans_loop_interval,
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
+
             self.connector.stateChanged: self.set_connection_status,
             self.set_remote_spec: self.connector.set_remote_spec,
             self.trans_timer.send_transaction: window.send,
