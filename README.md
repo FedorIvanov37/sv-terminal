@@ -86,6 +86,7 @@ of SIGNAL evolution.
 * New features
   * Remote Specification in Settings and SpecWindow. See [Remote specification](#remote-specification)
   * Log screen on SpecWindow 
+  * Complex fields conductor
 
 
 * Updates
@@ -93,11 +94,11 @@ of SIGNAL evolution.
   * Added key sequences on SpecWindow
   * SpecWindow checkboxes are protected in read-only mode
   * Spec backup storage depth
-  * Transaction constructor color scheme optimization
 
 
 * Fixed
   * Small code optimization
+  * JSON mode by default
   
 
 # Graphic User Interface
