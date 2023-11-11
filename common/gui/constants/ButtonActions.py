@@ -1,5 +1,8 @@
 from common.lib.constants import KeepAliveIntervals
 
+ALL = "All"
+STRING = "String"
+JSON = "JSON"
 
 LAST = "Reverse last"
 OTHER = "Reverse other"
@@ -14,6 +17,9 @@ LOCAL_SPEC = "Set local specification"
 BUTTON_PLUS_SIGN = "✚"
 BUTTON_MINUS_SIGN = "━"
 BUTTON_NEXT_LEVEL_SIGN = "🡾"
+BUTTON_UP_SIGN = "🡹"
+BUTTON_DOWN_SIGN = "🡻"
+
 
 KEEP_ALIVE_1S = KeepAliveIntervals.KEEP_ALIVE_1S
 KEEP_ALIVE_5S = KeepAliveIntervals.KEEP_ALIVE_5S

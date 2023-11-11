@@ -13,6 +13,7 @@ from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.spec_window import SpecWindow
 from common.gui.windows.hotkeys_hint_window import HotKeysHintWindow
 from common.gui.windows.about_window import AboutWindow
+from common.gui.windows.complex_fields_window import ComplexFieldsParser
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread
 from common.gui.windows.license_window import LicenseWindow
@@ -121,6 +122,7 @@ class SvTerminalGui(SvTerminal):
             window.about: lambda: AboutWindow(),
             window.keep_alive: self.set_keep_alive_interval,
             window.repeat: self.set_trans_loop_interval,
+            window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
         }
 
         for signal, slot in terminal_connections_map.items():

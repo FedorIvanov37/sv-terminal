@@ -81,7 +81,7 @@ class EpaySpecification(EpaySpecificationData):
 
         return field_spec.generate
 
-    def get_field_description(self, field_path: FieldPath, string: bool = False) -> str | list[str]:
+    def get_field_description(self, field_path: FieldPath, string: bool = False) -> str | FieldPath:
         description: list[str] = list()
         spec_fields: FieldSet = deepcopy(self.spec.fields)
 

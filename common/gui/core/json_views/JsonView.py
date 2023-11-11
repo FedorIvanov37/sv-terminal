@@ -15,6 +15,7 @@ from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
 from common.gui.decorators.void_qt_signals import void_qt_signals
 from common.gui.constants import Colors, CheckBoxesDefinition, MainFieldSpec as FieldsSpec
 
+
 class JsonView(TreeView):
     class Delegate(QItemDelegate):
         _text_edited: pyqtSignal = pyqtSignal(str, int)
@@ -27,9 +28,9 @@ class JsonView(TreeView):
             editor.textEdited.connect(lambda text: self.text_edited.emit(text, index.column()))
             QItemDelegate.setEditorData(self, editor, index)
 
+    root: FieldItem
     need_disable_next_level: pyqtSignal = pyqtSignal()
     need_enable_next_level: pyqtSignal = pyqtSignal()
-    root: FieldItem = FieldItem([FieldsSpec.MESSAGE])
     spec: EpaySpecification = EpaySpecification()
 
     @property
@@ -40,8 +41,9 @@ class JsonView(TreeView):
     def hide_secret_fields(self):
         return self.config.fields.hide_secrets
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, root_name: str = FieldsSpec.MESSAGE):
         super(JsonView, self).__init__()
+        self.root: FieldItem = FieldItem([root_name])
         self.config: Config = config
         self.delegate = JsonView.Delegate()
         self.validator = ItemsValidator(self.config)
@@ -241,10 +243,6 @@ class JsonView(TreeView):
             match column:
 
                 case FieldsSpec.ColumnsOrder.VALUE:
-                    if item.childCount():
-                        item.field_data = str()
-                        return
-
                     self.generate_item_data(item)
                     self.validate_item(item)
                     item.set_item_color()
@@ -368,7 +366,6 @@ class JsonView(TreeView):
     @void_qt_signals
     def minus(self, *args):
         item: FieldItem | QTreeWidgetItem
-        item: FieldItem
 
         if not (item := self.currentItem()):
             return
@@ -448,14 +445,18 @@ class JsonView(TreeView):
             item.field_data = value
 
     def parse_transaction(self, transaction: Transaction) -> None:
+        for item in self.root.get_children():
+            if not item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
+                continue
+
+            transaction.json_fields[item.field_number] = True
+
         self.clean()
 
         fields = deepcopy(transaction.data_fields)
 
         self.parse_fields(fields)
         self.set_checkboxes(transaction)
-        self.make_order()
-        self.hide_secrets()
         self.check_all_items()
 
         for item in self.root.get_children():
@@ -535,6 +536,9 @@ class JsonView(TreeView):
             if self.spec.is_field_complex(item.get_field_path()):
                 is_checked = self.config.fields.json_mode
 
+                if item.field_number in transaction.json_fields:
+                    is_checked = transaction.json_fields.get(item.field_number)
+
             item.set_checkbox(is_checked)
 
     def parse_fields(self, input_json: dict, parent: QTreeWidgetItem = None, specification=None):
@@ -559,12 +563,12 @@ class JsonView(TreeView):
                 child: FieldItem = FieldItem(string_data)
 
             parent.addChild(child, fill_len=self.len_fill)
-
             child.set_spec(field_spec)
-
             self.set_item_description(child)
 
         self.set_all_items_length()
+        self.hide_secrets()
+        self.make_order()
 
     def get_top_level_field_numbers(self) -> list[str]:
         field_numbers: list[str] = list()

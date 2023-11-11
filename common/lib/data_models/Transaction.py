@@ -21,6 +21,7 @@ class Transaction(BaseModel):
     data_fields: TypeFields
     max_amount: int = 100
     generate_fields: list[generated_field] = []
+    json_fields: dict[str, bool] = {}
 
     match_id: str = str()
     utrnno: str = str()
