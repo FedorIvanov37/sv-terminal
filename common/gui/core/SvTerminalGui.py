@@ -125,6 +125,10 @@ class SvTerminalGui(SvTerminal):
             window.keep_alive: self.set_keep_alive_interval,
             window.repeat: self.trans_timer.set_trans_loop_interval,
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
+            self.connector.stateChanged: self.set_connection_status,
+            self.set_remote_spec: self.connector.set_remote_spec,
+            self.trans_timer.send_transaction: window.send,
+            self.trans_timer.interval_was_set: window.process_repeat_change,
         }
 
         for signal, slot in terminal_connections_map.items():
@@ -133,10 +137,7 @@ class SvTerminalGui(SvTerminal):
         for slot in self.show_license_dialog, self.on_startup:
             self.pyqt_application.applicationStateChanged.connect(slot)
 
-        self.connector.stateChanged.connect(self.set_connection_status)
-        self.set_remote_spec.connect(self.connector.set_remote_spec)
-        self.trans_timer.send_transaction.connect(self.window.send)
-        self.trans_timer.interval_was_set.connect(self.window.process_repeat_change)
+ 
 
     def show_license_dialog(self, app_state):
         if app_state != Qt.ApplicationState.ApplicationActive:
