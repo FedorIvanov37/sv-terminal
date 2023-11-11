@@ -1,8 +1,20 @@
 from common.lib.constants import KeepAliveIntervals
 
+
+BUTTON_PLUS_SIGN = "✚"
+BUTTON_MINUS_SIGN = "━"
+BUTTON_NEXT_LEVEL_SIGN = "🡾"
+BUTTON_UP_SIGN = "🡹"
+BUTTON_DOWN_SIGN = "🡻"
+BUTTON_LEFT_SIGN = "🡸"
+BUTTON_RIGHT_SIGN = "🡺"
+
 ALL = "All"
 STRING = "String"
 JSON = "JSON"
+
+GET_DATA = f"{BUTTON_RIGHT_SIGN} Get from MainWindow"
+SET_DATA = f"{BUTTON_LEFT_SIGN} Set to MainWindow"
 
 LAST = "Reverse last"
 OTHER = "Reverse other"
@@ -13,13 +25,6 @@ PERMANENTLY = "Permanently"
 
 REMOTE_SPEC = "Set remote specification"
 LOCAL_SPEC = "Set local specification"
-
-BUTTON_PLUS_SIGN = "✚"
-BUTTON_MINUS_SIGN = "━"
-BUTTON_NEXT_LEVEL_SIGN = "🡾"
-BUTTON_UP_SIGN = "🡹"
-BUTTON_DOWN_SIGN = "🡻"
-
 
 KEEP_ALIVE_1S = KeepAliveIntervals.KEEP_ALIVE_1S
 KEEP_ALIVE_5S = KeepAliveIntervals.KEEP_ALIVE_5S
