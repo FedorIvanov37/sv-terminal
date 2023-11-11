@@ -1,4 +1,3 @@
-from os import remove, listdir
 from copy import deepcopy
 from json import dumps, load
 from logging import error, info, warning
@@ -24,7 +23,7 @@ from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.exceptions.exceptions import LicenceAlreadyAccepted, LicenseDataLoadingError
 from common.lib.constants import TextConstants, DataFormats, TermFilesPath, KeepAliveIntervals, LogDefinition
 from common.lib.core.TransTimer import TransactionTimer
-
+from common.lib.core.SpecFilesRotator import SpecFilesRotator
 
 
 """
@@ -90,7 +89,9 @@ class SvTerminalGui(SvTerminal):
         if self.config.remote_spec.use_remote_spec:
             self.set_remote_spec.emit()
 
-        self.clear_spec_backup()
+        if self.config.remote_spec.backup_storage:
+            rotator = SpecFilesRotator(self.config)
+            rotator.clear_spec_backup()
 
         self._startup_finished = True
 
@@ -143,35 +144,6 @@ class SvTerminalGui(SvTerminal):
             return
 
         self.window.send.emit()
-
-    def clear_spec_backup(self):
-        storage_debt = self.config.remote_spec.backup_storage_depth
-
-        if not self.config.remote_spec.backup_storage:
-            storage_debt = int()
-
-        try:
-            files = listdir(TermFilesPath.SPEC_BACKUP_DIR)
-        except Exception as dir_access_error:
-            error(f"Cannot get specification backup files list: {dir_access_error}")
-            return
-
-        files.sort(reverse=True)
-
-        while files:
-            if len(files) < storage_debt:
-                return
-
-            file = files.pop()
-
-            if not (file.startswith('spec_backup_20') and file.endswith('.json')):
-                continue
-
-            try:
-                remove(f"{TermFilesPath.SPEC_BACKUP_DIR}/{file}")
-            except Exception as remove_error:
-                error(f"Cannot cleanup specification backup directory: {remove_error}")
-                return
 
     def show_license_dialog(self, app_state):
         if app_state != Qt.ApplicationState.ApplicationActive:
