@@ -53,6 +53,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _reset: pyqtSignal = pyqtSignal()
     _keep_alive: pyqtSignal = pyqtSignal(str)
     _repeat: pyqtSignal = pyqtSignal(str)
+    _parse_complex_field: pyqtSignal = pyqtSignal()
 
     @property
     def repeat(self):
@@ -150,6 +151,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def about(self):
         return self._about
 
+    @property
+    def parse_complex_field(self):
+        return self._parse_complex_field
+
     def __init__(self, config: Config):
         super().__init__()
         self.config = config
@@ -209,6 +214,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonHotkeys: self.hotkeys,
             self.ButtonSettings: self.settings,
             self.ButtonCopyBitmap: self.copy_bitmap,
+            self.ButtonFieldsParser: self.parse_complex_field,
         }
 
         json_view_connection_map = {
@@ -347,6 +353,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def clean_window_log(self) -> None:
         self.LogArea.setText(str())
+
+    def parse_fields(self, fields):
+        self.json_view.clean()
+        self.json_view.parse_fields(fields)
 
     # Return transaction data fields in dict-representation
     def get_fields(self, flat=False) -> TypeFields:

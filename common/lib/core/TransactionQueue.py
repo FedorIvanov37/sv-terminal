@@ -1,6 +1,6 @@
-from datetime import datetime, timedelta
 from logging import error
 from collections import deque
+from datetime import datetime, timedelta
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtCore import QTimer
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -177,9 +177,6 @@ class TransactionQueue(QObject):
 
             if transaction.is_reversal:
                 continue
-
-            # if not transaction.is_request:
-            #     continue
 
             for field in reversal_fields:
                 if not (reversal_field := reversal.data_fields.get(field)):

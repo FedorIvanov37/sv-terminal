@@ -75,7 +75,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
-        <string>Reset</string>
+        <string>Set Spec</string>
        </property>
       </widget>
      </item>

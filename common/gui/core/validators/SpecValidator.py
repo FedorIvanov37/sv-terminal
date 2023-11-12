@@ -7,11 +7,11 @@ class SpecValidator:
     spec: EpaySpecification = EpaySpecification()
 
     def validate_spec_row(self, row: SpecItem):
-        if row.reserved_for_future:
-            return
-
-        for validator in (self.validate_field_number, self.validate_field_length, self.validate_datatype_checkboxes):
+        for validator in self.validate_field_number, self.validate_field_length, self.validate_datatype_checkboxes:
             validator(row)
+
+            if row.reserved_for_future:  # When the field is reserved for future validate field number only
+                return
 
         num_validation_map = {
             SpecFieldDef.ColumnsOrder.VARIABLE_LENGTH: row.var_length,

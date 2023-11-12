@@ -18,6 +18,7 @@ from common.lib.constants import TextConstants
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.lib.constants import LogDefinition
+from common.lib.core.SpecFilesRotator import SpecFilesRotator
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):
@@ -66,15 +67,17 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     @set_window_icon
     @has_close_button_only
     def _setup(self):
+        self.SpecView: SpecView = SpecView(self)
         self.PlusButton: QPushButton = QPushButton(ButtonActions.BUTTON_PLUS_SIGN)
         self.MinusButton: QPushButton = QPushButton(ButtonActions.BUTTON_MINUS_SIGN)
         self.NextLevelButton: QPushButton = QPushButton(ButtonActions.BUTTON_NEXT_LEVEL_SIGN)
-        self.SpecView: SpecView = SpecView(self)
-        #
-        self.PlusLayout.addWidget(self.PlusButton)
-        self.MinusLayout.addWidget(self.MinusButton)
-        self.NextLevelLayout.addWidget(self.NextLevelButton)
-        self.SpecTreeLayout.addWidget(self.SpecView)
+
+        widgets_layouts_map = {
+            self.PlusLayout: self.PlusButton,
+            self.MinusLayout: self.MinusButton,
+            self.NextLevelLayout: self.NextLevelButton,
+            self.SpecTreeLayout: self.SpecView,
+        }
 
         button_menu_structure = {
             self.ButtonApply: {
@@ -93,6 +96,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             for name, action in button_actions.items():
                 button.menu().addAction(name, action)
                 button.menu().addSeparator()
+
+        for layout, widget in widgets_layouts_map.items():
+            layout.addWidget(widget)
 
         for box in (self.CheckBoxHideReverved, self.CheckBoxReadOnly):
             box.setChecked(bool(Qt.CheckState.Checked))
@@ -152,8 +158,10 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         for button, function in buttons_connection_map.items():
             button.clicked.connect(function)
 
-    def backup(self):
-        backup_filename = self.spec.backup()
+    @staticmethod
+    def backup():
+        rotator: SpecFilesRotator = SpecFilesRotator()
+        backup_filename = rotator.backup_spec()
         info(f"Backup done! Filename: {backup_filename}")
 
     def set_hello_message(self):
@@ -176,6 +184,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def clear_log(self):
         self.LogArea.setText(str())
+
     def hide_reserved_for_future(self):
         if self.SearchLine.text():
             return

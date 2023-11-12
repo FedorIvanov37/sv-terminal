@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QTreeWidget
-from PyQt6.QtGui import QUndoStack, QFont
+from PyQt6.QtGui import QUndoStack, QFont, QPalette, QColor
 from PyQt6.QtCore import pyqtSignal
 from common.gui.decorators.void_qt_signals import void_qt_signals
 from common.gui.constants import MainFieldSpec
@@ -9,7 +9,6 @@ class TreeView(QTreeWidget):
     field_removed: pyqtSignal = pyqtSignal()
     field_changed: pyqtSignal = pyqtSignal()
     field_added: pyqtSignal = pyqtSignal()
-    fields_unhided: pyqtSignal = pyqtSignal()
     root = None
 
     def __init__(self):
@@ -23,6 +22,10 @@ class TreeView(QTreeWidget):
         self.setAlternatingRowColors(True)
         self.setEditTriggers(self.EditTrigger.NoEditTriggers)
         self.setSortingEnabled(False)
+
+        palette = QPalette()
+        palette.setColor(palette.ColorRole.AlternateBase, QColor(224, 233, 246))
+        self.setPalette(palette)
 
     def plus(self):
         ...

@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
+from common.lib.data_models.Types import FieldPath
 from common.gui.core.json_items.SpecItem import SpecItem
 from common.gui.core.validators.SpecValidator import SpecValidator
 from common.gui.decorators.void_qt_signals import void_qt_signals
@@ -16,10 +17,10 @@ class SpecView(TreeView):
     _spec: EpaySpecification = EpaySpecification()
     search_finished = pyqtSignal()
 
-    def reject_in_read_only_mode(fuction: Callable, *args):  # Reject function execution when read only mode is active
+    def reject_in_read_only_mode(fuction: Callable, *args, **kwargs):  # Reject function execution when read only mode is active
         def wrapper(self, *args, **kwargs):
             if not self.window.read_only:
-                return fuction(self, *args, **kwargs)
+                return fuction(self)
 
             if not self.hasFocus():
                 self.setFocus()
@@ -55,11 +56,15 @@ class SpecView(TreeView):
 
     def print_path(self):
         item: SpecItem
+        path: FieldPath
 
         if not (item := self.currentItem()):
             return
 
         if not (path := item.get_field_path()):
+            return
+
+        if not any((item.field_number, item.description)):
             return
 
         description: str = self.spec.get_field_description(path, string=True)
@@ -69,7 +74,7 @@ class SpecView(TreeView):
 
     @void_qt_signals
     def process_item_change(self, item, column):
-        if column > SpecFieldDef.ColumnsOrder.TAG_LENGTH and self.window.read_only:
+        if column in SpecFieldDef.CHECKBOXES and self.window.read_only:
             warning("Read only mode. Uncheck the checkbox on top of the window")
             state = item.checkState(column)
             state = Qt.CheckState.Checked if state == Qt.CheckState.Unchecked else Qt.CheckState.Unchecked
@@ -132,8 +137,6 @@ class SpecView(TreeView):
         if item is self.root:
             return
 
-        self.set_field_path(item)
-
         try:
             if validate_all:
                 self.validator.validate_spec_row(item)
@@ -166,17 +169,6 @@ class SpecView(TreeView):
     def make_order(self):
         TreeView.make_order(self)
         self.hide_reserved()
-
-    @staticmethod
-    def set_field_path(item):
-        try:
-            if not (path := item.get_field_path(string=True)):
-                path = str()
-
-            path = f"{path} {item.description}"
-
-        except AttributeError:
-            path = str()
 
     @reject_in_read_only_mode
     def minus(self):

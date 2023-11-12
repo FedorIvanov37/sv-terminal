@@ -3,16 +3,16 @@ from copy import deepcopy
 from json import dumps, load
 from logging import error, info, warning
 from pydantic import ValidationError
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QFileDialog
 from PyQt6.QtNetwork import QTcpSocket
-from PyQt6.QtWidgets import QFileDialog
-from PyQt6.QtCore import QTimer, Qt, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.spec_window import SpecWindow
 from common.gui.windows.hotkeys_hint_window import HotKeysHintWindow
 from common.gui.windows.about_window import AboutWindow
+from common.gui.windows.complex_fields_window import ComplexFieldsParser
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread
 from common.gui.windows.license_window import LicenseWindow
@@ -23,6 +23,8 @@ from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.exceptions.exceptions import LicenceAlreadyAccepted, LicenseDataLoadingError
 from common.lib.constants import TextConstants, DataFormats, TermFilesPath, KeepAliveIntervals, LogDefinition
+from common.lib.core.TransTimer import TransactionTimer
+from common.lib.core.SpecFilesRotator import SpecFilesRotator
 
 
 """
@@ -46,7 +48,7 @@ Starts MainWindow when starting its work, being a kind of low-level adapter betw
 
 class SvTerminalGui(SvTerminal):
     connector: ConnectionThread
-    trans_loop_timer: QTimer = QTimer()
+    trans_timer: TransactionTimer = TransactionTimer()
     set_remote_spec: pyqtSignal = pyqtSignal()
     wireless_handler: WirelessHandler
     _license_demonstrated: bool = False
@@ -88,7 +90,9 @@ class SvTerminalGui(SvTerminal):
         if self.config.remote_spec.use_remote_spec:
             self.set_remote_spec.emit()
 
-        self.clear_spec_backup()
+        if self.config.remote_spec.backup_storage:
+            rotator = SpecFilesRotator()
+            rotator.clear_spec_backup(self.config)
 
         self._startup_finished = True
 
@@ -119,8 +123,13 @@ class SvTerminalGui(SvTerminal):
             window.hotkeys: lambda: HotKeysHintWindow().exec(),
             window.specification: self.run_specification_window,
             window.about: lambda: AboutWindow(),
-            window.keep_alive: self.set_keep_alive_interval,
-            window.repeat: self.set_trans_loop_interval,
+            window.keep_alive: self.set_keep_alive,
+            window.repeat: self.trans_timer.set_trans_loop_interval,
+            window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
+            self.connector.stateChanged: self.set_connection_status,
+            self.set_remote_spec: self.connector.set_remote_spec,
+            self.trans_timer.send_transaction: window.send,
+            self.trans_timer.interval_was_set: window.process_repeat_change,
         }
 
         for signal, slot in terminal_connections_map.items():
@@ -190,35 +199,6 @@ class SvTerminalGui(SvTerminal):
         getLogger().removeHandler(spec_window.wireless_handler)
         self.create_window_logger()
 
-    def activate_transaction_loop(self, interval: int):
-        self.stop_transaction_loop()
-        self.trans_loop_timer = QTimer()
-        self.trans_loop_timer.timeout.connect(self.auto_send_transaction)
-        self.trans_loop_timer.start(int(interval) * 1000)
-
-    def stop_transaction_loop(self):
-        self.trans_loop_timer.stop()
-
-    def set_trans_loop_interval(self, interval_name: str):
-        if interval_name == KeepAliveIntervals.KEEP_ALIVE_STOP:
-            self.stop_transaction_loop()
-            info("Transaction loop is deactivated")
-
-        if interval := KeepAliveIntervals.get_interval_time(interval_name):
-            self.activate_transaction_loop(interval)
-            info(f"Transaction repeat set to {interval} second(s)")
-
-        self.window.process_repeat_change(interval_name)
-
-    def auto_send_transaction(self):
-        info("Sending auto transaction")
-
-        if self.connector.connection_in_progress():
-            warning("Cannot repeat transaction while connection is in progress")
-            return
-
-        self.window.send.emit()
-
     def echo_test(self):
         try:
             SvTerminal.echo_test(self)
@@ -287,7 +267,7 @@ class SvTerminalGui(SvTerminal):
             if self.config.host.keep_alive_mode:
                 interval_name = KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
 
-            self.set_keep_alive_interval(interval_name)
+            self.set_keep_alive(interval_name)
 
     def read_config(self):
         try:
@@ -303,8 +283,8 @@ class SvTerminalGui(SvTerminal):
     def stop_sv_terminal(self):
         self.connector.stop_thread()
 
-    def set_keep_alive_interval(self, interval_name: str):
-        SvTerminal.set_keep_alive_interval(self, interval_name)
+    def set_keep_alive(self, interval_name: str):
+        self.set_keep_alive_interval(interval_name)
         self.window.process_keep_alive_change(interval_name)
 
     def reconnect(self):

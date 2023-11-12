@@ -9,7 +9,7 @@
  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
   ########  ###########  ########   ###    ####  ###     ###  ########## 
                                                                                                                       
- Simplified ISO generation algorithm | v0.17 Oct 2023
+ Simplified ISO generation algorithm | v0.17 Dec 2023
 ```
 
 
@@ -20,13 +20,20 @@
   * [Important notes](#important-notes)
   * [Release info](#release-info)
 
+
  
 * [Graphic User Interface](#graphic-user-interface)
   * [GUI overview](#gui-overview)
-  * [Main Window hotkeys](#main-window-hotkeys)
+  * [Windows hotkeys](#windows-hotkeys)
+
+
+* [Settings](#settings) 
   * [Specification settings](#specification-settings)
     * [Specification Overview](#specification-overview) 
     * [Settings description](#settings-description)
+    * [Remote specification](#remote-specification)
+    * [Remote specification endpoint setting](#remote-specification-endpoint-setting)
+    * [Remote spec endpoint code example](#remote-spec-endpoint-code-example)
   * [Transaction data files format](#transaction-data-files-format)
     * [Overview](#overview)
     * [The data formats description](#the-data-formats-description)
@@ -34,7 +41,9 @@
     * [Save transaction to file](#save-transaction-to-file)
 
 
-* [Author](#author) 
+* [About](#about)
+  * [License](#license)
+  * [Author](#author)
 
 # Description
 
@@ -67,38 +76,30 @@ of SIGNAL evolution.
 
 * Allowed usage on test environment only. SIGNAL only implements basic security checks
 * At the moment SIGNAL doesn't support byte-fields
-* Logfile rotation included in the build. SIGNAL stores 10 logfiles by 10M each
+* GUI tests were made on Windows 10/11 x64 only
+
+[//]: # (* Logfile rotation included in the build. SIGNAL stores 10 logfiles by 10M each)
 
 
 ## Release info
 
 * New features
-  * Transactions repeat loop button
-  * Main / Spec Window search line, key sequence 
-  * Incoming message header length settings 
-  * Button "Set default" in the settings window
-  * Command "Set reversal fields" in the Reversal button menu
-  * Need to accept the license agreement on the first run  
+  * Remote Specification in Settings and SpecWindow. See [Remote specification](#remote-specification)
+  * Log screen on SpecWindow 
+  * Complex fields conductor
+
 
 
 * Updates
-  * Changed name to SIGNAL
-  * Hiding of secrets in logs and transaction constructors now possible for every field
-  * Simplified JSON mode, works without specification
-  * Default message corrected according to mandatory changes 23Q4
-  * Many small useful updates such as
-    * Improved checkboxes
-    * Instant field length counting
-    * Tag Length cascading
-    * Lines wrap on log display
-    * Predefined max amounts
-  
+  * JSON constructors color scheme optimization 
+  * Added key sequences on SpecWindow
+  * SpecWindow checkboxes are protected in read-only mode
+  * Spec backup storage depth
+
 
 * Fixed
-  * All problems around old JSON file incompatibility  
-  * Transaction field max_amount has no effect
-  * SIGNAL fall down in some cases of field validation
-  * Code optimization, minor bug fixes
+  * Small code optimization
+  * JSON mode by default
   
 
 # Graphic User Interface
@@ -114,9 +115,9 @@ settings are needed to run SIGNAL GUI on a Windows machine. Run the `signal.exe`
 
 Check the parameters, opened by the "Configuration" button to make your settings  
 
-![image](https://i.imgur.com/7kZuHsR.png)
+![image](https://i.imgur.com/Pj49PG1.png)
 
-## Main Window hotkeys
+## Windows hotkeys
 
 The list of key sequences and corresponding actions 
 
@@ -141,6 +142,8 @@ The list of key sequences and corresponding actions
 | Ctrl + Alt + Q        | Quit SIGNAL               | -                              |
 
 
+# Settings
+
 ## Specification settings
 
 ### Specification Overview 
@@ -157,7 +160,7 @@ by the author.
 
 ### Settings description
 
-![image](https://i.imgur.com/nLS8XXq.png)
+![image](https://i.imgur.com/Wvg8EuX.png)
 
 The table below describes the settings window columns from left to right
 
@@ -182,6 +185,7 @@ The table below describes the settings window columns from left to right
 ² Due to security reasons, it is impossible to set Primary Account Number (Field 2) as non-secret. The field has a non-removable "secret" mark  
 
 ### Remote specification
+The local specification `JSON` file always is at the path `common/data/settings/specification.json`, however, SIGNAL can get general specification `JSON` remotely on the startup stage and by the user's request in SpecWindow. The specification URL should be set in the settings. In case when the remote specification is set by settings but the SIGNAL is unable to get remote specification data the local spec data will be taken instead from the "settings" directory
 
 SIGNAL can get general specification JSON remotely on the startup stage and by the user's request in SpecWindow. The specification URL should be set in the settings.
 
@@ -189,27 +193,53 @@ In general, the specification endpoint has to return the Spec JSON by GET reques
 
 The conditions for the remote spec endpoint:
 
-* Available when SIGNAL starts
-* Supports GET request
-* Responds by HTTP-status 200
-* Sends header "Content-type": "application/json"
-* Returns specification in response-body
 
-In case when the remote specification is set by settings but the SIGNAL is unable to get remote specification data the local spec data will be taken instead
+* Be available when SIGNAL starts
+* Support GET requests with no additional actions
+* Respond by HTTP-status 200
+* Send header "Content-type": "application/json" in the response
+* Return valid specification data in response-body
 
-### Remote specification endpoint example
-The following endpoint is fully ready to start. In this example, endpoint http://127.0.0.1:4242/specification will return specification file data /opt/spec/specification.json
+
+### Remote specification endpoint setting
+The following [code](#remote-spec-endpoint-code-example) illustrates the endpoint example. In this example, endpoint http://127.0.0.1:4242/specification returns specification file data `/opt/spec/specification.json`
+
+  
+**To begin remote specification endpoint**
+
+1. Prepare specification.json file. You can get it from the directory `common/data/settings` or save a copy using SpecWindow which executes by button `Specification` on the MainWindow 
+2. Prepare file `signal_spec.py`, containing [endpoint script](#remote-spec-endpoint-code-example)
+3. Set `SERVER_ADDRESS`, `PORT`, `FILE` parameters in the file `signal_spec.py`
+4. Put both files `specification.json` and `signal_spec.py` to remote server
+5. Run the code using command `nohup python signal_spec.py &`
+6. For checking open specified URL in browser, it should show the specification `JSON`. In example below the URL is http://127.0.0.1:4242/specification
+
+
+**Test of remote specification endpoint**
+
+![image](https://i.imgur.com/mhjheFj.png)
+
+
+### Remote spec endpoint code example
 
 ```python
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+"""
+Basic realization of SIGNAL Specification remote endpoint. This endpoint returns specification.json by GET request
 
-SERVER_ADDRESS = '127.0.0.1'  # Specify the correct address
-PORT = 4242
-PATH = '/specification'
-FILE = '/opt/spec/specification.json'
+Check and set the required configuration parameters below before run 
 
+Was tested on Python3 only
+"""
+
+SERVER_ADDRESS = '127.0.0.1'  # The address of the server machine
+PORT = 4242  # Port for incoming connection
+PATH = '/specification'  # URL path to get the specification file
+FILE = '/opt/spec/specification.json'  # The Specification file path, the file should be returned by GET request
+
+# By these settings we create URL http://127.0.0.1:4242/specification which returns file /opt/spec/specification.json
 
 class HttpSpec(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -266,8 +296,16 @@ pattern one by one. Better to set the correct extension for each format. Refer t
 
 ... 
 
+# About
+
+## License
+
+SIGNAL is distributed under the GNU/GPL license as free software. See more on [GNU page](https://www.gnu.org/licenses/)
+
+
 ## Author
 
 Designed and developed by Fedor Ivanov   
 
-In case of any question contract [fedornivanov@gmail.com](mailto:fedornivanov@gmail.com?subject=SIGNAL%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SIGNAL%20version%20is%20v0.17%20%7C%20Released%20in%20Oct%202023%0A)
+
+In case of any question feel free to [contract author](mailto:fedornivanov@gmail.com?subject=SIGNAL%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SIGNAL%20version%20is%20v0.17%20%7C%20Released%20in%20Oct%202023%0A) directly
