@@ -45,9 +45,6 @@ class SvTerminal(QObject):
         self.trans_queue: TransactionQueue = TransactionQueue(self.connector)
         self.connect_interfaces()
 
-    def is_connected(self):
-        return self.connector.is_connected()
-
     def run(self):
         status = self.pyqt_application.exec()
         return status
