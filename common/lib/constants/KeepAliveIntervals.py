@@ -10,7 +10,7 @@ KEEP_ALIVE_10S: Final[str] = "10 seconds"
 KEEP_ALIVE_30S: Final[str] = "30 seconds"
 KEEP_ALIVE_60S: Final[str] = "60 seconds"
 KEEP_ALIVE_300S: Final[str] = "300 seconds"
-KEEP_ALIVE_DEFAULT: Final[str] = "%s second(s)"
+KEEP_ALIVE_DEFAULT: Final[str] = "%s seconds"
 KEEP_ALIVE_ONCE: Final[str] = "Send once"
 KEEP_ALIVE_STOP: Final[str] = "Stop"
 

@@ -231,7 +231,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         main_window_connection_map = {
             self.SearchLine.textChanged: self.json_view.search,
             self.SearchLine.editingFinished: self.json_view.setFocus,
-            self.keep_alive: lambda interval: self.process_transaction_loop_change(interval, KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE)
         }
 
         keys_connection_map = {
@@ -434,6 +433,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         if interval_name == ButtonActions.KEEP_ALIVE_ONCE:
             return
 
+        if interval_name == "1 seconds":
+            interval_name = interval_name.removesuffix("s")
+
         button_type_map: dict[str, QPushButton] = {
             KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE: self.ButtonKeepAlive,
             KeepAliveIntervals.TRANS_TYPE_TRANSACTION: self.ButtonRepeat,
@@ -453,12 +455,16 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         button.menu().clear()
 
         if trans_type == KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE and self.config.host.keep_alive_mode:
-            custom_interval_name = KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
-            button_action_menu[custom_interval_name] = lambda: self.keep_alive.emit(custom_interval_name)
+            custom_interval_name: str = KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
+
+            if self.config.host.keep_alive_interval == 1:
+                custom_interval_name: str = custom_interval_name.removesuffix("s")
+
+            button_action_menu[custom_interval_name]: Callable = lambda: self.keep_alive.emit(custom_interval_name)
 
         for action, function in button_action_menu.items():
             if action == interval_name:
-                action = f"{ButtonActions.CURRENT_ACTION_MARK} {action}"  # Set checked
+                action: str = f"{ButtonActions.CURRENT_ACTION_MARK} {action}"  # Set checked
 
             button.menu().addAction(action, function)
             button.menu().addSeparator()
