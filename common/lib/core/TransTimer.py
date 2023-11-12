@@ -37,6 +37,6 @@ class TransactionTimer(QObject):
 
         if interval := KeepAliveIntervals.get_interval_time(interval_name):
             self.activate_transaction_loop(interval)
-            info(f"{self.trans_type} repeat set to {interval} second(s)")
+            info(f"{self.trans_type} loop set to {interval} second(s)")
 
         self.interval_was_set.emit(interval_name)
