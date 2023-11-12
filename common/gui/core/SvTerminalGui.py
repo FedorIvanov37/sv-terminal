@@ -138,9 +138,6 @@ class SvTerminalGui(SvTerminal):
         for slot in self.show_license_dialog, self.on_startup:
             self.pyqt_application.applicationStateChanged.connect(slot)
 
-        self.connector.stateChanged.connect(self.set_connection_status)
-        self.set_remote_spec.connect(self.connector.set_remote_spec)
-
     def clear_spec_backup(self):
         storage_debt = self.config.remote_spec.backup_storage_depth
 
