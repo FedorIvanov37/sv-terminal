@@ -1,3 +1,4 @@
+from os import remove, listdir
 from copy import deepcopy
 from json import dumps, load
 from logging import error, info, warning
@@ -55,7 +56,7 @@ class SvTerminalGui(SvTerminal):
 
     def __init__(self, config: Config):
         self.connector = ConnectionThread(config)
-        super(SvTerminalGui, self).__init__(config, self.connector)  # ConnectionThread(config)
+        super(SvTerminalGui, self).__init__(config, self.connector)
         self.window: MainWindow = MainWindow(self.config)
         self.setup()
 
@@ -125,7 +126,6 @@ class SvTerminalGui(SvTerminal):
             window.keep_alive: self.set_keep_alive,
             window.repeat: self.trans_timer.set_trans_loop_interval,
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
-
             self.connector.stateChanged: self.set_connection_status,
             self.set_remote_spec: self.connector.set_remote_spec,
             self.trans_timer.send_transaction: window.send,
@@ -137,6 +137,38 @@ class SvTerminalGui(SvTerminal):
 
         for slot in self.show_license_dialog, self.on_startup:
             self.pyqt_application.applicationStateChanged.connect(slot)
+
+        self.connector.stateChanged.connect(self.set_connection_status)
+        self.set_remote_spec.connect(self.connector.set_remote_spec)
+
+    def clear_spec_backup(self):
+        storage_debt = self.config.remote_spec.backup_storage_depth
+
+        if not self.config.remote_spec.backup_storage:
+            storage_debt = int()
+
+        try:
+            files = listdir(TermFilesPath.SPEC_BACKUP_DIR)
+        except Exception as dir_access_error:
+            error(f"Cannot get specification backup files list: {dir_access_error}")
+            return
+
+        files.sort(reverse=True)
+
+        while files:
+            if len(files) < storage_debt:
+                return
+
+            file = files.pop()
+
+            if not (file.startswith('spec_backup_20') and file.endswith('.json')):
+                continue
+
+            try:
+                remove(f"{TermFilesPath.SPEC_BACKUP_DIR}/{file}")
+            except Exception as remove_error:
+                error(f"Cannot cleanup specification backup directory: {remove_error}")
+                return
 
     def show_license_dialog(self, app_state):
         if app_state != Qt.ApplicationState.ApplicationActive:

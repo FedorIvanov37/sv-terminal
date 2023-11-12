@@ -89,6 +89,7 @@ of SIGNAL evolution.
   * Complex fields conductor
 
 
+
 * Updates
   * JSON constructors color scheme optimization 
   * Added key sequences on SpecWindow
@@ -140,6 +141,7 @@ The list of key sequences and corresponding actions
 | Ctrl + T              | Print SIGNAL logo         | Print SIGNAL logo              |
 | Ctrl + Alt + Q        | Quit SIGNAL               | -                              |
 
+
 # Settings
 
 ## Specification settings
@@ -185,9 +187,12 @@ The table below describes the settings window columns from left to right
 ### Remote specification
 The local specification `JSON` file always is at the path `common/data/settings/specification.json`, however, SIGNAL can get general specification `JSON` remotely on the startup stage and by the user's request in SpecWindow. The specification URL should be set in the settings. In case when the remote specification is set by settings but the SIGNAL is unable to get remote specification data the local spec data will be taken instead from the "settings" directory
 
+SIGNAL can get general specification JSON remotely on the startup stage and by the user's request in SpecWindow. The specification URL should be set in the settings.
+
 In general, the specification endpoint has to return the Spec JSON by GET request without any additional actions
 
 The conditions for the remote spec endpoint:
+
 
 * Be available when SIGNAL starts
 * Support GET requests with no additional actions
@@ -216,6 +221,7 @@ The following [code](#remote-spec-endpoint-code-example) illustrates the endpoin
 
 
 ### Remote spec endpoint code example
+
 ```python
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -234,7 +240,6 @@ PATH = '/specification'  # URL path to get the specification file
 FILE = '/opt/spec/specification.json'  # The Specification file path, the file should be returned by GET request
 
 # By these settings we create URL http://127.0.0.1:4242/specification which returns file /opt/spec/specification.json
-
 
 class HttpSpec(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -301,5 +306,6 @@ SIGNAL is distributed under the GNU/GPL license as free software. See more on [G
 ## Author
 
 Designed and developed by Fedor Ivanov   
+
 
 In case of any question feel free to [contract author](mailto:fedornivanov@gmail.com?subject=SIGNAL%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SIGNAL%20version%20is%20v0.17%20%7C%20Released%20in%20Oct%202023%0A) directly
