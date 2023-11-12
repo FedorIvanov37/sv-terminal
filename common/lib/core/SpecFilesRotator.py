@@ -13,7 +13,7 @@ class SpecFilesRotator:
     filename_tail = ".json"
     date_format = "%Y%m%d_%H%M%S"
 
-    def backup_spec(self):
+    def backup_spec(self) -> str:
         filename = f"{self.filename_head}{datetime.now():{self.date_format}}{self.filename_tail}"
 
         with open(f'{TermFilesPath.SPEC_BACKUP_DIR}/{filename}', "w") as file:

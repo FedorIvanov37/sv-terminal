@@ -84,7 +84,7 @@ class SpecItem(Item):
     def is_secret(self):
         return self.is_checked(SpecFieldDef.ColumnsOrder.SECRET)
 
-    def __init__(self, field_data: list[str], checkboxes: dict[str, bool] = None):
+    def __init__(self, field_data: list[str], checkboxes: dict[int, bool] = None):
         super(SpecItem, self).__init__(field_data)
         self.setup(checkboxes=checkboxes)
 

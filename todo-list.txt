@@ -134,6 +134,7 @@
 + Remote spec - settings, SpecWindow
 + Full read only mode for spec
 + Spec backup storage settings
++ Complex fields constructor
 
 
 • Change name to SIGNAL

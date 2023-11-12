@@ -1,5 +1,5 @@
-from logging import info, error, warning
 from typing import Callable
+from logging import info, error, warning
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -74,16 +74,19 @@ class SpecView(TreeView):
 
     @void_qt_signals
     def process_item_change(self, item, column):
+        if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+            self.set_pan_as_secret(item)
+
+            if column == SpecFieldDef.ColumnsOrder.SECRET:
+                warning("The Card Number is a secret constantly")
+                return
+
         if column in SpecFieldDef.CHECKBOXES and self.window.read_only:
             warning("Read only mode. Uncheck the checkbox on top of the window")
             state = item.checkState(column)
             state = Qt.CheckState.Checked if state == Qt.CheckState.Unchecked else Qt.CheckState.Unchecked
             item.setCheckState(column, state)
-            self.set_pan_as_secret(item)
             return
-
-        if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            self.set_pan_as_secret(item)
 
         if column == SpecFieldDef.ColumnsOrder.SECRET:
             self.cascade_checkboxes(item)
@@ -248,7 +251,7 @@ class SpecView(TreeView):
                 str(field_data.tag_length),
             ]
 
-            checkboxes: dict[str, bool] = {
+            checkboxes: dict[int, bool] = {
                 SpecFieldDef.ColumnsOrder.USE_FOR_MATCHING: field_data.matching,
                 SpecFieldDef.ColumnsOrder.USE_FOR_REVERSAL: field_data.reversal,
                 SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED: field_data.generate,

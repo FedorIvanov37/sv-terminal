@@ -1,7 +1,6 @@
 from json import dump, load
 from copy import deepcopy
 from dataclasses import asdict
-from datetime import datetime
 from pydantic import FilePath
 from common.lib.decorators.singleton import singleton
 from common.lib.constants import MessageLength, TermFilesPath
@@ -218,12 +217,3 @@ class EpaySpecification(EpaySpecificationData):
             field_data_kit += getattr(self.FIELD_DATA_KIT, field_type, "")
 
         return field_data_kit
-
-    def backup(self) -> str:
-        date_format = "%Y%m%d_%H%M%S"
-        filename = f"spec_backup_{datetime.now():{date_format}}.json"
-
-        with open(f'{TermFilesPath.SPEC_BACKUP_DIR}/{filename}', "w") as file:
-            dump(self._specification_model.model_dump(), file, indent=4)
-
-        return filename

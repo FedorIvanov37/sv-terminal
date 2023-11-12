@@ -1,3 +1,4 @@
+from typing import Callable
 from json import dumps, load
 from logging import error, info, warning, debug
 from PyQt6 import QtWidgets
@@ -20,19 +21,19 @@ from common.lib.constants import KeepAliveIntervals
 
 
 class SvTerminal(QObject):
-    pyqt_application = QtWidgets.QApplication([])
+    pyqt_application: QtWidgets.QApplication = QtWidgets.QApplication([])
     spec: EpaySpecification = EpaySpecification(TermFilesPath.SPECIFICATION)
     keep_alive_timer: TransactionTimer = TransactionTimer(KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE)
 
     with open(TermFilesPath.CONFIG) as json_file:
         config: Config = Config.model_validate(load(json_file))
 
-    validator = Validator()
+    validator: Validator = Validator()
     need_reconnect: pyqtSignal = pyqtSignal()
 
     def __init__(self, config: Config, connector: ConnectionInterface | None = None):
         super(SvTerminal, self).__init__()
-        self.config = config
+        self.config: Config = config
 
         if connector is None:
             connector: Connector = Connector(self.config)
@@ -40,16 +41,16 @@ class SvTerminal(QObject):
         self.log_printer: LogPrinter = LogPrinter(self.config)
         self.connector: Connector = connector
         self.parser: Parser = Parser(self.config)
-        self.generator = FieldsGenerator()
+        self.generator: FieldsGenerator = FieldsGenerator()
         self.logger: Logger = Logger(self.config)
         self.trans_queue: TransactionQueue = TransactionQueue(self.connector)
         self.connect_interfaces()
 
-    def run(self):
-        status = self.pyqt_application.exec()
+    def run(self) -> int:
+        status: int = self.pyqt_application.exec()
         return status
 
-    def connect_interfaces(self):
+    def connect_interfaces(self) -> None:
         self.connector.errorOccurred.connect(self.socket_error)
         self.need_reconnect.connect(self.connector.reconnect_sv)
         self.connector.connected.connect(self.sv_connected)
@@ -59,31 +60,31 @@ class SvTerminal(QObject):
         self.trans_queue.transaction_timeout.connect(self.got_timeout)
         self.keep_alive_timer.send_transaction.connect(self.keep_alive)
 
-    def get_transaction(self, trans_id: str):
+    def get_transaction(self, trans_id: str) -> None:
         return self.trans_queue.get_transaction(trans_id)
 
     @staticmethod
-    def sv_connected():
+    def sv_connected() -> None:
         info("Connection ESTABLISHED")
 
     @staticmethod
-    def sv_disconnected():
+    def sv_disconnected() -> None:
         info("Connection DISCONNECTED")
 
     @staticmethod
-    def got_timeout(transaction, timeout_secs):
+    def got_timeout(transaction, timeout_secs) -> None:
         error(f"Transaction [{transaction.trans_id}] timeout after {int(timeout_secs)} seconds of waiting answer")
 
-    def socket_error(self):
+    def socket_error(self) -> None:
         if self.connector.error() == QTcpSocket.SocketError.UnknownSocketError:  # TODO
             return
 
         error(f"Received a socket error from host: {self.connector.errorString()}")
 
-    def disconnect(self):
+    def disconnect(self) -> None:
         self.connector.disconnect_sv()
 
-    def reconnect(self):
+    def reconnect(self) -> None:
         if self.connector.connection_in_progress():
             warning("Unable to reconnect while connection in progress")
             return
@@ -92,7 +93,7 @@ class SvTerminal(QObject):
 
         self.need_reconnect.emit()
 
-    def send(self, transaction: Transaction | None = None):
+    def send(self, transaction: Transaction | None = None) -> None:
         if transaction.generate_fields:
             transaction: Transaction = self.generator.set_generated_fields(transaction)
 
@@ -108,7 +109,7 @@ class SvTerminal(QObject):
 
         self.trans_queue.put_transaction(transaction)
 
-    def transaction_sent(self, request: Transaction):
+    def transaction_sent(self, request: Transaction) -> None:
         try:
             self.log_printer.print_dump(request)
         except Exception as parsing_error:
@@ -121,7 +122,7 @@ class SvTerminal(QObject):
             info(f"Transaction [{request.trans_id}] was sent ")
             info(str())
 
-    def transaction_received(self, response: Transaction):
+    def transaction_received(self, response: Transaction) -> None:
         try:
             self.log_printer.print_dump(response)
         except Exception as parsing_error:
@@ -134,25 +135,25 @@ class SvTerminal(QObject):
 
         if response.matched and response.resp_time_seconds:
             if response.is_keep_alive:
-                message = f"Keep Alive transaction [{response.match_id}] successfully matched."
+                message: str = f"Keep Alive transaction [{response.match_id}] successfully matched."
             else:
-                message = f"Transaction ID [{response.match_id}] matched."
+                message: str = f"Transaction ID [{response.match_id}] matched."
 
-            message = f"{message} Response time seconds: {response.resp_time_seconds}"
+            message: str = f"{message} Response time seconds: {response.resp_time_seconds}"
 
             info(message)
 
         if not response.matched:
-            match_fields = [field for field in self.spec.get_match_fields() if field in response.data_fields]
-            match_fields = ', '.join(match_fields)
+            match_fields: list[str] = [field for field in self.spec.get_match_fields() if field in response.data_fields]
+            match_fields: str = ', '.join(match_fields)
             warning(f"Non-matched Transaction received. Transaction ID [{response.trans_id}]")
             warning(f"Fields {match_fields} from the response don't correspond to any requests in the current session "
                     f"or request was matched before")
 
-    def set_keep_alive_interval(self, interval_name: str):
+    def set_keep_alive_interval(self, interval_name: str) -> None:
         self.keep_alive_timer.set_trans_loop_interval(interval_name)
 
-    def keep_alive(self):
+    def keep_alive(self) -> None:
         if self.connector.connection_in_progress():
             return
 
@@ -167,7 +168,7 @@ class SvTerminal(QObject):
         transaction.generate_fields = []
         transaction.is_keep_alive = True
 
-        message = f"Trans ID: [{transaction.trans_id}], "\
+        message: str = f"Trans ID: [{transaction.trans_id}], "\
                   f"STAN: [{transaction.data_fields.get(self.spec.FIELD_SET.FIELD_011_SYSTEM_TRACE_AUDIT_NUMBER)}], "\
                   f"Network management code: "\
                   f"[{transaction.data_fields.get(self.spec.FIELD_SET.FIELD_070_NETWORK_MANAGEMENT_CODE)}]"
@@ -177,7 +178,7 @@ class SvTerminal(QObject):
         self.send(transaction)
 
     def save_transaction(self, transaction: Transaction, file_format: str, file_name) -> None:
-        data_processing_map = {
+        data_processing_map: dict[str, Callable] = {
             DataFormats.JSON: lambda _trans: dumps(_trans.model_dump(), indent=4),
             DataFormats.INI: lambda _trans: self.parser.transaction_to_ini_string(_trans),
             DataFormats.DUMP: lambda _trans: self.parser.create_sv_dump(_trans)[1:]
@@ -205,8 +206,8 @@ class SvTerminal(QObject):
         if not (original_transaction.matched and original_transaction.match_id):
             raise LookupError(f"Lost response for transaction {original_transaction.trans_id}. Cannot build reversal")
 
-        reversal_trans_id = original_transaction.trans_id + "_R"
-        existed_reversal = self.trans_queue.get_transaction(reversal_trans_id)
+        reversal_trans_id: str = original_transaction.trans_id + "_R"
+        existed_reversal: Transaction | None = self.trans_queue.get_transaction(reversal_trans_id)
 
         if existed_reversal:
             self.trans_queue.remove_from_queue(existed_reversal)
@@ -215,18 +216,18 @@ class SvTerminal(QObject):
             transaction.generate_fields = []
             return transaction
 
-        fields = original_transaction.data_fields.copy()
+        fields: dict = original_transaction.data_fields.copy()
 
         for field in self.spec.get_reversal_fields():
-            fields[field] = original_transaction.data_fields.get(field)
+            fields[field]: str = original_transaction.data_fields.get(field)
 
         if self.config.fields.build_fld_90:
             field90 = self.generator.generate_original_data_elements(original_transaction)
             fields[self.spec.FIELD_SET.FIELD_090_ORIGINAL_DATA_ELEMENTS] = field90
 
-        reversal_mti = self.spec.get_reversal_mti(original_transaction.message_type)
+        reversal_mti: str = self.spec.get_reversal_mti(original_transaction.message_type)
 
-        reversal = Transaction(
+        reversal: Transaction = Transaction(
             message_type=reversal_mti,
             data_fields=fields,
             trans_id=reversal_trans_id,
@@ -239,6 +240,6 @@ class SvTerminal(QObject):
 
         return reversal
 
-    def echo_test(self):
+    def echo_test(self) -> None:
         transaction: Transaction = self.parser.parse_file(TermFilesPath.ECHO_TEST)
         self.send(transaction)

@@ -281,10 +281,10 @@ class FieldDateFormat:
 
 @dataclass
 class EpaySpecificationData:
-    FIELD_SET: FieldSet = FieldSet()
-    DATA_TYPES: DataTypes = DataTypes()
-    FIELD_DATA_KIT: FieldDataKit = FieldDataKit()
-    FIELD_DATE_FORMAT: FieldDateFormat = FieldDateFormat()
-    RESERVED_FOR_FUTURE: ReservedForFuture = ReservedForFuture()
-    MESSAGE_TYPE_INDICATORS: MessageTypeIndicators = MessageTypeIndicators()
-    GENERATED_FIELDS: GeneratedFields = GeneratedFields()
+    FIELD_SET: Final[FieldSet] = FieldSet()
+    DATA_TYPES: Final[DataTypes] = DataTypes()
+    FIELD_DATA_KIT: Final[FieldDataKit] = FieldDataKit()
+    FIELD_DATE_FORMAT: Final[FieldDateFormat] = FieldDateFormat()
+    RESERVED_FOR_FUTURE: Final[ReservedForFuture] = ReservedForFuture()
+    MESSAGE_TYPE_INDICATORS: Final[MessageTypeIndicators] = MessageTypeIndicators()
+    GENERATED_FIELDS: Final[GeneratedFields] = GeneratedFields()

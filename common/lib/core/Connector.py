@@ -11,6 +11,7 @@ from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.constants import TermFilesPath
+from common.lib.core.SpecFilesRotator import SpecFilesRotator
 
 
 class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
@@ -135,7 +136,8 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
             spec: EpaySpecification = EpaySpecification()
 
             if commit and self.config.remote_spec.backup_storage:
-                backup_filename: str = spec.backup()
+                rotator: SpecFilesRotator = SpecFilesRotator()
+                backup_filename: str = rotator.backup_spec()
                 info(f"Backup local specification file name: {TermFilesPath.SPEC_BACKUP_DIR}/{backup_filename}")
 
             try:

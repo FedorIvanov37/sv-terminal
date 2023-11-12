@@ -1,7 +1,7 @@
-from os import remove, listdir
+from typing import Callable
 from copy import deepcopy
 from json import dumps, load
-from logging import error, info, warning
+from logging import error, info, warning, Logger
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication, QFileDialog
 from PyQt6.QtNetwork import QTcpSocket
@@ -60,7 +60,7 @@ class SvTerminalGui(SvTerminal):
         self.window: MainWindow = MainWindow(self.config)
         self.setup()
 
-    def setup(self):
+    def setup(self) -> None:
         self.log_printer.print_startup_info()
         self.create_window_logger()
         self.connect_widgets()
@@ -68,7 +68,7 @@ class SvTerminalGui(SvTerminal):
         self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
         self.window.show()
 
-    def on_startup(self, app_state):
+    def on_startup(self, app_state) -> None:
         if not app_state == Qt.ApplicationState.ApplicationActive:
             return
 
@@ -84,22 +84,22 @@ class SvTerminalGui(SvTerminal):
             self.set_default_values()
 
         if self.config.host.keep_alive_mode:
-            interval = self.config.host.keep_alive_interval
+            interval: int = self.config.host.keep_alive_interval
             self.set_keep_alive_interval(interval_name=KeepAliveIntervals.KEEP_ALIVE_DEFAULT % interval)
 
         if self.config.remote_spec.use_remote_spec:
             self.set_remote_spec.emit()
 
         if self.config.remote_spec.backup_storage:
-            rotator = SpecFilesRotator()
+            rotator: SpecFilesRotator = SpecFilesRotator()
             rotator.clear_spec_backup(self.config)
 
-        self._startup_finished = True
+        self._startup_finished: bool = True
 
     def connect_widgets(self):
-        window = self.window
+        window: MainWindow = self.window
 
-        terminal_connections_map = {
+        terminal_connections_map: dict[pyqtSignal, Callable] = {
 
             # Data processing request channels. Usually get the tasks from MainWindow or low-level SvTerminal
 
@@ -139,36 +139,7 @@ class SvTerminalGui(SvTerminal):
         for slot in self.show_license_dialog, self.on_startup:
             self.pyqt_application.applicationStateChanged.connect(slot)
 
-    def clear_spec_backup(self):
-        storage_debt = self.config.remote_spec.backup_storage_depth
-
-        if not self.config.remote_spec.backup_storage:
-            storage_debt = int()
-
-        try:
-            files = listdir(TermFilesPath.SPEC_BACKUP_DIR)
-        except Exception as dir_access_error:
-            error(f"Cannot get specification backup files list: {dir_access_error}")
-            return
-
-        files.sort(reverse=True)
-
-        while files:
-            if len(files) < storage_debt:
-                return
-
-            file = files.pop()
-
-            if not (file.startswith('spec_backup_20') and file.endswith('.json')):
-                continue
-
-            try:
-                remove(f"{TermFilesPath.SPEC_BACKUP_DIR}/{file}")
-            except Exception as remove_error:
-                error(f"Cannot cleanup specification backup directory: {remove_error}")
-                return
-
-    def show_license_dialog(self, app_state):
+    def show_license_dialog(self, app_state) -> None:
         if app_state != Qt.ApplicationState.ApplicationActive:
             return
 
@@ -180,24 +151,24 @@ class SvTerminalGui(SvTerminal):
             license_window.exec()
 
         except LicenceAlreadyAccepted:
-            self._license_demonstrated = True
+            self._license_demonstrated: bool = True
             return
 
         except LicenseDataLoadingError as license_data_loading_error:
             error(license_data_loading_error)
             exit(100)
 
-        self._license_demonstrated = True
+        self._license_demonstrated: bool = True
 
-    def run_specification_window(self):
-        spec_window = SpecWindow(self.connector)
+    def run_specification_window(self) -> None:
+        spec_window: SpecWindow = SpecWindow(self.connector)
         spec_window.accepted.connect(self.window.hide_secrets)
         getLogger().removeHandler(self.wireless_handler)
         spec_window.exec()
         getLogger().removeHandler(spec_window.wireless_handler)
         self.create_window_logger()
 
-    def echo_test(self):
+    def echo_test(self) -> None:
         try:
             SvTerminal.echo_test(self)
 
@@ -207,7 +178,7 @@ class SvTerminalGui(SvTerminal):
         except Exception as sending_error:
             error(sending_error)
 
-    def settings(self):
+    def settings(self) -> None:
         try:
             old_config: Config = Config.model_validate(deepcopy(self.config.model_dump()))
             settings_window: SettingsWindow = SettingsWindow(self.config)
@@ -216,7 +187,7 @@ class SvTerminalGui(SvTerminal):
         except Exception as settings_error:
             error(settings_error)
 
-    def process_config_change(self, old_config: Config):
+    def process_config_change(self, old_config: Config) -> None:
         self.read_config()
 
         if "" in (self.config.host.host, self.config.host.port):
@@ -254,20 +225,20 @@ class SvTerminalGui(SvTerminal):
                     not old_config.remote_spec.use_remote_spec)):
                 self.set_remote_spec.emit()
 
-        keep_alive_change_conditions = (
+        keep_alive_change_conditions: tuple[bool, bool] = (
             old_config.host.keep_alive_mode != self.config.host.keep_alive_mode,
             old_config.host.keep_alive_interval != self.config.host.keep_alive_interval
         )
 
         if any(keep_alive_change_conditions):
-            interval_name = KeepAliveIntervals.KEEP_ALIVE_STOP
+            interval_name: str = KeepAliveIntervals.KEEP_ALIVE_STOP
 
             if self.config.host.keep_alive_mode:
-                interval_name = KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
+                interval_name: str = KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
 
             self.set_keep_alive_interval(interval_name)
 
-    def read_config(self):
+    def read_config(self) -> None:
         try:
             with open(TermFilesPath.CONFIG) as json_file:
                 config: Config = Config.model_validate(load(json_file))
@@ -278,13 +249,13 @@ class SvTerminalGui(SvTerminal):
 
         self.config.fields = config.fields
 
-    def stop_sv_terminal(self):
+    def stop_sv_terminal(self) -> None:
         self.connector.stop_thread()
 
-    def reconnect(self):
+    def reconnect(self) -> None:
         SvTerminal.reconnect(self)
 
-    def set_connection_status(self):
+    def set_connection_status(self) -> None:
         self.window.set_connection_status(self.connector.state())
 
         if self.connector.state() is QTcpSocket.SocketState.ConnectingState:
@@ -293,17 +264,17 @@ class SvTerminalGui(SvTerminal):
 
         self.window.unblock_connection_buttons()
 
-    def create_window_logger(self):
-        formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
-        self.wireless_handler = WirelessHandler()
-        stream = LogStream(self.window.log_browser)
+    def create_window_logger(self) -> None:
+        formatter: Formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
+        self.wireless_handler: WirelessHandler = WirelessHandler()
+        stream: LogStream = LogStream(self.window.log_browser)
         self.wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
         self.wireless_handler.setFormatter(formatter)
-        logger = getLogger()
+        logger: Logger = getLogger()
         logger.addHandler(self.wireless_handler)
 
-    def perform_reversal(self, command: str):
-        transaction_source_map = {
+    def perform_reversal(self, command: str) -> None:
+        transaction_source_map: dict[str, Callable] = {
             ButtonActions.LAST: self.trans_queue.get_last_reversible_transaction_id,
             ButtonActions.OTHER: self.show_reversal_window,
             ButtonActions.SET_REVERSAL: self.show_reversal_window,
@@ -342,7 +313,7 @@ class SvTerminalGui(SvTerminal):
             case _:
                 error("Cannot reverse transaction")
 
-    def parse_main_window(self, flat_fields=True, clean=False) -> Transaction:
+    def parse_main_window(self, flat_fields: bool = True, clean: bool = False) -> Transaction:
         data_fields: TypeFields = self.window.get_fields(flat=flat_fields)
 
         if not data_fields:
@@ -351,7 +322,7 @@ class SvTerminalGui(SvTerminal):
         if not (message_type := self.window.get_mti(self.spec.MessageLength.MESSAGE_TYPE_LENGTH)):
             raise ValueError("Invalid MTI")
 
-        transaction = Transaction(
+        transaction: Transaction = Transaction(
             generate_fields=self.window.get_fields_to_generate(),
             data_fields=data_fields,
             message_type=message_type,
@@ -369,16 +340,17 @@ class SvTerminalGui(SvTerminal):
                 transaction.is_request,
                 transaction.is_reversal,
                 transaction.is_keep_alive,
+                transaction.json_fields,
             )
 
         return transaction
 
-    def send(self, transaction: Transaction | None = None):
-        sender = None
+    def send(self, transaction: Transaction | None = None) -> None:
+        sender: MainWindow | None = None
 
         if not transaction:
             try:
-                sender = self.window
+                sender: MainWindow = self.window
                 transaction: Transaction = self.parse_main_window()
 
             except Exception as building_error:
@@ -405,10 +377,10 @@ class SvTerminalGui(SvTerminal):
             self.set_generated_fields(transaction)
 
     @staticmethod
-    def get_output_filename():
-        file_dialog = QFileDialog()
+    def get_output_filename() -> str:
+        file_dialog: QFileDialog = QFileDialog()
         file_dialog.setFileMode(QFileDialog.FileMode.AnyFile)
-        filename = file_dialog.getSaveFileName()[0]
+        filename: str = file_dialog.getSaveFileName()[0]
         return filename
 
     def save_transaction_to_file(self, file_format: str) -> None:
@@ -417,7 +389,7 @@ class SvTerminalGui(SvTerminal):
             return
 
         try:
-            transaction = self.parse_main_window(flat_fields=False, clean=True)
+            transaction: Transaction = self.parse_main_window(flat_fields=False, clean=True)
         except Exception as file_saving_error:
             error("File saving error: %s", file_saving_error)
             return
@@ -429,7 +401,7 @@ class SvTerminalGui(SvTerminal):
             error("Wrong format of output data: %s", data_format)
             return
 
-        data_processing_map = {
+        data_processing_map: dict[str, Callable] = {
             DataFormats.JSON: self.prepare_json_to_print,
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window()),
             DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window()),
@@ -452,7 +424,7 @@ class SvTerminalGui(SvTerminal):
         if self.config.fields.send_internal_id:
             transaction: Transaction = self.generator.set_trans_id(transaction)
 
-        json: dict = dict(
+        json: dict[str, str | int | dict] = dict(
             trans_id=transaction.trans_id,
             message_type=transaction.message_type,
             max_amount=transaction.max_amount,
@@ -464,27 +436,27 @@ class SvTerminalGui(SvTerminal):
 
         return json
 
-    def copy_log(self):
+    def copy_log(self) -> None:
         self.set_clipboard_text(self.window.get_log_data())
 
-    def copy_bitmap(self):
+    def copy_bitmap(self) -> None:
         self.set_clipboard_text(self.window.get_bitmap_data())
 
     @staticmethod
     def set_clipboard_text(data: str = str()) -> None:
         QApplication.clipboard().setText(data)
 
-    def show_reversal_window(self):
+    def show_reversal_window(self) -> None:
         reversible_transactions_list: list[Transaction] = self.trans_queue.get_reversible_transactions()
-        reversal_window = ReversalWindow(reversible_transactions_list)
-        accepted = reversal_window.exec()
+        reversal_window: ReversalWindow = ReversalWindow(reversible_transactions_list)
+        accepted: int = reversal_window.exec()
 
         if bool(accepted):
             return reversal_window.reversal_id
 
         raise LookupError
 
-    def set_default_values(self):
+    def set_default_values(self) -> None:
         try:
             self.parse_file(str(TermFilesPath.DEFAULT_FILE))
             info("Default file parsed")
@@ -493,7 +465,7 @@ class SvTerminalGui(SvTerminal):
             error("Default file parsing error! Exception: %s" % parsing_error)
 
     def parse_file(self, filename: str | None = None) -> None:
-        filename_found = ""
+        filename_found: str = ""
 
         if not filename:
             if not (filename := QFileDialog.getOpenFileName()[0]):
@@ -528,7 +500,7 @@ class SvTerminalGui(SvTerminal):
 
         info(f"File parsed: {filename}")
 
-    def parse_transaction(self, transaction: Transaction):
+    def parse_transaction(self, transaction: Transaction) -> None:
         try:
             self.window.set_mti_value(transaction.message_type)
             self.window.set_transaction_fields(transaction)
@@ -538,7 +510,7 @@ class SvTerminalGui(SvTerminal):
             error(f"Cannot set transaction fields: {transaction_parsing_error}")
             return
 
-    def set_bitmap(self):
+    def set_bitmap(self) -> None:
         bitmap: set[str] = set()
 
         for bit in self.window.get_top_level_field_numbers():
@@ -558,17 +530,17 @@ class SvTerminalGui(SvTerminal):
 
         self.window.set_bitmap(", ".join(sorted(bitmap, key=int)))
 
-    def clear_message(self):
+    def clear_message(self) -> None:
         self.window.clear_message()
         self.set_bitmap()
 
-    def set_generated_fields(self, transaction: Transaction):
+    def set_generated_fields(self, transaction: Transaction) -> None:
         for field in transaction.generate_fields:
 
             if not self.spec.can_be_generated([field]):
                 continue
 
             if not transaction.data_fields.get(field):
-                transaction.data_fields[field] = self.generator.generate_field(field)
+                transaction.data_fields[field]: str = self.generator.generate_field(field)
 
             self.window.set_field_value(field, transaction.data_fields.get(field))
