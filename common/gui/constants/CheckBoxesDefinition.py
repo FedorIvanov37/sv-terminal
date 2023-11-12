@@ -1,7 +1,8 @@
+from typing import Final
 from PyQt6.QtCore import Qt
 
 
-GENERATE = "Generate"
-JSON_MODE = "JSON mode"
-CHECKED = Qt.CheckState.Checked
-UNCHECKED = Qt.CheckState.Unchecked
+GENERATE: Final[str] = "Generate"
+JSON_MODE: Final[str] = "JSON mode"
+CHECKED: Final[Qt.CheckState] = Qt.CheckState.Checked
+UNCHECKED: Final[Qt.CheckState] = Qt.CheckState.Unchecked

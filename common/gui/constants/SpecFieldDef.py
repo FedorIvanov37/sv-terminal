@@ -1,36 +1,37 @@
+from typing import Final
 from enum import Enum
 
 
 class _Columns(Enum):
-    FIELD = "Field"
-    DESCRIPTION = "Description"
-    MIN_LENGTH = "Min Len"
-    MAX_LENGTH = "Max Len"
-    VARIABLE_LENGTH = "Data Len"
-    TAG_LENGTH = "Tag Len"
-    ALPHA = "Alpha"
-    NUMERIC = "Numeric"
-    SPECIAL = "Special"
-    USE_FOR_MATCHING = "Matching"
-    USE_FOR_REVERSAL = "Reversal"
-    CAN_BE_GENERATED = "Generated"
-    SECRET = "Secret"
+    FIELD: Final[str] = "Field"
+    DESCRIPTION: Final[str] = "Description"
+    MIN_LENGTH: Final[str] = "Min Len"
+    MAX_LENGTH: Final[str] = "Max Len"
+    VARIABLE_LENGTH: Final[str] = "Data Len"
+    TAG_LENGTH: Final[str] = "Tag Len"
+    ALPHA: Final[str] = "Alpha"
+    NUMERIC: Final[str] = "Numeric"
+    SPECIAL: Final[str] = "Special"
+    USE_FOR_MATCHING: Final[str] = "Matching"
+    USE_FOR_REVERSAL: Final[str] = "Reversal"
+    CAN_BE_GENERATED: Final[str] = "Generated"
+    SECRET: Final[str] = "Secret"
 
 
 class ColumnsOrder:
-    FIELD = 0
-    DESCRIPTION = 1
-    MIN_LENGTH = 2
-    MAX_LENGTH = 3
-    VARIABLE_LENGTH = 4
-    TAG_LENGTH = 5
-    ALPHA = 6
-    NUMERIC = 7
-    SPECIAL = 8
-    USE_FOR_MATCHING = 9
-    USE_FOR_REVERSAL = 10
-    CAN_BE_GENERATED = 11
-    SECRET = 12
+    FIELD: Final[int] = 0
+    DESCRIPTION: Final[int] = 1
+    MIN_LENGTH: Final[int] = 2
+    MAX_LENGTH: Final[int] = 3
+    VARIABLE_LENGTH: Final[int] = 4
+    TAG_LENGTH: Final[int] = 5
+    ALPHA: Final[int] = 6
+    NUMERIC: Final[int] = 7
+    SPECIAL: Final[int] = 8
+    USE_FOR_MATCHING: Final[int] = 9
+    USE_FOR_REVERSAL: Final[int] = 10
+    CAN_BE_GENERATED: Final[int] = 11
+    SECRET: Final[int] = 12
 
 
 COLUMNS = tuple(column.value for column in _Columns)
@@ -47,4 +48,4 @@ CHECKBOXES = (
 )
 
 
-SPECIFICATION = "Specification"
+SPECIFICATION: Final[str] = "Specification"

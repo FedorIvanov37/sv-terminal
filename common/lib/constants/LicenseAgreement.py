@@ -1,4 +1,7 @@
-AGREEMENT = """
+from typing import Final
+
+
+AGREEMENT: Final[str] = """
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 

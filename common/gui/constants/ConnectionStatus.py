@@ -1,18 +1,19 @@
+from typing import Final
 from pydantic import FilePath
 from PyQt6.QtNetwork import QTcpSocket
 from common.gui.constants import GuiFilesPath
 
 
 class ConnectionStatuses:
-    CONNECTED: str = "Connected"
-    DISCONNECTED: str = "Disconnected"
-    IN_PROGRESS: str = "Connection In Progress"
-    UNKNOWN: str = "Unknown"
+    CONNECTED: Final[str] = "Connected"
+    DISCONNECTED: Final[str] = "Disconnected"
+    IN_PROGRESS: Final[str] = "Connection In Progress"
+    UNKNOWN: Final[str] = "Unknown"
 
-    GREY: FilePath = GuiFilesPath.GREY_CIRCLE
-    GREEN: FilePath = GuiFilesPath.GREEN_CIRCLE
-    YELLOW: FilePath = GuiFilesPath.YELLOW_CIRCLE
-    RED: FilePath = GuiFilesPath.RED_CIRCLE
+    GREY: Final[FilePath] = GuiFilesPath.GREY_CIRCLE
+    GREEN: Final[FilePath] = GuiFilesPath.GREEN_CIRCLE
+    YELLOW: Final[FilePath] = GuiFilesPath.YELLOW_CIRCLE
+    RED: Final[FilePath] = GuiFilesPath.RED_CIRCLE
 
 
 def get_state_description(state):

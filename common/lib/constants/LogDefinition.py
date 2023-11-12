@@ -1,23 +1,24 @@
+from typing import Final
 from logging import _levelToName as Levels
 from logging import debug, info, warning, error, critical
 
 
-DEBUG = "DEBUG"
-INFO = "INFO"
-WARNING = "WARNING"
-ERROR = "ERROR"
-CRITICAL = "CRITICAL"
-NOTSET = "NOTSET"
+DEBUG: Final[str] = "DEBUG"
+INFO: Final[str] = "INFO"
+WARNING: Final[str] = "WARNING"
+ERROR: Final[str] = "ERROR"
+CRITICAL: Final[str] = "CRITICAL"
+NOTSET: Final[str] = "NOTSET"
 
-DISPLAY_DATE_FORMAT = "%T"
-LOGFILE_DATE_FORMAT = "%d.%m.%Y %H:%M:%S"
+DISPLAY_DATE_FORMAT: Final[str] = "%T"
+LOGFILE_DATE_FORMAT: Final[str] = "%d.%m.%Y %H:%M:%S"
 
-FORMAT = "{asctime} [{levelname}] {message}"
-MARK_STYLE = "{"
-LOG_MAX_SIZE_MEGABYTES = 10
-BACKUP_COUNT = 10
+FORMAT: Final[str] = "{asctime} [{levelname}] {message}"
+MARK_STYLE: Final[str] = "{"
+LOG_MAX_SIZE_MEGABYTES: Final[int] = 10
+BACKUP_COUNT: Final[int] = 10
 
-LOG_LEVEL = list(Levels.values())
+LOG_LEVEL: Final[list[str]] = list(Levels.values())
 LOG_LEVEL.remove(CRITICAL)
 LOG_LEVEL.remove(NOTSET)
 

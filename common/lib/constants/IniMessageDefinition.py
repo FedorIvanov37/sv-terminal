@@ -1,5 +1,8 @@
-MTI = "MTI"
-MESSAGE = "MESSAGE"
-CONFIG = "CONFIG"
-GENERATE_FIELDS = "GENERATE_FIELDS"
-MAX_AMOUNT = "MAX_AMOUNT"
+from typing import Final
+
+
+MTI: Final[str] = "MTI"
+MESSAGE: Final[str] = "MESSAGE"
+CONFIG: Final[str] = "CONFIG"
+GENERATE_FIELDS: Final[str] = "GENERATE_FIELDS"
+MAX_AMOUNT: Final[str] = "MAX_AMOUNT"

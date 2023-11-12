@@ -1,9 +1,11 @@
+from typing import Final
 from common.lib.constants import ReleaseDefinition
 from common.lib.constants import LicenseAgreement
 
-SYSTEM_NAME = "SIGNAL"
 
-HELLO_MESSAGE = f"""
+SYSTEM_NAME: Final[str] = "SIGNAL"
+
+HELLO_MESSAGE: Final[str] = f"""
   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
@@ -14,4 +16,4 @@ HELLO_MESSAGE = f"""
 
   Simplified ISO generation algorithm {ReleaseDefinition.VERSION}"""
 
-LICENSE_AGREEMENT = LicenseAgreement.AGREEMENT
+LICENSE_AGREEMENT: Final[str] = LicenseAgreement.AGREEMENT

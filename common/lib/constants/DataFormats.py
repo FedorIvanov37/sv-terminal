@@ -1,10 +1,13 @@
-INI: str = "INI"
-JSON: str = "JSON"
-DUMP: str = "DUMP"
-SPEC: str = "SPEC"
-TXT: str = "TXT"
-OTHER: str = "OTHER"
-TERM: str = "SIGNAL"
+from typing import Final
+
+
+INI: Final[str] = "INI"
+JSON: Final[str] = "JSON"
+DUMP: Final[str] = "DUMP"
+SPEC: Final[str] = "SPEC"
+TXT: Final[str] = "TXT"
+OTHER: Final[str] = "OTHER"
+TERM: Final[str] = "SIGNAL"
 
 
 def get_print_data_formats():

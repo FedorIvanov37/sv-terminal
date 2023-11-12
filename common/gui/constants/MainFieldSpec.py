@@ -1,24 +1,25 @@
+from typing import Final
 from enum import Enum
 from common.lib.core.EpaySpecification import EpaySpecification
 
 
 class ColumnsOrder:
-    FIELD = 0
-    VALUE = 1
-    LENGTH = 2
-    DESCRIPTION = 3
-    PROPERTY = 4
+    FIELD: Final[int] = 0
+    VALUE: Final[int] = 1
+    LENGTH: Final[int] = 2
+    DESCRIPTION: Final[int] = 3
+    PROPERTY: Final[int] = 4
 
 
 class Columns(Enum):
-    FIELD = "Field"
-    VALUE = "Value"
-    LENGTH = "Length"
-    DESCRIPTION = "Description"
-    PROPERTY = "Property"
+    FIELD: Final[str] = "Field"
+    VALUE: Final[str] = "Value"
+    LENGTH: Final[str] = "Length"
+    DESCRIPTION: Final[str] = "Description"
+    PROPERTY: Final[str] = "Property"
 
 
-MESSAGE = "Message"
+MESSAGE: Final[str] = "Message"
 
 spec: EpaySpecification = EpaySpecification()
 

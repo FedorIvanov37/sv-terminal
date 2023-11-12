@@ -1,3 +1,4 @@
+from re import search
 from logging import info
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from common.lib.constants import KeepAliveIntervals
@@ -6,7 +7,7 @@ from common.lib.constants import KeepAliveIntervals
 class TransactionTimer(QObject):
     _trans_loop_timer: QTimer = QTimer()
     _send_transaction: pyqtSignal = pyqtSignal()
-    _interval_was_set: pyqtSignal = pyqtSignal(str)
+    _interval_was_set: pyqtSignal = pyqtSignal(str, str)
 
     @property
     def send_transaction(self):
@@ -16,7 +17,7 @@ class TransactionTimer(QObject):
     def interval_was_set(self):
         return self._interval_was_set
 
-    def __init__(self, trans_type: str = KeepAliveIntervals.TRANS_TYPE_TRANSACTION):
+    def __init__(self, trans_type: str):
         super().__init__()
         self.trans_type = trans_type
 
@@ -33,10 +34,19 @@ class TransactionTimer(QObject):
 
         if interval_name == KeepAliveIntervals.KEEP_ALIVE_STOP:
             self._trans_loop_timer.stop()
+            self.interval_was_set.emit(interval_name, self.trans_type)
             info(f"{self.trans_type} loop is deactivated")
+            return
 
-        if interval := KeepAliveIntervals.get_interval_time(interval_name):
-            self.activate_transaction_loop(interval)
-            info(f"{self.trans_type} loop set to {interval} second(s)")
+        if not (interval := KeepAliveIntervals.get_interval_time(interval_name)):
 
-        self.interval_was_set.emit(interval_name)
+            if not (interval := search("^\d+", interval_name)):
+                return
+
+            interval = int(interval.group())
+
+        self.activate_transaction_loop(interval)
+
+        self.interval_was_set.emit(interval_name, self.trans_type)
+
+        info(f"{self.trans_type} loop set to {interval_name}")

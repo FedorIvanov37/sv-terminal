@@ -48,7 +48,7 @@ Starts MainWindow when starting its work, being a kind of low-level adapter betw
 
 class SvTerminalGui(SvTerminal):
     connector: ConnectionThread
-    trans_timer: TransactionTimer = TransactionTimer()
+    trans_timer: TransactionTimer = TransactionTimer(KeepAliveIntervals.TRANS_TYPE_TRANSACTION)
     set_remote_spec: pyqtSignal = pyqtSignal()
     wireless_handler: WirelessHandler
     _license_demonstrated: bool = False
@@ -123,13 +123,14 @@ class SvTerminalGui(SvTerminal):
             window.hotkeys: lambda: HotKeysHintWindow().exec(),
             window.specification: self.run_specification_window,
             window.about: lambda: AboutWindow(),
-            window.keep_alive: self.set_keep_alive,
+            window.keep_alive: self.set_keep_alive_interval,
             window.repeat: self.trans_timer.set_trans_loop_interval,
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
             self.connector.stateChanged: self.set_connection_status,
             self.set_remote_spec: self.connector.set_remote_spec,
             self.trans_timer.send_transaction: window.send,
-            self.trans_timer.interval_was_set: window.process_repeat_change,
+            self.trans_timer.interval_was_set: window.process_transaction_loop_change,
+            self.keep_alive_timer.interval_was_set: window.process_transaction_loop_change,
         }
 
         for signal, slot in terminal_connections_map.items():
@@ -264,7 +265,7 @@ class SvTerminalGui(SvTerminal):
             if self.config.host.keep_alive_mode:
                 interval_name = KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
 
-            self.set_keep_alive(interval_name)
+            self.set_keep_alive_interval(interval_name)
 
     def read_config(self):
         try:
@@ -279,10 +280,6 @@ class SvTerminalGui(SvTerminal):
 
     def stop_sv_terminal(self):
         self.connector.stop_thread()
-
-    def set_keep_alive(self, interval_name: str):
-        self.set_keep_alive_interval(interval_name)
-        self.window.process_keep_alive_change(interval_name)
 
     def reconnect(self):
         SvTerminal.reconnect(self)

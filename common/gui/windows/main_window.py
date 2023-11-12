@@ -1,4 +1,5 @@
 from sys import exit
+from typing import Callable
 from copy import deepcopy
 from ctypes import windll
 from pydantic import FilePath
@@ -10,7 +11,7 @@ from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.decorators.window_settings import set_window_icon
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Config import Config
-from common.lib.constants import TextConstants, DataFormats, ReleaseDefinition
+from common.lib.constants import TextConstants, DataFormats, ReleaseDefinition, KeepAliveIntervals
 from common.gui.constants import ButtonActions, KeySequence, ConnectionStatus, MainFieldSpec as FieldsSpec, GuiFilesPath
 
 
@@ -168,9 +169,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self._connect_all()
         self.setWindowTitle(f"{TextConstants.SYSTEM_NAME} {ReleaseDefinition.VERSION}")
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
-        self.process_keep_alive_change(ButtonActions.KEEP_ALIVE_STOP)
-        self.process_repeat_change(ButtonActions.KEEP_ALIVE_STOP)
         self.ButtonSend.setFocus()
+
+        for trans_type in KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE, KeepAliveIntervals.TRANS_TYPE_TRANSACTION:
+            self.process_transaction_loop_change(ButtonActions.KEEP_ALIVE_STOP, trans_type)
 
     def _add_json_control_buttons(self) -> None:
         # Create and place the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
@@ -229,6 +231,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         main_window_connection_map = {
             self.SearchLine.textChanged: self.json_view.search,
             self.SearchLine.editingFinished: self.json_view.setFocus,
+            self.keep_alive: lambda interval: self.process_transaction_loop_change(interval, KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE)
         }
 
         keys_connection_map = {
@@ -396,8 +399,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             button.setEnabled(enabled)
 
     def set_mti_values(self, mti_list: list[str]):
-        for mti in mti_list:
-            self.msgtype.addItem(mti)
+        self.msgtype.addItems(mti_list)
 
     def field_has_data(self, field_number: str) -> bool:
         return self.json_view.field_has_data(field_number)
@@ -428,49 +430,38 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.ConnectionStatus.setText(ConnectionStatus.get_state_description(status))
         self.ConnectionStatusLabel.setPixmap(QPixmap(ConnectionStatus.get_state_icon_path(status)))
 
-    def process_repeat_change(self, interval_name: str) -> None:
-        icon_file: FilePath = GuiFilesPath.GREEN_CIRCLE
-
-        if interval_name == ButtonActions.KEEP_ALIVE_STOP:
-            icon_file: FilePath = GuiFilesPath.GREY_CIRCLE
-
-        self.ButtonRepeat.setIcon(QIcon(QPixmap(icon_file)))
-        self.ButtonRepeat.menu().clear()
-
-        button_action_menu = deepcopy(self.buttons_menu_structure.get(self.ButtonRepeat))
-
-        for action, function in button_action_menu.items():
-            if action == interval_name:
-                action = f"{ButtonActions.CURRENT_ACTION_MARK} {action}"  # Set checked
-
-            self.ButtonRepeat.menu().addAction(action, function)
-            self.ButtonRepeat.menu().addSeparator()
-
-    # Change KeepAlive loop status
-    def process_keep_alive_change(self, interval_name: str) -> None:
+    def process_transaction_loop_change(self, interval_name: str, trans_type: str):
         if interval_name == ButtonActions.KEEP_ALIVE_ONCE:
             return
 
+        button_type_map: dict[str, QPushButton] = {
+            KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE: self.ButtonKeepAlive,
+            KeepAliveIntervals.TRANS_TYPE_TRANSACTION: self.ButtonRepeat,
+        }
+
+        if not (button := button_type_map.get(trans_type)):
+            return
+
+        button_action_menu: dict[str, Callable] = deepcopy(self.buttons_menu_structure.get(button))
+
         icon_file: FilePath = GuiFilesPath.GREEN_CIRCLE
 
         if interval_name == ButtonActions.KEEP_ALIVE_STOP:
             icon_file: FilePath = GuiFilesPath.GREY_CIRCLE
 
-        self.ButtonKeepAlive.setIcon(QIcon(QPixmap(icon_file)))
-        self.ButtonKeepAlive.menu().clear()
+        button.setIcon(QIcon(QPixmap(icon_file)))
+        button.menu().clear()
 
-        button_action_menu = deepcopy(self.buttons_menu_structure.get(self.ButtonKeepAlive))
-
-        if self.config.host.keep_alive_mode:  # Add custom interval
-            interval: str = ButtonActions.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
-            button_action_menu[interval] = lambda: self.keep_alive.emit(interval)
+        if trans_type == KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE and self.config.host.keep_alive_mode:
+            custom_interval_name = KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
+            button_action_menu[custom_interval_name] = lambda: self.keep_alive.emit(custom_interval_name)
 
         for action, function in button_action_menu.items():
             if action == interval_name:
                 action = f"{ButtonActions.CURRENT_ACTION_MARK} {action}"  # Set checked
 
-            self.ButtonKeepAlive.menu().addAction(action, function)
-            self.ButtonKeepAlive.menu().addSeparator()
+            button.menu().addAction(action, function)
+            button.menu().addSeparator()
 
     def set_bitmap(self, bitmap: str = str()) -> None:
         self.Bitmap.setText(bitmap)
