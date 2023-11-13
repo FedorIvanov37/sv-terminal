@@ -1,4 +1,3 @@
-from json import load, dump
 from logging import info, error, getLogger, getLevelName
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap, QIntValidator
@@ -88,7 +87,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
     def set_default_settings(self) -> None:
         try:
             with open(TermFilesPath.DEFAULT_CONFIG) as json_file:
-                default_config: Config = Config.model_validate(load(json_file))
+                default_config: Config = Config.model_validate_json(json_file.read())
 
         except Exception as parsing_error:
             error(parsing_error)
@@ -157,7 +156,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
             self.config.fields.max_amount = 999_999_999
 
         with open(TermFilesPath.CONFIG, "w") as file:
-            dump(self.config.model_dump(), file, indent=4)
+            file.write(self.config.model_dump_json(indent=4))
 
         self.accepted.emit()
         self.close()

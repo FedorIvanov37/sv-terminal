@@ -1,5 +1,4 @@
 from typing import Callable
-from json import dumps, load
 from logging import error, info, warning, debug
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject
@@ -26,7 +25,7 @@ class SvTerminal(QObject):
     keep_alive_timer: TransactionTimer = TransactionTimer(KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE)
 
     with open(TermFilesPath.CONFIG) as json_file:
-        config: Config = Config.model_validate(load(json_file))
+        config: Config = Config.model_validate_json(json_file.read())
 
     validator: Validator = Validator()
     need_reconnect: pyqtSignal = pyqtSignal()
@@ -179,7 +178,7 @@ class SvTerminal(QObject):
 
     def save_transaction(self, transaction: Transaction, file_format: str, file_name) -> None:
         data_processing_map: dict[str, Callable] = {
-            DataFormats.JSON: lambda _trans: dumps(_trans.model_dump(), indent=4),
+            DataFormats.JSON: lambda _trans: _trans.model_dump_json(indent=4),
             DataFormats.INI: lambda _trans: self.parser.transaction_to_ini_string(_trans),
             DataFormats.DUMP: lambda _trans: self.parser.create_sv_dump(_trans)[1:]
         }

@@ -1,4 +1,3 @@
-from json import loads
 from struct import pack
 from http import HTTPStatus
 from urllib.request import urlopen
@@ -141,11 +140,11 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
                 debug(f"Backup local specification file name: {TermFilesPath.SPEC_BACKUP_DIR}/{backup_filename}")
 
             try:
-                json_data = resp.read()
-                json_data = json_data.decode()
-                json_data = loads(json_data)
+                # json_data = resp.read()
+                # json_data = json_data.decode()
+                # json_data = loads(json_data)
 
-                spec_data: EpaySpecModel = EpaySpecModel.model_validate(json_data)
+                spec_data: EpaySpecModel = EpaySpecModel.model_validate_json(resp.read())
                 spec.reload_spec(spec=spec_data, commit=commit)
 
                 info(f"Remote specification loaded {spec.spec.name}")

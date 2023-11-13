@@ -1,5 +1,4 @@
 from os import remove, listdir
-from json import dump
 from datetime import datetime
 from logging import error
 from common.lib.data_models.Config import Config
@@ -17,7 +16,7 @@ class SpecFilesRotator:
         filename = f"{self.filename_head}{datetime.now():{self.date_format}}{self.filename_tail}"
 
         with open(f'{TermFilesPath.SPEC_BACKUP_DIR}/{filename}', "w") as file:
-            dump(self.spec.spec.model_dump(), file, indent=4)
+            file.write(self.spec.spec.model_dump_json(indent=4))
 
         return filename
 

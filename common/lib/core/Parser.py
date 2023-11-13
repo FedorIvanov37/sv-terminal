@@ -1,4 +1,4 @@
-from json import loads, load
+from json import loads
 from pathlib import Path
 from pydantic import FilePath
 from binascii import hexlify, unhexlify, b2a_hex
@@ -173,7 +173,7 @@ class Parser:
     @staticmethod
     def parse_raw_data(raw_data: bytes, flat=False) -> list[Transaction]:
         with open(TermFilesPath.CONFIG) as json_file:
-            config: Config = Config.model_validate(load(json_file))
+            config: Config = Config.model_validate_json(json_file.read())
 
         header_length = config.host.header_length if config.host.header_length_exists else int()
 
@@ -391,7 +391,7 @@ class Parser:
         JsonConverter.convert(filename)  # TODO: Temporary solution for transfer period
 
         with open(filename) as json_file:
-            transaction: Transaction = Transaction.model_validate(load(json_file))
+            transaction: Transaction = Transaction.model_validate_json(json_file.read())
 
         transaction.trans_id = generate_trans_id()
 

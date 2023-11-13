@@ -1,4 +1,3 @@
-from json import load
 from common.lib.constants import TermFilesPath
 from common.lib.core.Parser import Parser
 from common.lib.data_models.Config import Config
@@ -11,13 +10,13 @@ from common.lib.core.EpaySpecification import EpaySpecification
 # Create objects
 
 with open(TermFilesPath.CONFIG) as json_file:
-    config: Config = Config.model_validate(load(json_file))
+    config: Config = Config.model_validate_json(json_file.read())
 
 parser = Parser(config)
 connector = Connector(config)
 
 with open(TermFilesPath.DEFAULT_FILE) as json_file:
-    transaction = Transaction.model_validate(load(json_file))
+    transaction = Transaction.model_validate_json(json_file.read())
 
 spec: EpaySpecification = EpaySpecification()
 

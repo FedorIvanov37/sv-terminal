@@ -1,4 +1,3 @@
-from json import dumps
 from logging import debug, info, error
 from common.lib.constants import TextConstants
 from common.lib.data_models.Transaction import Transaction
@@ -24,7 +23,7 @@ class LogPrinter:
 
     def print_startup_info(self, level=default_level):
         LogPrinter.print_multi_row(TextConstants.HELLO_MESSAGE)
-        config_data = dumps(self.config.model_dump(), indent=4)
+        config_data = self.config.model_dump_json(indent=4)
         config_data = f"## Configuration parameters ##\n{config_data}\n## End of configuration parameters ##"
         self.print_multi_row(config_data, level=level)
 

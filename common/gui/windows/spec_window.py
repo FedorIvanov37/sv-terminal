@@ -1,5 +1,4 @@
 from logging import error, info
-from json import load
 from typing import Optional
 from pydantic import ValidationError
 from PyQt6.QtGui import QCloseEvent, QKeyEvent, QKeySequence, QShortcut
@@ -256,7 +255,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
         try:
             with open(filename) as json_file:
-                specification: EpaySpecModel = EpaySpecModel.model_validate(load(json_file))
+                specification: EpaySpecModel = EpaySpecModel.model_validate_json(json_file.read())
 
         except ValidationError as validation_error:
             error_text = str(validation_error)

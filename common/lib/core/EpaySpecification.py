@@ -1,4 +1,3 @@
-from json import dump, load
 from copy import deepcopy
 from dataclasses import asdict
 from pydantic import FilePath
@@ -21,7 +20,7 @@ class EpaySpecification(EpaySpecificationData):
         self.filename: FilePath = filename
 
         with open(filename) as json_file:
-            self._specification_model: EpaySpecModel = EpaySpecModel.model_validate(load(json_file))
+            self._specification_model: EpaySpecModel = EpaySpecModel.model_validate_json(json_file.read())
 
     @property
     def spec(self) -> EpaySpecModel:
@@ -134,7 +133,7 @@ class EpaySpecification(EpaySpecificationData):
             return
 
         with open(self.filename, "w") as spec_file:
-            dump(self.spec.model_dump(), spec_file, indent=4)
+            spec_file.write(self.spec.model_dump_json(indent=4))
 
     def get_reversal_fields(self):
         return (field for field, value in self.fields.items() if value.reversal)

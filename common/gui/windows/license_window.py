@@ -1,5 +1,4 @@
 from sys import exit
-from json import dump, load
 from json.decoder import JSONDecodeError
 from logging import warning, info
 from pydantic import ValidationError
@@ -28,7 +27,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
 
         try:
             with open(TermFilesPath.LICENSE_INFO) as json_file:
-                self.license_info: LicenseInfo = LicenseInfo.model_validate(load(json_file))
+                self.license_info: LicenseInfo = LicenseInfo.model_validate_json(json_file.read())
 
         except (ValueError, ValidationError, JSONDecodeError, FileNotFoundError):
             self.license_info: LicenseInfo = LicenseInfo()
@@ -73,7 +72,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
     @staticmethod
     def save_license_file(license_data: LicenseInfo):
         with open(TermFilesPath.LICENSE_INFO, 'w') as license_file:
-            dump(license_data.model_dump(), license_file, indent=4)
+            license_file.write(license_data.model_dump_json(indent=4))
 
     def block_acceptance(self):
         accepted = bool(self.CheckBoxAgreement.checkState().value)

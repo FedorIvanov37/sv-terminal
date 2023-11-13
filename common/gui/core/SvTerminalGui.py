@@ -1,6 +1,5 @@
 from typing import Callable
-from copy import deepcopy
-from json import dumps, load
+from json import dumps
 from logging import error, info, warning, Logger
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication, QFileDialog
@@ -180,7 +179,7 @@ class SvTerminalGui(SvTerminal):
 
     def settings(self) -> None:
         try:
-            old_config: Config = Config.model_validate(deepcopy(self.config.model_dump()))
+            old_config: Config = self.config.model_copy(deep=True)
             settings_window: SettingsWindow = SettingsWindow(self.config)
             settings_window.accepted.connect(lambda: self.process_config_change(old_config))
             settings_window.exec()
@@ -241,7 +240,7 @@ class SvTerminalGui(SvTerminal):
     def read_config(self) -> None:
         try:
             with open(TermFilesPath.CONFIG) as json_file:
-                config: Config = Config.model_validate(load(json_file))
+                config: Config = Config.model_validate_json(json_file.read())
 
         except ValidationError as parsing_error:
             error(f"Cannot parse configuration file: {parsing_error}")
@@ -406,7 +405,7 @@ class SvTerminalGui(SvTerminal):
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window()),
             DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window()),
             DataFormats.TERM: lambda: TextConstants.HELLO_MESSAGE + "\n",
-            DataFormats.SPEC: lambda: dumps(self.spec.spec.model_dump(), indent=4)
+            DataFormats.SPEC: lambda: self.spec.spec.model_dump_json(indent=4)
         }
 
         if not (function := data_processing_map.get(data_format)):

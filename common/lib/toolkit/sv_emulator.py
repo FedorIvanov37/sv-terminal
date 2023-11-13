@@ -1,4 +1,3 @@
-from json import load
 from time import sleep
 from copy import deepcopy
 from struct import pack
@@ -33,7 +32,7 @@ class SvEmulator:
 
     def __init__(self):
         with open(TermFilesPath.CONFIG) as json_file:
-            self.config: Config = Config.model_validate(load(json_file))
+            self.config: Config = Config.model_validate_json(json_file.read())
 
         self.parser: Parser = Parser(self.config)
         self.spec: EpaySpecification = EpaySpecification()
@@ -89,7 +88,8 @@ class SvEmulator:
 
         return request
 
-    def get_connector(self):
+    @staticmethod
+    def get_connector():
         sock = socket()
         sock.bind((IsoConfig.ADDRESS, IsoConfig.PORT))
         sock.listen(1)
