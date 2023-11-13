@@ -54,32 +54,26 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
         self.license_info.last_acceptance_date = datetime.utcnow()
         self.license_info.show_agreement = not bool(self.CheckBoxDontShowAgain.checkState().value)
 
-        with open(TermFilesPath.LICENSE_INFO, 'w') as license_file:
-            license_data = dict(
-                accepted=self.license_info.accepted,
-                show_agreement=self.license_info.show_agreement,
-                last_acceptance_date=self.license_info.last_acceptance_date.isoformat(),
-                license_id=self.license_info.license_id,
-            )
+        license_data: LicenseInfo = self.license_info.model_copy(deep=True)
+        license_data.last_acceptance_date = license_data.last_acceptance_date.isoformat()
 
-            dump(license_data, license_file, indent=4)
-
-            self.print_acceptance_info()
+        self.save_license_file(license_data)
+        self.print_acceptance_info()
 
     def reject_license(self):
-        with open(TermFilesPath.LICENSE_INFO, 'w') as license_file:
-            license_data = dict(
-                accepted=False,
-                show_agreement=True,
-                last_acceptance_date=None,
-                license_id=self.license_info.license_id,
-            )
+        license_data: LicenseInfo = self.license_info.model_copy(deep=True)
+        license_data.accepted = False
+        license_data.show_agreement = True
+        license_data.last_acceptance_date = None
 
-            dump(license_data, license_file, indent=4)
-
+        self.save_license_file(license_data)
         warning("License agreement rejected, exit")
-
         exit(100)
+
+    @staticmethod
+    def save_license_file(license_data: LicenseInfo):
+        with open(TermFilesPath.LICENSE_INFO, 'w') as license_file:
+            dump(license_data.model_dump(), license_file, indent=4)
 
     def block_acceptance(self):
         accepted = bool(self.CheckBoxAgreement.checkState().value)
@@ -91,6 +85,6 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
         self.ButtonAccept.setEnabled(accepted)
 
     def print_acceptance_info(self):
-        info(f"Licence agreement accepted {self.license_info.last_acceptance_date.strftime('%d/%m/%Y %T')} | "
-             f"License ID {self.license_info.license_id}")
+        info(f"Licence agreement accepted {self.license_info.last_acceptance_date}")
+        info(f"License ID {self.license_info.license_id}")
         info(f"Thank you for using SIGNAL")
