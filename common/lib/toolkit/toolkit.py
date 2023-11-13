@@ -1,4 +1,4 @@
-from common.lib.core.EpaySpecification import EpaySpecification, IsoField
+from common.lib.core.EpaySpecification import EpaySpecification
 
 secret_hide_mark: str = '•'
 

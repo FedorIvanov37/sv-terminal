@@ -87,4 +87,4 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
     def print_acceptance_info(self):
         info(f"Licence agreement accepted {self.license_info.last_acceptance_date}")
         info(f"License ID {self.license_info.license_id}")
-        info(f"Thank you for using SIGNAL")
+        info("Thank you for using SIGNAL")
