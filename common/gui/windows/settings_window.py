@@ -20,7 +20,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
     @set_window_icon
     @has_close_button_only
-    def setup(self):
+    def setup(self) -> None:
         self.ButtonAbout.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){1,3}\d+")))
         self.MaxAmount.setEditable(True)
@@ -37,16 +37,16 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.HeaderLengthMode.stateChanged.connect(lambda state: self.HeaderLength.setEnabled(bool(state)))
         self.BackupStorageCheckbox.stateChanged.connect(lambda state: self.StorageDepth.setEnabled(bool(state)))
         self.MaxAmountBox.stateChanged.connect(lambda state: self.MaxAmount.setEnabled(bool(state)))
-        self.UseRemoteSpec.stateChanged.connect(lambda state: self.RemoteSpecUrl.setEnabled(bool(state)))
-        self.UseRemoteSpec.stateChanged.connect(lambda state: self.RewriteLocalSpec.setEnabled(bool(state)))
+        self.UseRemoteSpec.stateChanged.connect(self.process_spec_usage_change)
         self.ButtonDefault.clicked.connect(self.set_default_settings)
         self.process_config(self.config)
+        self.process_spec_usage_change()
 
     @staticmethod
-    def about():
+    def about() -> None:
         AboutWindow()
 
-    def process_config(self, config: Config):
+    def process_config(self, config: Config) -> None:
         self.DebugLevel.setCurrentText(config.debug.level)
         self.SvAddress.setText(config.host.host)
         self.SvPort.setValue(int(config.host.port))
@@ -73,14 +73,11 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.RewriteLocalSpec.setChecked(config.remote_spec.rewrite_local_spec)
         self.StorageDepth.setValue(config.remote_spec.backup_storage_depth)
         self.BackupStorageCheckbox.setChecked(config.remote_spec.backup_storage)
-        self.StorageDepth.setEnabled(self.BackupStorageCheckbox.isChecked())
-        self.RemoteSpecUrl.setEnabled(self.UseRemoteSpec.isChecked())
-        self.RewriteLocalSpec.setEnabled(self.UseRemoteSpec.isChecked())
 
         if not config.fields.max_amount_limited:
             return
 
-        max_amount = str(config.fields.max_amount)
+        max_amount: str = str(config.fields.max_amount)
 
         if (index := self.MaxAmount.findText(max_amount)) < int():  # If the max_amount from config is not found
             index: int = int()
@@ -88,7 +85,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
         self.MaxAmount.setCurrentIndex(index)
 
-    def set_default_settings(self):
+    def set_default_settings(self) -> None:
         try:
             with open(TermFilesPath.DEFAULT_CONFIG) as json_file:
                 default_config: Config = Config.model_validate(load(json_file))
@@ -104,7 +101,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
         self.process_config(default_config)
 
-    def validate_header_length(self):
+    def validate_header_length(self) -> None:
         header_length: int = int(self.HeaderLength.value())
 
         if self.HeaderLengthMode.isChecked() and self.HeaderLength.value() < 2:
@@ -113,33 +110,37 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         if header_length % 2 != int():
             self.HeaderLength.setValue(header_length - 1)
 
-    def process_debug_level_change(self):
-        disabled = False
-        checked = self.config.debug.clear_log
+    def process_debug_level_change(self) -> None:
+        disabled: bool = False
+        checked: bool = self.config.debug.clear_log
 
         if self.DebugLevel.currentText() == LogDefinition.DEBUG:
-            checked = False
-            disabled = True
+            checked: bool = False
+            disabled: bool = True
 
         for checkbox in self.ClearLog, self.HideSecrets:
             checkbox.setChecked(checked)
             checkbox.setDisabled(disabled)
 
-    def ok(self):
+    def process_spec_usage_change(self) -> None:
+        for element in self.RemoteSpecUrl, self.RewriteLocalSpec, self.BackupStorageCheckbox:
+            element.setEnabled(self.UseRemoteSpec.isChecked())
+
+    def ok(self) -> None:
         getLogger().setLevel(getLevelName(self.DebugLevel.currentText()))
 
         self.config.host.host = self.SvAddress.text()
         self.config.host.port = self.SvPort.value()
         self.config.host.keep_alive_mode = self.KeepAliveMode.isChecked()
-        self.config.host.keep_alive_interval = self.KeepAliveInterval.value()
-        self.config.host.header_length = self.HeaderLength.value()
         self.config.host.header_length_exists = self.HeaderLengthMode.isChecked()
         self.config.terminal.process_default_dump = self.ProcessDefaultDump.isChecked()
         self.config.terminal.connect_on_startup = self.ConnectOnStartup.isChecked()
-        self.config.debug.clear_log = self.ClearLog.isChecked()
-        self.config.debug.level = self.DebugLevel.currentText()
         self.config.debug.parse_subfields = self.ParseSubfields.isChecked()
         self.config.fields.max_amount_limited = self.MaxAmountBox.isChecked()
+        self.config.debug.clear_log = self.ClearLog.isChecked()
+        self.config.host.keep_alive_interval = self.KeepAliveInterval.value()
+        self.config.host.header_length = self.HeaderLength.value()
+        self.config.debug.level = self.DebugLevel.currentText()
         self.config.fields.max_amount = int(self.MaxAmount.currentText())
         self.config.fields.build_fld_90 = self.BuildFld90.isChecked()
         self.config.fields.send_internal_id = self.SendInternalId.isChecked()
@@ -161,6 +162,6 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.accepted.emit()
         self.close()
 
-    def cancel(self):
+    def cancel(self) -> None:
         info("Settings applying was canceled")
         self.close()
