@@ -138,7 +138,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
             if commit and self.config.remote_spec.backup_storage:
                 rotator: SpecFilesRotator = SpecFilesRotator()
                 backup_filename: str = rotator.backup_spec()
-                info(f"Backup local specification file name: {TermFilesPath.SPEC_BACKUP_DIR}/{backup_filename}")
+                debug(f"Backup local specification file name: {TermFilesPath.SPEC_BACKUP_DIR}/{backup_filename}")
 
             try:
                 json_data = resp.read()
