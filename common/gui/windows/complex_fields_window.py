@@ -49,7 +49,7 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
         for button in self.UpButton, self.DownButton:
             button.setFont(QFont("MS Shell Dlg 2", 10))
 
-        for layout, widget in  widgets_layouts_map.items():
+        for layout, widget in widgets_layouts_map.items():
             layout.addWidget(widget)
 
         for button in self.PlusButton, self.MinusButton, self.NextLevelButton, self.UpButton, self.DownButton:
