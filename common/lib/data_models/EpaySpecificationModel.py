@@ -1,7 +1,8 @@
 from pydantic import BaseModel, Field, field_validator
+from typing import ForwardRef
 
 
-FieldSet = dict[str, "IsoField"]
+FieldSet = dict[str, ForwardRef("IsoField")]
 RawFieldSet = dict[str, str | dict]
 MtiValue = Field(default="", max_length=4, pattern=r"^\d{4}|$")
 
@@ -32,6 +33,7 @@ class IsoField(BaseModel):
     is_secret: bool = False
     fields: FieldSet | None = None
 
+    @classmethod
     @field_validator("is_secret", mode='before')
     def substitute_none(cls, val):
         if val is None:
@@ -42,5 +44,5 @@ class IsoField(BaseModel):
 
 class EpaySpecModel(BaseModel):
     name: str | None = "ISO-8583 E-pay Specification"
-    mti: list[Mti] = [] # Field(min_items=1, alias="mti")
+    mti: list[Mti] = []  # Field(min_items=1, alias="mti")
     fields: FieldSet = {}
