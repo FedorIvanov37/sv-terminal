@@ -7,7 +7,8 @@
     },
     "terminal": {
         "process_default_dump": true,
-        "connect_on_startup": true
+        "connect_on_startup": true,
+        "load_remote_spec": false
     },
     "debug": {
         "level": "INFO",
@@ -25,9 +26,9 @@
     },
     "remote_spec": {
         "use_remote_spec": false,
-        "rewrite_local_spec": true,
+        "rewrite_local_spec": false,
         "remote_spec_url": "",
-        "backup_storage_depth": 10,
-        "backup_storage":  true
+        "backup_storage_depth": 30,
+        "backup_storage":  false
     }
 }

@@ -1,5 +1,5 @@
-from typing import Callable
 from json import dumps
+from typing import Callable
 from logging import error, info, warning, Logger
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication, QFileDialog
@@ -53,12 +53,26 @@ class SvTerminalGui(SvTerminal):
     _license_demonstrated: bool = False
     _startup_finished: bool = False
 
+    def set_json_view_focus(function: callable):
+
+        # This decorator sets focus on the self.window.json_view after the decorated function execution is finished
+
+        def wrapper(self, *args, **kwargs):
+            try:
+                return function(self, *args, **kwargs)
+
+            finally:
+                self.window.json_view.setFocus()
+
+        return wrapper
+
     def __init__(self, config: Config):
         self.connector = ConnectionThread(config)
         super(SvTerminalGui, self).__init__(config, self.connector)
         self.window: MainWindow = MainWindow(self.config)
         self.setup()
 
+    @set_json_view_focus
     def setup(self) -> None:
         self.log_printer.print_startup_info()
         self.create_window_logger()
@@ -67,6 +81,7 @@ class SvTerminalGui(SvTerminal):
         self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
         self.window.show()
 
+    @set_json_view_focus
     def on_startup(self, app_state) -> None:
         if not app_state == Qt.ApplicationState.ApplicationActive:
             return
@@ -87,7 +102,8 @@ class SvTerminalGui(SvTerminal):
             self.set_keep_alive_interval(interval_name=KeepAliveIntervals.KEEP_ALIVE_DEFAULT % interval)
 
         if self.config.remote_spec.use_remote_spec:
-            self.set_remote_spec.emit()
+            if self.config.terminal.load_remote_spec:
+                self.set_remote_spec.emit()
 
         if self.config.remote_spec.backup_storage:
             rotator: SpecFilesRotator = SpecFilesRotator()
@@ -124,6 +140,7 @@ class SvTerminalGui(SvTerminal):
             window.about: lambda: AboutWindow(),
             window.keep_alive: self.set_keep_alive_interval,
             window.repeat: self.trans_timer.set_trans_loop_interval,
+            window.validate_message: self.process_message_validation,
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
             self.connector.stateChanged: self.set_connection_status,
             self.set_remote_spec: self.connector.set_remote_spec,
@@ -159,13 +176,26 @@ class SvTerminalGui(SvTerminal):
 
         self._license_demonstrated: bool = True
 
+    @set_json_view_focus
     def run_specification_window(self) -> None:
-        spec_window: SpecWindow = SpecWindow(self.connector)
+        spec_window: SpecWindow = SpecWindow(self.connector, self.config)
         spec_window.accepted.connect(self.window.hide_secrets)
         getLogger().removeHandler(self.wireless_handler)
         spec_window.exec()
         getLogger().removeHandler(spec_window.wireless_handler)
         self.create_window_logger()
+
+    def process_message_validation(self):
+        try:
+            self.validate_message(check_config=False)
+        except ValidationError as validation_error:
+            error(validation_error)
+
+        info("Message validated")
+
+    def validate_message(self, check_config: bool = True):
+        self.window.validate_fields(check_config=check_config)
+        self.window.refresh_fields()
 
     def echo_test(self) -> None:
         try:
@@ -177,12 +207,14 @@ class SvTerminalGui(SvTerminal):
         except Exception as sending_error:
             error(sending_error)
 
+    @set_json_view_focus
     def settings(self) -> None:
         try:
             old_config: Config = self.config.model_copy(deep=True)
             settings_window: SettingsWindow = SettingsWindow(self.config)
             settings_window.accepted.connect(lambda: self.process_config_change(old_config))
             settings_window.exec()
+
         except Exception as settings_error:
             error(settings_error)
 
@@ -200,18 +232,13 @@ class SvTerminalGui(SvTerminal):
                 raise ValueError
 
         except ValueError:
-            warning(f'Incorrect SV port value: "{self.config.host.port}". '
-                    f'Must be a number in the range of 0 to 65535')
+            warning(f"Incorrect SV port value: {self.config.host.port}. "
+                    f"Must be a number in the range of 0 to 65535")
 
         info("Settings applied")
 
         if old_config.fields.validation != self.config.fields.validation:
-            try:
-                self.window.validate_fields()
-                self.window.refresh_fields()
-
-            except ValueError as validation_error:
-                error(validation_error)
+            self.validate_message()
 
         if old_config.fields.json_mode != self.config.fields.json_mode:
             self.window.set_json_mode(self.config.fields.json_mode)
@@ -455,6 +482,7 @@ class SvTerminalGui(SvTerminal):
 
         raise LookupError
 
+    @set_json_view_focus
     def set_default_values(self) -> None:
         try:
             self.parse_file(str(TermFilesPath.DEFAULT_FILE))
@@ -463,6 +491,7 @@ class SvTerminalGui(SvTerminal):
         except Exception as parsing_error:
             error("Default file parsing error! Exception: %s" % parsing_error)
 
+    @set_json_view_focus
     def parse_file(self, filename: str | None = None) -> None:
         filename_found: str = ""
 
@@ -499,6 +528,7 @@ class SvTerminalGui(SvTerminal):
 
         info(f"File parsed: {filename}")
 
+    @set_json_view_focus
     def parse_transaction(self, transaction: Transaction) -> None:
         try:
             self.window.set_mti_value(transaction.message_type)
@@ -529,6 +559,7 @@ class SvTerminalGui(SvTerminal):
 
         self.window.set_bitmap(", ".join(sorted(bitmap, key=int)))
 
+    @set_json_view_focus
     def clear_message(self) -> None:
         self.window.clear_message()
         self.set_bitmap()

@@ -1,5 +1,5 @@
 from logging import info, error, getLogger, getLevelName
-from PyQt6.QtWidgets import QDialog
+from PyQt6.QtWidgets import QDialog, QLineEdit, QCheckBox
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap, QIntValidator
 from PyQt6.QtCore import QRegularExpression
 from common.lib.constants import LogDefinition, TermFilesPath
@@ -38,6 +38,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.MaxAmountBox.stateChanged.connect(lambda state: self.MaxAmount.setEnabled(bool(state)))
         self.UseRemoteSpec.stateChanged.connect(self.process_spec_usage_change)
         self.ButtonDefault.clicked.connect(self.set_default_settings)
+        self.LoadSpec2.stateChanged.connect(lambda: self.LoadSpec.setChecked(self.LoadSpec2.isChecked()))
+        self.LoadSpec.stateChanged.connect(lambda: self.LoadSpec2.setChecked(self.LoadSpec.isChecked()))
         self.process_config(self.config)
         self.process_spec_usage_change()
 
@@ -72,6 +74,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.RewriteLocalSpec.setChecked(config.remote_spec.rewrite_local_spec)
         self.StorageDepth.setValue(config.remote_spec.backup_storage_depth)
         self.BackupStorageCheckbox.setChecked(config.remote_spec.backup_storage)
+        self.LoadSpec.setChecked(config.terminal.load_remote_spec)
+        self.LoadSpec2.setChecked(config.terminal.load_remote_spec)
 
         if not config.fields.max_amount_limited:
             return
@@ -122,45 +126,60 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
             checkbox.setDisabled(disabled)
 
     def process_spec_usage_change(self) -> None:
-        for element in self.RemoteSpecUrl, self.RewriteLocalSpec, self.BackupStorageCheckbox:
+        elements: set[QLineEdit | QCheckBox] = {
+            self.RemoteSpecUrl,
+            self.RewriteLocalSpec,
+            self.BackupStorageCheckbox,
+            self.LoadSpec,
+            self.LoadSpec2
+        }
+
+        for element in elements:
             element.setEnabled(self.UseRemoteSpec.isChecked())
+
+        self.LoadSpec.setText("Load remote specification")
+
+        if not self.LoadSpec.isEnabled():
+            self.LoadSpec.setText(f'{self.LoadSpec.text()} (disabled below)')
 
     def ok(self) -> None:
         getLogger().setLevel(getLevelName(self.DebugLevel.currentText()))
 
-        self.config.host.host = self.SvAddress.text()
-        self.config.host.port = self.SvPort.value()
-        self.config.host.keep_alive_mode = self.KeepAliveMode.isChecked()
-        self.config.host.header_length_exists = self.HeaderLengthMode.isChecked()
-        self.config.terminal.process_default_dump = self.ProcessDefaultDump.isChecked()
-        self.config.terminal.connect_on_startup = self.ConnectOnStartup.isChecked()
-        self.config.debug.parse_subfields = self.ParseSubfields.isChecked()
-        self.config.fields.max_amount_limited = self.MaxAmountBox.isChecked()
-        self.config.debug.clear_log = self.ClearLog.isChecked()
-        self.config.host.keep_alive_interval = self.KeepAliveInterval.value()
-        self.config.host.header_length = self.HeaderLength.value()
-        self.config.debug.level = self.DebugLevel.currentText()
-        self.config.fields.max_amount = int(self.MaxAmount.currentText())
-        self.config.fields.build_fld_90 = self.BuildFld90.isChecked()
-        self.config.fields.send_internal_id = self.SendInternalId.isChecked()
-        self.config.fields.validation = self.ValidationEnabled.isChecked()
-        self.config.fields.json_mode = self.JsonMode.isChecked()
-        self.config.fields.hide_secrets = self.HideSecrets.isChecked()
-        self.config.remote_spec.use_remote_spec = self.UseRemoteSpec.isChecked()
-        self.config.remote_spec.remote_spec_url = self.RemoteSpecUrl.text()
-        self.config.remote_spec.rewrite_local_spec = self.RewriteLocalSpec.isChecked()
-        self.config.remote_spec.backup_storage = self.BackupStorageCheckbox.isChecked()
-        self.config.remote_spec.backup_storage_depth = self.StorageDepth.value()
+        config = self.config
 
-        if not self.config.fields.max_amount_limited:
-            self.config.fields.max_amount = 999_999_999
+        config.host.host = self.SvAddress.text()
+        config.host.port = self.SvPort.value()
+        config.host.keep_alive_mode = self.KeepAliveMode.isChecked()
+        config.host.header_length_exists = self.HeaderLengthMode.isChecked()
+        config.terminal.process_default_dump = self.ProcessDefaultDump.isChecked()
+        config.terminal.connect_on_startup = self.ConnectOnStartup.isChecked()
+        config.terminal.load_remote_spec = self.LoadSpec.isChecked()
+        config.debug.parse_subfields = self.ParseSubfields.isChecked()
+        config.fields.max_amount_limited = self.MaxAmountBox.isChecked()
+        config.debug.clear_log = self.ClearLog.isChecked()
+        config.host.keep_alive_interval = self.KeepAliveInterval.value()
+        config.host.header_length = self.HeaderLength.value()
+        config.debug.level = self.DebugLevel.currentText()
+        config.fields.max_amount = int(self.MaxAmount.currentText())
+        config.fields.build_fld_90 = self.BuildFld90.isChecked()
+        config.fields.send_internal_id = self.SendInternalId.isChecked()
+        config.fields.validation = self.ValidationEnabled.isChecked()
+        config.fields.json_mode = self.JsonMode.isChecked()
+        config.fields.hide_secrets = self.HideSecrets.isChecked()
+        config.remote_spec.use_remote_spec = self.UseRemoteSpec.isChecked()
+        config.remote_spec.remote_spec_url = self.RemoteSpecUrl.text()
+        config.remote_spec.rewrite_local_spec = self.RewriteLocalSpec.isChecked()
+        config.remote_spec.backup_storage = self.BackupStorageCheckbox.isChecked()
+        config.remote_spec.backup_storage_depth = self.StorageDepth.value()
+
+        if not config.fields.max_amount_limited:
+            config.fields.max_amount = 999_999_999
 
         with open(TermFilesPath.CONFIG, "w") as file:
             file.write(self.config.model_dump_json(indent=4))
 
-        self.accepted.emit()
-        self.close()
+        self.accept()
 
     def cancel(self) -> None:
         info("Settings applying was canceled")
-        self.close()
+        self.reject()

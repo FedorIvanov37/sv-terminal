@@ -55,6 +55,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _keep_alive: pyqtSignal = pyqtSignal(str)
     _repeat: pyqtSignal = pyqtSignal(str)
     _parse_complex_field: pyqtSignal = pyqtSignal()
+    _validate_message: pyqtSignal = pyqtSignal()
+
+    @property
+    def validate_message(self):
+        return self._validate_message
 
     @property
     def repeat(self):
@@ -217,6 +222,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonSettings: self.settings,
             self.ButtonCopyBitmap: self.copy_bitmap,
             self.ButtonFieldsParser: self.parse_complex_field,
+            self.ButtonValidate: self.validate_message,
         }
 
         json_view_connection_map = {
@@ -261,6 +267,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             KeySequence.CTRL_SHIFT_N: self.json_view.next_level,
             KeySequence.CTRL_ALT_Q: exit,
             KeySequence.CTRL_ALT_ENTER: self.echo_test,
+            KeySequence.CTRL_ALT_V: self.validate_message,
         }
 
         self.buttons_menu_structure = {
@@ -347,8 +354,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.json_view.switch_json_mode(json_mode)
 
     # Validate whole transaction data, presented on MainWindow
-    def validate_fields(self) -> None:
-        self.json_view.check_all_items()
+    def validate_fields(self, check_config: bool = True) -> None:
+        self.json_view.check_all_items(check_config=check_config)
 
     def refresh_fields(self):
         self.json_view.refresh_fields()

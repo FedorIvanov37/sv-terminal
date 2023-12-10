@@ -32,8 +32,8 @@ class Transaction(BaseModel):
     is_reversal: bool | None = None
     is_keep_alive: bool = False
 
+    @field_validator("max_amount", mode="before")
     @classmethod
-    @field_validator("max_amount", mode='before')
     def check_amount(cls, val):
         error_message = f"Wrong max_amount {val}. Amount must be digit in range from 0 to 999 999 999"
 
@@ -48,21 +48,21 @@ class Transaction(BaseModel):
 
         return val
 
+    @field_validator("generate_fields", mode="before")
     @classmethod
-    @field_validator("generate_fields", mode='before')
     def field_to_str(cls, val):
         return [str(field) for field in val]
 
-    @classmethod
     @field_validator("trans_id")
+    @classmethod
     def generate_transaction_id(cls, val):
         if not val:
             return generate_trans_id()
 
         return val
 
-    @classmethod
     @field_validator("message_type")
+    @classmethod
     def valid_mti(cls, val: str):
         if len(str(val)) != MessageLength.MESSAGE_TYPE_LENGTH:
             raise ValueError(f"Incorrect MTI length. Expected {MessageLength.MESSAGE_TYPE_LENGTH}, got {len(str(val))}")
@@ -75,8 +75,9 @@ class Transaction(BaseModel):
 
         return val
 
-    @classmethod
+
     @field_validator("data_fields")
+    @classmethod
     def top_level_fields_in_range(cls, val: TypeFields):
         for field in val.keys():
             if not field.isdigit():
@@ -103,8 +104,8 @@ class OldTransactionConfig(BaseModel):
     generate_fields: list[generated_field] = []
     max_amount: int | None = None
 
+    @field_validator("generate_fields", mode="before")
     @classmethod
-    @field_validator("generate_fields", mode='before')
     def field_to_str(cls, val):
         return [str(field) for field in val]
 

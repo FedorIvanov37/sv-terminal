@@ -6,18 +6,19 @@ from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog, QPushButton, QApplication
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
+from common.lib.data_models.Config import Config
 from common.lib.constants import TermFilesPath
+from common.lib.constants import TextConstants
+from common.lib.core.Logger import LogStream, getLogger, Formatter
+from common.lib.constants import LogDefinition
+from common.lib.core.SpecFilesRotator import SpecFilesRotator
 from common.gui.windows.spec_unsaved import SpecUnsaved
 from common.gui.forms.spec import Ui_SpecificationWindow
 from common.gui.core.json_views.SpecView import SpecView
 from common.gui.windows.mti_spec_window import MtiSpecWindow
 from common.gui.constants import ButtonActions, SpecFieldDef, KeySequence
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
-from common.lib.constants import TextConstants
 from common.gui.core.WirelessHandler import WirelessHandler
-from common.lib.core.Logger import LogStream, getLogger, Formatter
-from common.lib.constants import LogDefinition
-from common.lib.core.SpecFilesRotator import SpecFilesRotator
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):
@@ -57,9 +58,10 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def read_only(self, checked):
         self._read_only = checked
 
-    def __init__(self, connector):
+    def __init__(self, connector, config: Config):
         super(SpecWindow, self).__init__()
         self.connector = connector
+        self.config = config
         self.setupUi(self)
         self._setup()
 
@@ -84,8 +86,8 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
                 ButtonActions.PERMANENTLY: lambda: self.apply(ButtonActions.PERMANENTLY),
             },
             self.ButtonReset: {
-                ButtonActions.REMOTE_SPEC: lambda: self.reset_spec.emit(ButtonActions.REMOTE_SPEC),
                 ButtonActions.LOCAL_SPEC: lambda: self.reset_spec.emit(ButtonActions.LOCAL_SPEC),
+                ButtonActions.REMOTE_SPEC: lambda: self.reset_spec.emit(ButtonActions.REMOTE_SPEC),
             },
         }
 
@@ -95,6 +97,15 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             for name, action in button_actions.items():
                 button.menu().addAction(name, action)
                 button.menu().addSeparator()
+
+            for action in button.menu().actions():
+                if self.config.remote_spec.use_remote_spec:
+                    break
+
+                if action.text() == ButtonActions.REMOTE_SPEC:
+                    action.setText(f"{action.text()} (disabled in configuration)")
+                    action.setDisabled(True)
+                    break
 
         for layout, widget in widgets_layouts_map.items():
             layout.addWidget(widget)

@@ -13,6 +13,7 @@ class Host(BaseModel):
 class Terminal(BaseModel):
     process_default_dump: bool = True
     connect_on_startup: bool = True
+    load_remote_spec: bool = False
 
 
 class Debug(BaseModel):
@@ -30,6 +31,7 @@ class Fields(BaseModel):
     json_mode: bool = True
     hide_secrets: bool = True
 
+    @classmethod
     @field_validator("max_amount", mode='before')
     def amount_should_be_digit(cls, max_amount: str):
         if not str(max_amount).isdigit():
@@ -44,6 +46,7 @@ class RemoteSpec(BaseModel):
     remote_spec_url: str = ''
     backup_storage_depth: int = 100
     backup_storage: bool = True
+
 
 class Config(BaseModel):
     host: Host

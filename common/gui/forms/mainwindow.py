@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1469, 951)
+        MainWindow.resize(1550, 951)
         MainWindow.setMouseTracking(False)
         MainWindow.setFocusPolicy(QtCore.Qt.FocusPolicy.ClickFocus)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
@@ -173,6 +173,14 @@ class Ui_MainWindow(object):
         self.ButtonReverse.setFocusPolicy(QtCore.Qt.FocusPolicy.TabFocus)
         self.ButtonReverse.setObjectName("ButtonReverse")
         self.horizontalLayout_2.addWidget(self.ButtonReverse)
+        self.ButtonValidate = QtWidgets.QPushButton(parent=self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.ButtonValidate.setFont(font)
+        self.ButtonValidate.setFocusPolicy(QtCore.Qt.FocusPolicy.TabFocus)
+        self.ButtonValidate.setWhatsThis("")
+        self.ButtonValidate.setObjectName("ButtonValidate")
+        self.horizontalLayout_2.addWidget(self.ButtonValidate)
         self.ButtonClearLog = QtWidgets.QPushButton(parent=self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -350,13 +358,14 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "SmartVista Terminal"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "SIGNAL"))
         self.ConnectionStatusLabel.setText(_translate("MainWindow", ">>>"))
         self.ButtonCopyBitmap.setText(_translate("MainWindow", "Copy"))
         self.SearchLine.setPlaceholderText(_translate("MainWindow", "Search: field number | field value | field description"))
         self.ButtonSend.setText(_translate("MainWindow", "Send"))
         self.ButtonRepeat.setText(_translate("MainWindow", "Repeat"))
         self.ButtonReverse.setText(_translate("MainWindow", "Reversal"))
+        self.ButtonValidate.setText(_translate("MainWindow", "Validate"))
         self.ButtonClearLog.setText(_translate("MainWindow", "Clear log"))
         self.ButtonCopyLog.setText(_translate("MainWindow", "Copy log"))
         self.ButtonParseDump.setText(_translate("MainWindow", "Parse file"))

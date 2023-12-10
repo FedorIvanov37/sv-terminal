@@ -1,6 +1,6 @@
 from copy import deepcopy
 from logging import error, warning
-from PyQt6.QtCore import pyqtSignal, QModelIndex
+from PyQt6.QtCore import pyqtSignal, QModelIndex, Qt
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QLineEdit
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.FieldsGenerator import FieldsGenerator
@@ -228,7 +228,7 @@ class JsonView(TreeView):
                 child_item.setText(FieldsSpec.ColumnsOrder.LENGTH, child_item.field_length.zfill(item_length))
                 continue
 
-            prefix: str = '0' * (child_length - item_length)
+            prefix: str = "0" * (child_length - item_length)
 
             child_item.setText(FieldsSpec.ColumnsOrder.LENGTH, child_item.field_length.removeprefix(prefix))
 
@@ -293,8 +293,8 @@ class JsonView(TreeView):
         for child in item.get_children():
             self.set_item_description(child)
 
-    def validate_item(self, item):  # Validate single item, no auto children validate
-        if not self.config.fields.validation:
+    def validate_item(self, item, check_config: bool = True):  # Validate single item, no auto children validate
+        if check_config and not self.config.fields.validation:
             return
 
         if item is self.root:
@@ -313,16 +313,21 @@ class JsonView(TreeView):
             if row.childCount():
                 self.validate_items(row)
 
-    def check_all_items(self, parent: FieldItem | None = None):  # Validate and paint item without raising ValueError
+    def check_all_items(self, parent: FieldItem | None = None, check_config: bool = True):  # Validate and paint item without raising ValueError
         def set_error(item: FieldItem, exception: Exception):
             item.set_item_color(Colors.RED)
-            warning(exception)
+
+            for string in str(exception).splitlines():
+                warning(string)
+
+            self.setCurrentItem(item)
+            self.setFocus()
 
         if parent is None:
             parent = self.root
 
         try:
-            self.validate_item(parent)
+            self.validate_item(parent, check_config=check_config)
 
         except ValueError as validation_error:
             set_error(parent, validation_error)
@@ -332,11 +337,11 @@ class JsonView(TreeView):
 
         for child_item in parent.get_children():
             if child_item.childCount():
-                self.check_all_items(parent=child_item)
+                self.check_all_items(parent=child_item, check_config=check_config)
                 continue
 
             try:
-                self.validate_item(child_item)
+                self.validate_item(child_item, check_config=check_config)
 
             except ValueError as validation_error:
                 set_error(child_item, validation_error)

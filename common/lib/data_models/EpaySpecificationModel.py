@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from typing import ForwardRef
 
 
@@ -16,6 +16,8 @@ class Mti(BaseModel):
 
 
 class IsoField(BaseModel):
+    model_config: ConfigDict = ConfigDict(validate_assignment=True)
+
     field_number: str = ""
     field_path: list = []
     min_length: int
@@ -33,9 +35,10 @@ class IsoField(BaseModel):
     is_secret: bool = False
     fields: FieldSet | None = None
 
+    @field_validator("is_secret", mode="before")
     @classmethod
-    @field_validator("is_secret", mode='before')
     def substitute_none(cls, val):
+
         if val is None:
             return False
 

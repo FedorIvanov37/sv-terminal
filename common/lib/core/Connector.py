@@ -1,5 +1,6 @@
 from struct import pack
 from http import HTTPStatus
+from http.client import HTTPResponse
 from urllib.request import urlopen
 from logging import error, debug, warning, info
 from PyQt6.QtNetwork import QTcpSocket
@@ -121,14 +122,14 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
 
         try:
             try:
-                resp = urlopen(self.config.remote_spec.remote_spec_url)
+                resp: HTTPResponse | str = urlopen(self.config.remote_spec.remote_spec_url)
             except Exception as spec_loading_error:
                 error(f"Cannot get remote specification: {spec_loading_error}")
                 warning(use_local_spec_text)
                 return
 
             if resp.getcode() != HTTPStatus.OK:
-                error(f"Cannot get remote specification: Non-success http-code {resp.status_code}")
+                error(f"Cannot get remote specification: Non-success http-code {resp.status}")
                 warning(use_local_spec_text)
                 return
 
@@ -140,10 +141,6 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
                 debug(f"Backup local specification file name: {TermFilesPath.SPEC_BACKUP_DIR}/{backup_filename}")
 
             try:
-                # json_data = resp.read()
-                # json_data = json_data.decode()
-                # json_data = loads(json_data)
-
                 spec_data: EpaySpecModel = EpaySpecModel.model_validate_json(resp.read())
                 spec.reload_spec(spec=spec_data, commit=commit)
 

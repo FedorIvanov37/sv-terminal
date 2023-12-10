@@ -1,0 +1,334 @@
+</issuer>
+<acquirer>
+    <inst_id>9002</inst_id>
+    <network_id>1003</network_id>
+</acquirer><auth_data>
+<resp_code>RESP0001</resp_code>
+<is_advice>0</is_advice>
+<bin_cnvt_rate>70254746</bin_cnvt_rate>
+<card_data_input_cap>F221000M</card_data_input_cap>
+<crdh_auth_cap>F2220001</crdh_auth_cap>
+<card_capture_cap>F2230000</card_capture_cap>
+<terminal_operating_env>F2240001</terminal_operating_env>
+<crdh_presence>F2250000</crdh_presence>
+<card_data_input_mode>F227000M</card_data_input_mode>
+<card_data_output_cap>F22A0000</card_data_output_cap>
+<terminal_output_cap>F22B0000</terminal_output_cap>
+<pin_capture_cap>F22C0004</pin_capture_cap>
+<pos_entry_mode>071</pos_entry_mode>
+<pos_cond_code>00</pos_cond_code>
+<service_code>101</service_code>
+<is_completed>CMPF0010</is_completed>
+<external_auth_id>939203638</external_auth_id>
+<external_orig_id>939203638</external_orig_id>
+<system_trace_audit_number>189452</system_trace_audit_number>
+<auth_transaction_id>383328308273027</auth_transaction_id>
+<trace_number>939203638</trace_number>
+<auth_tag>
+    <tag_id>33</tag_id>
+    <tag_value>CYP</tag_value>
+    <tag_name>SENDER_COUNTRY</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>8634</tag_id>
+    <tag_value>00</tag_value>
+    <tag_name>DF8634</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>8715</tag_id>
+    <tag_value>0</tag_value>
+    <tag_name>DF8411</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>8716</tag_id>
+    <tag_value>231124113347</tag_value>
+    <tag_name>DF8423</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>8720</tag_id>
+    <tag_value>FA06D000000000024</tag_value>
+    <tag_name>DF8464</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>8724</tag_id>
+    <tag_value>1</tag_value>
+    <tag_name>DF8567</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>8753</tag_id>
+    <tag_value>4164100300500545</tag_value>
+    <tag_name>DF8A6C</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>8755</tag_id>
+    <tag_value>0</tag_value>
+    <tag_name>DF8642</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>33384</tag_id>
+    <tag_value>24.11.2023 08:33:47</tag_value>
+    <tag_name>DF8268</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>33914</tag_id>
+    <tag_value>025</tag_value>
+    <tag_name>DF8C14</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>34871</tag_id>
+    <tag_value>11</tag_value>
+    <tag_name>DF8837</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>34916</tag_id>
+    <tag_value>000000000000</tag_value>
+    <tag_name>DF8864</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>35074</tag_id>
+    <tag_value>0</tag_value>
+    <tag_name>DF8902</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>35437</tag_id>
+    <tag_value>103</tag_value>
+    <tag_name>DF8A6D</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>35855</tag_id>
+    <tag_value>1</tag_value>
+    <tag_name>DF8C0F</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>35856</tag_id>
+    <tag_value>0</tag_value>
+    <tag_name>DF8C10</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>35858</tag_id>
+    <tag_value>000000</tag_value>
+    <tag_name>DF8635</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>35966</tag_id>
+    <tag_value>DEF</tag_value>
+    <tag_name>DF8C7E</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>36135</tag_id>
+    <tag_value>071</tag_value>
+    <tag_name>DF8D27</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>36419</tag_id>
+    <tag_value>70254746</tag_value>
+    <tag_name>DF8E27</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>36643</tag_id>
+    <tag_value>2706</tag_value>
+    <tag_name>DF8F23</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>36673</tag_id>
+    <tag_value>0</tag_value>
+    <tag_name>DF8F41</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>36681</tag_id>
+    <tag_value>0100</tag_value>
+    <tag_name>DF8F49</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>36682</tag_id>
+    <tag_value>1 2 2</tag_value>
+    <tag_name>DF8F4A</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>36683</tag_id>
+    <tag_value>05000040</tag_value>
+    <tag_name>DF8F4B</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>36685</tag_id>
+    <tag_value>1</tag_value>
+    <tag_name>DF8F4D</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>50001</tag_id>
+    <tag_value>68790</tag_value>
+    <tag_name>DF806A</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>50002</tag_id>
+    <tag_value>68790</tag_value>
+    <tag_name>DF806D</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>60018</tag_id>
+    <tag_value>+000</tag_value>
+    <tag_name>DF8F11</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>60019</tag_id>
+    <tag_value>40010030273</tag_value>
+    <tag_name>DF8F18</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>60021</tag_id>
+    <tag_value>FANE</tag_value>
+    <tag_name>DF8C59</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+<auth_tag>
+    <tag_id>60032</tag_id>
+    <tag_name>FF8129</tag_name>
+    <seq_number>1</seq_number>
+</auth_tag>
+</auth_data><additional_amount>
+<amount_value>31600</amount_value>
+<currency>980</currency>
+<amount_type>AMPR0001</amount_type>
+</additional_amount><additional_amount>
+<amount_value>0</amount_value>
+<currency>980</currency>
+<amount_type>AMPR0002</amount_type>
+</additional_amount><additional_amount>
+<amount_value>31600</amount_value>
+<currency>980</currency>
+<amount_type>AMPR0003</amount_type>
+</additional_amount><additional_amount>
+<amount_value>805</amount_value>
+<currency>978</currency>
+<amount_type>AMPR0008</amount_type>
+</additional_amount><additional_amount>
+<amount_value>24</amount_value>
+<currency>978</currency>
+<amount_type>AMPR0010</amount_type>
+</additional_amount><additional_amount>
+<amount_value>24</amount_value>
+<currency>978</currency>
+<amount_type>AMPR0020</amount_type>
+</additional_amount></operation><operation>
+<oper_id>2311240666598617</oper_id>
+<oper_type>OPTP0000</oper_type>
+<msg_type>MSGTAUTH</msg_type>
+<sttl_type>STTT0100</sttl_type>
+<oper_date>2023-11-24T08:34:07</oper_date>
+<host_date>2023-11-24T08:34:07</host_date>
+<oper_amount>
+    <amount_value>1110</amount_value>
+    <currency>826</currency>
+</oper_amount>
+<oper_request_amount>
+    <amount_value>1110</amount_value>
+    <currency>826</currency>
+</oper_request_amount>
+<oper_surcharge_amount>
+    <amount_value>0</amount_value>
+    <currency>826</currency>
+</oper_surcharge_amount>
+<originator_refnum>332808676585</originator_refnum>
+<acq_inst_bin>416361</acq_inst_bin>
+<response_code>RESP0001</response_code>
+<status>OPST0800</status>
+<is_reversal>0</is_reversal>
+<merchant_number>1486754</merchant_number>
+<mcc>5812</mcc>
+<merchant_name>PRET A MANGER</merchant_name>
+<merchant_city>LIVERPOOL STR</merchant_city>
+<merchant_country>0-1</merchant_country>
+<terminal_type>TRMT0003</terminal_type>
+<terminal_number>50055867</terminal_number>
+<sttl_date>2023-11-24T00:00:00</sttl_date>
+<match_status>MTST0200</match_status>
+<transaction>
+    <transaction_id>2311240248675217</transaction_id>
+    <transaction_type>TRNT0103</transaction_type>
+    <posting_date>2023-11-24T09:02:13</posting_date>
+    <credit_entry>
+        <entry_id>2311240248675217</entry_id>
+        <status>ENTRPOST</status>
+        <account>
+            <account_number>CY62902000010000020105001415</account_number>
+            <currency>978</currency>
+            <balance_type>BLTP0002</balance_type>
+            <agent_number>50000001</agent_number>
+        </account>
+        <amount>
+            <amount_value>1278</amount_value>
+            <currency>978</currency>
+        </amount>
+    </credit_entry>
+    <conversion_rate>1</conversion_rate>
+    <rate_type>RTTPCUST</rate_type>
+    <amount_purpose>AMPR0008</amount_purpose>
+</transaction>
+<transaction>
+    <transaction_id>2311240248675219</transaction_id>
+    <transaction_type>TRNT0103</transaction_type>
+    <posting_date>2023-11-24T09:02:13</posting_date>
+    <credit_entry>
+        <entry_id>2311240248675219</entry_id>
+        <status>ENTRPOST</status>
+        <account>
+            <account_number>CY62902000010000020105001415</account_number>
+            <currency>978</currency>
+            <balance_type>BLTP0002</balance_type>
+            <agent_number>50000001</agent_number>
+        </account>
+        <amount>
+            <amount_value>38</amount_value>
+            <currency>978</currency>
+        </amount>
+    </credit_entry>
+    <conversion_rate>1</conversion_rate>
+    <rate_type>RTTPMCMR</rate_type>
+    <amount_purpose>FETP0111</amount_purpose>
+</transaction>
+<issuer>
+    <client_id_type>CITPCARD</client_id_type>
+    <card_number>439647********0303</card_number>
+    <card_id>100000006213</card_id>
+    <card_type_id>7050</card_type_id>
+    <card_instance_id>100000005932</card_instance_id>
+    <card_seq_number>1</card_seq_number>
+    <card_expir_date>2024-04-30</card_expir_date>
+    <card_country>196</card_country>
+    <inst_id>1001</inst_id>
+    <network_id>1001</network_id>
+    <auth_code>203774</auth_code>
+    <account_number>CY62902000010000020105001415</account_number>
+    <account_amount>1316</account_amount>
+    <account_currency>978</account_currency>
+    <customer_number>002294</customer_number>
