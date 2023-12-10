@@ -5,7 +5,7 @@ from PyQt6.QtGui import QCloseEvent, QKeyEvent, QKeySequence, QShortcut
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFileDialog, QMenu, QDialog, QPushButton, QApplication
 from common.lib.core.EpaySpecification import EpaySpecification
-from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, IsoField
 from common.lib.data_models.Config import Config
 from common.lib.constants import TermFilesPath
 from common.lib.constants import TextConstants
@@ -19,6 +19,8 @@ from common.gui.windows.mti_spec_window import MtiSpecWindow
 from common.gui.constants import ButtonActions, SpecFieldDef, KeySequence
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 from common.gui.core.WirelessHandler import WirelessHandler
+from common.gui.windows.field_validator_window import FieldDataSet
+from common.gui.core.json_items import SpecItem
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):
@@ -144,6 +146,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.ButtonClean: self.clean,
             self.ButtonSetMti: self.set_mti,
             self.ButtonBackup: self.backup,
+            self.ButtonSetValidators: self.show_validator_settings,
         }
 
         keys_connection_map = {
@@ -229,6 +232,22 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         mti_window = MtiSpecWindow()
         mti_window.need_to_set_mti.connect(self.set_mti_list)
         mti_window.exec()
+
+    def show_validator_settings(self):
+        self.SpecView.setFocus()
+
+        item: SpecItem
+
+        if not (item := self.SpecView.currentItem()):
+            return
+
+        if item is self.SpecView.root:
+            return
+
+        field_spec: IsoField = self.spec.get_field_spec(item.get_field_path())
+        validator_window: FieldDataSet = FieldDataSet(field_spec)
+        validator_window.field_spec_accepted.connect(lambda t: print(t))
+        validator_window.exec()
 
     @staticmethod
     def set_clipboard_text(data: str = str()) -> None:

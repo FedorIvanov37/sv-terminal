@@ -140,7 +140,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.LoadSpec.setText("Load remote specification")
 
         if not self.LoadSpec.isEnabled():
-            self.LoadSpec.setText(f'{self.LoadSpec.text()} (disabled below)')
+            self.LoadSpec.setText(f"{self.LoadSpec.text()} (disabled below)")
 
     def ok(self) -> None:
         getLogger().setLevel(getLevelName(self.DebugLevel.currentText()))
@@ -173,7 +173,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         config.remote_spec.backup_storage_depth = self.StorageDepth.value()
 
         if not config.fields.max_amount_limited:
-            config.fields.max_amount = 999_999_999
+            config.fields.max_amount = 9_999_999_999
 
         with open(TermFilesPath.CONFIG, "w") as file:
             file.write(self.config.model_dump_json(indent=4))
