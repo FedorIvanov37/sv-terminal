@@ -1,11 +1,12 @@
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QDialog, QListWidgetItem, QCheckBox, QLineEdit, QComboBox
+from PyQt6.QtWidgets import QDialog, QListWidgetItem, QCheckBox, QLineEdit, QComboBox, QWidget
 from common.gui.core.CheckableComboBox import CheckableComboBox
 from common.gui.forms.field_validator_window import Ui_FieldDataSet
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
-from common.lib.data_models.EpaySpecificationModel import IsoField, Validators
+from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.constants import ValidationParams
+from common.gui.constants import FieldTypeParams
 
 
 class FieldDataSet(Ui_FieldDataSet, QDialog):
@@ -57,12 +58,14 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         self.FieldType.currentIndexChanged.connect(self.process_field_type_change)
         self.CancelButton.clicked.connect(self.close)
         self.PlusButton.clicked.connect(self.plus)
-        self.MinusButton.clicked.connect(self.remove_validation_value)
+        self.MinusButton.clicked.connect(self.minus)
         self.CheckTypeBox.currentIndexChanged.connect(self.process_check_type_change)
-        self.OkButton.clicked.connect(self.ok)
         self.FillSide.currentIndexChanged.connect(self.process_justification_change)
         self.FillUpTo.currentIndexChanged.connect(self.process_justification_length_change)
         self.FillSymbol.textChanged.connect(self.set_justification_simbols)
+        self.PlusButton.clicked.connect(lambda: self.ValuesList.setFocus())
+        self.MinusButton.clicked.connect(lambda: self.ValuesList.setFocus())
+        self.OkButton.clicked.connect(self.ok)
 
         checkboxes = (
             self.CheckBoxAlpha,
@@ -75,7 +78,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         )
 
         for checkbox in checkboxes:
-            checkbox.stateChanged.connect(lambda: self.process_checkbox_change(checkbox))
+            checkbox.stateChanged.connect(self.process_checkbox_change)
 
     def ok(self):
         self.save_validations()
@@ -104,29 +107,21 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
 
     def process_justification_change(self):
         just_map = {
-            "No Pad": None,
+            "Not set": None,
             "Left Pad": "LEFT",
             "Rigth Pad": "RIGHT"
         }
 
         self.field_spec.validators.justification = just_map.get(self.FillSide.currentText())
 
-    def process_checkbox_change(self, checkbox: QCheckBox):
-        match checkbox:
-            case self.CheckBoxAlpha:
-                self.field_spec.alpha = checkbox.isChecked()
-            case self.CheckBoxNumeric:
-                self.field_spec.numeric = checkbox.isChecked()
-            case self.CheckBoxSpecial:
-                self.field_spec.special = checkbox.isChecked()
-            case self.CheckBoxMatching:
-                self.field_spec.matching = checkbox.isChecked()
-            case self.CheckBoxReversal:
-                self.field_spec.reversal = checkbox.isChecked()
-            case self.CheckBoxGeneratible:
-                self.field_spec.generate = checkbox.isChecked()
-            case self.CheckBoxSecret:
-                self.field_spec.is_secret = checkbox.isChecked()
+    def process_checkbox_change(self):
+        self.field_spec.alpha = self.CheckBoxAlpha.isChecked()
+        self.field_spec.numeric = self.CheckBoxNumeric.isChecked()
+        self.field_spec.special = self.CheckBoxSpecial.isChecked()
+        self.field_spec.matching = self.CheckBoxMatching.isChecked()
+        self.field_spec.reversal = self.CheckBoxReversal.isChecked()
+        self.field_spec.generate = self.CheckBoxGeneratible.isChecked()
+        self.field_spec.is_secret = self.CheckBoxSecret.isChecked()
 
     def process_check_type_change(self):
         if previous_check_type := self.CheckTypeBox.get_previous_text():
@@ -140,32 +135,29 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         if check_type is None:
             check_type = self.CheckTypeBox.currentText()
 
-        literal_list: list[str] = []
+        check_list = list[str]
+        validations_map: dict[str, check_list] = self._literal_validations_map
 
-        for row in range(self.ValuesList.count()):
-            item = self.ValuesList.item(row)
-            literal_list.append(item.text())
+        literal_list: check_list = [self.ValuesList.item(row).text() for row in range(self.ValuesList.count())]
+        literal_list: check_list = list(set(literal_list))
 
-        literal_list: list[str] = list(set(literal_list))
-
-        if str() in literal_list:
+        try:
             literal_list.remove(str())
+        except ValueError:
+            pass
 
-        self._literal_validations_map[check_type] = literal_list
+        validations_map[check_type] = literal_list
 
-        self.update_validators()
-
-    def update_validators(self):
-        self.field_spec.validators.must_contain=self._literal_validations_map.get(ValidationParams.MUST_CONTAIN)
-        self.field_spec.validators.must_contain_only=self._literal_validations_map.get(ValidationParams.MUST_CONTAIN_ONLY)
-        self.field_spec.validators.must_not_contain=self._literal_validations_map.get(ValidationParams.MUST_NOT_CONTAIN)
-        self.field_spec.validators.must_not_contain_only=self._literal_validations_map.get(ValidationParams.MUST_NOT_CONTAIN_ONLY)
-        self.field_spec.validators.must_start_with=self._literal_validations_map.get(ValidationParams.MUST_START_WITH)
-        self.field_spec.validators.must_not_start_with=self._literal_validations_map.get(ValidationParams.MUST_NOT_START_WITH)
-        self.field_spec.validators.must_end_with=self._literal_validations_map.get(ValidationParams.MUST_END_WITH)
-        self.field_spec.validators.must_not_end_with=self._literal_validations_map.get(ValidationParams.MUST_NOT_END_WITH)
-        self.field_spec.validators.valid_values=self._literal_validations_map.get(ValidationParams.VALID_VALUES)
-        self.field_spec.validators.invalid_values=self._literal_validations_map.get(ValidationParams.INVALID_VALUES)
+        self.field_spec.validators.must_contain = validations_map.get(ValidationParams.MUST_CONTAIN)
+        self.field_spec.validators.must_contain_only = validations_map.get(ValidationParams.MUST_CONTAIN_ONLY)
+        self.field_spec.validators.must_not_contain = validations_map.get(ValidationParams.MUST_NOT_CONTAIN)
+        self.field_spec.validators.must_not_contain_only = validations_map.get(ValidationParams.MUST_NOT_CONTAIN_ONLY)
+        self.field_spec.validators.must_start_with = validations_map.get(ValidationParams.MUST_START_WITH)
+        self.field_spec.validators.must_not_start_with = validations_map.get(ValidationParams.MUST_NOT_START_WITH)
+        self.field_spec.validators.must_end_with = validations_map.get(ValidationParams.MUST_END_WITH)
+        self.field_spec.validators.must_not_end_with = validations_map.get(ValidationParams.MUST_NOT_END_WITH)
+        self.field_spec.validators.valid_values = validations_map.get(ValidationParams.VALID_VALUES)
+        self.field_spec.validators.invalid_values = validations_map.get(ValidationParams.INVALID_VALUES)
 
     def set_validation_items(self, check_type):
         if (validation_list := self._literal_validations_map.get(check_type)) is None:
@@ -183,7 +175,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         for row in range(self.ValuesList.count()):
             self.ValuesList.takeItem(int())
 
-    def remove_validation_value(self):
+    def minus(self):
         self.ValuesList.setFocus()
 
         if not (item := self.ValuesList.currentItem()):
@@ -214,7 +206,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         self.FillSide.setCurrentText(iso_field.validators.justification)
 
         if not iso_field.validators.justification:
-            self.FillSide.setCurrentText("No Pad")
+            self.FillSide.setCurrentText("Not set")
 
         self.FieldDescription.setText(f"Field {field_path} - {field_desc}")
         self.CheckBoxComplex.setChecked(not iso_field.fields is None)
@@ -252,53 +244,61 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         self.TagLengthLabel.setEnabled(self.CheckBoxComplex.isChecked())
         self.TagLength.setEnabled(self.CheckBoxComplex.isChecked())
 
-        justification_enabled = self.FillSide.currentText().upper() != "NO PAD"
+        justification_enabled = self.FillSide.currentText().lower() != "not set".lower()
         
         for element in self.FillUpTo, self.FillSymbolLabel, self.FillUpToLabel, self.FillSymbol:
             element.setEnabled(justification_enabled)
 
     def process_field_type_change(self):
         for row in range(self.FieldTypeLayout.count()):
-            if not (widget := self.FieldTypeLayout.itemAt(row).widget()):
+            if not (element := self.FieldTypeLayout.itemAt(row).widget()):
                 continue
 
-            widget.hide()
+            element.hide()
+
+        widgets_list = list[QWidget]
+        widgets: widgets_list = list()
 
         match self.FieldType.currentText():
-            case "Currency":
-                code_a3 = QCheckBox("Currency Code Alpha 3")
-                code_n3 = QCheckBox("Currency Code Numeric 3")
+            case FieldTypeParams.CURRENCY:
+                widgets: widgets_list = [
+                    QCheckBox(code) for code in (
+                        FieldTypeParams.CURRENCY_CODE_A3,
+                        FieldTypeParams.COUNTRY_CODE_N3,
+                    )
+                ]
 
-                for widget in code_a3, code_n3:
-                    self.FieldTypeLayout.addWidget(widget)
+            case FieldTypeParams.COUNTRY:
+                widgets: widgets_list = [
+                    QCheckBox(code) for code in (
+                        FieldTypeParams.COUNTRY_CODE_A3,
+                        FieldTypeParams.COUNTRY_CODE_A2,
+                        FieldTypeParams.COUNTRY_CODE_N3,
+                    )
+                ]
 
-            case "Country":
-                code_a3 = QCheckBox("Country Code Alpha 3")
-                code_a2 = QCheckBox("Country Code Alpha 2")
-                code_n3 = QCheckBox("Country Code Numeric 3")
+            case FieldTypeParams.OTHER:
+                widgets: widgets_list = [
+                    QCheckBox(validation) for validation in (
+                        FieldTypeParams.CHECK_LUHN,
+                        FieldTypeParams.UPPERCASE,
+                        FieldTypeParams.LOWERCASE,
+                        FieldTypeParams.TO_UPPERCASE,
+                        FieldTypeParams.TO_LOWERCASE,
+                        FieldTypeParams.IGNORE_VALIDATIONS,
+                    )
+                ]
 
-                for widget in code_a2, code_a3, code_n3:
-                    self.FieldTypeLayout.addWidget(widget)
-
-            case "MCC":
-                self.FieldTypeLayout.addWidget(QCheckBox("ISO 18245 MCC"))
-
-            case "Date":
+            case FieldTypeParams.DATE:
                 date_format = QLineEdit()
-                date_format.setPlaceholderText("Date format Python datetime")
-                current_date = QComboBox()
-                current_date.addItems(["Past time", "Future time", "Not check"])
+                date_format.setPlaceholderText("Format in Python datetime")
+                time_frames = QComboBox()
+                time_frames.addItems((FieldTypeParams.ANY_TIME, FieldTypeParams.PAST_TIME, FieldTypeParams.FUTURE_TIME))
 
-                for widget in date_format, current_date:
-                    self.FieldTypeLayout.addWidget(widget)
+                widgets: widgets_list = [date_format, time_frames]
 
-            case "Other":
-                check_luhn = QCheckBox("Check Luhn algorithm")
-                uppercase = QCheckBox("Upper case only")
-                lowercase = QCheckBox("Lower case only")
-                to_uppercase = QCheckBox("Translate to upper case")
-                to_lowercase = QCheckBox("Translate to lower case")
-                ignore = QCheckBox("Ignore all validations")
+            case FieldTypeParams.MCC:
+                widgets: widgets_list = [QCheckBox(FieldTypeParams.MCC_ISO)]
 
-                for widget in check_luhn, uppercase, lowercase, to_uppercase, to_lowercase, ignore:
-                    self.FieldTypeLayout.addWidget(widget)
+        for widget in widgets:
+            self.FieldTypeLayout.addWidget(widget)
