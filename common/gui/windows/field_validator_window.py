@@ -253,11 +253,9 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         self.TagLength.setEnabled(self.CheckBoxComplex.isChecked())
 
         justification_enabled = self.FillSide.currentText().upper() != "NO PAD"
-
-        self.FillUpTo.setEnabled(justification_enabled)
-        self.FillUpToLabel.setEnabled(justification_enabled)
-        self.FillSymbol.setEnabled(justification_enabled)
-        self.FillSymbolLabel.setEnabled(justification_enabled)
+        
+        for element in self.FillUpTo, self.FillSymbolLabel, self.FillUpToLabel, self.FillSymbol.setEnabled:
+            element.setEnabled(justification_enabled)
 
     def process_field_type_change(self):
         for row in range(self.FieldTypeLayout.count()):
