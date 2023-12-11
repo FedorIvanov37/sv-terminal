@@ -254,7 +254,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
 
         justification_enabled = self.FillSide.currentText().upper() != "NO PAD"
         
-        for element in self.FillUpTo, self.FillSymbolLabel, self.FillUpToLabel, self.FillSymbol.setEnabled:
+        for element in self.FillUpTo, self.FillSymbolLabel, self.FillUpToLabel, self.FillSymbol:
             element.setEnabled(justification_enabled)
 
     def process_field_type_change(self):
