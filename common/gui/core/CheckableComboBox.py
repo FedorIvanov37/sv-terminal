@@ -20,12 +20,17 @@ class CheckableComboBox(QComboBox):
         item.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable)
         # item.setCheckState(state)
 
-        if state == Qt.CheckState.Checked:
-            item.setIcon(QIcon(QPixmap(GuiFilesPath.GREEN_CIRCLE)))
-            return
-
-        item.setIcon(QIcon())
+        self.set_validation_mark(mark=state == Qt.CheckState.Checked, item=item)
 
     def itemChecked(self, index):
         item = self.model().item(index, 0)
         return item.checkState() == Qt.CheckState.Checked
+
+    def set_validation_mark(self, mark=True, item=None):
+        icon: QIcon = QIcon(QPixmap(GuiFilesPath.GREEN_CIRCLE)) if mark else QIcon(QPixmap(GuiFilesPath.GREY_CIRCLE))
+
+        if item is not None:
+            item.setIcon(icon)
+            return
+
+        self.setItemIcon(self.currentIndex(), icon)

@@ -1,7 +1,5 @@
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QDialog, QListWidgetItem, QCheckBox, QLineEdit, QLabel, QComboBox, QWidget
-from logging import error
-from pydantic import ValidationError
+from PyQt6.QtWidgets import QDialog, QListWidgetItem, QCheckBox, QLineEdit, QComboBox
 from common.gui.core.CheckableComboBox import CheckableComboBox
 from common.gui.forms.field_validator_window import Ui_FieldDataSet
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
@@ -53,7 +51,6 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         self.process_field_type_change()
         self.connect_all()
 
-
     def connect_all(self):
         self.CheckBoxComplex.stateChanged.connect(self.process_changes)
         self.FillSide.currentIndexChanged.connect(self.process_changes)
@@ -63,11 +60,73 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         self.MinusButton.clicked.connect(self.remove_validation_value)
         self.CheckTypeBox.currentIndexChanged.connect(self.process_check_type_change)
         self.OkButton.clicked.connect(self.ok)
+        self.FillSide.currentIndexChanged.connect(self.process_justification_change)
+        self.FillUpTo.currentIndexChanged.connect(self.process_justification_length_change)
+        self.FillSymbol.textChanged.connect(self.set_justification_simbols)
+
+        checkboxes = (
+            self.CheckBoxAlpha,
+            self.CheckBoxNumeric,
+            self.CheckBoxSpecial,
+            self.CheckBoxMatching,
+            self.CheckBoxReversal,
+            self.CheckBoxGeneratible,
+            self.CheckBoxSecret,
+        )
+
+        for checkbox in checkboxes:
+            checkbox.stateChanged.connect(lambda: self.process_checkbox_change(checkbox))
 
     def ok(self):
         self.save_validations()
         self.field_spec_accepted.emit(self.field_spec)
         self.accept()
+
+    def set_justification_simbols(self):
+        self.field_spec.validators.justification_element = self.FillSymbol.text()
+
+    def process_justification_length_change(self):
+        just_len_map = {
+            "Min Length": self.MinLength.value(),
+            "Max Length": self.MaxLength.value()
+        }
+
+        just_len = self.FillUpTo.currentText()
+
+        if just_len in just_len_map:
+            self.field_spec.validators.justification_length = just_len_map.get(just_len)
+            return
+
+        if not str(just_len).isdigit():
+            return
+
+        self.field_spec.validators.justification_length = just_len
+
+    def process_justification_change(self):
+        just_map = {
+            "No Pad": None,
+            "Left Pad": "LEFT",
+            "Rigth Pad": "RIGHT"
+        }
+
+        self.field_spec.validators.justification = just_map.get(self.FillSide.currentText())
+
+    def process_checkbox_change(self, checkbox: QCheckBox):
+        match checkbox:
+            case self.CheckBoxAlpha:
+                self.field_spec.alpha = checkbox.isChecked()
+            case self.CheckBoxNumeric:
+                self.field_spec.numeric = checkbox.isChecked()
+            case self.CheckBoxSpecial:
+                self.field_spec.special = checkbox.isChecked()
+            case self.CheckBoxMatching:
+                self.field_spec.matching = checkbox.isChecked()
+            case self.CheckBoxReversal:
+                self.field_spec.reversal = checkbox.isChecked()
+            case self.CheckBoxGeneratible:
+                self.field_spec.generate = checkbox.isChecked()
+            case self.CheckBoxSecret:
+                self.field_spec.is_secret = checkbox.isChecked()
 
     def process_check_type_change(self):
         if previous_check_type := self.CheckTypeBox.get_previous_text():
@@ -94,31 +153,19 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
 
         self._literal_validations_map[check_type] = literal_list
 
-        try:
-            validators: Validators = self.build_validators()
-        except (ValidationError, ValueError) as validation_error:
-            error(validation_error)
-            return
+        self.update_validators()
 
-        self.field_spec.validators = validators
-
-    def build_validators(self) -> Validators:
-        validation_map: dict[str, list[str]] = dict(
-            must_contain=self._literal_validations_map.get(ValidationParams.MUST_CONTAIN),
-            must_contain_only=self._literal_validations_map.get(ValidationParams.MUST_CONTAIN_ONLY),
-            must_not_contain=self._literal_validations_map.get(ValidationParams.MUST_NOT_CONTAIN),
-            must_not_contain_only=self._literal_validations_map.get(ValidationParams.MUST_NOT_CONTAIN_ONLY),
-            must_start_with=self._literal_validations_map.get(ValidationParams.MUST_START_WITH),
-            must_not_start_with=self._literal_validations_map.get(ValidationParams.MUST_NOT_START_WITH),
-            must_end_with=self._literal_validations_map.get(ValidationParams.MUST_END_WITH),
-            must_not_end_with=self._literal_validations_map.get(ValidationParams.MUST_NOT_END_WITH),
-            valid_values=self._literal_validations_map.get(ValidationParams.VALID_VALUES),
-            invalid_values=self._literal_validations_map.get(ValidationParams.INVALID_VALUES),
-        )
-
-        validators: Validators = Validators.model_validate(validation_map)
-
-        return validators
+    def update_validators(self):
+        self.field_spec.validators.must_contain=self._literal_validations_map.get(ValidationParams.MUST_CONTAIN)
+        self.field_spec.validators.must_contain_only=self._literal_validations_map.get(ValidationParams.MUST_CONTAIN_ONLY)
+        self.field_spec.validators.must_not_contain=self._literal_validations_map.get(ValidationParams.MUST_NOT_CONTAIN)
+        self.field_spec.validators.must_not_contain_only=self._literal_validations_map.get(ValidationParams.MUST_NOT_CONTAIN_ONLY)
+        self.field_spec.validators.must_start_with=self._literal_validations_map.get(ValidationParams.MUST_START_WITH)
+        self.field_spec.validators.must_not_start_with=self._literal_validations_map.get(ValidationParams.MUST_NOT_START_WITH)
+        self.field_spec.validators.must_end_with=self._literal_validations_map.get(ValidationParams.MUST_END_WITH)
+        self.field_spec.validators.must_not_end_with=self._literal_validations_map.get(ValidationParams.MUST_NOT_END_WITH)
+        self.field_spec.validators.valid_values=self._literal_validations_map.get(ValidationParams.VALID_VALUES)
+        self.field_spec.validators.invalid_values=self._literal_validations_map.get(ValidationParams.INVALID_VALUES)
 
     def set_validation_items(self, check_type):
         if (validation_list := self._literal_validations_map.get(check_type)) is None:
@@ -143,10 +190,15 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
             return
 
         self.ValuesList.takeItem(self.ValuesList.row(item))
+        self.set_validator_mark()
 
     def plus(self):
         item: QListWidgetItem = self.add_validation_value()
+        self.set_validator_mark()
         self.ValuesList.editItem(item)
+
+    def set_validator_mark(self):
+        self.CheckTypeBox.set_validation_mark(mark=self.ValuesList.count() > int())
 
     def add_validation_value(self, value_data: str | None = None) -> QListWidgetItem:
         value_data: str = str() if value_data is None else value_data
@@ -159,16 +211,36 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         field_desc: str = self.spec.get_field_description(iso_field.field_path, string=True)
         field_path: str = ".".join(iso_field.field_path)
 
+        self.FillSide.setCurrentText(iso_field.validators.justification)
+
+        if not iso_field.validators.justification:
+            self.FillSide.setCurrentText("No Pad")
+
         self.FieldDescription.setText(f"Field {field_path} - {field_desc}")
         self.CheckBoxComplex.setChecked(not iso_field.fields is None)
-        self.CheckBoxAlpha.setChecked(iso_field.alpha)
-        self.CheckBoxNumeric.setChecked(iso_field.numeric)
-        self.CheckBoxSpecial.setChecked(iso_field.special)
-        self.MinLength.setValue(iso_field.min_length)
-        self.MaxLength.setValue(iso_field.max_length)
-        self.DataLength.setValue(iso_field.var_length)
-        self.TagLength.setValue(iso_field.tag_length)
-        self.FillSide.setCurrentText("No Justification" if iso_field.validators.justification is None else iso_field.validators.justification)
+
+        checkbox_property_map = {
+            self.CheckBoxAlpha: iso_field.alpha,
+            self.CheckBoxNumeric: iso_field.numeric,
+            self.CheckBoxSpecial: iso_field.special,
+            self.CheckBoxMatching: iso_field.matching,
+            self.CheckBoxReversal: iso_field.reversal,
+            self.CheckBoxGeneratible: iso_field.generate,
+            self.CheckBoxSecret: iso_field.is_secret,
+        }
+
+        length_property_map = {
+            self.MinLength: iso_field.min_length,
+            self.MaxLength: iso_field.max_length,
+            self.DataLength: iso_field.var_length,
+            self.TagLength: iso_field.tag_length,
+        }
+
+        for length, field_property in length_property_map.items():
+            length.setValue(field_property)
+
+        for checkbox, field_property in checkbox_property_map.items():
+            checkbox.setChecked(field_property)
 
         for check_type, values in self._literal_validations_map.items():
             state: Qt.CheckState = Qt.CheckState.Checked if values else Qt.CheckState.Unchecked
@@ -226,7 +298,9 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
                 check_luhn = QCheckBox("Check Luhn algorithm")
                 uppercase = QCheckBox("Upper case only")
                 lowercase = QCheckBox("Lower case only")
+                to_uppercase = QCheckBox("Translate to upper case")
+                to_lowercase = QCheckBox("Translate to lower case")
                 ignore = QCheckBox("Ignore all validations")
 
-                for widget in check_luhn, uppercase, lowercase, ignore:
+                for widget in check_luhn, uppercase, lowercase, to_uppercase, to_lowercase, ignore:
                     self.FieldTypeLayout.addWidget(widget)
