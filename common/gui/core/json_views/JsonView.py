@@ -7,7 +7,7 @@ from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.core.Parser import Parser
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
-from common.lib.data_models.EpaySpecificationModel import RawFieldSet
+from common.lib.data_models.EpaySpecificationModel import RawFieldSet, Justification, IsoField
 from common.gui.core.json_items.FIeldItem import FieldItem
 from common.gui.core.validators.ItemsValidator import ItemsValidator
 from common.gui.core.json_views.TreeView import TreeView
@@ -244,6 +244,7 @@ class JsonView(TreeView):
 
                 case FieldsSpec.ColumnsOrder.VALUE:
                     self.generate_item_data(item)
+                    item.field_data = self.get_justified_field_data(item.spec, item.field_data)
                     self.validate_item(item)
                     item.set_item_color()
 
@@ -265,6 +266,20 @@ class JsonView(TreeView):
 
         if column != FieldsSpec.ColumnsOrder.PROPERTY:
             self.set_item_description(item)
+
+    @staticmethod
+    def get_justified_field_data(field_spec: IsoField, value: str) -> str:
+        if field_spec.validators.justification is None:
+            return value
+
+        just_letter: str = field_spec.validators.justification_element
+        just_length: int = field_spec.validators.justification_length
+
+        if field_spec.validators.justification == Justification.RIGHT:
+            return value.ljust(just_length, just_letter)
+
+        if field_spec.validators.justification == Justification.LEFT:
+            return value.rjust(just_length, just_letter)
 
     @void_qt_signals
     def set_item_description(self, item: FieldItem):
@@ -564,7 +579,8 @@ class JsonView(TreeView):
                 self.parse_fields(field_data, parent=child, specification=specification.fields.get(field))
 
             else:
-                string_data = [field, str(field_data), None, description]
+                field_data = self.get_justified_field_data(field_spec, str(field_data))
+                string_data = [field, field_data, None, description]
                 child: FieldItem = FieldItem(string_data)
 
             parent.addChild(child, fill_len=self.len_fill)

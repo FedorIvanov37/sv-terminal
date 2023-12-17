@@ -53,7 +53,7 @@ class Validators(BaseModel):
 class IsoField(BaseModel):
     model_config: ConfigDict = ConfigDict(validate_assignment=True)
 
-    validators: Validators = Validators()
+    validators: Validators | None = Validators()
     field_number: str = ""
     field_path: list = []
     min_length: int
@@ -77,6 +77,14 @@ class IsoField(BaseModel):
 
         if val is None:
             return False
+
+        return val
+
+    @field_validator("validators", mode="before")
+    @classmethod
+    def substitute_none_validator(cls, val):
+        if val is None:
+            return Validators()
 
         return val
 

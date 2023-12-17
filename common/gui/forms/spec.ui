@@ -239,7 +239,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
-        <string>Validators</string>
+        <string>Field Params</string>
        </property>
       </widget>
      </item>
@@ -299,7 +299,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
-        <string>Parse file</string>
+        <string>Parse File</string>
        </property>
       </widget>
      </item>
@@ -329,7 +329,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
-        <string>Clear log</string>
+        <string>Clear Log</string>
        </property>
       </widget>
      </item>
@@ -344,7 +344,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
-        <string>Copy log</string>
+        <string>Copy Log</string>
        </property>
       </widget>
      </item>

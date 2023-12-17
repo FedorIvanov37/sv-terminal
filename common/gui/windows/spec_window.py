@@ -1,4 +1,5 @@
 from logging import error, info
+from copy import deepcopy
 from typing import Optional
 from pydantic import ValidationError
 from PyQt6.QtGui import QCloseEvent, QKeyEvent, QKeySequence, QShortcut
@@ -30,6 +31,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     _spec_rejected: pyqtSignal = pyqtSignal()
     _reset_spec: pyqtSignal = pyqtSignal(str)
     _load_remote_spec: pyqtSignal = pyqtSignal(bool)
+    _clean_spec: EpaySpecModel = None
     wireless_handler: WirelessHandler
 
     @property
@@ -71,6 +73,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     @has_close_button_only
     def _setup(self):
         self.SpecView: SpecView = SpecView(self)
+        self._clean_spec = deepcopy(self.SpecView.generate_spec())
         self.PlusButton: QPushButton = QPushButton(ButtonActions.BUTTON_PLUS_SIGN)
         self.MinusButton: QPushButton = QPushButton(ButtonActions.BUTTON_MINUS_SIGN)
         self.NextLevelButton: QPushButton = QPushButton(ButtonActions.BUTTON_NEXT_LEVEL_SIGN)
@@ -234,7 +237,8 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         mti_window.exec()
 
     def show_validator_settings(self):
-        self.SpecView.setFocus()
+        if not self.SpecView.hasFocus():
+            self.SpecView.setFocus()
 
         item: SpecItem
 
@@ -244,9 +248,11 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         if item is self.SpecView.root:
             return
 
-        field_spec: IsoField = self.spec.get_field_spec(item.get_field_path())
+        field_path: list[str] = item.get_field_path()
+        field_spec: IsoField = self.spec.get_field_spec(field_path)
+
         validator_window: FieldDataSet = FieldDataSet(field_spec)
-        validator_window.field_spec_accepted.connect(lambda t: print(t))
+        validator_window.field_spec_accepted.connect(self.SpecView.parse_spec)
         validator_window.exec()
 
     @staticmethod
@@ -265,6 +271,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.spec_rejected.emit()
             return
 
+        self._clean_spec = deepcopy(self.SpecView.generate_spec())
         self.spec_accepted.emit(self.spec.name)
         self.accepted.emit()
 
@@ -305,11 +312,15 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def process_close(self, close_event):
         try:
             current_spec = self.SpecView.generate_spec()
-        except (ValidationError, ValueError):
+
+        except (ValidationError, ValueError) as spec_error:
+            if isinstance(spec_error, ValidationError):
+                error(spec_error)
+
             close_event.accept()
             return
 
-        if current_spec == self.spec.spec:
+        if current_spec == self._clean_spec:
             close_event.accept()
             return
 

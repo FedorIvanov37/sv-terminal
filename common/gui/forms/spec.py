@@ -185,14 +185,14 @@ class Ui_SpecificationWindow(object):
         self.CheckBoxHideReverved.setText(_translate("SpecificationWindow", "Hide reserved for future"))
         self.SearchLine.setPlaceholderText(_translate("SpecificationWindow", "Search: field number | field description"))
         self.ButtonSetMti.setText(_translate("SpecificationWindow", "Set MTI"))
-        self.ButtonSetValidators.setText(_translate("SpecificationWindow", "Validators"))
+        self.ButtonSetValidators.setText(_translate("SpecificationWindow", "Field Params"))
         self.ButtonApply.setText(_translate("SpecificationWindow", "Apply"))
         self.ButtonReset.setText(_translate("SpecificationWindow", "Set Spec"))
         self.ButtonBackup.setText(_translate("SpecificationWindow", "Backup"))
-        self.ParseFile.setText(_translate("SpecificationWindow", "Parse file"))
+        self.ParseFile.setText(_translate("SpecificationWindow", "Parse File"))
         self.ButtonClean.setText(_translate("SpecificationWindow", "Clear Spec"))
-        self.ButtonClearLog.setText(_translate("SpecificationWindow", "Clear log"))
-        self.ButtonCopyLog.setText(_translate("SpecificationWindow", "Copy log"))
+        self.ButtonClearLog.setText(_translate("SpecificationWindow", "Clear Log"))
+        self.ButtonCopyLog.setText(_translate("SpecificationWindow", "Copy Log"))
         self.ButtonClose.setText(_translate("SpecificationWindow", "Close"))
 
 

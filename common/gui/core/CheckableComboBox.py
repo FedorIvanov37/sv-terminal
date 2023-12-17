@@ -14,23 +14,16 @@ class CheckableComboBox(QComboBox):
         self._previous_text = self.currentText()
         QComboBox.mousePressEvent(self, e)
 
-    def addItem(self, item, state):
+    def addItem(self, item, state: bool=False):
         super(CheckableComboBox, self).addItem(item)
         item = self.model().item(self.count() -1, 0)
         item.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable)
-        # item.setCheckState(state)
 
-        self.set_validation_mark(mark=state == Qt.CheckState.Checked, item=item)
-
-    def itemChecked(self, index):
-        item = self.model().item(index, 0)
-        return item.checkState() == Qt.CheckState.Checked
-
-    def set_validation_mark(self, mark=True, item=None):
-        icon: QIcon = QIcon(QPixmap(GuiFilesPath.GREEN_CIRCLE)) if mark else QIcon(QPixmap(GuiFilesPath.GREY_CIRCLE))
+    def set_validation_mark(self, mark=False, item=None):
+        icon: QIcon = QIcon(QPixmap(GuiFilesPath.GREEN_CIRCLE if mark else GuiFilesPath.GREY_CIRCLE))
 
         if item is not None:
-            item.setIcon(icon)
+            self.setItemIcon(item, icon)
             return
 
         self.setItemIcon(self.currentIndex(), icon)

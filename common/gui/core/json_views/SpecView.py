@@ -273,7 +273,7 @@ class SpecView(TreeView):
 
         self.make_order()
 
-    def generate_spec(self):
+    def generate_spec(self) -> EpaySpecModel:
         name: str = self.root.text(SpecFieldDef.ColumnsOrder.DESCRIPTION)
         fields_set: FieldSet
 
@@ -309,8 +309,15 @@ class SpecView(TreeView):
 
                 fields[row.field_number] = field
 
-                if row.childCount():
-                    fields[row.field_number].fields = generate_fields(row)
+                field.validators = self.spec.get_field_validations(field.field_path)
+
+                if not row.childCount():
+                    continue
+
+                if not (field_object := fields.get(row.field_number)):
+                    continue
+
+                field_object.fields = generate_fields(row)
 
             return fields
 

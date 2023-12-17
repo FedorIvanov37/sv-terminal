@@ -1,19 +1,20 @@
+from PyQt6.QtGui import QPalette, QColor
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QDialog, QListWidgetItem, QCheckBox, QLineEdit, QComboBox, QWidget
 from common.gui.core.CheckableComboBox import CheckableComboBox
 from common.gui.forms.field_validator_window import Ui_FieldDataSet
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
-from common.lib.data_models.EpaySpecificationModel import IsoField
+from common.gui.constants import FieldTypeParams
+from common.lib.data_models.EpaySpecificationModel import IsoField, Justification
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.constants import ValidationParams
-from common.gui.constants import FieldTypeParams
 
 
 class FieldDataSet(Ui_FieldDataSet, QDialog):
     spec: EpaySpecification = EpaySpecification()
     _field_spec: IsoField = None
     _literal_validations_map: dict
-    _field_spec_accepted: pyqtSignal = pyqtSignal(IsoField)
+    _field_spec_accepted: pyqtSignal = pyqtSignal()
 
     @property
     def field_spec_accepted(self):
@@ -24,7 +25,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         return self._field_spec
 
     def __init__(self, field_spec: IsoField):
-        super(FieldDataSet, self).__init__()
+        super().__init__()
         self._field_spec = field_spec
         self.CheckTypeBox = CheckableComboBox()
         self.setupUi(self)
@@ -46,82 +47,91 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
             ValidationParams.INVALID_VALUES: self.field_spec.validators.invalid_values,
         }
 
+        palette = QPalette()
+        palette.setColor(palette.ColorRole.AlternateBase, QColor(224, 233, 246))
+        self.ValuesList.setPalette(palette)
         self.CheckTypeLayout.addWidget(self.CheckTypeBox)
         self.parse_field_spec(self.field_spec)
         self.process_changes()
         self.process_field_type_change()
+        self.process_check_type_change()
         self.connect_all()
 
     def connect_all(self):
-        self.CheckBoxComplex.stateChanged.connect(self.process_changes)
-        self.FillSide.currentIndexChanged.connect(self.process_changes)
-        self.FieldType.currentIndexChanged.connect(self.process_field_type_change)
-        self.CancelButton.clicked.connect(self.close)
-        self.PlusButton.clicked.connect(self.plus)
-        self.MinusButton.clicked.connect(self.minus)
-        self.CheckTypeBox.currentIndexChanged.connect(self.process_check_type_change)
-        self.FillSide.currentIndexChanged.connect(self.process_justification_change)
-        self.FillUpTo.currentIndexChanged.connect(self.process_justification_length_change)
-        self.FillSymbol.textChanged.connect(self.set_justification_simbols)
-        self.PlusButton.clicked.connect(lambda: self.ValuesList.setFocus())
-        self.MinusButton.clicked.connect(lambda: self.ValuesList.setFocus())
-        self.OkButton.clicked.connect(self.ok)
+        connection_map = {
+            self.FillSide.currentIndexChanged: self.process_changes,
+            self.FieldType.currentIndexChanged: self.process_field_type_change,
+            self.CheckTypeBox.currentIndexChanged: self.process_check_type_change,
+            self.ValuesList.itemChanged: self.mark_all_check_types,
+            self.CancelButton.clicked: self.ok,
+            self.PlusButton.clicked: self.plus,
+            self.MinusButton.clicked: self.minus,
+            self.OkButton.clicked: self.ok,
+        }
 
-        checkboxes = (
-            self.CheckBoxAlpha,
-            self.CheckBoxNumeric,
-            self.CheckBoxSpecial,
-            self.CheckBoxMatching,
-            self.CheckBoxReversal,
-            self.CheckBoxGeneratible,
-            self.CheckBoxSecret,
-        )
-
-        for checkbox in checkboxes:
-            checkbox.stateChanged.connect(self.process_checkbox_change)
+        for signal, slot in connection_map.items():
+            signal.connect(slot)
 
     def ok(self):
-        self.save_validations()
-        self.field_spec_accepted.emit(self.field_spec)
+        self.prepare_field_spec(self.field_spec)
+        self.field_spec_accepted.emit()
         self.accept()
+
+    def prepare_field_spec(self, field_spec: IsoField | None = None) -> IsoField:
+        if field_spec is None:
+            field_spec = self.field_spec
+
+        self.save_validations()
+
+        field_spec.min_length = self.MinLength.value()
+        field_spec.max_length = self.MaxLength.value()
+        field_spec.tag_length = self.TagLength.value()
+        field_spec.var_length = self.DataLength.value()
+
+        field_spec.alpha = self.CheckBoxAlpha.isChecked()
+        field_spec.numeric = self.CheckBoxNumeric.isChecked()
+        field_spec.special = self.CheckBoxSpecial.isChecked()
+        field_spec.matching = self.CheckBoxMatching.isChecked()
+        field_spec.reversal = self.CheckBoxReversal.isChecked()
+        field_spec.generate = self.CheckBoxGeneratible.isChecked()
+        field_spec.is_secret = self.CheckBoxSecret.isChecked()
+
+        if self.FillSide.currentText() == "Not set" or self.FillSymbol.text() is str():
+            field_spec.validators.justification = None
+            return field_spec
+
+        if self.FillSide.currentText() == "Left Pad":
+            field_spec.validators.justification = Justification.LEFT
+
+        if self.FillSide.currentText() == "Right Pad":
+            field_spec.validators.justification = Justification.RIGHT
+
+        if self.FillUpTo.currentText() == "Min Length":
+            field_spec.validators.justification_length = field_spec.min_length
+
+        if self.FillUpTo.currentText() == "Max Length":
+            field_spec.validators.justification_length = field_spec.max_length
+
+        if self.FillUpTo.currentText().isdigit():
+            field_spec.validators.justification_length = int(self.FillUpTo.currentText())
+
+        if self.FillSymbol.text():
+            field_spec.validators.justification_element = self.FillSymbol.text()
+
+        return field_spec
 
     def set_justification_simbols(self):
         self.field_spec.validators.justification_element = self.FillSymbol.text()
 
-    def process_justification_length_change(self):
-        just_len_map = {
-            "Min Length": self.MinLength.value(),
-            "Max Length": self.MaxLength.value()
-        }
+    def mark_all_check_types(self):
+        self.save_validations()
 
-        just_len = self.FillUpTo.currentText()
+        for item_index in range(self.CheckTypeBox.count()):
+            if not self._literal_validations_map.get(self.CheckTypeBox.itemText(item_index)):
+                self.CheckTypeBox.set_validation_mark(mark=False, item=item_index)
+                continue
 
-        if just_len in just_len_map:
-            self.field_spec.validators.justification_length = just_len_map.get(just_len)
-            return
-
-        if not str(just_len).isdigit():
-            return
-
-        self.field_spec.validators.justification_length = just_len
-
-    def process_justification_change(self):
-        just_map = {
-            "Not set": None,
-            "Left Pad": "LEFT",
-            "Rigth Pad": "RIGHT"
-        }
-
-        self.field_spec.validators.justification = just_map.get(self.FillSide.currentText())
-
-    def process_checkbox_change(self):
-        self.field_spec.alpha = self.CheckBoxAlpha.isChecked()
-        self.field_spec.numeric = self.CheckBoxNumeric.isChecked()
-        self.field_spec.special = self.CheckBoxSpecial.isChecked()
-        self.field_spec.matching = self.CheckBoxMatching.isChecked()
-        self.field_spec.reversal = self.CheckBoxReversal.isChecked()
-        self.field_spec.generate = self.CheckBoxGeneratible.isChecked()
-        self.field_spec.is_secret = self.CheckBoxSecret.isChecked()
+            self.CheckTypeBox.set_validation_mark(mark=True, item=item_index)
 
     def process_check_type_change(self):
         if previous_check_type := self.CheckTypeBox.get_previous_text():
@@ -130,6 +140,8 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         current_check_type: str = self.CheckTypeBox.currentText()
 
         self.set_validation_items(current_check_type)
+        self.mark_all_check_types()
+        self.ValuesList.setFocus()
 
     def save_validations(self, check_type: str | None = None):
         if check_type is None:
@@ -144,7 +156,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         try:
             literal_list.remove(str())
         except ValueError:
-            pass
+            pass  # When no empty strings in literal_list
 
         validations_map[check_type] = literal_list
 
@@ -182,20 +194,22 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
             return
 
         self.ValuesList.takeItem(self.ValuesList.row(item))
-        self.set_validator_mark()
+        self.save_validations()
+        self.mark_all_check_types()
 
     def plus(self):
         item: QListWidgetItem = self.add_validation_value()
-        self.set_validator_mark()
         self.ValuesList.editItem(item)
 
     def set_validator_mark(self):
-        self.CheckTypeBox.set_validation_mark(mark=self.ValuesList.count() > int())
+        values_count = len([row for row in range(self.ValuesList.count()) if self.ValuesList.item(row).text() != str()])
+        validation_mark: bool = bool(values_count)
+        self.CheckTypeBox.set_validation_mark(mark=validation_mark)
 
     def add_validation_value(self, value_data: str | None = None) -> QListWidgetItem:
         value_data: str = str() if value_data is None else value_data
         item: QListWidgetItem = QListWidgetItem(value_data)
-        item.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable)
+        item.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsUserCheckable)
         self.ValuesList.addItem(item)
         return item
 
@@ -208,8 +222,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         if not iso_field.validators.justification:
             self.FillSide.setCurrentText("Not set")
 
-        self.FieldDescription.setText(f"Field {field_path} - {field_desc}")
-        self.CheckBoxComplex.setChecked(not iso_field.fields is None)
+        self.FieldDescription.setText(f"Field {field_path}  - {field_desc}")
 
         checkbox_property_map = {
             self.CheckBoxAlpha: iso_field.alpha,
@@ -235,15 +248,35 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
             checkbox.setChecked(field_property)
 
         for check_type, values in self._literal_validations_map.items():
-            state: Qt.CheckState = Qt.CheckState.Checked if values else Qt.CheckState.Unchecked
-            self.CheckTypeBox.addItem(check_type, state)
+            self.CheckTypeBox.addItem(check_type)
+
+        if self.field_spec.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+            self.CheckBoxSecret.setChecked(True)
+            self.CheckBoxSecret.setDisabled(True)
 
         self.set_validation_items(self.CheckTypeBox.currentText())
 
-    def process_changes(self):
-        self.TagLengthLabel.setEnabled(self.CheckBoxComplex.isChecked())
-        self.TagLength.setEnabled(self.CheckBoxComplex.isChecked())
+        if iso_field.validators.justification is None:
+            self.FillSide.setCurrentText("Not set")
+            return
 
+        if iso_field.validators.justification == Justification.RIGHT:
+            self.FillSide.setCurrentText("Right Pad")
+
+        if iso_field.validators.justification == Justification.LEFT:
+            self.FillSide.setCurrentText("Left Pad")
+
+        self.FillUpTo.setCurrentText(str(iso_field.validators.justification_length))
+        self.FillSymbol.setText(iso_field.validators.justification_element)
+
+        if iso_field.validators.justification_length == iso_field.max_length:
+            self.FillUpTo.setCurrentText("Max Length")
+            return
+
+        if iso_field.validators.justification_length == iso_field.min_length:
+            self.FillUpTo.setCurrentText("Min Length")
+
+    def process_changes(self):
         justification_enabled = self.FillSide.currentText().lower() != "not set".lower()
         
         for element in self.FillUpTo, self.FillSymbolLabel, self.FillUpToLabel, self.FillSymbol:

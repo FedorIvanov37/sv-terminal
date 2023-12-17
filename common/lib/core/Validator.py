@@ -91,6 +91,8 @@ class Validator(object):
         if not (field_spec := self.spec.get_field_spec(list(field_path))):
             raise ValueError(f"Lost spec for field {path}")
 
+        path_desc = f"{path} - {field_spec.description}"
+
         if isinstance(value, dict):
             self.validate_fields(value, field_path)
             return
@@ -112,13 +114,64 @@ class Validator(object):
                 validation_errors.add(f"Non-printable letters in field {path}. Seems like a problem with encoding")
 
             if letter in ascii_letters and not field_spec.alpha:
-                validation_errors.add(f"Alphabetic values not allowed in field {path} - {field_spec.description}")
+                validation_errors.add(f"Alphabetic values not allowed in field {path_desc}")
 
             if letter in digits and not field_spec.numeric:
-                validation_errors.add(f"Numeric values not allowed in field {path} - {field_spec.description}")
+                validation_errors.add(f"Numeric values not allowed in field {path_desc}")
 
             if letter in specials and not field_spec.special:
-                validation_errors.add(f"Special values not allowed in field {path} - {field_spec.description}")
+                validation_errors.add(f"Special values not allowed in field {path_desc}")
+
+        for validation, patterns in field_spec.validators.model_dump().items():
+            if not isinstance(patterns, list):
+                continue
+
+            if not patterns:
+                continue
+
+            for pattern in patterns:
+                match validation:
+                    case "must_contain":
+                        if pattern not in value:
+                            validation_errors.add(f'Field {path_desc} must contain "{pattern}"')
+
+                    case "must_contain_only":
+                        if [letter for letter in value if letter not in pattern]:
+                            validation_errors.add(f'Field {path_desc} must contain only one or multiple "{pattern}"')
+
+                    case "must_not_contain":
+                        if pattern in value:
+                            validation_errors.add(f'Field {path_desc} must not contain "{pattern}"')
+
+                    case "must_not_contain_only":
+                        if not [letter for letter in value if letter not in pattern]:
+                            validation_errors.add(f'Field {path_desc} must not contain only one or multiple "{pattern}"')
+
+                    case "must_start_with":
+                        if not value.startswith(pattern):
+                            validation_errors.add(f'Field {path_desc} must start with "{pattern}"')
+
+                    case "must_not_start_with":
+                        if value.startswith(pattern):
+                            validation_errors.add(f'Field {path_desc} must not start with "{pattern}"')
+
+                    case "must_end_with":
+                        if not value.endswith(pattern):
+                            validation_errors.add(f'Field {path_desc} must end with "{pattern}"')
+
+                    case "must_not_end_with":
+                        if value.endswith(pattern):
+                            validation_errors.add(f'Field {path_desc} must not end with "{pattern}"')
+
+            if validation == "valid_values":
+                if not value in patterns:
+                    bad_patterns = ", ".join(patterns)
+                    validation_errors.add(f'Field {path_desc} must contain one of the following: {bad_patterns}')
+
+            if validation == "invalid_values":
+                if value in patterns:
+                    bad_patterns = ", ".join(patterns)
+                    validation_errors.add(f'Field {path_desc} must not contain one of the following: {bad_patterns}')
 
         if not validation_errors:
             return
