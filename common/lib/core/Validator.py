@@ -2,6 +2,7 @@ from string import digits, ascii_letters, punctuation
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Types import FieldPath
+from common.lib.data_models.EpaySpecificationModel import ValidationTypes
 
 
 class Validator(object):
@@ -79,13 +80,13 @@ class Validator(object):
         if not self.spec.get_field_spec(path=path):
             raise ValueError(f"Lost spec for field {str_path}")
 
-    def validate_field_data(self, field_path: FieldPath, value: TypeFields | str):
+    def validate_field_data(self, field_path: FieldPath, field_value: TypeFields | str):
         alphabetic = ascii_letters
         numeric = digits
         specials = punctuation + " "
         valid_values = alphabetic + numeric + specials
         path = ".".join(field_path)
-        length = len(value)
+        length = len(field_value)
         validation_errors: set = set()
 
         if not (field_spec := self.spec.get_field_spec(list(field_path))):
@@ -93,85 +94,92 @@ class Validator(object):
 
         path_desc = f"{path} - {field_spec.description}"
 
-        if isinstance(value, dict):
-            self.validate_fields(value, field_path)
+        if isinstance(field_value, dict):
+            self.validate_fields(field_value, field_path)
             return
 
-        if not value:
+        # Pre-validations
+
+        if not field_value:  # Field should contain the data
             raise ValueError(f"Lost field value for field {path}")
 
-        if not all(field for field in field_path if field.isdigit()):
+        if not all(field for field in field_path if field.isdigit()):  # Field number should be digit
             raise ValueError(f"Field numbers can be digits only. {path} is wrong value")
 
-        if length > field_spec.max_length:
+        if length > field_spec.max_length:  # Max length validation
             validation_errors.add(f"Field {path} over MaxLength. Max length: {field_spec.max_length} got: {length}")
 
-        if length < field_spec.min_length:
+        if length < field_spec.min_length:  # Min length validation
             validation_errors.add(f"Field {path} less MinLength. Min length: {field_spec.min_length} got: {length}")
 
-        for letter in value:
-            if letter not in valid_values:
+        # Main validations
+
+        for letter in field_value:
+            if letter not in valid_values:  # Only ascii-printable allowed
                 validation_errors.add(f"Non-printable letters in field {path}. Seems like a problem with encoding")
 
-            if letter in ascii_letters and not field_spec.alpha:
+            if letter in ascii_letters and not field_spec.alpha:  # Validation charset - alphabetic
                 validation_errors.add(f"Alphabetic values not allowed in field {path_desc}")
 
-            if letter in digits and not field_spec.numeric:
+            if letter in digits and not field_spec.numeric:  # Validation charset - numeric
                 validation_errors.add(f"Numeric values not allowed in field {path_desc}")
 
-            if letter in specials and not field_spec.special:
+            if letter in specials and not field_spec.special:  # Validation charset - special
                 validation_errors.add(f"Special values not allowed in field {path_desc}")
 
-        for validation, patterns in field_spec.validators.model_dump().items():
+        for validation, patterns in field_spec.validators.model_dump().items():  # Custom validations
             if not isinstance(patterns, list):
                 continue
 
             if not patterns:
                 continue
 
+            match validation:
+                case ValidationTypes.VALID_VALUES:  # Exact allowed value validation
+                    if not field_value in patterns:
+                        bad_patterns = ", ".join(patterns)
+                        validation_errors.add(f'Field {path_desc} must contain one of the following: {bad_patterns}')
+
+                case ValidationTypes.INVALID_VALUES:  # Exact not allowed value validation
+                    if field_value in patterns:
+                        bad_patterns = ", ".join(patterns)
+                        validation_errors.add(f'Field {path_desc} must not contain one of the following: {bad_patterns}')
+
             for pattern in patterns:
                 match validation:
-                    case "must_contain":
-                        if pattern not in value:
+                    case ValidationTypes.MUST_CONTAIN:
+                        if pattern not in field_value:
                             validation_errors.add(f'Field {path_desc} must contain "{pattern}"')
 
-                    case "must_contain_only":
-                        if [letter for letter in value if letter not in pattern]:
-                            validation_errors.add(f'Field {path_desc} must contain only one or multiple "{pattern}"')
+                    case ValidationTypes.MUST_CONTAIN_ONLY:
+                        bad_patterns = ", ".join(patterns)
 
-                    case "must_not_contain":
-                        if pattern in value:
-                            validation_errors.add(f'Field {path_desc} must not contain "{pattern}"')
+                        if [letter for letter in field_value if letter not in patterns]:
+                            validation_errors.add(f"Field {path_desc} must contain only one or multiple: {bad_patterns}")
 
-                    case "must_not_contain_only":
-                        if not [letter for letter in value if letter not in pattern]:
-                            validation_errors.add(f'Field {path_desc} must not contain only one or multiple "{pattern}"')
+                    case ValidationTypes.MUST_NOT_CONTAIN:
+                        if pattern in field_value:
+                            validation_errors.add(f'Field {path_desc} must not contain {pattern}')
 
-                    case "must_start_with":
-                        if not value.startswith(pattern):
-                            validation_errors.add(f'Field {path_desc} must start with "{pattern}"')
+                    case ValidationTypes.MUST_NOT_CONTAIN_ONLY:
+                        if not [letter for letter in field_value if letter not in pattern]:
+                            validation_errors.add(f"Field {path_desc} must not contain only one or multiple {pattern}")
 
-                    case "must_not_start_with":
-                        if value.startswith(pattern):
-                            validation_errors.add(f'Field {path_desc} must not start with "{pattern}"')
+                    case ValidationTypes.MUST_START_WITH:
+                        if not field_value.startswith(pattern):
+                            validation_errors.add(f"Field {path_desc} must start with {pattern}")
 
-                    case "must_end_with":
-                        if not value.endswith(pattern):
-                            validation_errors.add(f'Field {path_desc} must end with "{pattern}"')
+                    case ValidationTypes.MUST_NOT_START_WITH:
+                        if field_value.startswith(pattern):
+                            validation_errors.add(f"Field {path_desc} must not start with {pattern}")
 
-                    case "must_not_end_with":
-                        if value.endswith(pattern):
-                            validation_errors.add(f'Field {path_desc} must not end with "{pattern}"')
+                    case ValidationTypes.MUST_END_WITH:
+                        if not field_value.endswith(pattern):
+                            validation_errors.add(f"Field {path_desc} must end with {pattern}")
 
-            if validation == "valid_values":
-                if not value in patterns:
-                    bad_patterns = ", ".join(patterns)
-                    validation_errors.add(f'Field {path_desc} must contain one of the following: {bad_patterns}')
-
-            if validation == "invalid_values":
-                if value in patterns:
-                    bad_patterns = ", ".join(patterns)
-                    validation_errors.add(f'Field {path_desc} must not contain one of the following: {bad_patterns}')
+                    case ValidationTypes.MUST_NOT_END_WITH:
+                        if field_value.endswith(pattern):
+                            validation_errors.add(f"Field {path_desc} must not end with {pattern}")
 
         if not validation_errors:
             return

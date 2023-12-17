@@ -127,11 +127,14 @@
                 "possible_values": [],
                 "must_contain": [],
                 "must_contain_only": [
+                    "1",
                     "0"
                 ],
                 "must_not_contain": [],
                 "must_not_contain_only": [],
-                "must_start_with": [],
+                "must_start_with": [
+                    "00000"
+                ],
                 "must_not_start_with": [],
                 "must_end_with": [],
                 "must_not_end_with": [],
