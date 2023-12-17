@@ -14,6 +14,7 @@ class FieldTypes(str, Enum):
     CURRENCY_CODE = "CURRENCY CODE"
     MERCHANT_CATEGORY_CODE = "MERCHANT CATEGORY CODE"
     DATE = "DATE"
+    OTHER = "OTHER"
 
 
 class Justification(str, Enum):
@@ -29,9 +30,29 @@ class Mti(BaseModel):
     reversal_mti: str = MtiValue
 
 
+class LogicalValidators(BaseModel):
+    currency_a3: bool = False
+    currency_n3: bool = False
+    country_a3: bool = False
+    country_a2: bool = False
+    country_n2: bool = False
+    mcc: bool = False
+    date_format: str = ""
+    past: bool = False
+    future: bool = False
+    check_luhn: bool = False
+    only_upper: bool = False
+    only_lower: bool = False
+    change_to_upper: bool = False
+    change_to_lower: bool = False
+    do_not_validate: bool = False
+
+
 class Validators(BaseModel):
     field_type: FieldTypes | None = None
     date_format: str | None = None
+    min_value: int = 0
+    max_value: int = 0
     must_not_contain: literal_list = list()
     possible_values: literal_list = list()
     must_start_with: literal_list = list()
@@ -46,8 +67,16 @@ class Validators(BaseModel):
     justification: Justification | None = None
     justification_element: str | None = None
     justification_length: int = 0
-    min_value: int = 0
-    max_value: int = 0
+    field_type_validators: LogicalValidators | None = LogicalValidators()
+
+    @field_validator("field_type_validators", mode="before")
+    @classmethod
+    def substitute_none_validator(cls, val):
+        if val is None:
+            return LogicalValidators()
+
+        return val
+
 
 class IsoField(BaseModel):
     model_config: ConfigDict = ConfigDict(validate_assignment=True)

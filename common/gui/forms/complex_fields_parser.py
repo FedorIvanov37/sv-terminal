@@ -125,6 +125,7 @@ class Ui_ComplexFieldsParser(object):
         self.TextData.setFont(font)
         self.TextData.setInputMethodHints(QtCore.Qt.InputMethodHint.ImhLatinOnly|QtCore.Qt.InputMethodHint.ImhMultiLine|QtCore.Qt.InputMethodHint.ImhPreferLatin)
         self.TextData.setAcceptRichText(False)
+        self.TextData.setPlaceholderText("")
         self.TextData.setObjectName("TextData")
         self.gridLayout.addWidget(self.TextData, 3, 0, 1, 1)
 

@@ -91,7 +91,6 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
         self.JsonView.hideColumn(MainFieldSpec.ColumnsOrder.PROPERTY)
         self.connect_all()
         self.set_field_data()
-        self.set_hello_message()
 
     def connect_all(self):
         button_connection_map = {
@@ -118,7 +117,7 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
             KeySequence.CTRL_E: lambda: self.JsonView.edit_column(MainFieldSpec.ColumnsOrder.VALUE),
             KeySequence.CTRL_W: lambda: self.JsonView.edit_column(MainFieldSpec.ColumnsOrder.FIELD),
             KeySequence.CTRL_SHIFT_N: self.JsonView.next_level,
-            KeySequence.CTRL_T: self.set_hello_message,
+            KeySequence.CTRL_T: self.set_message,
         }
 
         for button, action in button_connection_map.items():
@@ -130,8 +129,11 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
         for combination, function in keys_connection_map.items():  # Key sequences
             QShortcut(QKeySequence(combination), self).activated.connect(function)
 
-    def set_hello_message(self):
-        self.TextData.setText(TextConstants.HELLO_MESSAGE + "\n")
+    def set_message(self, message: str | None = None):
+        if message is None:
+            message = TextConstants.HELLO_MESSAGE + "\n"
+
+        self.TextData.setText(message)
         self.TextData.clearFocus()
 
     def set_field_data(self):

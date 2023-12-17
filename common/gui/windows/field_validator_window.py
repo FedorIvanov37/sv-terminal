@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QDialog, QListWidgetItem, QCheckBox, QLineEdit, QCom
 from common.gui.core.CheckableComboBox import CheckableComboBox
 from common.gui.forms.field_validator_window import Ui_FieldDataSet
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
-from common.gui.constants import FieldTypeParams
+from common.gui.constants import FieldTypeParams, Colors
 from common.lib.data_models.EpaySpecificationModel import IsoField, Justification
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.constants import ValidationParams
@@ -49,7 +49,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         }
 
         palette = QPalette()
-        palette.setColor(palette.ColorRole.AlternateBase, QColor(224, 233, 246))
+        palette.setColor(palette.ColorRole.AlternateBase, QColor(*Colors.ALTERNATE_CELLS))
         self.ValuesList.setPalette(palette)
         self.CheckTypeLayout.addWidget(self.CheckTypeBox)
         self.parse_field_spec(self.field_spec)
@@ -192,17 +192,13 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         if (validation_list := self._literal_validations_map.get(check_type)) is None:
             return
 
-        self.clear_validation_list()
+        self.clear_validation()
 
         if not validation_list:
             return
 
         for literal in validation_list:
             self.add_validation_value(literal)
-
-    def clear_validation_list(self):
-        for row in range(self.ValuesList.count()):
-            self.ValuesList.takeItem(int())
 
     def minus(self):
         self.ValuesList.setFocus()
@@ -226,7 +222,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
     def add_validation_value(self, value_data: str | None = None) -> QListWidgetItem:
         value_data: str = str() if value_data is None else value_data
         item: QListWidgetItem = QListWidgetItem(value_data)
-        item.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsUserCheckable)
+        item.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable)
         self.ValuesList.addItem(item)
         return item
 

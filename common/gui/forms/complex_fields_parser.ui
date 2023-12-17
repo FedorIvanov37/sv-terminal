@@ -255,6 +255,9 @@
      <property name="acceptRichText">
       <bool>false</bool>
      </property>
+     <property name="placeholderText">
+      <string/>
+     </property>
     </widget>
    </item>
   </layout>
