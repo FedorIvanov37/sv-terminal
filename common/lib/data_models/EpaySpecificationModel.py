@@ -21,20 +21,6 @@ class Justification(str, Enum):
     RIGHT = "RIGHT"
 
 
-class ValidationTypes(str, Enum):
-    MUST_NOT_CONTAIN = "must_not_contain"
-    POSSIBLE_VALUES = "possible_values"
-    MUST_START_WITH = "must_start_with"
-    MUST_END_WITH = "must_end_with"
-    MUST_CONTAIN = "must_contain"
-    VALID_VALUES = "valid_values"
-    INVALID_VALUES = "invalid_values"
-    MUST_CONTAIN_ONLY = "must_contain_only"
-    MUST_NOT_END_WITH = "must_not_end_with"
-    MUST_NOT_START_WITH = "must_not_start_with"
-    MUST_NOT_CONTAIN_ONLY = "must_not_contain_only"
-
-
 class Mti(BaseModel):
     request: str = MtiValue
     response: str = MtiValue

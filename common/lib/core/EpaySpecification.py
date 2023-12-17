@@ -154,6 +154,18 @@ class EpaySpecification(EpaySpecificationData):
 
         return False
 
+    def set_field_spec(self, field_spec: IsoField, parent: FieldSet | None = None):
+        if parent is None:
+            parent = self.fields
+
+        for field, field_data in parent.items():
+            if field_data.field_path == field_spec.field_path:
+                parent[field_spec.field_number] = field_spec
+                return
+
+            if field_data.fields is not None:
+                self.set_field_spec(field_spec, parent=field_data.fields)
+
     def get_field_validations(self, field_path: list[str], parent=None):
         if parent is None:
             parent = self.spec.fields

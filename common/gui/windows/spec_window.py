@@ -149,7 +149,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.ButtonClean: self.clean,
             self.ButtonSetMti: self.set_mti,
             self.ButtonBackup: self.backup,
-            self.ButtonSetValidators: self.show_validator_settings,
+            self.ButtonSetValidators: self.set_field_params,
         }
 
         keys_connection_map = {
@@ -236,7 +236,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         mti_window.need_to_set_mti.connect(self.set_mti_list)
         mti_window.exec()
 
-    def show_validator_settings(self):
+    def set_field_params(self):
         if not self.SpecView.hasFocus():
             self.SpecView.setFocus()
 
@@ -251,9 +251,16 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         field_path: list[str] = item.get_field_path()
         field_spec: IsoField = self.spec.get_field_spec(field_path)
 
-        validator_window: FieldDataSet = FieldDataSet(field_spec)
-        validator_window.field_spec_accepted.connect(self.SpecView.parse_spec)
+        validator_window = FieldDataSet(field_spec)
+        validator_window.field_spec_accepted.connect(self.process_field_spec_acceptance)
         validator_window.exec()
+
+    def process_field_spec_acceptance(self, field_spec: IsoField):
+        try:
+            self.spec.set_field_spec(field_spec)
+            self.SpecView.parse_spec()
+        except (ValidationError, ValueError) as validation_error:
+            error(validation_error)
 
     @staticmethod
     def set_clipboard_text(data: str = str()) -> None:

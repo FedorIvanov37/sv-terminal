@@ -225,11 +225,31 @@ class SpecView(TreeView):
         if spec is None:
             spec = self.spec
 
+        current_path = None
+        current_item: SpecItem
+
+        if current_item := self.currentItem():
+            current_path = current_item.get_field_path()
+
         self.clean()
         self.root.setText(SpecFieldDef.ColumnsOrder.DESCRIPTION, spec.name)
         self.parse_spec_fields(spec.fields)
         self.collapseAll()
         self.expandItem(self.root)
+        self.set_current_item_by_path(current_path)
+
+    def set_current_item_by_path(self, field_path: list[str], parent: SpecItem | None = None):
+        if parent is None:
+            parent = self.root
+
+        for item in parent.get_children():
+            if item.get_field_path() == field_path:
+                self.setCurrentItem(item)
+                self.scrollToItem(item)
+                return
+
+            if item.get_children():
+                self.set_current_item_by_path(field_path=field_path, parent=item)
 
     def parse_spec_fields(self, input_json, parent: QTreeWidgetItem = None):
         if parent is None or parent == self.root:

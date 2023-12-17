@@ -24,7 +24,7 @@ class MtiSpecWindow(Ui_MtiSpecWindow, QDialog):
         return self._spec
 
     def __init__(self):
-        super().__init__()
+        super(MtiSpecWindow, self).__init__()
         self.setupUi(self)
         self.setup()
 

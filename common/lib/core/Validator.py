@@ -2,7 +2,7 @@ from string import digits, ascii_letters, punctuation
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Types import FieldPath
-from common.lib.data_models.EpaySpecificationModel import ValidationTypes
+from common.lib.constants import ValidationParams
 
 
 class Validator(object):
@@ -135,49 +135,49 @@ class Validator(object):
                 continue
 
             match validation:
-                case ValidationTypes.VALID_VALUES:  # Exact allowed value validation
+                case ValidationParams.VALID_VALUES:  # Exact allowed value validation
                     if not field_value in patterns:
                         bad_patterns = ", ".join(patterns)
                         validation_errors.add(f'Field {path_desc} must contain one of the following: {bad_patterns}')
 
-                case ValidationTypes.INVALID_VALUES:  # Exact not allowed value validation
+                case ValidationParams.INVALID_VALUES:  # Exact not allowed value validation
                     if field_value in patterns:
                         bad_patterns = ", ".join(patterns)
                         validation_errors.add(f'Field {path_desc} must not contain one of the following: {bad_patterns}')
 
             for pattern in patterns:
                 match validation:
-                    case ValidationTypes.MUST_CONTAIN:
+                    case ValidationParams.MUST_CONTAIN:
                         if pattern not in field_value:
                             validation_errors.add(f'Field {path_desc} must contain "{pattern}"')
 
-                    case ValidationTypes.MUST_CONTAIN_ONLY:
+                    case ValidationParams.MUST_CONTAIN_ONLY:
                         bad_patterns = ", ".join(patterns)
 
                         if [letter for letter in field_value if letter not in patterns]:
                             validation_errors.add(f"Field {path_desc} must contain only one or multiple: {bad_patterns}")
 
-                    case ValidationTypes.MUST_NOT_CONTAIN:
+                    case ValidationParams.MUST_NOT_CONTAIN:
                         if pattern in field_value:
                             validation_errors.add(f'Field {path_desc} must not contain {pattern}')
 
-                    case ValidationTypes.MUST_NOT_CONTAIN_ONLY:
+                    case ValidationParams.MUST_NOT_CONTAIN_ONLY:
                         if not [letter for letter in field_value if letter not in pattern]:
                             validation_errors.add(f"Field {path_desc} must not contain only one or multiple {pattern}")
 
-                    case ValidationTypes.MUST_START_WITH:
+                    case ValidationParams.MUST_START_WITH:
                         if not field_value.startswith(pattern):
                             validation_errors.add(f"Field {path_desc} must start with {pattern}")
 
-                    case ValidationTypes.MUST_NOT_START_WITH:
+                    case ValidationParams.MUST_NOT_START_WITH:
                         if field_value.startswith(pattern):
                             validation_errors.add(f"Field {path_desc} must not start with {pattern}")
 
-                    case ValidationTypes.MUST_END_WITH:
+                    case ValidationParams.MUST_END_WITH:
                         if not field_value.endswith(pattern):
                             validation_errors.add(f"Field {path_desc} must end with {pattern}")
 
-                    case ValidationTypes.MUST_NOT_END_WITH:
+                    case ValidationParams.MUST_NOT_END_WITH:
                         if field_value.endswith(pattern):
                             validation_errors.add(f"Field {path_desc} must not end with {pattern}")
 

@@ -1,3 +1,4 @@
+from copy import deepcopy
 from PyQt6.QtGui import QPalette, QColor
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QDialog, QListWidgetItem, QCheckBox, QLineEdit, QComboBox, QWidget
@@ -14,7 +15,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
     spec: EpaySpecification = EpaySpecification()
     _field_spec: IsoField = None
     _literal_validations_map: dict
-    _field_spec_accepted: pyqtSignal = pyqtSignal()
+    _field_spec_accepted: pyqtSignal = pyqtSignal(IsoField)
 
     @property
     def field_spec_accepted(self):
@@ -25,8 +26,8 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         return self._field_spec
 
     def __init__(self, field_spec: IsoField):
-        super().__init__()
-        self._field_spec = field_spec
+        super(FieldDataSet, self).__init__()
+        self._field_spec = deepcopy(field_spec)
         self.CheckTypeBox = CheckableComboBox()
         self.setupUi(self)
         self.setup()
@@ -63,9 +64,11 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
             self.FieldType.currentIndexChanged: self.process_field_type_change,
             self.CheckTypeBox.currentIndexChanged: self.process_check_type_change,
             self.ValuesList.itemChanged: self.mark_all_check_types,
-            self.CancelButton.clicked: self.ok,
+            self.CancelButton.clicked: self.reject,
             self.PlusButton.clicked: self.plus,
             self.MinusButton.clicked: self.minus,
+            self.ButtonClear.clicked: self.clear_validation,
+            self.ButtonClearAll.clicked: self.clear_all_validations,
             self.OkButton.clicked: self.ok,
         }
 
@@ -74,8 +77,22 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
 
     def ok(self):
         self.prepare_field_spec(self.field_spec)
-        self.field_spec_accepted.emit()
+        self.field_spec_accepted.emit(self.field_spec)
         self.accept()
+
+    def clear_all_validations(self):
+        self.clear_validation()
+
+        for check_type in self._literal_validations_map:
+            self._literal_validations_map[check_type] = list()
+
+        self.mark_all_check_types()
+
+    def clear_validation(self):
+        for index in range(self.ValuesList.count()):
+            self.ValuesList.takeItem(int())
+
+        self.CheckTypeBox.set_validation_mark(mark=False, item=self.CheckTypeBox.currentIndex())
 
     def prepare_field_spec(self, field_spec: IsoField | None = None) -> IsoField:
         if field_spec is None:
