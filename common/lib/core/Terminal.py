@@ -31,17 +31,7 @@ class SvTerminal(QObject):
     with open(TermFilesPath.CONFIG) as json_file:
         config: Config = Config.model_validate_json(json_file.read())
 
-    try:
-        with open(TermFilesPath.CURRENCY_DICT) as json_file:
-            currencies_dictionary = Currencies.model_validate_json(json_file.read())
-
-        with open(TermFilesPath.COUNTRY_DICT) as json_file:
-            countries_dictionary = Countries.model_validate_json(json_file.read())
-
-    except Exception as dictionary_parsing_error:
-        warning(f"Cannot load dictionary: {dictionary_parsing_error}")
-
-    validator: Validator = Validator(countries_dictionary, currencies_dictionary)
+    validator: Validator = Validator()
     need_reconnect: pyqtSignal = pyqtSignal()
 
     def __init__(self, config: Config, connector: ConnectionInterface | None = None):

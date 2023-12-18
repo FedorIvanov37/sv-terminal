@@ -156,12 +156,9 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         for widget in widgets.values():
             widget.show()
 
-    def hide_field_type_widgets(self, check: bool = False):
+    def hide_field_type_widgets(self):
         for widgets in self._field_type_checkboxes.values():
             for widget in widgets.values():
-                if isinstance(widget, QCheckBox):
-                    widget.setChecked(check)
-
                 widget.hide()
 
     def prepare_field_spec(self, field_spec: IsoField | None = None) -> IsoField:

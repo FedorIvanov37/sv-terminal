@@ -1,12 +1,13 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 
-class Countries(BaseModel):
-    countries_a3: list[str] = list()
-    countries_a2: list[str] = list()
-    countries_n3: list[str] = list()
+class Country(BaseModel):
+    name: str
+    code_a3: str = Field(..., min_length=3, max_length=3)
+    code_n3: str = Field(..., min_length=3, max_length=3)
+    code_a2: str = Field(..., min_length=2, max_length=2)
 
-    @field_validator("countries_a2", "countries_a3", mode="before")
+    @field_validator("code_a3", "code_a2", mode="before")
     @classmethod
     def non_digits_only(cls, val):
         for country in val:
@@ -15,7 +16,7 @@ class Countries(BaseModel):
 
         return val
 
-    @field_validator("countries_n3", mode="before")
+    @field_validator("code_n3", mode="before")
     @classmethod
     def digits_only(cls, val):
         for country in val:
@@ -23,3 +24,7 @@ class Countries(BaseModel):
                 raise ValueError("Only numeric codes allowed")
 
         return val
+
+
+class Countries(BaseModel):
+    countries: list[Country] = list()

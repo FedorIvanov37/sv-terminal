@@ -1,32 +1,15 @@
-from logging import warning
 from common.lib.core.Validator import Validator
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Config import Config
 from common.gui.core.json_items.FIeldItem import FieldItem
 from common.lib.data_models.Types import FieldPath
-from common.lib.constants import TermFilesPath
-from common.lib.data_models.Currencies import Currencies
-from common.lib.data_models.Countries import Countries
 
 
 class ItemsValidator(Validator):
     spec: EpaySpecification = EpaySpecification()
 
-    try:
-        with open(TermFilesPath.CURRENCY_DICT) as json_file:
-            currencies_dictionary = Currencies.model_validate_json(json_file.read())
-
-        with open(TermFilesPath.COUNTRY_DICT) as json_file:
-            countries_dictionary = Countries.model_validate_json(json_file.read())
-
-    except Exception as dictionary_parsing_error:
-        warning(f"Cannot load dictionary: {dictionary_parsing_error}")
-
     def __init__(self, config: Config):
-        super(ItemsValidator, self).__init__(self.countries_dictionary, self.currencies_dictionary)
-
         self.config: Config = config
-
 
     def validate_item(self, item: FieldItem):
         field_path: FieldPath = item.get_field_path()

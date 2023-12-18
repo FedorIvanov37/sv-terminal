@@ -1,17 +1,22 @@
 from copy import deepcopy
+from logging import warning
 from dataclasses import asdict
-from pydantic import FilePath
+from pydantic import FilePath, ValidationError
 from common.lib.decorators.singleton import singleton
 from common.lib.constants import MessageLength, TermFilesPath
 from common.lib.constants.EpaySpecificationData import EpaySpecificationData
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField, FieldSet
 from common.lib.data_models.Types import FieldPath
+from common.lib.data_models.Dictionaries import Dictionaries
+from common.lib.data_models.Currencies import Currencies
+from common.lib.data_models.Countries import Countries
 
 
 @singleton
 class EpaySpecification(EpaySpecificationData):
     _MessageLength: MessageLength = MessageLength
     _specification_model: EpaySpecModel = None
+    _dictionary: Dictionaries = Dictionaries()
 
     def __init__(self, filename: FilePath | None = None):
         if filename is None:
@@ -21,6 +26,14 @@ class EpaySpecification(EpaySpecificationData):
 
         with open(filename) as json_file:
             self._specification_model: EpaySpecModel = EpaySpecModel.model_validate_json(json_file.read())
+
+        self._dictionary = self.create_dictionary()
+    @property
+    def dictionary(self):
+        if self._dictionary is not None:
+            return self._dictionary
+
+        return Dictionaries()
 
     @property
     def spec(self) -> EpaySpecModel:
@@ -41,6 +54,30 @@ class EpaySpecification(EpaySpecificationData):
     @property
     def MessageLength(self):
         return self._MessageLength
+
+    def create_dictionary(self) -> Dictionaries:
+        try:
+            with open(TermFilesPath.CURRENCY_DICT) as json_file:
+                currencies_dictionary = Currencies.model_validate_json(json_file.read())
+
+            with open(TermFilesPath.COUNTRY_DICT) as json_file:
+                countries_dictionary = Countries.model_validate_json(json_file.read())
+
+        except Exception as dictionary_parsing_error:
+            warning(f"Cannot load dictionary: {dictionary_parsing_error}")
+            return Dictionaries()
+
+        try:
+            dictionary = Dictionaries(
+                currencies=currencies_dictionary,
+                countries=countries_dictionary,
+            )
+
+        except (ValueError, ValidationError) as validation_error:
+            warning(validation_error)
+            return Dictionaries()
+
+        return dictionary
 
     def is_reversal(self, mti: str):
         return mti in (

@@ -5,8 +5,6 @@ from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Types import FieldPath
 from common.lib.constants import ValidationParams
 from common.gui.constants import FieldTypeParams
-from common.lib.data_models.Countries import Countries
-from common.lib.data_models.Currencies import Currencies
 
 
 class Validator(object):
@@ -15,10 +13,6 @@ class Validator(object):
     @property
     def spec(self):
         return self._spec
-
-    def __init__(self, countries_dictionary: Countries | None, currencies_dictionary: Currencies | None):
-        self.countries_dictionary = countries_dictionary
-        self.currencies_dictionary = currencies_dictionary
 
     def validate_transaction(self, transaction: Transaction):
         self.validate_mti(transaction.message_type)
@@ -188,7 +182,7 @@ class Validator(object):
                                 validation_errors.add(f"Field {path_desc} must not end with {pattern}")
 
         def country_validations():
-            if self.countries_dictionary is None:
+            if self.spec.dictionary.countries is None:
                 return
 
             for field, value in field_spec.validators.field_type_validators.model_dump().items():
@@ -196,19 +190,19 @@ class Validator(object):
                     continue
 
                 if field == "country_a3":
-                    if field_value not in self.countries_dictionary.countries_a3:
+                    if field_value not in self.spec.dictionary.countries.countries_a3:
                         validation_errors.add(f"Field {path_desc} must contain valid {FieldTypeParams.COUNTRY_CODE_A3}")
 
                 if field == "country_n3":
-                    if field_value not in self.countries_dictionary.countries_n3:
+                    if field_value not in self.spec.dictionary.countries.countries_n3:
                         validation_errors.add(f"Field {path_desc} must contain valid {FieldTypeParams.COUNTRY_CODE_N3}")
 
                 if field == "country_a2":
-                    if field_value not in self.countries_dictionary.countries_a2:
+                    if field_value not in self.spec.dictionary.countries.countries_a2:
                         validation_errors.add(f"Field {path_desc} must contain valid {FieldTypeParams.COUNTRY_CODE_A2}")
 
         def currency_validation():
-            if self.currencies_dictionary is None:
+            if self.spec.dictionary.currencies is None:
                 return
 
             for field, value in field_spec.validators.field_type_validators.model_dump().items():
@@ -216,11 +210,11 @@ class Validator(object):
                     continue
 
                 if field == "currency_a3":
-                    if field_value not in self.currencies_dictionary.currencies_a3:
+                    if field_value not in self.spec.dictionary.currencies.currencies_a3:
                         validation_errors.add(f"Field {path_desc} must contain valid {FieldTypeParams.CURRENCY_CODE_A3}")
 
                 if field == "currency_n3":
-                    if value and field_value not in self.currencies_dictionary.currencies_n3:
+                    if field_value not in self.spec.dictionary.currencies.currencies_n3:
                         validation_errors.add(f"Field {path_desc} must contain valid {FieldTypeParams.CURRENCY_CODE_N3}")
 
         def extended_validations():
