@@ -35,7 +35,7 @@ class LogicalValidators(BaseModel):
     currency_n3: bool = False
     country_a3: bool = False
     country_a2: bool = False
-    country_n2: bool = False
+    country_n3: bool = False
     mcc: bool = False
     date_format: str = ""
     past: bool = False

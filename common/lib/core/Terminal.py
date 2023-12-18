@@ -17,17 +17,31 @@ from common.lib.core.Connector import Connector
 from common.lib.core.LogPrinter import LogPrinter
 from common.lib.core.TransTimer import TransactionTimer
 from common.lib.constants import KeepAliveIntervals
+from common.lib.data_models.Currencies import Currencies
+from common.lib.data_models.Countries import Countries
 
 
 class SvTerminal(QObject):
     pyqt_application: QtWidgets.QApplication = QtWidgets.QApplication([])
     spec: EpaySpecification = EpaySpecification(TermFilesPath.SPECIFICATION)
     keep_alive_timer: TransactionTimer = TransactionTimer(KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE)
+    currencies_dictionary: Currencies
+    countries_dictionary: Countries
 
     with open(TermFilesPath.CONFIG) as json_file:
         config: Config = Config.model_validate_json(json_file.read())
 
-    validator: Validator = Validator()
+    try:
+        with open(TermFilesPath.CURRENCY_DICT) as json_file:
+            currencies_dictionary = Currencies.model_validate_json(json_file.read())
+
+        with open(TermFilesPath.COUNTRY_DICT) as json_file:
+            countries_dictionary = Countries.model_validate_json(json_file.read())
+
+    except Exception as dictionary_parsing_error:
+        warning(f"Cannot load dictionary: {dictionary_parsing_error}")
+
+    validator: Validator = Validator(countries_dictionary, currencies_dictionary)
     need_reconnect: pyqtSignal = pyqtSignal()
 
     def __init__(self, config: Config, connector: ConnectionInterface | None = None):

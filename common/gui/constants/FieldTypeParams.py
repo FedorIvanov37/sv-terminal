@@ -17,9 +17,9 @@ COUNTRY_CODE_N3: Final[str] = "ISO 3166 Numeric 3"
 CURRENCY_CODE_N3: Final[str] = "ISO 4217 Numeric 3"
 CURRENCY_CODE_A3: Final[str] = "ISO 4217 Alpha 3"
 
-PAST_TIME: Final[str] = "Past time only"
-FUTURE_TIME: Final[str] = "Future time only"
-ANY_TIME: Final[str] = "Any time"
+DATE_FORMAT: Final[str] = "Format in Python datetime"
+PAST_TIME: Final[str] = "Past time"
+FUTURE_TIME: Final[str] = "Future time"
 
 CHECK_LUHN: Final[str] =  "Check Luhn algorithm"
 UPPERCASE: Final[str] = "Upper case only"

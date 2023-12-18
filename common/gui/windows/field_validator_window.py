@@ -6,7 +6,7 @@ from common.gui.core.CheckableComboBox import CheckableComboBox
 from common.gui.forms.field_validator_window import Ui_FieldDataSet
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 from common.gui.constants import FieldTypeParams, Colors
-from common.lib.data_models.EpaySpecificationModel import IsoField, Justification
+from common.lib.data_models.EpaySpecificationModel import IsoField, Justification, LogicalValidators
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.constants import ValidationParams
 
@@ -16,6 +16,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
     _field_spec: IsoField = None
     _literal_validations_map: dict
     _field_spec_accepted: pyqtSignal = pyqtSignal(IsoField)
+    _field_type_checkboxes: dict[str, dict[str, QLineEdit | QCheckBox]] = {}
 
     @property
     def field_spec_accepted(self):
@@ -53,6 +54,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         self.ValuesList.setPalette(palette)
         self.CheckTypeLayout.addWidget(self.CheckTypeBox)
         self.parse_field_spec(self.field_spec)
+        self.create_field_type_checkboxes()
         self.process_changes()
         self.process_field_type_change()
         self.process_check_type_change()
@@ -94,6 +96,74 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
 
         self.CheckTypeBox.set_validation_mark(mark=False, item=self.CheckTypeBox.currentIndex())
 
+    def create_field_type_checkboxes(self):
+        self._field_type_checkboxes = {
+            FieldTypeParams.COUNTRY: {
+                FieldTypeParams.COUNTRY_CODE_N3: QCheckBox(FieldTypeParams.COUNTRY_CODE_N3),
+                FieldTypeParams.COUNTRY_CODE_A3: QCheckBox(FieldTypeParams.COUNTRY_CODE_A3),
+                FieldTypeParams.COUNTRY_CODE_A2: QCheckBox(FieldTypeParams.COUNTRY_CODE_A2),
+            },
+
+            FieldTypeParams.CURRENCY: {
+                FieldTypeParams.CURRENCY_CODE_A3: QCheckBox(FieldTypeParams.CURRENCY_CODE_A3),
+                FieldTypeParams.CURRENCY_CODE_N3: QCheckBox(FieldTypeParams.CURRENCY_CODE_N3),
+            },
+
+            FieldTypeParams.MERCHANT_CATEGORY_CODE: {
+                FieldTypeParams.MCC_ISO: QCheckBox(FieldTypeParams.MCC_ISO),
+            },
+
+            FieldTypeParams.DATE: {
+                FieldTypeParams.DATE_FORMAT: QLineEdit(),
+                FieldTypeParams.PAST_TIME: QCheckBox(FieldTypeParams.PAST_TIME),
+                FieldTypeParams.FUTURE_TIME: QCheckBox(FieldTypeParams.FUTURE_TIME),
+            },
+
+            FieldTypeParams.OTHER: {
+                FieldTypeParams.CHECK_LUHN: QCheckBox(FieldTypeParams.CHECK_LUHN),
+                FieldTypeParams.UPPERCASE: QCheckBox(FieldTypeParams.UPPERCASE),
+                FieldTypeParams.LOWERCASE: QCheckBox(FieldTypeParams.LOWERCASE),
+                FieldTypeParams.TO_UPPERCASE: QCheckBox(FieldTypeParams.TO_UPPERCASE),
+                FieldTypeParams.TO_LOWERCASE: QCheckBox(FieldTypeParams.TO_LOWERCASE),
+                FieldTypeParams.IGNORE_VALIDATIONS: QCheckBox(FieldTypeParams.IGNORE_VALIDATIONS),
+            }
+        }
+
+        try:
+            field_date: dict = self._field_type_checkboxes[FieldTypeParams.DATE]
+            line_date: QLineEdit = field_date[FieldTypeParams.DATE_FORMAT]
+            line_date.setPlaceholderText(FieldTypeParams.DATE_FORMAT)
+        except KeyError:
+            pass
+
+        for field_type, widgets in self._field_type_checkboxes.items():
+            self.FieldType.addItem(field_type)
+
+            for widget in widgets.values():
+                self.FieldTypeLayout.addWidget(widget)
+
+        self.hide_field_type_widgets()
+
+    def process_field_type_change(self):
+        self.hide_field_type_widgets()
+
+        if not (field_type := self.FieldType.currentText()):
+            return
+
+        if not (widgets := self._field_type_checkboxes.get(field_type)):
+            return
+
+        for widget in widgets.values():
+            widget.show()
+
+    def hide_field_type_widgets(self, check: bool = False):
+        for widgets in self._field_type_checkboxes.values():
+            for widget in widgets.values():
+                if isinstance(widget, QCheckBox):
+                    widget.setChecked(check)
+
+                widget.hide()
+
     def prepare_field_spec(self, field_spec: IsoField | None = None) -> IsoField:
         if field_spec is None:
             field_spec = self.field_spec
@@ -113,10 +183,6 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         field_spec.generate = self.CheckBoxGeneratible.isChecked()
         field_spec.is_secret = self.CheckBoxSecret.isChecked()
 
-        if self.FillSide.currentText() == "Not set" or self.FillSymbol.text() is str():
-            field_spec.validators.justification = None
-            return field_spec
-
         if self.FillSide.currentText() == "Left Pad":
             field_spec.validators.justification = Justification.LEFT
 
@@ -134,6 +200,35 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
 
         if self.FillSymbol.text():
             field_spec.validators.justification_element = self.FillSymbol.text()
+
+        logical_validators = LogicalValidators()
+
+        if currency := self._field_type_checkboxes.get(FieldTypeParams.CURRENCY):
+            logical_validators.currency_n3 = currency.get(FieldTypeParams.CURRENCY_CODE_N3).isChecked()
+            logical_validators.currency_a3 = currency.get(FieldTypeParams.CURRENCY_CODE_A3).isChecked()
+
+        if country := self._field_type_checkboxes.get(FieldTypeParams.COUNTRY):
+            logical_validators.country_a2 = country.get(FieldTypeParams.COUNTRY_CODE_A2).isChecked()
+            logical_validators.country_a3 = country.get(FieldTypeParams.COUNTRY_CODE_A3).isChecked()
+            logical_validators.country_n3 = country.get(FieldTypeParams.COUNTRY_CODE_N3).isChecked()
+
+        if merch_cat := self._field_type_checkboxes.get(FieldTypeParams.MCC):
+            logical_validators.mcc = merch_cat.get(FieldTypeParams.MCC_ISO).isChecked()
+
+        if date := self._field_type_checkboxes.get(FieldTypeParams.DATE):
+            logical_validators.date_format = date.get(FieldTypeParams.DATE_FORMAT).text()
+            logical_validators.future = date.get(FieldTypeParams.FUTURE_TIME).isChecked()
+            logical_validators.past = date.get(FieldTypeParams.PAST_TIME).isChecked()
+
+        if other := self._field_type_checkboxes.get(FieldTypeParams.OTHER):
+            logical_validators.check_luhn = other.get(FieldTypeParams.CHECK_LUHN).isChecked()
+            logical_validators.only_upper = other.get(FieldTypeParams.UPPERCASE).isChecked()
+            logical_validators.only_lower = other.get(FieldTypeParams.LOWERCASE).isChecked()
+            logical_validators.change_to_upper = other.get(FieldTypeParams.TO_UPPERCASE).isChecked()
+            logical_validators.change_to_lower = other.get(FieldTypeParams.TO_LOWERCASE).isChecked()
+            logical_validators.do_not_validate = other.get(FieldTypeParams.IGNORE_VALIDATIONS).isChecked()
+
+        field_spec.validators.field_type_validators = logical_validators
 
         return field_spec
 
@@ -294,57 +389,3 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         
         for element in self.FillUpTo, self.FillSymbolLabel, self.FillUpToLabel, self.FillSymbol:
             element.setEnabled(justification_enabled)
-
-    def process_field_type_change(self):
-        for row in range(self.FieldTypeLayout.count()):
-            if not (element := self.FieldTypeLayout.itemAt(row).widget()):
-                continue
-
-            element.hide()
-
-        widgets_list = list[QWidget]
-        widgets: widgets_list = list()
-
-        match self.FieldType.currentText():
-            case FieldTypeParams.CURRENCY:
-                widgets: widgets_list = [
-                    QCheckBox(code) for code in (
-                        FieldTypeParams.CURRENCY_CODE_A3,
-                        FieldTypeParams.COUNTRY_CODE_N3,
-                    )
-                ]
-
-            case FieldTypeParams.COUNTRY:
-                widgets: widgets_list = [
-                    QCheckBox(code) for code in (
-                        FieldTypeParams.COUNTRY_CODE_A3,
-                        FieldTypeParams.COUNTRY_CODE_A2,
-                        FieldTypeParams.COUNTRY_CODE_N3,
-                    )
-                ]
-
-            case FieldTypeParams.OTHER:
-                widgets: widgets_list = [
-                    QCheckBox(validation) for validation in (
-                        FieldTypeParams.CHECK_LUHN,
-                        FieldTypeParams.UPPERCASE,
-                        FieldTypeParams.LOWERCASE,
-                        FieldTypeParams.TO_UPPERCASE,
-                        FieldTypeParams.TO_LOWERCASE,
-                        FieldTypeParams.IGNORE_VALIDATIONS,
-                    )
-                ]
-
-            case FieldTypeParams.DATE:
-                date_format = QLineEdit()
-                date_format.setPlaceholderText("Format in Python datetime")
-                time_frames = QComboBox()
-                time_frames.addItems((FieldTypeParams.ANY_TIME, FieldTypeParams.PAST_TIME, FieldTypeParams.FUTURE_TIME))
-
-                widgets: widgets_list = [date_format, time_frames]
-
-            case FieldTypeParams.MCC:
-                widgets: widgets_list = [QCheckBox(FieldTypeParams.MCC_ISO)]
-
-        for widget in widgets:
-            self.FieldTypeLayout.addWidget(widget)

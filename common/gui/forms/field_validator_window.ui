@@ -685,31 +685,6 @@
           <string>Not set</string>
          </property>
         </item>
-        <item>
-         <property name="text">
-          <string>Currency</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Country</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>MCC</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Date</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Other</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item>
