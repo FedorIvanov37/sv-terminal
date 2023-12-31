@@ -240,16 +240,14 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         if not self.SpecView.hasFocus():
             self.SpecView.setFocus()
 
-        item: SpecItem
+        item: SpecItem = self.SpecView.currentItem()
 
-        if not (item := self.SpecView.currentItem()):
+        if not item or item is self.SpecView.root:
             return
 
-        if item is self.SpecView.root:
+        if not (field_spec := item.get_field_spec()):
+            error(f"Cannot get field specification for {item.get_field_path(string=True)}")
             return
-
-        field_path: list[str] = item.get_field_path()
-        field_spec: IsoField = self.spec.get_field_spec(field_path)
 
         validator_window = FieldDataSet(field_spec)
         validator_window.field_spec_accepted.connect(self.process_field_spec_acceptance)
@@ -258,7 +256,8 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def process_field_spec_acceptance(self, field_spec: IsoField):
         try:
             self.spec.set_field_spec(field_spec)
-            self.SpecView.parse_spec()
+            self.SpecView.parse_field_spec(field_spec)
+
         except (ValidationError, ValueError) as validation_error:
             error(validation_error)
 

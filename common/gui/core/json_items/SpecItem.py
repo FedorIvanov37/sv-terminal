@@ -84,7 +84,10 @@ class SpecItem(Item):
     def is_secret(self):
         return self.is_checked(SpecFieldDef.ColumnsOrder.SECRET)
 
-    def __init__(self, field_data: list[str], checkboxes: dict[int, bool] = None):
+    def __init__(self, field_data: list[str] | None = None, checkboxes: dict[int, bool] = None):
+        if field_data is None:
+            field_data: list[str] = list()
+
         super(SpecItem, self).__init__(field_data)
         self.setup(checkboxes=checkboxes)
 
@@ -92,7 +95,7 @@ class SpecItem(Item):
         self.set_checkboxes(checkboxes)
         # self.setTextAlignment(SpecFieldDef.ColumnsOrder.ALPHA, Qt.AlignmentFlag.AlignCenter)
 
-    def set_checkboxes(self, checkboxes: dict[str, bool]):
+    def set_checkboxes(self, checkboxes: dict[int, bool]):
         if self.text(SpecFieldDef.ColumnsOrder.FIELD) == SpecFieldDef.SPECIFICATION:
             return
 
@@ -100,7 +103,7 @@ class SpecItem(Item):
             return
 
         if checkboxes is None:
-            checkboxes: dict[str, bool] = dict()
+            checkboxes: dict[int, bool] = dict()
 
             for box in SpecFieldDef.CHECKBOXES:
                 checkboxes[box] = False
@@ -113,3 +116,31 @@ class SpecItem(Item):
         state = state.value
         state = bool(state)
         return state
+
+    def parse_field_spec(self, field_spec: IsoField):
+        column_values_map = {
+            SpecFieldDef.ColumnsOrder.FIELD: field_spec.field_number,
+            SpecFieldDef.ColumnsOrder.DESCRIPTION: field_spec.description,
+            SpecFieldDef.ColumnsOrder.MIN_LENGTH: field_spec.min_length,
+            SpecFieldDef.ColumnsOrder.MAX_LENGTH: field_spec.max_length,
+            SpecFieldDef.ColumnsOrder.VARIABLE_LENGTH: field_spec.var_length,
+            SpecFieldDef.ColumnsOrder.TAG_LENGTH: field_spec.tag_length,
+        }
+
+        column_checkboxes_map = {
+            SpecFieldDef.ColumnsOrder.ALPHA: field_spec.alpha,
+            SpecFieldDef.ColumnsOrder.NUMERIC: field_spec.numeric,
+            SpecFieldDef.ColumnsOrder.SPECIAL: field_spec.special,
+            SpecFieldDef.ColumnsOrder.USE_FOR_MATCHING: field_spec.matching,
+            SpecFieldDef.ColumnsOrder.USE_FOR_REVERSAL: field_spec.reversal,
+            SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED: field_spec.generate,
+            SpecFieldDef.ColumnsOrder.SECRET: field_spec.is_secret,
+        }
+
+        for column, value in column_values_map.items():
+            self.setText(column, str(value))
+
+        self.set_checkboxes(column_checkboxes_map)
+
+        if self.get_field_path(string=True) == self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+            self.setCheckState(SpecFieldDef.ColumnsOrder.SECRET, Qt.CheckState.PartiallyChecked)

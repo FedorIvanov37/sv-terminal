@@ -5,7 +5,7 @@ from pydantic import FilePath, ValidationError
 from common.lib.decorators.singleton import singleton
 from common.lib.constants import MessageLength, TermFilesPath
 from common.lib.constants.EpaySpecificationData import EpaySpecificationData
-from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField, FieldSet
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField, FieldSet, Validators
 from common.lib.data_models.Types import FieldPath
 from common.lib.data_models.Dictionaries import Dictionaries
 from common.lib.data_models.Currencies import Currencies
@@ -28,6 +28,7 @@ class EpaySpecification(EpaySpecificationData):
             self._specification_model: EpaySpecModel = EpaySpecModel.model_validate_json(json_file.read())
 
         self._dictionary = self.create_dictionary()
+
     @property
     def dictionary(self):
         if self._dictionary is not None:
@@ -55,7 +56,8 @@ class EpaySpecification(EpaySpecificationData):
     def MessageLength(self):
         return self._MessageLength
 
-    def create_dictionary(self) -> Dictionaries:
+    @staticmethod
+    def create_dictionary() -> Dictionaries:
         try:
             with open(TermFilesPath.CURRENCY_DICT) as json_file:
                 currencies_dictionary = Currencies.model_validate_json(json_file.read())
@@ -191,17 +193,20 @@ class EpaySpecification(EpaySpecificationData):
 
         return False
 
-    def set_field_spec(self, field_spec: IsoField, parent: FieldSet | None = None):
+    def set_field_spec(self, field_spec: IsoField, parent: FieldSet | None = None) -> bool | None:
         if parent is None:
             parent = self.fields
 
         for field, field_data in parent.items():
             if field_data.field_path == field_spec.field_path:
                 parent[field_spec.field_number] = field_spec
-                return
+                return True
 
-            if field_data.fields is not None:
-                self.set_field_spec(field_spec, parent=field_data.fields)
+            if not field_data.fields:
+                continue
+
+            if self.set_field_spec(field_spec=field_spec, parent=field_data.fields):
+                return
 
     def get_field_validations(self, field_path: list[str], parent=None):
         if parent is None:
@@ -209,13 +214,16 @@ class EpaySpecification(EpaySpecificationData):
 
         field: str
         field_data: IsoField
+        validation: Validators = Validators()
 
         for field, field_data in parent.items():
             if field_data.field_path == field_path:
                 return field_data.validators
 
             if field_data.fields:
-                return self.get_field_validations(field_path=field_path, parent=field_data.fields)
+                validation = self.get_field_validations(field_path=field_path, parent=field_data.fields)
+
+        return validation
 
     def get_field_spec(self, path: FieldPath, spec=None) -> IsoField | None:
         if spec is None:

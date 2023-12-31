@@ -221,6 +221,13 @@ class SpecView(TreeView):
         self.setCurrentItem(item)
         self.editItem(item, int())
 
+    @void_qt_signals
+    def parse_field_spec(self, field_spec: IsoField):
+        if not(item := self.get_item_by_path(field_spec.field_path)):
+            return
+
+        item.parse_field_spec(field_spec)
+
     def parse_spec(self, spec=None):
         if spec is None:
             spec = self.spec
@@ -237,6 +244,18 @@ class SpecView(TreeView):
         self.collapseAll()
         self.expandItem(self.root)
         self.set_current_item_by_path(current_path)
+
+    def get_item_by_path(self, field_path: list[str], parent: SpecItem | None = None) -> SpecItem:
+        if parent is None:
+            parent = self.root
+
+        for child in parent.get_children():
+            if child.get_field_path() == field_path:
+                return child
+
+            if child.get_children():
+                if child := self.get_item_by_path(field_path, parent=child):
+                    return child
 
     def set_current_item_by_path(self, field_path: list[str], parent: SpecItem | None = None):
         if parent is None:

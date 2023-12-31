@@ -35,27 +35,6 @@
    <bool>false</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <item row="0" column="0">
-    <widget class="QLabel" name="FieldDescription">
-     <property name="font">
-      <font>
-       <family>Calibri</family>
-       <pointsize>12</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Field Description</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-     <property name="textInteractionFlags">
-      <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="font">
@@ -441,6 +420,11 @@
             <string>Max Length</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>Custom</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>
@@ -673,19 +657,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QComboBox" name="FieldType">
-        <property name="font">
-         <font>
-          <family>Calibri</family>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <item>
-         <property name="text">
-          <string>Not set</string>
-         </property>
-        </item>
-       </widget>
+       <layout class="QHBoxLayout" name="FieldTypeBoxLayout"/>
       </item>
       <item>
        <layout class="QGridLayout" name="FieldTypeLayout"/>
@@ -746,6 +718,27 @@
       </spacer>
      </item>
     </layout>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="FieldDescription">
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Field Description</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="textInteractionFlags">
+      <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

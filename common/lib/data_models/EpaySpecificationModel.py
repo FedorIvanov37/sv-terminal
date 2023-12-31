@@ -20,6 +20,7 @@ class FieldTypes(str, Enum):
 class Justification(str, Enum):
     LEFT = "LEFT"
     RIGHT = "RIGHT"
+    CUSTOM = "CUSTOM"
 
 
 class Mti(BaseModel):

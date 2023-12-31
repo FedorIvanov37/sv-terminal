@@ -63,3 +63,6 @@ class Item(QTreeWidgetItem):
     def set_item_color(self, color=Colors.BLACK):
         for column in range(self.columnCount()):
             self.setForeground(column, QtGui.QBrush(QtGui.QColor(color)))
+
+    def get_field_spec(self) -> IsoField:
+        return self.epay_spec.get_field_spec(self.get_field_path())
