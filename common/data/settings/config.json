@@ -12,6 +12,11 @@
         "connect_on_startup": false,
         "load_remote_spec": false
     },
+    "validation": {
+        "validation_enabled": true,
+        "validation_mode": "ERROR",
+        "validate_incoming": false
+    },
     "debug": {
         "level": "INFO",
         "clear_log": true,
@@ -22,7 +27,6 @@
         "max_amount_limited": true,
         "build_fld_90": true,
         "send_internal_id": true,
-        "validation": true,
         "json_mode": true,
         "hide_secrets": true
     },

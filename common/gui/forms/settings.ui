@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>330</width>
-    <height>690</height>
+    <width>350</width>
+    <height>775</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,14 +18,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>330</width>
-    <height>690</height>
+    <width>350</width>
+    <height>775</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>330</width>
-    <height>690</height>
+    <width>350</width>
+    <height>775</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -359,7 +359,7 @@
      <property name="title">
       <string>Fields</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QGridLayout" name="gridLayout_5">
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
@@ -428,13 +428,6 @@
        </widget>
       </item>
       <item row="4" column="0">
-       <widget class="QCheckBox" name="ValidationEnabled">
-        <property name="text">
-         <string>Fields validation</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
        <widget class="QCheckBox" name="HideSecrets">
         <property name="text">
          <string>Hide secret fields</string>
@@ -445,6 +438,64 @@
     </widget>
    </item>
    <item row="4" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Validation</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="ValidationEnabled">
+        <property name="text">
+         <string>Fields validation enabled</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_9">
+        <item>
+         <widget class="QCheckBox" name="ValidationMode">
+          <property name="text">
+           <string>Validation mode</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="ValidationReaction">
+          <item>
+           <property name="text">
+            <string>ERROR</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>WARNING</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>FLEXIBLE</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>IGNORE</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="ValidateIncoming">
+        <property name="text">
+         <string>Validate incoming messages</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="0">
     <widget class="QGroupBox" name="SpecBox">
      <property name="title">
       <string>Remote Specification</string>
@@ -516,7 +567,7 @@
      </layout>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="6" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
       <widget class="QDialogButtonBox" name="buttonBox">
@@ -586,7 +637,6 @@
   <tabstop>SendInternalId</tabstop>
   <tabstop>BuildFld90</tabstop>
   <tabstop>JsonMode</tabstop>
-  <tabstop>ValidationEnabled</tabstop>
   <tabstop>HideSecrets</tabstop>
   <tabstop>buttonBox</tabstop>
   <tabstop>ButtonAbout</tabstop>

@@ -111,7 +111,7 @@ class SvTerminalGui(SvTerminal):
 
         self._startup_finished: bool = True
 
-        self.window.specification.emit()
+        # self.window.specification.emit()
 
     def connect_widgets(self):
         window: MainWindow = self.window

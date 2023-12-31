@@ -280,13 +280,15 @@ class Validator:
                         if not field_data.islower():
                             validation_errors.add(f"Field {path_desc} allowed lower case only")
 
-                    case "date":  # Date format and timeframes
+                    case "date_format":  # Date format and timeframes
                         date: datetime | None = None
 
-                        try:
-                            date: datetime = datetime.strptime(field_data, field_spec.validators.field_type_validators.date_format)
-                        except ValueError:
-                            validation_errors.add(f"Field {path_desc} must contain date in {field_spec.validators.field_type_validators.date_format}")
+                        if field_spec.validators.field_type_validators.date_format:
+                            try:
+                                date: datetime = datetime.strptime(field_data, field_spec.validators.field_type_validators.date_format)
+                            except ValueError:
+                                validation_errors.add(f'Field {path_desc} must contain date in the following format: "{field_spec.validators.field_type_validators.date_format}"')
+                                validation_errors.add(f"See possible date formats and additional info here: https://docs.python.org/3/library/datetime.html")
 
                         if date is not None:
                             if not field_spec.validators.field_type_validators.past and date < datetime.now():

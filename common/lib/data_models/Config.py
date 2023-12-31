@@ -1,4 +1,12 @@
 from pydantic import BaseModel, field_validator
+from enum import Enum
+
+
+class ValidationMode(str, Enum):
+    ERROR = "ERROR"
+    WARNING = "WARNING"
+    FLEXIBLE = "FLEXIBLE"
+    IGNORE = "IGNORE"
 
 
 class Host(BaseModel):
@@ -20,6 +28,12 @@ class Debug(BaseModel):
     level: str = "INFO"
     clear_log: bool = True
     parse_subfields: bool = False
+
+
+class Validation(BaseModel):
+    validation_enabled: bool = True
+    validation_mode: ValidationMode = "ERROR" # ValidationMode.ERROR
+    validate_incoming: bool = False
 
 
 class Fields(BaseModel):
@@ -52,5 +66,6 @@ class Config(BaseModel):
     host: Host
     terminal: Terminal
     debug: Debug
+    validation: Validation = None
     fields: Fields | None = None
     remote_spec: RemoteSpec = RemoteSpec()

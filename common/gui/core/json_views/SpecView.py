@@ -284,11 +284,13 @@ class SpecView(TreeView):
             field_data_for_item = [
                 field,
                 field_data.description,
-                str(field_data.min_length),
-                str(field_data.max_length),
-                str(field_data.var_length),
-                str(field_data.tag_length),
+                field_data.min_length,
+                field_data.max_length,
+                field_data.var_length,
+                field_data.tag_length,
             ]
+
+            field_data_for_item: list[str] = list(map(str, field_data_for_item))
 
             checkboxes: dict[int, bool] = {
                 SpecFieldDef.ColumnsOrder.USE_FOR_MATCHING: field_data.matching,

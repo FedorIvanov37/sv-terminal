@@ -134,13 +134,12 @@ class SpecItem(Item):
             SpecFieldDef.ColumnsOrder.USE_FOR_MATCHING: field_spec.matching,
             SpecFieldDef.ColumnsOrder.USE_FOR_REVERSAL: field_spec.reversal,
             SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED: field_spec.generate,
-            SpecFieldDef.ColumnsOrder.SECRET: field_spec.is_secret,
         }
+
+        if self.get_field_path(string=True) != self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+            column_checkboxes_map[SpecFieldDef.ColumnsOrder.SECRET] = field_spec.is_secret
 
         for column, value in column_values_map.items():
             self.setText(column, str(value))
 
         self.set_checkboxes(column_checkboxes_map)
-
-        if self.get_field_path(string=True) == self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            self.setCheckState(SpecFieldDef.ColumnsOrder.SECRET, Qt.CheckState.PartiallyChecked)

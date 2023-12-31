@@ -40,8 +40,12 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.ButtonDefault.clicked.connect(self.set_default_settings)
         self.LoadSpec2.stateChanged.connect(lambda: self.LoadSpec.setChecked(self.LoadSpec2.isChecked()))
         self.LoadSpec.stateChanged.connect(lambda: self.LoadSpec2.setChecked(self.LoadSpec.isChecked()))
+        self.ValidationEnabled.stateChanged.connect(self.process_validation_change)
+        self.ValidationMode.stateChanged.connect(self.process_validation_mode_change)
         self.process_config(self.config)
         self.process_spec_usage_change()
+        self.process_validation_change()
+        self.process_validation_mode_change()
 
     @staticmethod
     def about() -> None:
@@ -113,6 +117,9 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         if header_length % 2 != int():
             self.HeaderLength.setValue(header_length - 1)
 
+    def process_validation_mode_change(self):
+        self.ValidationReaction.setEnabled(self.ValidationMode.isChecked())
+
     def process_debug_level_change(self) -> None:
         disabled: bool = False
         checked: bool = self.config.debug.clear_log
@@ -124,6 +131,16 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         for checkbox in self.ClearLog, self.HideSecrets:
             checkbox.setChecked(checked)
             checkbox.setDisabled(disabled)
+
+    def process_validation_change(self):
+        elements = [
+            self.ValidateIncoming,
+            self.ValidationMode,
+            self.ValidationReaction,
+        ]
+
+        for elements in elements:
+            elements.setEnabled(self.ValidationEnabled.isChecked())
 
     def process_spec_usage_change(self) -> None:
         elements: set[QLineEdit | QCheckBox] = {
