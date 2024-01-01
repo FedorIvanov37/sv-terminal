@@ -1,4 +1,3 @@
-from json import dumps
 from typing import Callable
 from logging import error, info, warning, Logger
 from pydantic import ValidationError
@@ -101,9 +100,8 @@ class SvTerminalGui(SvTerminal):
             interval: int = self.config.host.keep_alive_interval
             self.set_keep_alive_interval(interval_name=KeepAliveIntervals.KEEP_ALIVE_DEFAULT % interval)
 
-        if self.config.remote_spec.use_remote_spec:
-            if self.config.terminal.load_remote_spec:
-                self.set_remote_spec.emit()
+        if self.config.terminal.load_remote_spec:
+            self.set_remote_spec.emit()
 
         if self.config.remote_spec.backup_storage:
             rotator: SpecFilesRotator = SpecFilesRotator()
@@ -239,7 +237,7 @@ class SvTerminalGui(SvTerminal):
 
         info("Settings applied")
 
-        if old_config.fields.validation != self.config.fields.validation:
+        if old_config.validation.validation_enabled != self.config.validation.validation_enabled:
             self.validate_message()
 
         if old_config.fields.json_mode != self.config.fields.json_mode:
@@ -248,9 +246,8 @@ class SvTerminalGui(SvTerminal):
         if old_config.fields.hide_secrets != self.config.fields.hide_secrets:
             self.window.hide_secrets()
 
-        if self.config.remote_spec.use_remote_spec:
-            if any((old_config.remote_spec.remote_spec_url != self.config.remote_spec.remote_spec_url,
-                    not old_config.remote_spec.use_remote_spec)):
+        if old_config.remote_spec.remote_spec_url != self.config.remote_spec.remote_spec_url:
+            if self.config.remote_spec.remote_spec_url:
                 self.set_remote_spec.emit()
 
         keep_alive_change_conditions: tuple[bool, bool] = (
@@ -357,7 +354,10 @@ class SvTerminalGui(SvTerminal):
             max_amount=self.config.fields.max_amount,
             is_reversal=self.spec.is_reversal(message_type)
         )
-        
+
+        if self.config.fields.send_internal_id:
+            transaction: Transaction = self.generator.set_trans_id(transaction)
+
         if clean:
             del (
                 transaction.resp_time_seconds,
@@ -369,6 +369,7 @@ class SvTerminalGui(SvTerminal):
                 transaction.is_reversal,
                 transaction.is_keep_alive,
                 transaction.json_fields,
+                transaction.sending_time,
             )
 
         return transaction
@@ -430,11 +431,12 @@ class SvTerminalGui(SvTerminal):
             return
 
         data_processing_map: dict[str, Callable] = {
-            DataFormats.JSON: self.prepare_json_to_print,
+            DataFormats.JSON: lambda: self.parse_main_window(flat_fields=False, clean=True).model_dump_json(indent=4),
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window()),
             DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window()),
             DataFormats.TERM: lambda: TextConstants.HELLO_MESSAGE + "\n",
-            DataFormats.SPEC: lambda: self.spec.spec.model_dump_json(indent=4)
+            DataFormats.SPEC: lambda: self.spec.spec.model_dump_json(indent=4),
+            DataFormats.CONFIG: lambda: self.config.model_dump_json(indent=4),
         }
 
         if not (function := data_processing_map.get(data_format)):
@@ -443,26 +445,8 @@ class SvTerminalGui(SvTerminal):
 
         try:
             self.window.set_log_data(function())
-        except (ValidationError, ValueError, LookupError) as validation_error:
+        except (ValidationError, ValueError, LookupError, AttributeError) as validation_error:
             error(f"{validation_error}")
-
-    def prepare_json_to_print(self) -> str:
-        transaction: Transaction = self.parse_main_window(flat_fields=False, clean=True)
-
-        if self.config.fields.send_internal_id:
-            transaction: Transaction = self.generator.set_trans_id(transaction)
-
-        json: dict[str, str | int | dict] = dict(
-            trans_id=transaction.trans_id,
-            message_type=transaction.message_type,
-            max_amount=transaction.max_amount,
-            generate_fields=transaction.generate_fields,
-            data_fields=transaction.data_fields,
-        )
-
-        json: str = dumps(json, indent=4)
-
-        return json
 
     def copy_log(self) -> None:
         self.set_clipboard_text(self.window.get_log_data())
@@ -508,7 +492,7 @@ class SvTerminalGui(SvTerminal):
             transaction: Transaction = self.parser.parse_file(filename)
 
         except ValidationError as validation_error:
-            error(f"File parsing error: {validation_error.json()}")
+            error(f"File parsing error: {validation_error}")
             return
 
         except Exception as parsing_error:

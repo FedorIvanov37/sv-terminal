@@ -141,120 +141,106 @@ class Validator:
             # Custom validations set by user
 
             for validation, patterns in field_spec.validators.model_dump().items():
-                if not isinstance(patterns, list):
-                    continue
-
-                if not patterns:
+                if not patterns or not isinstance(patterns, list):
                     continue
 
                 match validation:
-                    case ValidationParams.VALID_VALUES:  # Exact allowed value validation
+                    case "valid_values":  # Exact allowed value validation
                         if not field_data in patterns:
                             bad_patterns = ", ".join(patterns)
                             validation_errors.add(f'Field {path_desc} must contain one of the following: {bad_patterns}')
 
-                    case ValidationParams.INVALID_VALUES:  # Exact not allowed value validation
+                    case "invalid_values":  # Exact not allowed value validation
                         if field_data in patterns:
                             bad_patterns = ", ".join(patterns)
                             validation_errors.add(f'Field {path_desc} must not contain one of the following: {bad_patterns}')
 
                 for pattern in patterns:
                     match validation:
-                        case ValidationParams.MUST_CONTAIN:
+                        case "must_contain":
                             if pattern not in field_data:
                                 validation_errors.add(f'Field {path_desc} must contain "{pattern}"')
 
-                        case ValidationParams.MUST_CONTAIN_ONLY:
+                        case "must_contain_only":
                             bad_patterns = ", ".join(patterns)
 
                             if [letter for letter in field_data if letter not in patterns]:
                                 validation_errors.add(f"Field {path_desc} must contain only one or multiple: {bad_patterns}")
 
-                        case ValidationParams.MUST_NOT_CONTAIN:
+                        case "must_not_contain":
                             if pattern in field_data:
                                 validation_errors.add(f'Field {path_desc} must not contain {pattern}')
 
-                        case ValidationParams.MUST_NOT_CONTAIN_ONLY:
+                        case "must_not_contain_only":
                             if not [letter for letter in field_data if letter not in pattern]:
                                 validation_errors.add(f"Field {path_desc} must not contain only one or multiple {pattern}")
 
-                        case ValidationParams.MUST_START_WITH:
+                        case "must_start_with":
                             if not field_data.startswith(pattern):
                                 validation_errors.add(f"Field {path_desc} must start with {pattern}")
 
-                        case ValidationParams.MUST_NOT_START_WITH:
+                        case "must_not_start_with":
                             if field_data.startswith(pattern):
                                 validation_errors.add(f"Field {path_desc} must not start with {pattern}")
 
-                        case ValidationParams.MUST_END_WITH:
+                        case "must_end_with":
                             if not field_data.endswith(pattern):
                                 validation_errors.add(f"Field {path_desc} must end with {pattern}")
 
-                        case ValidationParams.MUST_NOT_END_WITH:
+                        case "must_not_end_with":
                             if field_data.endswith(pattern):
                                 validation_errors.add(f"Field {path_desc} must not end with {pattern}")
 
-        def country_validations(field_data):
-            # Validation ISO-4217 country code
-
+        def country_validations(field_data): # Validation ISO-4217 country codes
             if not self.spec.dictionary.countries:
                 return
+
+            allowed_country_codes: list[str] = list()
+
+            if field_spec.validators.field_type_validators.country_a2:
+                allowed_country_codes.extend([country.code_a2 for country in self.spec.dictionary.countries.countries])
+
+            if field_spec.validators.field_type_validators.country_a3:
+                allowed_country_codes.extend([country.code_a3 for country in self.spec.dictionary.countries.countries])
+
+            if field_spec.validators.field_type_validators.country_n3:
+                allowed_country_codes.extend([country.code_n3 for country in self.spec.dictionary.countries.countries])
 
             for field, value in field_spec.validators.field_type_validators.model_dump().items():
                 if not value:
                     continue
 
-                code_desc: str
-                country_codes: list[str]
-
-                match field:
-                    case "country_a3":
-                        code_desc = FieldTypeParams.COUNTRY_CODE_A3
-                        country_codes = [country.code_a3 for country in self.spec.dictionary.countries.countries]
-
-                    case "country_n3":
-                        code_desc = FieldTypeParams.COUNTRY_CODE_N3
-                        country_codes = [country.code_n3 for country in self.spec.dictionary.countries.countries]
-
-                    case "country_a2":
-                        code_desc = FieldTypeParams.COUNTRY_CODE_A2
-                        country_codes = [country.code_a2 for country in self.spec.dictionary.countries.countries]
-
-                    case _:
-                        continue
-
-                if field_data in country_codes:
+                if field not in ("country_a3", "country_n3", "country_a2"):
                     continue
 
-                validation_errors.add(f"Field {path_desc} must contain {code_desc} code")
+                if field_data in allowed_country_codes:
+                    continue
+
+                validation_errors.add(f"Field {path_desc} must contain valid ISO country code")
 
         def currency_validation(field_data: str):
             if not self.spec.dictionary.currencies:
                 return
 
+            allowed_currency_codes: list[str] = list()
+
+            if field_spec.validators.field_type_validators.currency_a3:
+                allowed_currency_codes.extend([curr.code_a3 for curr in self.spec.dictionary.currencies.currencies])
+
+            if field_spec.validators.field_type_validators.currency_n3:
+                allowed_currency_codes.extend([curr.code_n3 for curr in self.spec.dictionary.currencies.currencies])
+
             for field, value in field_spec.validators.field_type_validators.model_dump().items():
                 if not value:
                     continue
 
-                code_desc: str
-                currency_codes: list[str]
-
-                match field:
-                    case "currency_a3":
-                        code_desc = FieldTypeParams.CURRENCY_CODE_A3
-                        currency_codes = [curr.code_a3 for curr in self.spec.dictionary.currencies.currencies]
-
-                    case "currency_n3":
-                        code_desc = FieldTypeParams.CURRENCY_CODE_N3
-                        currency_codes = [curr.code_n3 for curr in self.spec.dictionary.currencies.currencies]
-
-                    case _:
-                        continue
-
-                if field_data in currency_codes:
+                if field not in ("currency_a3", "currency_n3"):
                     continue
 
-                validation_errors.add(f"Field {path_desc} must contain {code_desc} code")
+                if field_data in allowed_currency_codes:
+                    continue
+
+                validation_errors.add(f"Field {path_desc} must contain valid ISO currency code")
 
         def extended_validations(field_data: str):
             # Extended, logical validation, based on business-purpose of the data field

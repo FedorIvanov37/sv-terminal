@@ -103,7 +103,7 @@ class SvTerminal(QObject):
         if self.config.fields.send_internal_id:
             transaction: Transaction = self.generator.set_trans_id(transaction)
 
-        if self.config.fields.validation:
+        if self.config.validation.validation_enabled:
             try:
                 self.validator.validate_transaction(transaction)
             except (ValueError, TypeError) as validation_error:

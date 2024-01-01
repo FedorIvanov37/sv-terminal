@@ -8,10 +8,11 @@ SPEC: Final[str] = "SPEC"
 TXT: Final[str] = "TXT"
 OTHER: Final[str] = "OTHER"
 TERM: Final[str] = "SIGNAL"
+CONFIG: Final[str] = "CONFIG"
 
 
 def get_print_data_formats():
-    return JSON, INI, DUMP, SPEC, TERM
+    return JSON, INI, DUMP, SPEC, TERM, CONFIG
 
 
 def get_input_file_formats():

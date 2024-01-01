@@ -460,8 +460,9 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
                 continue
 
         if self.field_spec.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            self.CheckBoxSecret.setChecked(True)
-            self.CheckBoxSecret.setDisabled(True)
+            self.CheckBoxSecret.setCheckState(Qt.CheckState.PartiallyChecked)
+            self.CheckBoxSecret.stateChanged.connect(lambda: self.CheckBoxSecret.setCheckState(Qt.CheckState.PartiallyChecked))
+            self.CheckBoxSecret.setText(f"Hide value (required for PAN)")
 
         self.set_validation_items(self.CheckTypeBox.currentText())
 

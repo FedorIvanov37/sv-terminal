@@ -103,15 +103,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
                 button.menu().addAction(name, action)
                 button.menu().addSeparator()
 
-            for action in button.menu().actions():
-                if self.config.remote_spec.use_remote_spec:
-                    break
-
-                if action.text() == ButtonActions.REMOTE_SPEC:
-                    action.setText(f"{action.text()} (disabled in configuration)")
-                    action.setDisabled(True)
-                    break
-
         for layout, widget in widgets_layouts_map.items():
             layout.addWidget(widget)
 

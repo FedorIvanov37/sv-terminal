@@ -40,7 +40,7 @@ class Logger:
         file_handler = RotatingFileHandler(
             filename=TermFilesPath.LOG_FILE_NAME,
             maxBytes=LogDefinition.LOG_MAX_SIZE_MEGABYTES * 1024000,
-            backupCount=LogDefinition.BACKUP_COUNT,
+            backupCount=self.config.debug.backup_storage_depth,
             encoding='utf8'
         )
 

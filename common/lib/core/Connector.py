@@ -116,6 +116,10 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
         if commit is None:
             commit = self.config.remote_spec.rewrite_local_spec
 
+        if not self.config.remote_spec.remote_spec_url:
+            error("Cannot load remote spec due to invalid URL")
+            return
+
         info(f"Getting remote spec using url: {self.config.remote_spec.remote_spec_url}")
 
         use_local_spec_text = "Local specification will be used instead"

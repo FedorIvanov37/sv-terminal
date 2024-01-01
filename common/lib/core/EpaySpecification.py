@@ -5,7 +5,7 @@ from pydantic import FilePath, ValidationError
 from common.lib.decorators.singleton import singleton
 from common.lib.constants import MessageLength, TermFilesPath
 from common.lib.constants.EpaySpecificationData import EpaySpecificationData
-from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField, FieldSet, Validators
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField, FieldSet
 from common.lib.data_models.Types import FieldPath
 from common.lib.data_models.Dictionaries import Dictionaries
 from common.lib.data_models.Currencies import Currencies
@@ -214,16 +214,14 @@ class EpaySpecification(EpaySpecificationData):
 
         field: str
         field_data: IsoField
-        validation: Validators = Validators()
 
         for field, field_data in parent.items():
             if field_data.field_path == field_path:
                 return field_data.validators
 
             if field_data.fields:
-                validation = self.get_field_validations(field_path=field_path, parent=field_data.fields)
-
-        return validation
+                if validation := self.get_field_validations(field_path=field_path, parent=field_data.fields):
+                    return validation
 
     def get_field_spec(self, path: FieldPath, spec=None) -> IsoField | None:
         if spec is None:

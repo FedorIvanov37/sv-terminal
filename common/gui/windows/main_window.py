@@ -308,6 +308,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 DataFormats.INI: lambda: self.print.emit(DataFormats.INI),
                 DataFormats.SPEC: lambda: self.print.emit(DataFormats.SPEC),
                 DataFormats.TERM: lambda: self.print.emit(DataFormats.TERM),
+                DataFormats.CONFIG: lambda: self.print.emit(DataFormats.CONFIG),
             },
 
             self.ButtonSave: {

@@ -12,15 +12,16 @@
         "connect_on_startup": false,
         "load_remote_spec": false
     },
-    "validation": {
-        "validation_enabled": true,
-        "validation_mode": "ERROR",
-        "validate_incoming": false
-    },
     "debug": {
         "level": "INFO",
         "clear_log": true,
-        "parse_subfields": false
+        "parse_subfields": false,
+        "backup_storage_depth": 30
+    },
+    "validation": {
+        "validation_enabled": true,
+        "validate_incoming": false,
+        "validation_mode": "FLEXIBLE"
     },
     "fields": {
         "max_amount": 100,
@@ -31,8 +32,7 @@
         "hide_secrets": true
     },
     "remote_spec": {
-        "use_remote_spec": false,
-        "rewrite_local_spec": false,
+        "rewrite_local_spec": true,
         "remote_spec_url": "http://172.21.30.20:4242/specification",
         "backup_storage_depth": 30,
         "backup_storage": false

@@ -35,7 +35,7 @@ class JsonView(TreeView):
 
     @property
     def len_fill(self):
-        return 3 if self.config.fields.validation else None
+        return 3 if self.config.validation.validation_enabled else None
 
     @property
     def hide_secret_fields(self):
@@ -85,7 +85,7 @@ class JsonView(TreeView):
         if column not in (FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.LENGTH):
             return
 
-        if column == FieldsSpec.ColumnsOrder.LENGTH and not self.config.fields.validation:
+        if column == FieldsSpec.ColumnsOrder.LENGTH and not self.config.validation.validation_enabled:
             return
 
         item.set_length(len(text), fill_length=self.len_fill)
@@ -161,7 +161,7 @@ class JsonView(TreeView):
         if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.LENGTH):
             return
 
-        if column == FieldsSpec.ColumnsOrder.LENGTH and self.config.fields.validation:
+        if column == FieldsSpec.ColumnsOrder.LENGTH and self.config.validation.validation_enabled:
             return
 
         if column == FieldsSpec.ColumnsOrder.VALUE:
@@ -288,7 +288,7 @@ class JsonView(TreeView):
         except Exception:
             pass
 
-        specification_found = any((item.spec, self.config.fields.validation))
+        specification_found = any((item.spec, self.config.validation.validation_enabled))
 
         if specification_found:
             item.set_description()
@@ -309,7 +309,7 @@ class JsonView(TreeView):
             self.set_item_description(child)
 
     def validate_item(self, item, check_config: bool = True):  # Validate single item, no auto children validate
-        if check_config and not self.config.fields.validation:
+        if check_config and not self.config.validation.validation_enabled:
             return
 
         if item is self.root:
@@ -521,7 +521,7 @@ class JsonView(TreeView):
 
         item.field_data = ""
 
-        if self.config.fields.validation:
+        if self.config.validation.validation_enabled:
             self.check_all_items(item)
 
         self.hide_secrets(parent=item)
@@ -609,7 +609,7 @@ class JsonView(TreeView):
         row: FieldItem
 
         for row in parent.get_children():
-            if self.config.fields.validation:
+            if self.config.validation.validation_enabled:
                 self.validate_items(row)
 
             if row.childCount():
@@ -624,7 +624,7 @@ class JsonView(TreeView):
         if parent is self.root:
             fields = {field: result[field] for field in sorted(result, key=int)}
 
-            if not self.config.fields.validation:
+            if not self.config.validation.validation_enabled:
                 return fields
 
             self.validator.validate_fields(fields)

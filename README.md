@@ -88,14 +88,19 @@ of SIGNAL evolution.
   * Log screen on SpecWindow 
   * Complex fields conductor
   * Fields validation button and key sequence
-
+  * Extended validation settings window
+  * Validation violation processing modes
+  
 
 * Updates
   * JSON constructors color scheme optimization 
   * Added key sequences on SpecWindow
   * SpecWindow checkboxes are protected in read-only mode
   * Spec backup storage depth
-
+  * Added config.json to the "Print" menu
+  * SettingsWindow form optimization
+  * Manual setting of logfiles backup storage depth
+  
 
 * Fixed
   * Small code optimization

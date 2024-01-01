@@ -28,12 +28,12 @@ class Debug(BaseModel):
     level: str = "INFO"
     clear_log: bool = True
     parse_subfields: bool = False
-
+    backup_storage_depth: int = 30
 
 class Validation(BaseModel):
     validation_enabled: bool = True
-    validation_mode: ValidationMode = "ERROR" # ValidationMode.ERROR
     validate_incoming: bool = False
+    validation_mode: ValidationMode = ValidationMode.ERROR
 
 
 class Fields(BaseModel):
@@ -41,7 +41,6 @@ class Fields(BaseModel):
     max_amount_limited: bool
     build_fld_90: bool = True
     send_internal_id: bool = True
-    validation: bool = True
     json_mode: bool = True
     hide_secrets: bool = True
 
@@ -55,7 +54,6 @@ class Fields(BaseModel):
 
 
 class RemoteSpec(BaseModel):
-    use_remote_spec: bool = False
     rewrite_local_spec: bool = False
     remote_spec_url: str = ''
     backup_storage_depth: int = 100

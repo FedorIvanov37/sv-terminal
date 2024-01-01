@@ -3,7 +3,7 @@ from logging import info, error, warning
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
-from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Validators
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
 from common.lib.data_models.Types import FieldPath
 from common.gui.core.json_items.SpecItem import SpecItem
@@ -350,7 +350,10 @@ class SpecView(TreeView):
 
                 fields[row.field_number] = field
 
-                field.validators = self.spec.get_field_validations(field.field_path)
+                if not(validators := self.spec.get_field_validations(field.field_path)):
+                    validators = Validators()
+
+                field.validators = validators
 
                 if not row.childCount():
                     continue
