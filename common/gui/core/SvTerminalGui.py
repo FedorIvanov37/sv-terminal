@@ -403,6 +403,12 @@ class SvTerminalGui(SvTerminal):
         if self.config.debug.clear_log and not transaction.is_keep_alive:
             self.window.clean_window_log()
 
+        from common.lib.core.validators.TransValidator import TransValidator
+        validator = TransValidator(self.config)
+        validator.validate_transaction(transaction)
+        return
+
+
         if not transaction.is_keep_alive:
             info(f"Processing transaction ID [{transaction.trans_id}]")
             info(str())

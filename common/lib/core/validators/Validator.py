@@ -6,6 +6,8 @@ from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Types import FieldPath
 from common.gui.constants import FieldTypeParams
+from common.lib.data_models.ValidationResult import ValidationResult, ValidationTypes
+from common.lib.data_models.EpaySpecificationModel import IsoField
 
 
 class Validator:
@@ -19,29 +21,9 @@ class Validator:
     def validate_url(url: str):
         AnyHttpUrl(url)
 
-    def validate_transaction(self, transaction: Transaction):
-        self.validate_mti(transaction.message_type)
-        self.validate_fields(transaction.data_fields)
-
     def validate_mti(self, mti):
         if mti not in self.spec.get_mti_codes():
             raise ValueError(f"Unknown MTI: {mti}")
-
-    def validate_fields(self, fields: TypeFields, field_path: FieldPath | None = None):
-        if field_path is None:
-            field_path = []
-
-        for field, value in fields.items():
-            field_path.append(field)
-
-            if isinstance(value, dict):
-                self.validate_fields(fields=value, field_path=field_path)
-                field_path.pop()
-                continue
-
-            self.validate_field_data(field_path, value)
-
-            field_path.pop()
 
     @staticmethod
     def check_luhn(value: str) -> bool:  # Based on code example from https://en.wikipedia.org/wiki/Luhn_algorithm
@@ -105,42 +87,53 @@ class Validator:
         if not self.spec.get_field_spec(path=path):
             raise ValueError(f"Lost spec for field {str_path}")
 
-    def validate_field_data(self, field_path: FieldPath, field_value: TypeFields | str):
-        # General method to validate fields values. Contain separated function for each validation type
+    def validate_field_data(self, field_path: FieldPath, field_value: str, validation_result: ValidationResult):
+        path = ".".join(field_path)
+        field_spec = self.spec.get_field_spec(field_path)
+        path_desc: str = f"{path} - {field_spec.description}"
 
-        def pre_validations(field_data):
-            # Generic validations, actual for any data field
+        def fields_pre_validation():
+            errors: set[str] = set()
+            length = len(field_value)
 
-            if not field_data:  # Field should contain the data
-                raise ValueError(f"Lost field value for field {path}")
+            if not field_value:  # Field should contain the data
+                errors.add(f"Lost field value for field {path}")
 
             if not all(field for field in field_path if field.isdigit()):  # Field number should be digit
-                raise ValueError(f"Field numbers can be digits only. {path} is wrong value")
+                errors.add(f"Field numbers can be digits only. {path} is wrong value")
 
             if length > field_spec.max_length:  # Max length validation
-                validation_errors.add(f"Field {path} over MaxLength. Max length: {field_spec.max_length} got: {length}")
+                errors.add(f"Field {path} over MaxLength. Max length: {field_spec.max_length} got: {length}")
 
             if length < field_spec.min_length:  # Min length validation
-                validation_errors.add(f"Field {path} less MinLength. Min length: {field_spec.min_length} got: {length}")
+                errors.add(f"Field {path} less MinLength. Min length: {field_spec.min_length} got: {length}")
 
-        def main_validations(field_data):
-            # ANS-validation. Checks the occurrence of non-allowed charset
+            return errors
 
-            for letter in field_data:
+        def main_validations(): # ANS-validation. Checks the occurrence of non-allowed charset
+            errors: set[str] = set()
+            alphabetic: str = ascii_letters
+            numeric: str = digits
+            specials: str = punctuation + " "
+            valid_values: str = alphabetic + numeric + specials
+
+            for letter in field_value:
                 if letter not in valid_values:  # Only ascii-printable allowed
-                    validation_errors.add(f"Non-printable letters in field {path}. Seems like a problem with encoding")
+                    errors.add(f"Non-printable letters in field {path}. Seems like a problem with encoding")
 
                 if letter in ascii_letters and not field_spec.alpha:  # Validation charset - alphabetic
-                    validation_errors.add(f"Alphabetic values not allowed in field {path_desc}")
+                    errors.add(f"Alphabetic values not allowed in field {path_desc}")
 
                 if letter in digits and not field_spec.numeric:  # Validation charset - numeric
-                    validation_errors.add(f"Numeric values not allowed in field {path_desc}")
+                    errors.add(f"Numeric values not allowed in field {path_desc}")
 
                 if letter in specials and not field_spec.special:  # Validation charset - special
-                    validation_errors.add(f"Special values not allowed in field {path_desc}")
+                    errors.add(f"Special values not allowed in field {path_desc}")
 
-        def custom_validations(field_data):
-            # Custom validations set by user
+            return errors
+
+        def custom_validations():  # Custom validations set by user
+            errors: set[str] = set()
 
             for validation, patterns in field_spec.validators.model_dump().items():
                 if not patterns or not isinstance(patterns, list):
@@ -148,55 +141,55 @@ class Validator:
 
                 match validation:
                     case "valid_values":  # Exact allowed value validation
-                        if not field_data in patterns:
+                        if not field_value in patterns:
                             bad_patterns = ", ".join(patterns)
-                            validation_errors.add(f'Field {path_desc} must contain one of the following: {bad_patterns}')
+                            errors.add(f'Field {path_desc} must contain one of the following: {bad_patterns}')
 
                     case "invalid_values":  # Exact not allowed value validation
-                        if field_data in patterns:
+                        if field_value in patterns:
                             bad_patterns = ", ".join(patterns)
-                            validation_errors.add(f'Field {path_desc} must not contain one of the following: {bad_patterns}')
+                            errors.add(f'Field {path_desc} must not contain one of the following: {bad_patterns}')
 
                 for pattern in patterns:
                     match validation:
                         case "must_contain":
-                            if pattern not in field_data:
-                                validation_errors.add(f'Field {path_desc} must contain "{pattern}"')
+                            if pattern not in field_value:
+                                errors.add(f'Field {path_desc} must contain "{pattern}"')
 
                         case "must_contain_only":
                             bad_patterns = ", ".join(patterns)
 
-                            if [letter for letter in field_data if letter not in patterns]:
-                                validation_errors.add(f"Field {path_desc} must contain only one or multiple: {bad_patterns}")
+                            if [letter for letter in field_value if letter not in patterns]:
+                                errors.add(f"Field {path_desc} must contain only one or multiple: {bad_patterns}")
 
                         case "must_not_contain":
-                            if pattern in field_data:
-                                validation_errors.add(f'Field {path_desc} must not contain {pattern}')
+                            if pattern in field_value:
+                                errors.add(f'Field {path_desc} must not contain {pattern}')
 
                         case "must_not_contain_only":
-                            if not [letter for letter in field_data if letter not in pattern]:
-                                validation_errors.add(f"Field {path_desc} must not contain only one or multiple {pattern}")
+                            if not [letter for letter in field_value if letter not in pattern]:
+                                errors.add(f"Field {path_desc} must not contain only one or multiple {pattern}")
 
                         case "must_start_with":
-                            if not field_data.startswith(pattern):
-                                validation_errors.add(f"Field {path_desc} must start with {pattern}")
+                            if not field_value.startswith(pattern):
+                                errors.add(f"Field {path_desc} must start with {pattern}")
 
                         case "must_not_start_with":
-                            if field_data.startswith(pattern):
-                                validation_errors.add(f"Field {path_desc} must not start with {pattern}")
+                            if field_value.startswith(pattern):
+                                errors.add(f"Field {path_desc} must not start with {pattern}")
 
                         case "must_end_with":
-                            if not field_data.endswith(pattern):
-                                validation_errors.add(f"Field {path_desc} must end with {pattern}")
+                            if not field_value.endswith(pattern):
+                                errors.add(f"Field {path_desc} must end with {pattern}")
 
                         case "must_not_end_with":
-                            if field_data.endswith(pattern):
-                                validation_errors.add(f"Field {path_desc} must not end with {pattern}")
+                            if field_value.endswith(pattern):
+                                errors.add(f"Field {path_desc} must not end with {pattern}")
 
-        def country_validations(field_data): # Validation ISO-4217 country codes
-            if not self.spec.dictionary.countries:
-                return
+            return errors
 
+        def country_validations(): # Validation ISO-4217 country codes
+            errors: set[str] = set()
             allowed_country_codes: list[str] = list()
 
             if field_spec.validators.field_type_validators.country_a2:
@@ -215,15 +208,15 @@ class Validator:
                 if field not in ("country_a3", "country_n3", "country_a2"):
                     continue
 
-                if field_data in allowed_country_codes:
+                if field_value in allowed_country_codes:
                     continue
 
-                validation_errors.add(f"Field {path_desc} must contain valid ISO country code")
+                errors.add(f"Field {path_desc} must contain valid ISO country code")
 
-        def currency_validation(field_data: str):
-            if not self.spec.dictionary.currencies:
-                return
+            return errors
 
+        def currency_validation():
+            errors: set[str] = set()
             allowed_currency_codes: list[str] = list()
 
             if field_spec.validators.field_type_validators.currency_a3:
@@ -239,13 +232,15 @@ class Validator:
                 if field not in ("currency_a3", "currency_n3"):
                     continue
 
-                if field_data in allowed_currency_codes:
+                if field_value in allowed_currency_codes:
                     continue
 
-                validation_errors.add(f"Field {path_desc} must contain valid ISO currency code")
+                errors.add(f"Field {path_desc} must contain valid ISO currency code")
 
-        def extended_validations(field_data: str):
-            # Extended, logical validation, based on business-purpose of the data field
+            return errors
+
+        def extended_validations(): # Extended, logical validation, based on business-purpose of the data field
+            errors: set[str] = set()
 
             for field, value in field_spec.validators.field_type_validators.model_dump().items():
                 if not value:
@@ -253,78 +248,56 @@ class Validator:
 
                 match field:
                     case "check_luhn":  # Check by the Luhn algorithm
-                        if not self.check_luhn(field_data):
-                            validation_errors.add(f"Field {path_desc} did not pass validation by the Luhn algorithm")
+                        if not self.check_luhn(field_value):
+                            errors.add(f"Field {path_desc} did not pass validation by the Luhn algorithm")
 
                     case "mcc":  # Valid merchant category code
                         mcc_list = (mcc.code for mcc in self.spec.dictionary.merch_cat_codes.merchant_category_codes)
 
-                        if field_data not in mcc_list:
-                            validation_errors.add(f"Field {path_desc} must contain valid {FieldTypeParams.MCC_ISO}")
+                        if field_value not in mcc_list:
+                            errors.add(f"Field {path_desc} must contain valid {FieldTypeParams.MCC_ISO}")
 
                     case "only_upper":  # Only UPPER case allowed
-                        if not field_data.isupper():
-                            validation_errors.add(f"Field {path_desc} allowed UPPER case only")
+                        if not field_value.isupper():
+                            errors.add(f"Field {path_desc} allowed UPPER case only")
 
                     case "only_lower":  # Only lower case allowed
-                        if not field_data.islower():
-                            validation_errors.add(f"Field {path_desc} allowed lower case only")
+                        if not field_value.islower():
+                            errors.add(f"Field {path_desc} allowed lower case only")
 
                     case "date_format":  # Date format and timeframes
                         date: datetime | None = None
 
                         if field_spec.validators.field_type_validators.date_format:
                             try:
-                                date: datetime = datetime.strptime(field_data, field_spec.validators.field_type_validators.date_format)
+                                date: datetime = datetime.strptime(field_value, field_spec.validators.field_type_validators.date_format)
                             except ValueError:
-                                validation_errors.add(f'Field {path_desc} must contain date in the following format: "{field_spec.validators.field_type_validators.date_format}"')
-                                validation_errors.add(f"See possible date formats and additional info here: https://docs.python.org/3/library/datetime.html")
+                                errors.add(f'Field {path_desc} must contain date in the following format: "{field_spec.validators.field_type_validators.date_format}"')
 
                         if date is not None:
                             if not field_spec.validators.field_type_validators.past and date < datetime.now():
-                                validation_errors.add(f"Field {path_desc} past time not allowed")
+                                errors.add(f"Field {path_desc} past time not allowed")
 
                             if not field_spec.validators.field_type_validators.future and date > datetime.now():
-                                validation_errors.add(f"Field {path_desc} future time not allowed")
+                                errors.add(f"Field {path_desc} future time not allowed")
 
-        alphabetic: str = ascii_letters
-        numeric: str = digits
-        specials: str = punctuation + " "
-        valid_values: str = alphabetic + numeric + specials
-        path: str = ".".join(field_path)
-        length: int = len(field_value)
-        validation_errors: set[str] = set()
+            return errors
 
-        if not (field_spec := self.spec.get_field_spec(list(field_path))):
-            raise ValueError(f"Lost spec for field {path}")
-
-        if field_spec.validators.field_type_validators.do_not_validate:
-            return
-
-        path_desc: str = f"{path} - {field_spec.description}"
-
-        if isinstance(field_value, dict):
-            self.validate_fields(field_value, field_path)
-            return
-
-        validators: set[Callable] = {
-            pre_validations,
-            main_validations,
-            custom_validations,
-            extended_validations,
-            currency_validation,
-            country_validations,
+        validators_map: dict[ValidationTypes, Callable] = {
+            ValidationTypes.FIELD_DATA_PRE_VALIDATION: fields_pre_validation,
+            ValidationTypes.FIELD_DATA_MAIN_VALIDATION: main_validations,
+            ValidationTypes.FIELD_DATA_CUSTOM_VALIDATION: custom_validations,
+            ValidationTypes.EXTENDED_VALIDATION: extended_validations,
+            ValidationTypes.CURRENCY_VALIDATION: currency_validation,
+            ValidationTypes.COUNTRY_VALIDATION: country_validations,
         }
 
-        for validator in validators:
-            try:
-                validator(field_value)
-            except Exception as validation_exception:
-                validation_errors.add(f"Validation error: {validation_exception}")
+        for check_type, validator in validators_map.items():
+            validation_errors: set[str] = validator()
 
-        if not validation_errors:
-            return
+            if validation_result.errors.get(check_type) is None:
+                validation_result.errors[check_type] = set()
 
-        validation_errors: str = "\n".join(validation_errors)
+            validation_result.errors[check_type].update(validation_errors)
 
-        raise ValueError(validation_errors)
+        return validation_result
