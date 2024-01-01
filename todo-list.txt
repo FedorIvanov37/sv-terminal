@@ -134,7 +134,23 @@
 + Remote spec - settings, SpecWindow
 + Full read only mode for spec
 + Spec backup storage settings
++ Log backup storage settings
 + Complex fields constructor
++ Change style of SettingsWindow
++ Add custom validations
++ Add custom validations Window
++ Add spec URL validation
++ Add MCC model and dictionary
++ Incoming message validation
+
+
+• Make validations violation processing mode
+• Error on console when run AboutWindow - Could not find codec parameters for stream
+• Check all custom validations
+
+
+
+
 
 
 • Change name to SIGNAL

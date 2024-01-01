@@ -31,12 +31,13 @@ class SvTerminal(QObject):
     with open(TermFilesPath.CONFIG) as json_file:
         config: Config = Config.model_validate_json(json_file.read())
 
-    validator: Validator = Validator()
+    validator: Validator
     need_reconnect: pyqtSignal = pyqtSignal()
 
     def __init__(self, config: Config, connector: ConnectionInterface | None = None):
         super(SvTerminal, self).__init__()
         self.config: Config = config
+        self.validator = Validator()
 
         if connector is None:
             connector: Connector = Connector(self.config)
@@ -96,6 +97,13 @@ class SvTerminal(QObject):
 
         self.need_reconnect.emit()
 
+    def save_config(self, config: Config | None = None):
+        if config is None:
+            config = self.config
+
+        with open(TermFilesPath.CONFIG, "w") as file:
+            file.write(config.model_dump_json(indent=4))
+
     def send(self, transaction: Transaction | None = None) -> None:
         if transaction.generate_fields:
             transaction: Transaction = self.generator.set_generated_fields(transaction)
@@ -122,10 +130,24 @@ class SvTerminal(QObject):
         self.log_printer.print_transaction(request)
 
         if not request.is_keep_alive:
-            info(f"Transaction [{request.trans_id}] was sent ")
+            info(f"Outgoing transaction [{request.trans_id}] sent")
             info(str())
 
     def transaction_received(self, response: Transaction) -> None:
+        info(f"Incoming transaction [{response.match_id if response.matched else response.trans_id}] received")
+
+        if self.config.validation.validate_incoming:
+            info(str())
+            info("Validating incoming transaction data")
+
+            try:
+                self.validator.validate_transaction(transaction=response)
+
+            except ValueError as validation_error:
+                warning(f"Incoming message validation error: {validation_error}")
+
+            warning("Trying to proceed with incoming transaction processing")
+
         try:
             self.log_printer.print_dump(response)
         except Exception as parsing_error:

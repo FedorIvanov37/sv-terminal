@@ -9,6 +9,7 @@ class ItemsValidator(Validator):
     spec: EpaySpecification = EpaySpecification()
 
     def __init__(self, config: Config):
+        super(ItemsValidator, self).__init__()
         self.config: Config = config
 
     def validate_item(self, item: FieldItem):

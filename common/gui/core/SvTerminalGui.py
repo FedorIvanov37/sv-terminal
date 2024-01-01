@@ -11,18 +11,18 @@ from common.gui.windows.spec_window import SpecWindow
 from common.gui.windows.hotkeys_hint_window import HotKeysHintWindow
 from common.gui.windows.about_window import AboutWindow
 from common.gui.windows.complex_fields_window import ComplexFieldsParser
+from common.gui.windows.license_window import LicenseWindow
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread
-from common.gui.windows.license_window import LicenseWindow
 from common.gui.constants import ButtonActions
 from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.lib.core.Terminal import SvTerminal
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.exceptions.exceptions import LicenceAlreadyAccepted, LicenseDataLoadingError
-from common.lib.constants import TextConstants, DataFormats, TermFilesPath, KeepAliveIntervals, LogDefinition
 from common.lib.core.TransTimer import TransactionTimer
 from common.lib.core.SpecFilesRotator import SpecFilesRotator
+from common.lib.constants import TextConstants, DataFormats, TermFilesPath, KeepAliveIntervals, LogDefinition
 
 
 """
@@ -101,15 +101,18 @@ class SvTerminalGui(SvTerminal):
             self.set_keep_alive_interval(interval_name=KeepAliveIntervals.KEEP_ALIVE_DEFAULT % interval)
 
         if self.config.terminal.load_remote_spec:
-            self.set_remote_spec.emit()
+            if not self.config.remote_spec.remote_spec_url:
+                warning("Remote specification was not loaded due to empty spec URL")
+                warning("The local specification will be used instead")
+
+            if self.config.remote_spec.remote_spec_url:
+                self.set_remote_spec.emit()
 
         if self.config.remote_spec.backup_storage:
             rotator: SpecFilesRotator = SpecFilesRotator()
             rotator.clear_spec_backup(self.config)
 
         self._startup_finished: bool = True
-
-        # self.window.specification.emit()
 
     def connect_widgets(self):
         window: MainWindow = self.window
@@ -246,14 +249,25 @@ class SvTerminalGui(SvTerminal):
         if old_config.fields.hide_secrets != self.config.fields.hide_secrets:
             self.window.hide_secrets()
 
-        if old_config.remote_spec.remote_spec_url != self.config.remote_spec.remote_spec_url:
-            if self.config.remote_spec.remote_spec_url:
+        spec_loading_conditions: list[bool] = [
+            self.config.remote_spec.remote_spec_url,
+            old_config.remote_spec.remote_spec_url != self.config.remote_spec.remote_spec_url,
+        ]
+
+        if all(spec_loading_conditions):
+            try:
+                self.validator.validate_url(self.config.remote_spec.remote_spec_url)
+
+            except ValidationError as url_validation_error:
+                error(f"Remote spec URL validation error: {url_validation_error}")
+
+            else:
                 self.set_remote_spec.emit()
 
-        keep_alive_change_conditions: tuple[bool, bool] = (
+        keep_alive_change_conditions: list[bool] = [
             old_config.host.keep_alive_mode != self.config.host.keep_alive_mode,
             old_config.host.keep_alive_interval != self.config.host.keep_alive_interval
-        )
+        ]
 
         if any(keep_alive_change_conditions):
             interval_name: str = KeepAliveIntervals.KEEP_ALIVE_STOP
@@ -391,6 +405,7 @@ class SvTerminalGui(SvTerminal):
 
         if not transaction.is_keep_alive:
             info(f"Processing transaction ID [{transaction.trans_id}]")
+            info(str())
 
         if self.connector.connection_in_progress():
             error("Cannot send the transaction while the host connection is in progress")

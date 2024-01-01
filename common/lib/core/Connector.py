@@ -3,6 +3,7 @@ from http import HTTPStatus
 from http.client import HTTPResponse
 from urllib.request import urlopen
 from logging import error, debug, warning, info
+from pydantic import ValidationError
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtCore import pyqtSignal
 from common.lib.data_models.Config import Config
@@ -12,6 +13,7 @@ from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.constants import TermFilesPath
 from common.lib.core.SpecFilesRotator import SpecFilesRotator
+from common.lib.core.Validator import Validator
 
 
 class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
@@ -116,11 +118,15 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
         if commit is None:
             commit = self.config.remote_spec.rewrite_local_spec
 
-        if not self.config.remote_spec.remote_spec_url:
-            error("Cannot load remote spec due to invalid URL")
+        validator = Validator()
+
+        try:
+            validator.validate_url(self.config.remote_spec.remote_spec_url)
+        except ValidationError as url_validation_error:
+            error(f"Cannot load remote specification due to incorrect URL: {url_validation_error}")
             return
 
-        info(f"Getting remote spec using url: {self.config.remote_spec.remote_spec_url}")
+        info(f"Getting remote spec using url {self.config.remote_spec.remote_spec_url}")
 
         use_local_spec_text = "Local specification will be used instead"
 
@@ -148,7 +154,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
                 spec_data: EpaySpecModel = EpaySpecModel.model_validate_json(resp.read())
                 spec.reload_spec(spec=spec_data, commit=commit)
 
-                info(f"Remote specification loaded {spec.spec.name}")
+                info(f"Remote specification loaded: {spec.spec.name}")
 
                 self.got_remote_spec.emit()
 

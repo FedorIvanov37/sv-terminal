@@ -21,7 +21,7 @@
     "validation": {
         "validation_enabled": true,
         "validate_incoming": false,
-        "validation_mode": "FLEXIBLE"
+        "validation_mode": "ERROR"
     },
     "fields": {
         "max_amount": 100,
@@ -32,7 +32,7 @@
         "hide_secrets": true
     },
     "remote_spec": {
-        "rewrite_local_spec": true,
+        "rewrite_local_spec": false,
         "remote_spec_url": "http://172.21.30.20:4242/specification",
         "backup_storage_depth": 30,
         "backup_storage": false

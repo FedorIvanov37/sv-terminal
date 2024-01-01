@@ -44,8 +44,8 @@ class Fields(BaseModel):
     json_mode: bool = True
     hide_secrets: bool = True
 
-    @classmethod
     @field_validator("max_amount", mode='before')
+    @classmethod
     def amount_should_be_digit(cls, max_amount: str):
         if not str(max_amount).isdigit():
             raise ValueError("Max transaction amount should be digits only")
@@ -55,7 +55,7 @@ class Fields(BaseModel):
 
 class RemoteSpec(BaseModel):
     rewrite_local_spec: bool = False
-    remote_spec_url: str = ''
+    remote_spec_url: str = str()
     backup_storage_depth: int = 100
     backup_storage: bool = True
 

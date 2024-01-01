@@ -1,10 +1,10 @@
 from typing import Callable
 from datetime import datetime
 from string import digits, ascii_letters, punctuation
+from pydantic import AnyHttpUrl
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Types import FieldPath
-from common.lib.constants import ValidationParams
 from common.gui.constants import FieldTypeParams
 
 
@@ -14,6 +14,10 @@ class Validator:
     @property
     def spec(self):
         return self._spec
+
+    @staticmethod
+    def validate_url(url: str):
+        AnyHttpUrl(url)
 
     def validate_transaction(self, transaction: Transaction):
         self.validate_mti(transaction.message_type)
@@ -255,7 +259,9 @@ class Validator:
                             validation_errors.add(f"Field {path_desc} did not pass validation by the Luhn algorithm")
 
                     case "mcc":  # Valid merchant category code
-                        if field_data not in ["6533", "8999"]:
+                        mcc_list = (mcc.code for mcc in self.spec.dictionary.merch_cat_codes.merchant_category_codes)
+
+                        if field_data not in mcc_list:
                             validation_errors.add(f"Field {path_desc} must contain valid {FieldTypeParams.MCC_ISO}")
 
                     case "only_upper":  # Only UPPER case allowed
@@ -318,5 +324,9 @@ class Validator:
             except Exception as validation_exception:
                 validation_errors.add(f"Validation error: {validation_exception}")
 
-        if validation_errors:
-            raise ValueError("\n".join(validation_errors))
+        if not validation_errors:
+            return
+
+        validation_errors: str = "\n".join(validation_errors)
+
+        raise ValueError(validation_errors)

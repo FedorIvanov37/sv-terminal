@@ -1,5 +1,5 @@
 from logging import info, error, getLogger, getLevelName
-from PyQt6.QtWidgets import QDialog, QLineEdit, QCheckBox
+from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap, QIntValidator
 from PyQt6.QtCore import QRegularExpression
 from common.lib.constants import LogDefinition, TermFilesPath
@@ -153,13 +153,13 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         config.fields.send_internal_id = self.SendInternalId.isChecked()
         config.fields.json_mode = self.JsonMode.isChecked()
         config.fields.hide_secrets = self.HideSecrets.isChecked()
-        config.remote_spec.remote_spec_url = self.RemoteSpecUrl.text()
         config.remote_spec.rewrite_local_spec = self.RewriteLocalSpec.isChecked()
         config.remote_spec.backup_storage_depth = self.StorageDepth.value()
         config.validation.validation_enabled = self.ValidationEnabled.isChecked()
         config.validation.validation_enabled = self.ValidationEnabled.isChecked()
         config.validation.validate_incoming = self.ValidateIncoming.isChecked() and self.ValidateIncoming.isEnabled()
         config.validation.validation_mode = self.ValidationReaction.currentText()
+        config.remote_spec.remote_spec_url = self.RemoteSpecUrl.text()
 
         if not config.fields.max_amount_limited:
             config.fields.max_amount = 9_999_999_999

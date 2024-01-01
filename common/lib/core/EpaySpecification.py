@@ -10,6 +10,7 @@ from common.lib.data_models.Types import FieldPath
 from common.lib.data_models.Dictionaries import Dictionaries
 from common.lib.data_models.Currencies import Currencies
 from common.lib.data_models.Countries import Countries
+from common.lib.data_models.MerchCategories import MerchantCategoryCodes
 
 
 @singleton
@@ -60,10 +61,13 @@ class EpaySpecification(EpaySpecificationData):
     def create_dictionary() -> Dictionaries:
         try:
             with open(TermFilesPath.CURRENCY_DICT) as json_file:
-                currencies_dictionary = Currencies.model_validate_json(json_file.read())
+                currencies_dictionary: Currencies = Currencies.model_validate_json(json_file.read())
 
             with open(TermFilesPath.COUNTRY_DICT) as json_file:
-                countries_dictionary = Countries.model_validate_json(json_file.read())
+                countries_dictionary: Countries = Countries.model_validate_json(json_file.read())
+
+            with open(TermFilesPath.MCC_DICT) as json_file:
+                merch_cat_codes: MerchantCategoryCodes = MerchantCategoryCodes.model_validate_json(json_file.read())
 
         except Exception as dictionary_parsing_error:
             warning(f"Cannot load dictionary: {dictionary_parsing_error}")
@@ -73,6 +77,7 @@ class EpaySpecification(EpaySpecificationData):
             dictionary = Dictionaries(
                 currencies=currencies_dictionary,
                 countries=countries_dictionary,
+                merch_cat_codes=merch_cat_codes,
             )
 
         except (ValueError, ValidationError) as validation_error:
