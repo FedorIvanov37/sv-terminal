@@ -1,6 +1,6 @@
 from typing import Callable
 from datetime import datetime
-from string import digits, ascii_letters, punctuation
+from string import digits, ascii_letters, punctuation, whitespace 
 from pydantic import AnyHttpUrl
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Transaction import Transaction, TypeFields
@@ -114,7 +114,7 @@ class Validator:
             errors: set[str] = set()
             alphabetic: str = ascii_letters
             numeric: str = digits
-            specials: str = punctuation + " "
+            specials: str = punctuation + whitespace 
             valid_values: str = alphabetic + numeric + specials
 
             for letter in field_value:
