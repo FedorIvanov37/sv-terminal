@@ -1,10 +1,11 @@
 from copy import deepcopy
 from logging import error, warning
-from PyQt6.QtCore import pyqtSignal, QModelIndex, Qt
+from PyQt6.QtCore import pyqtSignal, QModelIndex
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QLineEdit
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.FieldsGenerator import FieldsGenerator
 from common.lib.core.Parser import Parser
+from common.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
 from common.lib.data_models.EpaySpecificationModel import RawFieldSet, Justification, IsoField
@@ -253,16 +254,19 @@ class JsonView(TreeView):
                     self.process_change_property(item)
 
                 case FieldsSpec.ColumnsOrder.FIELD:
-                    item.set_checkbox()
                     self.check_all_items(item)
+                    item.set_checkbox()
 
                 case FieldsSpec.ColumnsOrder.LENGTH:
                     self.set_subfields_length(item)
 
-        except ValueError as validation_error:
+        except (ValueError, DataValidationError) as validation_error:
             item.set_item_color(Colors.RED)
             [warning(err) for err in str(validation_error).splitlines()]
             return
+
+        except DataValidationWarning:
+            item.set_item_color(Colors.RED)
 
         if column != FieldsSpec.ColumnsOrder.PROPERTY:
             self.set_item_description(item)
@@ -316,6 +320,8 @@ class JsonView(TreeView):
             return
 
         if self.spec.can_be_generated(item.get_field_path()):
+            self.validator.validate_duplicates(item)
+
             if item.checkbox_checked(CheckBoxesDefinition.GENERATE):
                 return
 
@@ -328,6 +334,7 @@ class JsonView(TreeView):
             if row.childCount():
                 self.validate_items(row)
 
+    @void_qt_signals
     def check_all_items(self, parent: FieldItem | None = None, check_config: bool = True):  # Validate and paint item without raising ValueError
         def set_error(item: FieldItem, exception: Exception):
             item.set_item_color(Colors.RED)
@@ -335,7 +342,6 @@ class JsonView(TreeView):
             for string in str(exception).splitlines():
                 warning(string)
 
-            self.setCurrentItem(item)
             self.setFocus()
 
         if parent is None:
@@ -344,7 +350,7 @@ class JsonView(TreeView):
         try:
             self.validate_item(parent, check_config=check_config)
 
-        except ValueError as validation_error:
+        except (ValueError, DataValidationError, DataValidationWarning) as validation_error:
             set_error(parent, validation_error)
 
         else:
@@ -358,11 +364,11 @@ class JsonView(TreeView):
             try:
                 self.validate_item(child_item, check_config=check_config)
 
-            except ValueError as validation_error:
+            except (ValueError, DataValidationError, DataValidationWarning) as validation_error:
                 set_error(child_item, validation_error)
+                continue
 
-            else:
-                child_item.set_item_color(Colors.BLACK)
+            child_item.set_item_color(Colors.BLACK)
 
     def plus(self):
         if not (current_item := self.currentItem()):
@@ -611,6 +617,9 @@ class JsonView(TreeView):
         for row in parent.get_children():
             if self.config.validation.validation_enabled:
                 self.validate_items(row)
+
+            if row.field_number in result:
+                warning(f"Duplicated field number {row.get_field_path(string=True)}")
 
             if row.childCount():
                 if flat:

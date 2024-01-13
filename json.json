@@ -1,12 +1,11 @@
-[
-  {
-    "type": "url_parsing",
-    "loc": [],
-    "msg": "Input should be a valid URL, relative URL without a base",
-    "input": "1",
-    "ctx": {
-      "error": "relative URL without a base"
-    },
-    "url": "https://errors.pydantic.dev/2.4/v/url_parsing"
+{
+  "card_id": "100000000126",
+  "event_type": "PIN_COUNTER_CHANGE",
+  "date_time": "2024-01-03T13:50:38+0000",
+  "status": "SUCCESS",
+  "attributes": {
+    "pin_counter_current_value": 3,
+    "pin_count_limit": 3,
+    "pin_limit_reached": true
   }
-]
+}

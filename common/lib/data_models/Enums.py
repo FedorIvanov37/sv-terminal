@@ -5,3 +5,9 @@ from common.lib.core.EpaySpecification import EpaySpecification
 spec: EpaySpecification = EpaySpecification()
 
 generated_field = Enum("generated_field", spec.get_generated_fields_dict())
+
+
+class ValidationMode(str, Enum):
+    ERROR = "ERROR"
+    WARNING = "WARNING"
+    FLEXIBLE = "FLEXIBLE"

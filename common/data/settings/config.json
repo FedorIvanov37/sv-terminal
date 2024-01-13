@@ -19,8 +19,8 @@
         "backup_storage_depth": 30
     },
     "validation": {
-        "validation_enabled": false,
-        "validate_incoming": false,
+        "validation_enabled": true,
+        "validate_incoming": true,
         "validation_mode": "FLEXIBLE"
     },
     "fields": {

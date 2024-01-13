@@ -13,7 +13,7 @@ from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.constants import TermFilesPath
 from common.lib.core.SpecFilesRotator import SpecFilesRotator
-from common.lib.core.Validator import Validator
+from common.lib.core.validators.TransValidator import TransValidator as Validator
 
 
 class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
@@ -31,7 +31,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
 
     def send_transaction_data(self, trans_id: str, transaction_data: bytes):
         if not self.state() == self.SocketState.ConnectedState:
-            warning("Host disconnected. Trying to established the connection")
+            warning("Host disconnected. Trying to establish the connection")
 
             try:
                 self.reconnect_sv()
@@ -118,7 +118,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
         if commit is None:
             commit = self.config.remote_spec.rewrite_local_spec
 
-        validator = Validator()
+        validator = Validator(self.config)
 
         try:
             validator.validate_url(self.config.remote_spec.remote_spec_url)

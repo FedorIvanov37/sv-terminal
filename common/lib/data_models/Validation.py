@@ -21,3 +21,9 @@ class ValidationTypes(str, Enum):
 
 class ValidationResult(BaseModel):
     errors: dict[ValidationTypes, set[str]] = dict.fromkeys([validation for validation in ValidationTypes])
+
+    critical_validation_types: list[ValidationTypes] = [
+        ValidationTypes.FIELD_DATA_PRE_VALIDATION,
+        ValidationTypes.FIELD_DATA_MAIN_VALIDATION,
+        ValidationTypes.MTI_VALIDATION,
+    ]

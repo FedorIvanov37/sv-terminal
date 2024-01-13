@@ -1,12 +1,5 @@
 from pydantic import BaseModel, field_validator
-from enum import Enum
-
-
-class ValidationMode(str, Enum):
-    ERROR = "ERROR"
-    WARNING = "WARNING"
-    FLEXIBLE = "FLEXIBLE"
-    IGNORE = "IGNORE"
+from common.lib.data_models.Enums import ValidationMode
 
 
 class Host(BaseModel):

@@ -19,7 +19,7 @@ from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.lib.core.Terminal import SvTerminal
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
-from common.lib.exceptions.exceptions import LicenceAlreadyAccepted, LicenseDataLoadingError
+from common.lib.exceptions.exceptions import LicenceAlreadyAccepted, LicenseDataLoadingError, DataValidationWarning
 from common.lib.core.TransTimer import TransactionTimer
 from common.lib.core.SpecFilesRotator import SpecFilesRotator
 from common.lib.constants import TextConstants, DataFormats, TermFilesPath, KeepAliveIntervals, LogDefinition
@@ -403,12 +403,6 @@ class SvTerminalGui(SvTerminal):
         if self.config.debug.clear_log and not transaction.is_keep_alive:
             self.window.clean_window_log()
 
-        from common.lib.core.validators.TransValidator import TransValidator
-        validator = TransValidator(self.config)
-        validator.validate_transaction(transaction)
-        return
-
-
         if not transaction.is_keep_alive:
             info(f"Processing transaction ID [{transaction.trans_id}]")
             info(str())
@@ -541,6 +535,9 @@ class SvTerminalGui(SvTerminal):
             self.window.set_mti_value(transaction.message_type)
             self.window.set_transaction_fields(transaction)
             self.set_bitmap()
+
+        except DataValidationWarning as validation_warning:
+            [warning(warn) for warn in str(validation_warning).splitlines()]
 
         except Exception as transaction_parsing_error:
             error(f"Cannot set transaction fields: {transaction_parsing_error}")

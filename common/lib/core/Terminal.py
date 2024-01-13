@@ -10,7 +10,8 @@ from common.lib.core.Logger import Logger
 from common.lib.core.TransactionQueue import TransactionQueue
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.FieldsGenerator import FieldsGenerator
-from common.lib.core.Validator import Validator
+from common.lib.core.validators.TransValidator import TransValidator as Validator
+from common.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.Connector import Connector
@@ -37,7 +38,7 @@ class SvTerminal(QObject):
     def __init__(self, config: Config, connector: ConnectionInterface | None = None):
         super(SvTerminal, self).__init__()
         self.config: Config = config
-        self.validator = Validator()
+        self.validator = Validator(self.config)
 
         if connector is None:
             connector: Connector = Connector(self.config)
@@ -114,9 +115,13 @@ class SvTerminal(QObject):
         if self.config.validation.validation_enabled:
             try:
                 self.validator.validate_transaction(transaction)
-            except (ValueError, TypeError) as validation_error:
-                error(f"Transaction validation error {validation_error}")
+
+            except (ValueError, TypeError, DataValidationError) as validation_error:
+                [error(err) for err in str(validation_error).splitlines()]
                 return
+
+            except DataValidationWarning as validation_warning:
+                [warning(warn) for warn in str(validation_warning).splitlines()]
 
         self.trans_queue.put_transaction(transaction)
 
@@ -130,23 +135,19 @@ class SvTerminal(QObject):
         self.log_printer.print_transaction(request)
 
         if not request.is_keep_alive:
-            info(f"Outgoing transaction [{request.trans_id}] sent")
-            info(str())
+            info(f"Outgoing transaction ID [{request.trans_id}] sent")
 
     def transaction_received(self, response: Transaction) -> None:
-        info(f"Incoming transaction [{response.match_id if response.matched else response.trans_id}] received")
+        resp_trans_id = response.match_id if response.matched else response.trans_id
+
+        info(f"Incoming transaction ID [{resp_trans_id}] received")
 
         if self.config.validation.validate_incoming:
-            info(str())
-            info("Validating incoming transaction data")
-
             try:
                 self.validator.validate_transaction(transaction=response)
 
-            except ValueError as validation_error:
-                warning(f"Incoming message validation error: {validation_error}")
-
-            warning("Trying to proceed with incoming transaction processing")
+            except Exception as validation_error:
+                [warning(warn) for warn in str(validation_error).splitlines()]
 
         try:
             self.log_printer.print_dump(response)

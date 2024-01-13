@@ -2,12 +2,14 @@ from typing import Callable
 from datetime import datetime
 from string import digits, ascii_letters, punctuation, whitespace 
 from pydantic import AnyHttpUrl
+from common.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 from common.lib.core.EpaySpecification import EpaySpecification
-from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Types import FieldPath
+from common.lib.data_models.Config import Config
 from common.gui.constants import FieldTypeParams
-from common.lib.data_models.ValidationResult import ValidationResult, ValidationTypes
-from common.lib.data_models.EpaySpecificationModel import IsoField
+from common.lib.data_models.Validation import ValidationResult, ValidationTypes
+from common.lib.data_models.Enums import ValidationMode
+from common.lib.data_models.Transaction import TypeFields
 
 
 class Validator:
@@ -17,18 +19,26 @@ class Validator:
     def spec(self):
         return self._spec
 
+    def __init__(self, config: Config):
+        self.config = config
+
     @staticmethod
     def validate_url(url: str):
         AnyHttpUrl(url)
 
     def validate_mti(self, mti):
-        if mti not in self.spec.get_mti_codes():
-            raise ValueError(f"Unknown MTI: {mti}")
+        if mti in self.spec.get_mti_codes():
+            return
+
+        raise DataValidationError(f"Unknown MTI: {mti}")
 
     @staticmethod
     def check_luhn(value: str) -> bool:  # Based on code example from https://en.wikipedia.org/wiki/Luhn_algorithm
         def digits_of(val):
             return [int(dig) for dig in str(val)]
+
+        if not value.isdigit():
+            return False
 
         digits_kit: list[int] = digits_of(value)
         odd_digits: list[int] = digits_kit[-1::-2]
@@ -99,7 +109,7 @@ class Validator:
             if not field_value:  # Field should contain the data
                 errors.add(f"Lost field value for field {path}")
 
-            if not all(field for field in field_path if field.isdigit()):  # Field number should be digit
+            if not all(field.isdigit() for field in field_path):  # Field number should be digit
                 errors.add(f"Field numbers can be digits only. {path} is wrong value")
 
             if length > field_spec.max_length:  # Max length validation
@@ -283,6 +293,9 @@ class Validator:
 
             return errors
 
+        if field_spec.validators.field_type_validators.do_not_validate:
+            return
+
         validators_map: dict[ValidationTypes, Callable] = {
             ValidationTypes.FIELD_DATA_PRE_VALIDATION: fields_pre_validation,
             ValidationTypes.FIELD_DATA_MAIN_VALIDATION: main_validations,
@@ -299,5 +312,57 @@ class Validator:
                 validation_result.errors[check_type] = set()
 
             validation_result.errors[check_type].update(validation_errors)
+
+        return validation_result
+
+    def process_validation_result(self, validation_result: ValidationResult):
+        errors: set[str] = set()
+
+        for error_set in validation_result.errors.values():
+            if not isinstance(error_set, set):
+                continue
+
+            errors.update(error_set)
+
+        if not errors:
+            return
+
+        errors_string = "\n".join(errors)
+
+        match self.config.validation.validation_mode:
+            case ValidationMode.ERROR:
+                raise DataValidationError(errors_string)
+
+            case ValidationMode.WARNING:
+                raise DataValidationWarning(errors_string)
+
+            case ValidationMode.FLEXIBLE:
+                for check_type in validation_result.errors:
+                    if not validation_result.errors.get(check_type):
+                        continue
+
+                    if check_type in validation_result.critical_validation_types:
+                        raise DataValidationError(errors_string)
+
+                    raise DataValidationWarning(errors_string)
+
+    def validate_fields(self, fields: TypeFields, field_path: FieldPath | None = None, validation_result: ValidationResult = None) -> ValidationResult:
+        if validation_result is None:
+            validation_result: ValidationResult = ValidationResult()
+
+        if field_path is None:
+            field_path = []
+
+        for field, value in fields.items():
+            field_path.append(field)
+
+            if isinstance(value, dict):
+                self.validate_fields(fields=value, field_path=field_path, validation_result=validation_result)
+                field_path.pop()
+                continue
+
+            validation_result: ValidationResult = self.validate_field_data(field_path, value, validation_result)
+
+            field_path.pop()
 
         return validation_result
