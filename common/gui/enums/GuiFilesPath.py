@@ -2,14 +2,29 @@ from enum import StrEnum
 from common.lib.enums.TermFilesPath import TermDirs
 
 
-class GuiFilesPath(StrEnum):
+class GuiDirs(StrEnum):
     STYLE_DIR = f"{TermDirs.DATA_DIR}/style"
-    MAIN_LOGO = f"{STYLE_DIR}/logo_triangle.png"
-    MUSIC_ON = f"{STYLE_DIR}/music_on.png"
-    MUSIC_OFF = f"{STYLE_DIR}/music_off.png"
-    VVVVVV = f"{STYLE_DIR}/VVVVVV.mp3"
-    GIF_ABOUT = f"{STYLE_DIR}/rocks.gif"
-    GREEN_CIRCLE = f"{STYLE_DIR}/green_circle.ico"
-    GREY_CIRCLE = f"{STYLE_DIR}/grey_circle.ico"
-    RED_CIRCLE = f"{STYLE_DIR}/red_circle.ico"
-    YELLOW_CIRCLE = f"{STYLE_DIR}/yellow_circle.ico"
+
+
+class GuiFiles(StrEnum):
+    MAIN_LOGO = "logo_triangle.png"
+    MUSIC_ON = "music_on.png"
+    MUSIC_OFF = "music_off.png"
+    VVVVVV = "VVVVVV.mp3"
+    GIF_ABOUT = "rocks.gif"
+    GREEN_CIRCLE = "green_circle.ico"
+    GREY_CIRCLE = "grey_circle.ico"
+    RED_CIRCLE = "red_circle.ico"
+    YELLOW_CIRCLE = "yellow_circle.ico"
+
+
+class GuiFilesPath(StrEnum):
+    MAIN_LOGO = f"{GuiDirs.STYLE_DIR}/{GuiFiles.MAIN_LOGO}"
+    MUSIC_ON = f"{GuiDirs.STYLE_DIR}/{GuiFiles.MUSIC_ON}"
+    MUSIC_OFF = f"{GuiDirs.STYLE_DIR}/{GuiFiles.MUSIC_OFF}"
+    VVVVVV = f"{GuiDirs.STYLE_DIR}/{GuiFiles.VVVVVV}"
+    GIF_ABOUT = f"{GuiDirs.STYLE_DIR}/{GuiFiles.GIF_ABOUT}"
+    GREEN_CIRCLE = f"{GuiDirs.STYLE_DIR}/{GuiFiles.GREEN_CIRCLE}"
+    GREY_CIRCLE = f"{GuiDirs.STYLE_DIR}/{GuiFiles.GREY_CIRCLE}"
+    RED_CIRCLE = f"{GuiDirs.STYLE_DIR}/{GuiFiles.RED_CIRCLE}"
+    YELLOW_CIRCLE = f"{GuiDirs.STYLE_DIR}/{GuiFiles.YELLOW_CIRCLE}"
