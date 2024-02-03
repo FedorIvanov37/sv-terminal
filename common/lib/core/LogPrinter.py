@@ -1,17 +1,19 @@
 from logging import debug, info, error
-from common.lib.constants import TextConstants
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Parser import Parser
 from common.lib.toolkit.toolkit import mask_pan, mask_secret
 from common.lib.data_models.Config import Config
+from common.lib.enums.TextConstants import TextConstants
+from PyQt6.QtCore import QObject
 
 
-class LogPrinter:
+class LogPrinter(QObject):
     spec: EpaySpecification = EpaySpecification()
     default_level = info
 
     def __init__(self, config: Config):
+        super().__init__()
         self.config = config
 
     @staticmethod
@@ -20,6 +22,10 @@ class LogPrinter:
             level(string)
 
         level("")
+
+    @staticmethod
+    def startup_finished(level=default_level):
+        level("Startup finished")
 
     def print_startup_info(self, level=default_level):
         LogPrinter.print_multi_row(TextConstants.HELLO_MESSAGE)

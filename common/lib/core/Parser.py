@@ -13,7 +13,11 @@ from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet, Ra
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.core.JsonConverter import JsonConverter
 from common.lib.core.FieldsGenerator import FieldsGenerator
-from common.lib.constants import TermFilesPath, DumpDefinition, IniMessageDefinition, DataFormats
+from common.lib.enums.DataFormats import DataFormats
+from common.lib.enums.DumpDefinition import DumpLength, DumpFillers
+from common.lib.enums.IniMessageDefinition import IniMessageDefinition
+from common.lib.enums.MessageLength import MessageLength
+from common.lib.enums.TermFilesPath import TermFilesPath
 
 
 class Parser:
@@ -71,21 +75,21 @@ class Parser:
             return
 
         dump = "\n"
-        ascii_dump = mti + DumpDefinition.ASCII_BITMAP + body
+        ascii_dump = mti + DumpFillers.ASCII_BITMAP + body
         hex_dump = hexlify(mti.encode()).decode() + bitmap + hexlify(body.encode()).decode().upper()
 
-        for position in range(0, len(hex_dump), DumpDefinition.LINE_LENGTH):
+        for position in range(0, len(hex_dump), DumpLength.LINE_LENGTH):
             sub_string = str()
-            string = hex_dump[position:position + DumpDefinition.LINE_LENGTH]
+            string = hex_dump[position:position + DumpLength.LINE_LENGTH]
 
-            for sub_position in range(0, len(string), DumpDefinition.BYTE_LENGTH):
-                sub_string += string[sub_position:sub_position + DumpDefinition.BYTE_LENGTH]
-                sub_string += DumpDefinition.SEPARATOR
+            for sub_position in range(0, len(string), DumpLength.BYTE_LENGTH):
+                sub_string += string[sub_position:sub_position + DumpLength.BYTE_LENGTH]
+                sub_string += DumpFillers.SEPARATOR
 
             sub_string = sub_string[:-1]
-            sub_string = sub_string.ljust(DumpDefinition.HEX_LINE_LENGTH, " ")
+            sub_string = sub_string.ljust(DumpLength.HEX_LINE_LENGTH, " ")
             position = int(position / 2)
-            sub_string += ascii_dump[position:position + DumpDefinition.ASCII_LINE_LENGTH]
+            sub_string += ascii_dump[position:position + DumpLength.ASCII_LINE_LENGTH]
             sub_string += "\n"
             dump += sub_string
 
@@ -221,9 +225,9 @@ class Parser:
         spec: EpaySpecification = EpaySpecification()
         fields: RawFieldSet = {}
         position = int()
-        message_type_indicator = data[position:spec.MessageLength.MESSAGE_TYPE_LENGTH].decode()
-        position += spec.MessageLength.MESSAGE_TYPE_LENGTH
-        bitmap: str = data[position: position + spec.MessageLength.BITMAP_LENGTH]
+        message_type_indicator = data[position:MessageLength.MESSAGE_TYPE_LENGTH].decode()
+        position += MessageLength.MESSAGE_TYPE_LENGTH
+        bitmap: str = data[position: position + MessageLength.BITMAP_LENGTH]
         position += len(bitmap)
         second_bitmap_exists = Bitmap(bitmap, bytes).second_bitmap_exists()
 
@@ -460,12 +464,12 @@ class Parser:
                 except IndexError:
                     raise ValueError("Unexpected result of data parsing - no data")
 
-                line = line.replace(DumpDefinition.SEPARATOR, "")
+                line = line.replace(DumpFillers.SEPARATOR, "")
                 string += line
 
-        mti = string[:self.spec.MessageLength.MESSAGE_TYPE_LENGTH_HEX]
+        mti = string[:MessageLength.MESSAGE_TYPE_LENGTH_HEX]
         string = string[len(mti):]
-        bitmap = string[:self.spec.MessageLength.FIRST_BITMAP_LENGTH_HEX]
+        bitmap = string[:MessageLength.FIRST_BITMAP_LENGTH_HEX]
         string = string[len(bitmap):]
         bitmap = Bitmap(bitmap, hex).get_bitmap(bytes)
         pre_message = unhexlify(mti) + bitmap + unhexlify(string)

@@ -13,8 +13,10 @@ from common.lib.data_models.Transaction import Transaction
 from common.gui.forms.complex_fields_parser import Ui_ComplexFieldsParser
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 from common.gui.core.json_views.JsonView import JsonView
-from common.gui.constants import MainFieldSpec, ButtonActions, KeySequence
-from common.lib.constants import TextConstants
+from common.gui.enums import ButtonActions, MainFieldSpec
+from common.gui.enums.KeySequences import KeySequences
+from common.gui.enums.RootItemNames import RootItemNames
+from common.lib.enums.TextConstants import TextConstants
 
 
 class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
@@ -30,12 +32,12 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
     @set_window_icon
     @has_close_button_only
     def _setup(self):
-        self.PlusButton: QPushButton = QPushButton(ButtonActions.BUTTON_PLUS_SIGN)
-        self.MinusButton: QPushButton = QPushButton(ButtonActions.BUTTON_MINUS_SIGN)
-        self.NextLevelButton: QPushButton = QPushButton(ButtonActions.BUTTON_NEXT_LEVEL_SIGN)
-        self.UpButton: QPushButton = QPushButton(f"{ButtonActions.BUTTON_UP_SIGN} To JSON ")
-        self.DownButton: QPushButton = QPushButton(f"{ButtonActions.BUTTON_DOWN_SIGN} To String ")
-        self.JsonView: JsonView = JsonView(self.config, "Field Data")
+        self.PlusButton: QPushButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_PLUS_SIGN)
+        self.MinusButton: QPushButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_MINUS_SIGN)
+        self.NextLevelButton: QPushButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_NEXT_LEVEL_SIGN)
+        self.UpButton: QPushButton = QPushButton(f"{ButtonActions.ButtonActionSigns.BUTTON_UP_SIGN} To JSON ")
+        self.DownButton: QPushButton = QPushButton(f"{ButtonActions.ButtonActionSigns.BUTTON_DOWN_SIGN} To String ")
+        self.JsonView: JsonView = JsonView(self.config, RootItemNames.FIELD_CONSTRUCTOR_ROOT_NAME)
 
         widgets_layouts_map = {
             self.PlusLayout: self.PlusButton,
@@ -65,19 +67,19 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
 
         button_menu_structure = {
             self.ButtonClearString: {
-                ButtonActions.ALL: self.clear_all,
-                ButtonActions.JSON: self.JsonView.clean,
-                ButtonActions.STRING: self.clear_string,
+                ButtonActions.ClearMenuActions.ALL: self.clear_all,
+                ButtonActions.ClearMenuActions.JSON: self.JsonView.clean,
+                ButtonActions.ClearMenuActions.STRING: self.clear_string,
             },
 
             self.ButtonCopy: {
-                ButtonActions.JSON: self.copy_json,
-                ButtonActions.STRING: self.copy_string,
+                ButtonActions.ClearMenuActions.JSON: self.copy_json,
+                ButtonActions.ClearMenuActions.STRING: self.copy_string,
             },
 
             self.ButtonMainWindow: {
-                ButtonActions.GET_DATA: self.get_from_main_window,
-                ButtonActions.SET_DATA: self.set_on_main_windows,
+                ButtonActions.DataMenuActions.GET_DATA: self.get_from_main_window,
+                ButtonActions.DataMenuActions.SET_DATA: self.set_on_main_windows,
             },
         }
 
@@ -113,11 +115,11 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
             QKeySequence.StandardKey.New: self.JsonView.plus,
             QKeySequence.StandardKey.Delete: self.JsonView.minus,
             QKeySequence.StandardKey.Find: self.SearchLine.setFocus,
-            KeySequence.CTRL_L: self.ButtonClearString.showMenu,
-            KeySequence.CTRL_E: lambda: self.JsonView.edit_column(MainFieldSpec.ColumnsOrder.VALUE),
-            KeySequence.CTRL_W: lambda: self.JsonView.edit_column(MainFieldSpec.ColumnsOrder.FIELD),
-            KeySequence.CTRL_SHIFT_N: self.JsonView.next_level,
-            KeySequence.CTRL_T: self.set_message,
+            KeySequences.CTRL_L: self.ButtonClearString.showMenu,
+            KeySequences.CTRL_E: lambda: self.JsonView.edit_column(MainFieldSpec.ColumnsOrder.VALUE),
+            KeySequences.CTRL_W: lambda: self.JsonView.edit_column(MainFieldSpec.ColumnsOrder.FIELD),
+            KeySequences.CTRL_SHIFT_N: self.JsonView.next_level,
+            KeySequences.CTRL_T: self.set_message,
         }
 
         for button, action in button_connection_map.items():

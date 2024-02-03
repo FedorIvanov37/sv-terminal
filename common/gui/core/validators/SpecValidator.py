@@ -1,6 +1,6 @@
 from common.lib.core.EpaySpecification import EpaySpecification
-from common.gui.constants import SpecFieldDef
 from common.gui.core.json_items.SpecItem import SpecItem
+from common.gui.enums import SpecFieldDef
 
 
 class SpecValidator:

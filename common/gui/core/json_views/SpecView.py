@@ -10,7 +10,9 @@ from common.gui.core.json_items.SpecItem import SpecItem
 from common.gui.core.validators.SpecValidator import SpecValidator
 from common.gui.decorators.void_qt_signals import void_qt_signals
 from common.gui.core.json_views.TreeView import TreeView
-from common.gui.constants import Colors, SpecFieldDef
+from common.gui.enums.Colors import Colors
+from common.gui.enums import SpecFieldDef
+from common.gui.enums.RootItemNames import RootItemNames
 
 
 class SpecView(TreeView):
@@ -35,14 +37,14 @@ class SpecView(TreeView):
 
     def __init__(self, window):
         super(SpecView, self).__init__()
-        self.root: SpecItem = SpecItem([SpecFieldDef.SPECIFICATION])
+        self.root: SpecItem = SpecItem([RootItemNames.SPECIFICATION_ROOT_NAME])
         self.window = window
         self.validator = SpecValidator()
         self.setItemDelegate(QItemDelegate())
         self._setup()
 
     def _setup(self):
-        self.setHeaderLabels(SpecFieldDef.COLUMNS)
+        self.setHeaderLabels(SpecFieldDef.Columns)
         self.addTopLevelItem(self.root)
         self.itemDoubleClicked.connect(self.editItem)
         self.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
@@ -81,7 +83,7 @@ class SpecView(TreeView):
                 warning("The Card Number is a secret constantly")
                 return
 
-        if column in SpecFieldDef.CHECKBOXES and self.window.read_only:
+        if column in list(SpecFieldDef.Checkboxes) and self.window.read_only:
             warning("Read only mode. Uncheck the checkbox on top of the window")
             state = item.checkState(column)
             state = Qt.CheckState.Checked if state == Qt.CheckState.Unchecked else Qt.CheckState.Unchecked

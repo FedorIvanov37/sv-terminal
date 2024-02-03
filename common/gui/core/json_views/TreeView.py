@@ -2,7 +2,8 @@ from PyQt6.QtWidgets import QTreeWidget
 from PyQt6.QtGui import QUndoStack, QFont, QPalette, QColor
 from PyQt6.QtCore import pyqtSignal
 from common.gui.decorators.void_qt_signals import void_qt_signals
-from common.gui.constants import MainFieldSpec, Colors
+from common.gui.enums.Colors import Colors
+from common.gui.enums import MainFieldSpec
 
 
 class TreeView(QTreeWidget):
@@ -24,7 +25,7 @@ class TreeView(QTreeWidget):
         self.setSortingEnabled(False)
 
         palette = QPalette()
-        palette.setColor(palette.ColorRole.AlternateBase, QColor(*Colors.ALTERNATE_CELLS))
+        palette.setColor(palette.ColorRole.AlternateBase, QColor(Colors.LIGHT_GREY))
         self.setPalette(palette)
 
     def resize_all(self, exceptions: list[int] | None = None):

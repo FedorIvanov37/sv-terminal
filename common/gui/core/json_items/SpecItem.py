@@ -1,7 +1,8 @@
 from PyQt6.QtCore import Qt
 from common.lib.data_models.EpaySpecificationModel import IsoField
-from common.gui.constants import SpecFieldDef
 from common.gui.core.json_items.Item import Item
+from common.gui.enums import SpecFieldDef
+from common.gui.enums.RootItemNames import RootItemNames
 
 
 class SpecItem(Item):
@@ -96,7 +97,7 @@ class SpecItem(Item):
         # self.setTextAlignment(SpecFieldDef.ColumnsOrder.ALPHA, Qt.AlignmentFlag.AlignCenter)
 
     def set_checkboxes(self, checkboxes: dict[int, bool]):
-        if self.text(SpecFieldDef.ColumnsOrder.FIELD) == SpecFieldDef.SPECIFICATION:
+        if self.text(SpecFieldDef.ColumnsOrder.FIELD) == RootItemNames.SPECIFICATION_ROOT_NAME:
             return
 
         if self.field_number == self.epay_spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
@@ -105,7 +106,7 @@ class SpecItem(Item):
         if checkboxes is None:
             checkboxes: dict[int, bool] = dict()
 
-            for box in SpecFieldDef.CHECKBOXES:
+            for box in SpecFieldDef.Checkboxes:
                 checkboxes[box] = False
 
         for column, state in checkboxes.items():

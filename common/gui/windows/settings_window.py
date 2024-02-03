@@ -2,10 +2,11 @@ from logging import info, error, getLogger, getLevelName
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap, QIntValidator
 from PyQt6.QtCore import QRegularExpression
-from common.lib.constants import LogDefinition, TermFilesPath
+from common.lib.constants import LogDefinition
 from common.lib.data_models.Config import Config
 from common.gui.forms.settings import Ui_SettingsWindow
-from common.gui.constants import GuiFilesPath
+from common.gui.enums.GuiFilesPath import GuiFilesPath
+from common.lib.enums.TermFilesPath import TermFilesPath
 from common.gui.windows.about_window import AboutWindow
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 
@@ -117,7 +118,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         disabled: bool = False
         checked: bool = self.config.debug.clear_log
 
-        if self.DebugLevel.currentText() == LogDefinition.DEBUG:
+        if self.DebugLevel.currentText() == LogDefinition.DebugLevels.DEBUG:
             checked: bool = False
             disabled: bool = True
 

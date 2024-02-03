@@ -5,10 +5,11 @@ from PyQt6.QtWidgets import QDialog, QListWidgetItem, QCheckBox, QLineEdit, QSpi
 from common.gui.core.CheckableComboBox import CheckableComboBox
 from common.gui.forms.field_validator_window import Ui_FieldDataSet
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
-from common.gui.constants import FieldTypeParams, Colors
 from common.lib.data_models.EpaySpecificationModel import IsoField, Justification, LogicalValidators
 from common.lib.core.EpaySpecification import EpaySpecification
-from common.lib.constants import ValidationParams
+from common.lib.enums.ValidationParams import LiteralValidations
+from common.gui.enums.Colors import Colors
+from common.gui.enums.FieldTypeParams import FieldTypeParams
 
 
 class FieldDataSet(Ui_FieldDataSet, QDialog):
@@ -38,20 +39,20 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
     @has_close_button_only
     def setup(self):
         self._literal_validations_map = {
-            ValidationParams.MUST_CONTAIN: self.field_spec.validators.must_contain,
-            ValidationParams.MUST_CONTAIN_ONLY: self.field_spec.validators.must_contain_only,
-            ValidationParams.MUST_NOT_CONTAIN: self.field_spec.validators.must_not_contain,
-            ValidationParams.MUST_NOT_CONTAIN_ONLY: self.field_spec.validators.must_not_contain_only,
-            ValidationParams.MUST_START_WITH: self.field_spec.validators.must_start_with,
-            ValidationParams.MUST_NOT_START_WITH: self.field_spec.validators.must_not_start_with,
-            ValidationParams.MUST_END_WITH: self.field_spec.validators.must_end_with,
-            ValidationParams.MUST_NOT_END_WITH: self.field_spec.validators.must_not_end_with,
-            ValidationParams.VALID_VALUES: self.field_spec.validators.valid_values,
-            ValidationParams.INVALID_VALUES: self.field_spec.validators.invalid_values,
+            LiteralValidations.MUST_CONTAIN: self.field_spec.validators.must_contain,
+            LiteralValidations.MUST_CONTAIN_ONLY: self.field_spec.validators.must_contain_only,
+            LiteralValidations.MUST_NOT_CONTAIN: self.field_spec.validators.must_not_contain,
+            LiteralValidations.MUST_NOT_CONTAIN_ONLY: self.field_spec.validators.must_not_contain_only,
+            LiteralValidations.MUST_START_WITH: self.field_spec.validators.must_start_with,
+            LiteralValidations.MUST_NOT_START_WITH: self.field_spec.validators.must_not_start_with,
+            LiteralValidations.MUST_END_WITH: self.field_spec.validators.must_end_with,
+            LiteralValidations.MUST_NOT_END_WITH: self.field_spec.validators.must_not_end_with,
+            LiteralValidations.VALID_VALUES: self.field_spec.validators.valid_values,
+            LiteralValidations.INVALID_VALUES: self.field_spec.validators.invalid_values,
         }
 
         palette = QPalette()
-        palette.setColor(palette.ColorRole.AlternateBase, QColor(*Colors.ALTERNATE_CELLS))
+        palette.setColor(palette.ColorRole.AlternateBase, QColor(Colors.LIGHT_GREY))
         self.ValuesList.setPalette(palette)
         self.CheckTypeLayout.addWidget(self.CheckTypeBox)
         self.FieldTypeBoxLayout.addWidget(self.FieldType)
@@ -339,16 +340,16 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
 
         validations_map[check_type] = literal_list
 
-        self.field_spec.validators.must_contain = validations_map.get(ValidationParams.MUST_CONTAIN)
-        self.field_spec.validators.must_contain_only = validations_map.get(ValidationParams.MUST_CONTAIN_ONLY)
-        self.field_spec.validators.must_not_contain = validations_map.get(ValidationParams.MUST_NOT_CONTAIN)
-        self.field_spec.validators.must_not_contain_only = validations_map.get(ValidationParams.MUST_NOT_CONTAIN_ONLY)
-        self.field_spec.validators.must_start_with = validations_map.get(ValidationParams.MUST_START_WITH)
-        self.field_spec.validators.must_not_start_with = validations_map.get(ValidationParams.MUST_NOT_START_WITH)
-        self.field_spec.validators.must_end_with = validations_map.get(ValidationParams.MUST_END_WITH)
-        self.field_spec.validators.must_not_end_with = validations_map.get(ValidationParams.MUST_NOT_END_WITH)
-        self.field_spec.validators.valid_values = validations_map.get(ValidationParams.VALID_VALUES)
-        self.field_spec.validators.invalid_values = validations_map.get(ValidationParams.INVALID_VALUES)
+        self.field_spec.validators.must_contain = validations_map.get(LiteralValidations.MUST_CONTAIN)
+        self.field_spec.validators.must_contain_only = validations_map.get(LiteralValidations.MUST_CONTAIN_ONLY)
+        self.field_spec.validators.must_not_contain = validations_map.get(LiteralValidations.MUST_NOT_CONTAIN)
+        self.field_spec.validators.must_not_contain_only = validations_map.get(LiteralValidations.MUST_NOT_CONTAIN_ONLY)
+        self.field_spec.validators.must_start_with = validations_map.get(LiteralValidations.MUST_START_WITH)
+        self.field_spec.validators.must_not_start_with = validations_map.get(LiteralValidations.MUST_NOT_START_WITH)
+        self.field_spec.validators.must_end_with = validations_map.get(LiteralValidations.MUST_END_WITH)
+        self.field_spec.validators.must_not_end_with = validations_map.get(LiteralValidations.MUST_NOT_END_WITH)
+        self.field_spec.validators.valid_values = validations_map.get(LiteralValidations.VALID_VALUES)
+        self.field_spec.validators.invalid_values = validations_map.get(LiteralValidations.INVALID_VALUES)
 
     def set_validation_items(self, check_type):
         if (validation_list := self._literal_validations_map.get(check_type)) is None:

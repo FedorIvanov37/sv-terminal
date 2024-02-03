@@ -8,8 +8,8 @@ from dataclasses import dataclass
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.Parser import Parser
-from common.lib.constants import TermFilesPath
 from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.enums.TermFilesPath import TermFilesPath
 
 
 @dataclass

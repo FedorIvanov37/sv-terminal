@@ -1,30 +1,23 @@
-from typing import Final
-from pydantic import FilePath
 from PyQt6.QtNetwork import QTcpSocket
-from common.gui.constants import GuiFilesPath
+from common.gui.enums.GuiFilesPath import GuiFilesPath
+from enum import StrEnum
 
 
-class ConnectionStatuses:
-    CONNECTED: Final[str] = "Connected"
-    DISCONNECTED: Final[str] = "Disconnected"
-    IN_PROGRESS: Final[str] = "Connection In Progress"
-    UNKNOWN: Final[str] = "Unknown"
-
-    GREY: Final[FilePath] = GuiFilesPath.GREY_CIRCLE
-    GREEN: Final[FilePath] = GuiFilesPath.GREEN_CIRCLE
-    YELLOW: Final[FilePath] = GuiFilesPath.YELLOW_CIRCLE
-    RED: Final[FilePath] = GuiFilesPath.RED_CIRCLE
+class ConnectionStatuses(StrEnum):
+    CONNECTED = "Connected"
+    DISCONNECTED = "Disconnected"
+    IN_PROGRESS = "Connection In Progress"
+    UNKNOWN = "Unknown"
 
 
-def get_state_description(state):
-    return ConnectionStatusMap.get(state, ConnectionStatuses.UNKNOWN)
+class ConnectionIcons(StrEnum):
+    GREY = GuiFilesPath.GREY_CIRCLE
+    GREEN = GuiFilesPath.GREEN_CIRCLE
+    YELLOW = GuiFilesPath.YELLOW_CIRCLE
+    RED = GuiFilesPath.RED_CIRCLE
 
 
-def get_state_icon_path(state):
-    return ConnectionIconMap.get(state, ConnectionStatuses.GREY)
-
-
-ConnectionStatusMap = {
+ConnectionStatusDict = {
     QTcpSocket.SocketState.ConnectedState: ConnectionStatuses.CONNECTED,
     QTcpSocket.SocketState.UnconnectedState: ConnectionStatuses.DISCONNECTED,
     QTcpSocket.SocketState.ConnectingState: ConnectionStatuses.IN_PROGRESS,
@@ -34,7 +27,7 @@ ConnectionStatusMap = {
     QTcpSocket.SocketState.ListeningState: ConnectionStatuses.UNKNOWN,
 }
 
-ConnectionIconMap = {
+ConnectionIconDict = {
     QTcpSocket.SocketState.ConnectedState: GuiFilesPath.GREEN_CIRCLE,
     QTcpSocket.SocketState.UnconnectedState: GuiFilesPath.RED_CIRCLE,
     QTcpSocket.SocketState.ConnectingState: GuiFilesPath.YELLOW_CIRCLE,
@@ -43,3 +36,7 @@ ConnectionIconMap = {
     QTcpSocket.SocketState.ClosingState: GuiFilesPath.YELLOW_CIRCLE,
     QTcpSocket.SocketState.ListeningState: GuiFilesPath.GREY_CIRCLE,
 }
+
+
+ConnectionStatus = StrEnum("ConnectionStatus", {field.name: value for field, value in ConnectionStatusDict.items()})
+ConnectionIcon = StrEnum("ConnectionIcon", {field.name: value for field, value in ConnectionIconDict.items()})

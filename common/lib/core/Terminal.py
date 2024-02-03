@@ -3,7 +3,6 @@ from logging import error, info, warning, debug
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject
 from PyQt6.QtNetwork import QTcpSocket
-from common.lib.constants import DataFormats, TermFilesPath
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.core.Parser import Parser
 from common.lib.core.Logger import Logger
@@ -17,15 +16,18 @@ from common.lib.data_models.Transaction import Transaction
 from common.lib.core.Connector import Connector
 from common.lib.core.LogPrinter import LogPrinter
 from common.lib.core.TransTimer import TransactionTimer
-from common.lib.constants import KeepAliveIntervals
 from common.lib.data_models.Currencies import Currencies
 from common.lib.data_models.Countries import Countries
+from common.lib.enums.DataFormats import DataFormats
+from common.lib.enums import KeepAlive
+from common.lib.enums.TermFilesPath import TermFilesPath
+
 
 
 class SvTerminal(QObject):
     pyqt_application: QtWidgets.QApplication = QtWidgets.QApplication([])
     spec: EpaySpecification = EpaySpecification(TermFilesPath.SPECIFICATION)
-    keep_alive_timer: TransactionTimer = TransactionTimer(KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE)
+    keep_alive_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_KEEP_ALIVE)
     currencies_dictionary: Currencies
     countries_dictionary: Countries
 

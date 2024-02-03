@@ -5,7 +5,7 @@ from common.lib.data_models.Types import FieldPath
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.decorators.void_qt_signals import void_tree_signals
 from common.lib.data_models.EpaySpecificationModel import IsoField
-from common.gui.constants import Colors
+from common.gui.enums.Colors import Colors
 
 
 class Item(QTreeWidgetItem):
@@ -60,9 +60,12 @@ class Item(QTreeWidgetItem):
         return tuple(self.child(child_id) for child_id in range(self.childCount()))
 
     @void_tree_signals
-    def set_item_color(self, color=Colors.BLACK):
+    def set_item_color(self, color: str = Colors.BLACK):
+        color: QtGui.QColor = QtGui.QColor(color)
+        brush: QtGui.QBrush = QtGui.QBrush(color)
+
         for column in range(self.columnCount()):
-            self.setForeground(column, QtGui.QBrush(QtGui.QColor(color)))
+            self.setForeground(column, brush)
 
     def get_field_spec(self) -> IsoField:
         return self.epay_spec.get_field_spec(self.get_field_path())

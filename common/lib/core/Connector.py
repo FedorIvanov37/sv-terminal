@@ -11,7 +11,7 @@ from common.lib.interfaces.MetaClasses import QObjectAbcMeta
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.core.EpaySpecification import EpaySpecification
-from common.lib.constants import TermFilesPath
+from common.lib.enums.TermFilesPath import TermDirs
 from common.lib.core.SpecFilesRotator import SpecFilesRotator
 from common.lib.core.validators.TransValidator import TransValidator as Validator
 
@@ -148,7 +148,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
             if commit and self.config.remote_spec.backup_storage:
                 rotator: SpecFilesRotator = SpecFilesRotator()
                 backup_filename: str = rotator.backup_spec()
-                debug(f"Backup local specification file name: {TermFilesPath.SPEC_BACKUP_DIR}/{backup_filename}")
+                debug(f"Backup local specification file name: {TermDirs.SPEC_BACKUP_DIR}/{backup_filename}")
 
             try:
                 spec_data: EpaySpecModel = EpaySpecModel.model_validate_json(resp.read())

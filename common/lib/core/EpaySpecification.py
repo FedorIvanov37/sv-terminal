@@ -3,7 +3,6 @@ from logging import warning
 from dataclasses import asdict
 from pydantic import FilePath, ValidationError
 from common.lib.decorators.singleton import singleton
-from common.lib.constants import MessageLength, TermFilesPath
 from common.lib.constants.EpaySpecificationData import EpaySpecificationData
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Mti, IsoField, FieldSet
 from common.lib.data_models.Types import FieldPath
@@ -11,11 +10,11 @@ from common.lib.data_models.Dictionaries import Dictionaries
 from common.lib.data_models.Currencies import Currencies
 from common.lib.data_models.Countries import Countries
 from common.lib.data_models.MerchCategories import MerchantCategoryCodes
+from common.lib.enums.TermFilesPath import TermFilesPath
 
 
 @singleton
 class EpaySpecification(EpaySpecificationData):
-    _MessageLength: MessageLength = MessageLength
     _specification_model: EpaySpecModel = None
     _dictionary: Dictionaries = Dictionaries()
 
@@ -52,10 +51,6 @@ class EpaySpecification(EpaySpecificationData):
     @property
     def fields(self):
         return self.spec.fields
-
-    @property
-    def MessageLength(self):
-        return self._MessageLength
 
     @staticmethod
     def create_dictionary() -> Dictionaries:

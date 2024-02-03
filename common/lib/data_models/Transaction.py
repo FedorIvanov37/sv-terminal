@@ -2,8 +2,8 @@ from datetime import datetime
 from pydantic import BaseModel, Field, field_validator, ConfigDict
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.toolkit.generate_trans_id import generate_trans_id
-from common.lib.constants import MessageLength
 from common.lib.data_models.Enums import generated_field
+from common.lib.enums.MessageLength import MessageLength
 
 
 spec: EpaySpecification = EpaySpecification()

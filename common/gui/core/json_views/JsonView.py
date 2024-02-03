@@ -14,7 +14,10 @@ from common.gui.core.validators.ItemsValidator import ItemsValidator
 from common.gui.core.json_views.TreeView import TreeView
 from common.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
 from common.gui.decorators.void_qt_signals import void_qt_signals
-from common.gui.constants import Colors, CheckBoxesDefinition, MainFieldSpec as FieldsSpec
+from common.gui.enums.CheckBoxesDefinition import CheckBoxesDefinition
+from common.gui.enums.Colors import Colors
+from common.gui.enums import MainFieldSpec as FieldsSpec
+from common.gui.enums.RootItemNames import RootItemNames
 
 
 class JsonView(TreeView):
@@ -42,7 +45,7 @@ class JsonView(TreeView):
     def hide_secret_fields(self):
         return self.config.fields.hide_secrets
 
-    def __init__(self, config: Config, root_name: str = FieldsSpec.MESSAGE):
+    def __init__(self, config: Config, root_name: str = RootItemNames.TRANSACTION_ROOT_NAME):
         super(JsonView, self).__init__()
         self.root: FieldItem = FieldItem([root_name])
         self.config: Config = config
@@ -61,7 +64,7 @@ class JsonView(TreeView):
         self.delegate.text_edited.connect(self.set_item_length)
         self.currentItemChanged.connect(self.disable_next_level)
         self.setItemDelegate(self.delegate)
-        self.setHeaderLabels(FieldsSpec.columns)
+        self.setHeaderLabels(FieldsSpec.Columns)
         self.addTopLevelItem(self.root)
         self.header().setMaximumSectionSize(700)
         self.header().resizeSection(FieldsSpec.ColumnsOrder.DESCRIPTION, 470)

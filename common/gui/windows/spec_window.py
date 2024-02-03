@@ -10,7 +10,7 @@ from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.lib.core.SpecFilesRotator import SpecFilesRotator
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, IsoField
 from common.lib.data_models.Config import Config
-from common.lib.constants import TermFilesPath, TextConstants, LogDefinition
+from common.lib.constants import LogDefinition
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.json_items import SpecItem
 from common.gui.windows.spec_unsaved import SpecUnsaved
@@ -18,8 +18,11 @@ from common.gui.windows.mti_spec_window import MtiSpecWindow
 from common.gui.windows.field_validator_window import FieldDataSet
 from common.gui.forms.spec import Ui_SpecificationWindow
 from common.gui.core.json_views.SpecView import SpecView
-from common.gui.constants import ButtonActions, SpecFieldDef, KeySequence
+from common.gui.enums.KeySequences import KeySequences
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
+from common.gui.enums import ButtonActions, SpecFieldDef
+from common.lib.enums.TermFilesPath import TermFilesPath
+from common.lib.enums.TextConstants import TextConstants
 
 
 class SpecWindow(Ui_SpecificationWindow, QDialog):
@@ -72,9 +75,9 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def _setup(self):
         self.SpecView: SpecView = SpecView(self)
         self._clean_spec = deepcopy(self.SpecView.generate_spec())
-        self.PlusButton: QPushButton = QPushButton(ButtonActions.BUTTON_PLUS_SIGN)
-        self.MinusButton: QPushButton = QPushButton(ButtonActions.BUTTON_MINUS_SIGN)
-        self.NextLevelButton: QPushButton = QPushButton(ButtonActions.BUTTON_NEXT_LEVEL_SIGN)
+        self.PlusButton: QPushButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_PLUS_SIGN)
+        self.MinusButton: QPushButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_MINUS_SIGN)
+        self.NextLevelButton: QPushButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_NEXT_LEVEL_SIGN)
 
         widgets_layouts_map = {
             self.PlusLayout: self.PlusButton,
@@ -85,12 +88,12 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
         button_menu_structure = {
             self.ButtonApply: {
-                ButtonActions.ONE_SESSION: lambda: self.apply(ButtonActions.ONE_SESSION),
-                ButtonActions.PERMANENTLY: lambda: self.apply(ButtonActions.PERMANENTLY),
+                ButtonActions.ApplySpecMenuActions.ONE_SESSION: lambda: self.apply(ButtonActions.ApplySpecMenuActions.ONE_SESSION),
+                ButtonActions.ApplySpecMenuActions.PERMANENTLY: lambda: self.apply(ButtonActions.ApplySpecMenuActions.PERMANENTLY),
             },
             self.ButtonReset: {
-                ButtonActions.LOCAL_SPEC: lambda: self.reset_spec.emit(ButtonActions.LOCAL_SPEC),
-                ButtonActions.REMOTE_SPEC: lambda: self.reset_spec.emit(ButtonActions.REMOTE_SPEC),
+                ButtonActions.SetSpecMenuActions.LOCAL_SPEC: lambda: self.reset_spec.emit(ButtonActions.SetSpecMenuActions.LOCAL_SPEC),
+                ButtonActions.SetSpecMenuActions.REMOTE_SPEC: lambda: self.reset_spec.emit(ButtonActions.SetSpecMenuActions.REMOTE_SPEC),
             },
         }
 
@@ -147,11 +150,11 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             QKeySequence.StandardKey.Delete: self.SpecView.minus,
             QKeySequence.StandardKey.Open: self.parse_file,
             QKeySequence.StandardKey.Save: self.backup,
-            KeySequence.CTRL_SHIFT_N: self.SpecView.next_level,
-            KeySequence.CTRL_W: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.FIELD),
-            KeySequence.CTRL_E: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.DESCRIPTION),
-            KeySequence.CTRL_T: self.set_hello_message,
-            KeySequence.CTRL_L: self.clear_log,
+            KeySequences.CTRL_SHIFT_N: self.SpecView.next_level,
+            KeySequences.CTRL_W: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.FIELD),
+            KeySequences.CTRL_E: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.DESCRIPTION),
+            KeySequences.CTRL_T: self.set_hello_message,
+            KeySequences.CTRL_L: self.clear_log,
         }
 
         for signal, slot in connection_map.items():
@@ -208,11 +211,11 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         getLogger().addHandler(self.wireless_handler)
 
     def reload_spec(self, spec_type: str):
-        if spec_type == ButtonActions.LOCAL_SPEC:
+        if spec_type == ButtonActions.SetSpecMenuActions.LOCAL_SPEC:
             self.parse_file(TermFilesPath.SPECIFICATION)
             self.apply(commit=False)
 
-        if spec_type == ButtonActions.REMOTE_SPEC:
+        if spec_type == ButtonActions.SetSpecMenuActions.REMOTE_SPEC:
             self.load_remote_spec.emit(False)
 
         self.reload()
@@ -256,7 +259,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
     def apply(self, commit: bool | str):
         if isinstance(commit, str):
-            commit: bool = True if commit == ButtonActions.PERMANENTLY else False
+            commit: bool = True if commit == ButtonActions.ApplySpecMenuActions.PERMANENTLY else False
 
         try:
             self.SpecView.reload_spec(commit)

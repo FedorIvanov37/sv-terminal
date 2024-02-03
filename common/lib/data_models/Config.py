@@ -1,5 +1,5 @@
 from pydantic import BaseModel, field_validator
-from common.lib.data_models.Enums import ValidationMode
+from common.lib.enums.Validation import ValidationMode
 
 
 class Host(BaseModel):

@@ -1,10 +1,9 @@
-from common.lib.constants import TermFilesPath
 from common.lib.core.Parser import Parser
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.Connector import Connector
 from common.lib.core.EpaySpecification import EpaySpecification
-
+from common.lib.enums.TermFilesPath import TermFilesPath
 
 
 # Create objects

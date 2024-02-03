@@ -14,15 +14,20 @@ from common.gui.windows.complex_fields_window import ComplexFieldsParser
 from common.gui.windows.license_window import LicenseWindow
 from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread
-from common.gui.constants import ButtonActions
+from common.gui.enums import ButtonActions
+from common.lib.enums import KeepAlive
+from common.lib.enums.TermFilesPath import TermFilesPath
+from common.lib.enums.DataFormats import DataFormats, PrintDataFormats
+from common.lib.enums.MessageLength import MessageLength
+from common.lib.enums.TextConstants import TextConstants
+from common.lib.core.TransTimer import TransactionTimer
+from common.lib.core.SpecFilesRotator import SpecFilesRotator
 from common.lib.core.Logger import LogStream, getLogger, Formatter
 from common.lib.core.Terminal import SvTerminal
 from common.lib.data_models.Config import Config
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.exceptions.exceptions import LicenceAlreadyAccepted, LicenseDataLoadingError, DataValidationWarning
-from common.lib.core.TransTimer import TransactionTimer
-from common.lib.core.SpecFilesRotator import SpecFilesRotator
-from common.lib.constants import TextConstants, DataFormats, TermFilesPath, KeepAliveIntervals, LogDefinition
+from common.lib.constants import LogDefinition
 
 
 """
@@ -46,8 +51,9 @@ Starts MainWindow when starting its work, being a kind of low-level adapter betw
 
 class SvTerminalGui(SvTerminal):
     connector: ConnectionThread
-    trans_timer: TransactionTimer = TransactionTimer(KeepAliveIntervals.TRANS_TYPE_TRANSACTION)
+    trans_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION)
     set_remote_spec: pyqtSignal = pyqtSignal()
+    startup_finished: pyqtSignal = pyqtSignal()
     wireless_handler: WirelessHandler
     _license_demonstrated: bool = False
     _startup_finished: bool = False
@@ -90,15 +96,12 @@ class SvTerminalGui(SvTerminal):
 
         self.print_data(DataFormats.TERM)
 
-        if self.config.terminal.connect_on_startup:
-            self.reconnect()
-
         if self.config.terminal.process_default_dump:
             self.set_default_values()
 
         if self.config.host.keep_alive_mode:
             interval: int = self.config.host.keep_alive_interval
-            self.set_keep_alive_interval(interval_name=KeepAliveIntervals.KEEP_ALIVE_DEFAULT % interval)
+            self.set_keep_alive_interval(interval_name=KeepAlive.IntervalNames.KEEP_ALIVE_DEFAULT % interval)
 
         if self.config.terminal.load_remote_spec:
             if not self.config.remote_spec.remote_spec_url:
@@ -111,6 +114,9 @@ class SvTerminalGui(SvTerminal):
         if self.config.remote_spec.backup_storage:
             rotator: SpecFilesRotator = SpecFilesRotator()
             rotator.clear_spec_backup(self.config)
+
+        if self.config.terminal.connect_on_startup:
+            self.reconnect()
 
         self._startup_finished: bool = True
 
@@ -150,6 +156,7 @@ class SvTerminalGui(SvTerminal):
             self.trans_timer.send_transaction: window.send,
             self.trans_timer.interval_was_set: window.process_transaction_loop_change,
             self.keep_alive_timer.interval_was_set: window.process_transaction_loop_change,
+            self.startup_finished: self.log_printer.startup_finished,
         }
 
         for signal, slot in terminal_connections_map.items():
@@ -270,10 +277,10 @@ class SvTerminalGui(SvTerminal):
         ]
 
         if any(keep_alive_change_conditions):
-            interval_name: str = KeepAliveIntervals.KEEP_ALIVE_STOP
+            interval_name: str = KeepAlive.IntervalNames.KEEP_ALIVE_STOP
 
             if self.config.host.keep_alive_mode:
-                interval_name: str = KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
+                interval_name: str = KeepAlive.IntervalNames.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
 
             self.set_keep_alive_interval(interval_name)
 
@@ -314,9 +321,9 @@ class SvTerminalGui(SvTerminal):
 
     def perform_reversal(self, command: str) -> None:
         transaction_source_map: dict[str, Callable] = {
-            ButtonActions.LAST: self.trans_queue.get_last_reversible_transaction_id,
-            ButtonActions.OTHER: self.show_reversal_window,
-            ButtonActions.SET_REVERSAL: self.show_reversal_window,
+            ButtonActions.ReversalMenuActions.LAST: self.trans_queue.get_last_reversible_transaction_id,
+            ButtonActions.ReversalMenuActions.OTHER: self.show_reversal_window,
+            ButtonActions.ReversalMenuActions.SET_REVERSAL: self.show_reversal_window,
         }
 
         try:
@@ -340,10 +347,10 @@ class SvTerminalGui(SvTerminal):
             return
 
         match command:
-            case ButtonActions.SET_REVERSAL:
+            case ButtonActions.ReversalMenuActions.SET_REVERSAL:
                 self.parse_transaction(reversal)
 
-            case ButtonActions.LAST | ButtonActions.OTHER:
+            case ButtonActions.ReversalMenuActions.LAST | ButtonActions.ReversalMenuActions.OTHER:
                 try:
                     self.send(reversal)
                 except Exception as sending_error:
@@ -358,7 +365,7 @@ class SvTerminalGui(SvTerminal):
         if not data_fields:
             raise ValueError("No transaction data found")
 
-        if not (message_type := self.window.get_mti(self.spec.MessageLength.MESSAGE_TYPE_LENGTH)):
+        if not (message_type := self.window.get_mti(MessageLength.MESSAGE_TYPE_LENGTH)):
             raise ValueError("Invalid MTI")
 
         transaction: Transaction = Transaction(
@@ -440,10 +447,7 @@ class SvTerminalGui(SvTerminal):
 
         SvTerminal.save_transaction(self, transaction, file_format, filename)
 
-    def print_data(self, data_format: str) -> None:
-        if data_format not in DataFormats.get_print_data_formats():
-            error("Wrong format of output data: %s", data_format)
-            return
+    def print_data(self, data_format: PrintDataFormats) -> None:
 
         data_processing_map: dict[str, Callable] = {
             DataFormats.JSON: lambda: self.parse_main_window(flat_fields=False, clean=True).model_dump_json(indent=4),
@@ -550,13 +554,13 @@ class SvTerminalGui(SvTerminal):
             if not bit.isdigit():
                 continue
 
-            if int(bit) not in range(1, self.spec.MessageLength.SECOND_BITMAP_CAPACITY + 1):
+            if int(bit) not in range(1, MessageLength.SECOND_BITMAP_CAPACITY + 1):
                 continue
 
             if not (self.window.field_has_data(bit) or bit in self.window.get_fields_to_generate()):
                 continue
 
-            if int(bit) >= self.spec.MessageLength.FIRST_BITMAP_CAPACITY:
+            if int(bit) >= MessageLength.FIRST_BITMAP_CAPACITY:
                 bitmap.add(self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY)
 
             bitmap.add(bit)

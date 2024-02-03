@@ -15,7 +15,7 @@ __version__ = "v0.17"
 if __name__ != "__main__":  # Runs only by import command
     from sys import exit
     from common.gui.core.SvTerminalGui import SvTerminalGui
-    from common.lib.constants import TermFilesPath
+    from common.lib.enums.TermFilesPath import TermFilesPath
     from common.lib.data_models.Config import Config
 
     with open(TermFilesPath.CONFIG) as json_file:

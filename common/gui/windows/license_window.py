@@ -7,9 +7,10 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog
 from common.gui.forms.license_window import Ui_LicenseWindow
 from common.gui.decorators.window_settings import set_window_icon, frameless_window
-from common.lib.constants import TermFilesPath, TextConstants
 from common.lib.data_models.License import LicenseInfo
 from common.lib.exceptions.exceptions import LicenseDataLoadingError, LicenceAlreadyAccepted
+from common.lib.enums.TermFilesPath import TermFilesPath
+from common.lib.enums.TextConstants import TextConstants
 
 
 class LicenseWindow(Ui_LicenseWindow, QDialog):
@@ -39,6 +40,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
             self.print_acceptance_info()
             raise LicenceAlreadyAccepted
 
+        self.CheckBoxAgreement.setChecked(self.license_info.accepted)
         self.CheckBoxAgreement.stateChanged.connect(self.block_acceptance)
         self.rejected.connect(self.reject_license)
         self.accepted.connect(self.accept_license)

@@ -3,9 +3,10 @@ from PyQt6.QtWidgets import QTreeWidgetItem, QCheckBox, QWidget
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.lib.toolkit.toolkit import mask_pan, mask_secret
 from common.lib.core.EpaySpecification import EpaySpecification
-from common.gui.constants import CheckBoxesDefinition, MainFieldSpec as FieldsSpec
 from common.gui.core.json_items.Item import Item
 from common.gui.decorators.void_qt_signals import void_tree_signals
+from common.gui.enums.CheckBoxesDefinition import CheckBoxesDefinition
+from common.gui.enums import MainFieldSpec as FieldsSpec
 
 
 class FieldItem(Item):
@@ -113,7 +114,7 @@ class FieldItem(Item):
                 return False
 
         if checkbox_type == CheckBoxesDefinition.GENERATE:
-            if self.field_number not in FieldsSpec.generated_fields:
+            if self.field_number not in list(FieldsSpec.GeneratedFields):
                 return False
 
         if not (tree := self.treeWidget()):
@@ -132,7 +133,7 @@ class FieldItem(Item):
             return
 
         column_number = FieldsSpec.ColumnsOrder.PROPERTY
-        state = CheckBoxesDefinition.CHECKED if checked else CheckBoxesDefinition.UNCHECKED
+        state = Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked
         checkbox = QCheckBox()
         checkbox.setCheckState(state)
 
@@ -141,7 +142,7 @@ class FieldItem(Item):
 
         tree.removeItemWidget(self, FieldsSpec.ColumnsOrder.PROPERTY)
 
-        if self.field_number in FieldsSpec.generated_fields:
+        if self.field_number in list(FieldsSpec.GeneratedFields):
             checkbox.setText(CheckBoxesDefinition.GENERATE)
             tree.setItemWidget(self, column_number, checkbox)
 

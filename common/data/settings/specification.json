@@ -147,7 +147,9 @@
                 "possible_values": [],
                 "must_start_with": [],
                 "must_end_with": [],
-                "must_contain": [],
+                "must_contain": [
+                    "000"
+                ],
                 "valid_values": [],
                 "invalid_values": [],
                 "must_contain_only": [],
@@ -155,8 +157,8 @@
                 "must_not_start_with": [],
                 "must_not_contain_only": [],
                 "justification": null,
-                "justification_element": null,
-                "justification_length": 0,
+                "justification_element": "",
+                "justification_length": 6,
                 "field_type_validators": {
                     "currency_a3": false,
                     "currency_n3": false,
@@ -818,7 +820,7 @@
             "special": false,
             "reserved_for_future": false,
             "description": "Primary account number expiration date YYMM",
-            "is_secret": false,
+            "is_secret": true,
             "fields": null
         },
         "15": {

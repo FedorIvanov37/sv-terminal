@@ -1,11 +1,12 @@
-from typing import Final
-from common.lib.constants import ReleaseDefinition
-from common.lib.constants import LicenseAgreement
+from enum import StrEnum
+from common.lib.enums.ReleaseDefinition import ReleaseDefinition
+from common.lib.enums.LicenseAgreement import LicenseAgreement
 
 
-SYSTEM_NAME: Final[str] = "SIGNAL"
+class TextConstants(StrEnum):
+    SYSTEM_NAME = "SIGNAL"
 
-HELLO_MESSAGE: Final[str] = f"""
+    HELLO_MESSAGE = f"""
   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
@@ -16,4 +17,4 @@ HELLO_MESSAGE: Final[str] = f"""
 
   Simplified ISO generation algorithm {ReleaseDefinition.VERSION}"""
 
-LICENSE_AGREEMENT: Final[str] = LicenseAgreement.AGREEMENT
+    LICENSE_AGREEMENT = LicenseAgreement.AGREEMENT

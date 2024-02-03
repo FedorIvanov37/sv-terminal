@@ -6,10 +6,11 @@ from common.lib.exceptions.exceptions import DataValidationError, DataValidation
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.Types import FieldPath
 from common.lib.data_models.Config import Config
-from common.gui.constants import FieldTypeParams
 from common.lib.data_models.Validation import ValidationResult, ValidationTypes
-from common.lib.data_models.Enums import ValidationMode
+from common.lib.enums.Validation import ValidationMode, CustomValidations, ExtendedValidations
 from common.lib.data_models.Transaction import TypeFields
+from common.gui.enums.FieldTypeParams import FieldTypeParams
+from common.lib.enums.MessageLength import MessageLength
 
 
 class Validator:
@@ -67,9 +68,9 @@ class Validator:
         if not is_top_level_field:
             return
 
-        if field_number not in range(1, self.spec.MessageLength.SECOND_BITMAP_CAPACITY):
+        if field_number not in range(1, MessageLength.SECOND_BITMAP_CAPACITY):
             error_text = f"Incorrect field number {field_number}. Top level field number must be in range 1 " \
-                         f"- {self.spec.MessageLength.SECOND_BITMAP_CAPACITY}"
+                         f"- {MessageLength.SECOND_BITMAP_CAPACITY}"
 
             raise ValueError(error_text)
 
@@ -150,49 +151,49 @@ class Validator:
                     continue
 
                 match validation:
-                    case "valid_values":  # Exact allowed value validation
+                    case CustomValidations.VALID_VALUES:  # Exact allowed value validation
                         if not field_value in patterns:
                             bad_patterns = ", ".join(patterns)
                             errors.add(f'Field {path_desc} must contain one of the following: {bad_patterns}')
 
-                    case "invalid_values":  # Exact not allowed value validation
+                    case CustomValidations.INVALID_VALUES:  # Exact not allowed value validation
                         if field_value in patterns:
                             bad_patterns = ", ".join(patterns)
                             errors.add(f'Field {path_desc} must not contain one of the following: {bad_patterns}')
 
                 for pattern in patterns:
                     match validation:
-                        case "must_contain":
+                        case CustomValidations.MUST_CONTAIN:
                             if pattern not in field_value:
                                 errors.add(f'Field {path_desc} must contain "{pattern}"')
 
-                        case "must_contain_only":
+                        case CustomValidations.MUST_CONTAIN_ONLY:
                             bad_patterns = ", ".join(patterns)
 
                             if [letter for letter in field_value if letter not in patterns]:
                                 errors.add(f"Field {path_desc} must contain only one or multiple: {bad_patterns}")
 
-                        case "must_not_contain":
+                        case CustomValidations.MUST_NOT_CONTAIN:
                             if pattern in field_value:
                                 errors.add(f'Field {path_desc} must not contain {pattern}')
 
-                        case "must_not_contain_only":
+                        case CustomValidations.MUST_NOT_CONTAIN_ONLY:
                             if not [letter for letter in field_value if letter not in pattern]:
                                 errors.add(f"Field {path_desc} must not contain only one or multiple {pattern}")
 
-                        case "must_start_with":
+                        case CustomValidations.MUST_START_WITH:
                             if not field_value.startswith(pattern):
                                 errors.add(f"Field {path_desc} must start with {pattern}")
 
-                        case "must_not_start_with":
+                        case CustomValidations.MUST_NOT_START_WITH:
                             if field_value.startswith(pattern):
                                 errors.add(f"Field {path_desc} must not start with {pattern}")
 
-                        case "must_end_with":
+                        case CustomValidations.MUST_END_WITH:
                             if not field_value.endswith(pattern):
                                 errors.add(f"Field {path_desc} must end with {pattern}")
 
-                        case "must_not_end_with":
+                        case CustomValidations.MUST_NOT_END_WITH:
                             if field_value.endswith(pattern):
                                 errors.add(f"Field {path_desc} must not end with {pattern}")
 
@@ -215,7 +216,7 @@ class Validator:
                 if not value:
                     continue
 
-                if field not in ("country_a3", "country_n3", "country_a2"):
+                if field not in (ExtendedValidations.COUNTRY_A3, ExtendedValidations.COUNTRY_N3, ExtendedValidations.COUNTRY_A2):
                     continue
 
                 if field_value in allowed_country_codes:
@@ -239,7 +240,7 @@ class Validator:
                 if not value:
                     continue
 
-                if field not in ("currency_a3", "currency_n3"):
+                if field not in (ExtendedValidations.CURRENCY_A3, ExtendedValidations.COUNTRY_N3):
                     continue
 
                 if field_value in allowed_currency_codes:
@@ -257,25 +258,25 @@ class Validator:
                     continue
 
                 match field:
-                    case "check_luhn":  # Check by the Luhn algorithm
+                    case ExtendedValidations.CHECK_LUHN:  # Check by the Luhn algorithm
                         if not self.check_luhn(field_value):
                             errors.add(f"Field {path_desc} did not pass validation by the Luhn algorithm")
 
-                    case "mcc":  # Valid merchant category code
+                    case ExtendedValidations.MCC:  # Valid merchant category code
                         mcc_list = (mcc.code for mcc in self.spec.dictionary.merch_cat_codes.merchant_category_codes)
 
                         if field_value not in mcc_list:
                             errors.add(f"Field {path_desc} must contain valid {FieldTypeParams.MCC_ISO}")
 
-                    case "only_upper":  # Only UPPER case allowed
+                    case ExtendedValidations.ONLY_UPPER:  # Only UPPER case allowed
                         if not field_value.isupper():
                             errors.add(f"Field {path_desc} allowed UPPER case only")
 
-                    case "only_lower":  # Only lower case allowed
+                    case ExtendedValidations.ONLY_LOWER:  # Only lower case allowed
                         if not field_value.islower():
                             errors.add(f"Field {path_desc} allowed lower case only")
 
-                    case "date_format":  # Date format and timeframes
+                    case ExtendedValidations.DATE_FORMAT:  # Date format and timeframes
                         date: datetime | None = None
 
                         if field_spec.validators.field_type_validators.date_format:

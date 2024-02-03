@@ -1,8 +1,7 @@
 from re import search
 from logging import info
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
-from common.lib.constants import KeepAliveIntervals
-
+from common.lib.enums import KeepAlive
 
 class TransactionTimer(QObject):
     _trans_loop_timer: QTimer = QTimer()
@@ -28,22 +27,25 @@ class TransactionTimer(QObject):
         self._trans_loop_timer.start(int(interval) * 1000)
 
     def set_trans_loop_interval(self, interval_name: str):
-        if interval_name == KeepAliveIntervals.KEEP_ALIVE_ONCE:
+        if interval_name == KeepAlive.IntervalNames.KEEP_ALIVE_ONCE:
             self.send_transaction.emit()
             return
 
-        if interval_name == KeepAliveIntervals.KEEP_ALIVE_STOP:
+        if interval_name == KeepAlive.IntervalNames.KEEP_ALIVE_STOP:
             self._trans_loop_timer.stop()
             self.interval_was_set.emit(interval_name, self.trans_type)
             info(f"{self.trans_type} loop is deactivated")
             return
 
-        if not (interval := KeepAliveIntervals.get_interval_time(interval_name)):
+        try:
+            interval: int = KeepAlive.IntervalTimes[interval_name]
 
-            if not (interval := search("^\d+", interval_name)):
+        except KeyError:
+
+            if not (interval_from_name := search("^\d+", interval_name)):
                 return
 
-            interval = int(interval.group())
+            interval: int = int(interval_from_name.group())
 
         self.activate_transaction_loop(interval)
 

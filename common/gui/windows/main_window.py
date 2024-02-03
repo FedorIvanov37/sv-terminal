@@ -3,6 +3,7 @@ from typing import Callable
 from copy import deepcopy
 from ctypes import windll
 from pydantic import FilePath
+from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
@@ -11,8 +12,14 @@ from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.decorators.window_settings import set_window_icon
 from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Config import Config
-from common.lib.constants import TextConstants, DataFormats, ReleaseDefinition, KeepAliveIntervals
-from common.gui.constants import ButtonActions, KeySequence, ConnectionStatus, MainFieldSpec as FieldsSpec, GuiFilesPath
+from common.gui.enums import ButtonActions, MainFieldSpec as FieldsSpec
+from common.gui.enums.KeySequences import KeySequences
+from common.gui.enums.GuiFilesPath import GuiFilesPath
+from common.gui.enums.ConnectionStatus import ConnectionStatus, ConnectionIcon
+from common.lib.enums.DataFormats import DataFormats
+from common.lib.enums import KeepAlive
+from common.lib.enums.ReleaseDefinition import ReleaseDefinition
+from common.lib.enums.TextConstants import TextConstants
 
 
 """
@@ -176,16 +183,16 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
         self.ButtonSend.setFocus()
 
-        for trans_type in KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE, KeepAliveIntervals.TRANS_TYPE_TRANSACTION:
-            self.process_transaction_loop_change(ButtonActions.KEEP_ALIVE_STOP, trans_type)
+        for trans_type in KeepAlive.TransTypes.TRANS_TYPE_KEEP_ALIVE, KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION:
+            self.process_transaction_loop_change(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_STOP, trans_type)
 
     def _add_json_control_buttons(self) -> None:
         # Create and place the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
 
         self.FieldsTreeLayout.addWidget(self.json_view)
-        self.PlusButton = QPushButton(ButtonActions.BUTTON_PLUS_SIGN)
-        self.MinusButton = QPushButton(ButtonActions.BUTTON_MINUS_SIGN)
-        self.NextLevelButton = QPushButton(ButtonActions.BUTTON_NEXT_LEVEL_SIGN)
+        self.PlusButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_PLUS_SIGN)
+        self.MinusButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_MINUS_SIGN)
+        self.NextLevelButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_NEXT_LEVEL_SIGN)
 
         buttons_layouts_map = {
             self.PlusLayout: self.PlusButton,
@@ -257,17 +264,17 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
             # Custom Key Sequences
             # The string argument (modifier) is a hint about a requested data format
-            KeySequence.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
-            KeySequence.CTRL_SHIFT_ENTER: lambda: self.reverse.emit(ButtonActions.LAST),
-            KeySequence.CTRL_ENTER: self.send,
-            KeySequence.CTRL_R: self.reconnect,
-            KeySequence.CTRL_L: self.clear_log,
-            KeySequence.CTRL_E: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.VALUE),
-            KeySequence.CTRL_W: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.FIELD),
-            KeySequence.CTRL_SHIFT_N: self.json_view.next_level,
-            KeySequence.CTRL_ALT_Q: exit,
-            KeySequence.CTRL_ALT_ENTER: self.echo_test,
-            KeySequence.CTRL_ALT_V: self.validate_message,
+            KeySequences.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
+            KeySequences.CTRL_SHIFT_ENTER: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.LAST),
+            KeySequences.CTRL_ENTER: self.send,
+            KeySequences.CTRL_R: self.reconnect,
+            KeySequences.CTRL_L: self.clear_log,
+            KeySequences.CTRL_E: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.VALUE),
+            KeySequences.CTRL_W: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.FIELD),
+            KeySequences.CTRL_SHIFT_N: self.json_view.next_level,
+            KeySequences.CTRL_ALT_Q: exit,
+            KeySequences.CTRL_ALT_ENTER: self.echo_test,
+            KeySequences.CTRL_ALT_V: self.validate_message,
         }
 
         self.buttons_menu_structure = {
@@ -276,30 +283,30 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             # The modifiers are used to define the requested data format or as a hint on how to process the data
 
             self.ButtonKeepAlive: {
-                ButtonActions.KEEP_ALIVE_1S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_1S),
-                ButtonActions.KEEP_ALIVE_5S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_5S),
-                ButtonActions.KEEP_ALIVE_10S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_10S),
-                ButtonActions.KEEP_ALIVE_30S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_30S),
-                ButtonActions.KEEP_ALIVE_60S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_60S),
-                ButtonActions.KEEP_ALIVE_300S: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_300S),
-                ButtonActions.KEEP_ALIVE_STOP: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_STOP),
-                ButtonActions.KEEP_ALIVE_ONCE: lambda: self.keep_alive.emit(ButtonActions.KEEP_ALIVE_ONCE),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_1S: lambda: self.keep_alive.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_1S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_5S: lambda: self.keep_alive.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_5S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_10S: lambda: self.keep_alive.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_10S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_30S: lambda: self.keep_alive.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_30S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_60S: lambda: self.keep_alive.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_60S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_300S: lambda: self.keep_alive.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_300S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_STOP: lambda: self.keep_alive.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_STOP),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_ONCE: lambda: self.keep_alive.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_ONCE),
             },
 
             self.ButtonRepeat: {
-                ButtonActions.KEEP_ALIVE_1S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_1S),
-                ButtonActions.KEEP_ALIVE_5S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_5S),
-                ButtonActions.KEEP_ALIVE_10S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_10S),
-                ButtonActions.KEEP_ALIVE_30S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_30S),
-                ButtonActions.KEEP_ALIVE_60S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_60S),
-                ButtonActions.KEEP_ALIVE_300S: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_300S),
-                ButtonActions.KEEP_ALIVE_STOP: lambda: self.repeat.emit(ButtonActions.KEEP_ALIVE_STOP),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_1S: lambda: self.repeat.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_1S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_5S: lambda: self.repeat.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_5S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_10S: lambda: self.repeat.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_10S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_30S: lambda: self.repeat.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_30S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_60S: lambda: self.repeat.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_60S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_300S: lambda: self.repeat.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_300S),
+                ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_STOP: lambda: self.repeat.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_STOP),
             },
 
             self.ButtonReverse: {
-                ButtonActions.LAST: lambda: self.reverse.emit(ButtonActions.LAST),
-                ButtonActions.OTHER: lambda: self.reverse.emit(ButtonActions.OTHER),
-                ButtonActions.SET_REVERSAL: lambda: self.reverse.emit(ButtonActions.SET_REVERSAL),
+                ButtonActions.ReversalMenuActions.LAST: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.LAST),
+                ButtonActions.ReversalMenuActions.OTHER: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.OTHER),
+                ButtonActions.ReversalMenuActions.SET_REVERSAL: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.SET_REVERSAL),
             },
 
             self.ButtonPrintData: {
@@ -432,21 +439,28 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.msgtype.setCurrentIndex(-1)
         self.json_view.clean()
 
-    def set_connection_status(self, status) -> None:
-        self.ConnectionStatusLabel.setPixmap(QPixmap(GuiFilesPath.GREEN_CIRCLE))
-        self.ConnectionStatus.setText(ConnectionStatus.get_state_description(status))
-        self.ConnectionStatusLabel.setPixmap(QPixmap(ConnectionStatus.get_state_icon_path(status)))
+    def set_connection_status(self, status: QTcpSocket.SocketState) -> None:
+        try:
+            text = ConnectionStatus[status.name]
+            icon = ConnectionIcon[status.name]
+
+        except KeyError:
+            text = ConnectionStatus.ConnectionStatuses.UNKNOWN
+            icon = ConnectionStatus.ConnectionIcons.GREY
+
+        self.ConnectionStatus.setText(text)
+        self.ConnectionStatusLabel.setPixmap(QPixmap(icon))
 
     def process_transaction_loop_change(self, interval_name: str, trans_type: str):
-        if interval_name == ButtonActions.KEEP_ALIVE_ONCE:
+        if interval_name == ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_ONCE:
             return
 
         if interval_name == "1 seconds":
             interval_name = interval_name.removesuffix("s")
 
         button_type_map: dict[str, QPushButton] = {
-            KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE: self.ButtonKeepAlive,
-            KeepAliveIntervals.TRANS_TYPE_TRANSACTION: self.ButtonRepeat,
+            KeepAlive.TransTypes.TRANS_TYPE_KEEP_ALIVE: self.ButtonKeepAlive,
+            KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION: self.ButtonRepeat,
         }
 
         if not (button := button_type_map.get(trans_type)):
@@ -456,14 +470,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         icon_file: FilePath = GuiFilesPath.GREEN_CIRCLE
 
-        if interval_name == ButtonActions.KEEP_ALIVE_STOP:
+        if interval_name == ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_STOP:
             icon_file: FilePath = GuiFilesPath.GREY_CIRCLE
 
         button.setIcon(QIcon(QPixmap(icon_file)))
         button.menu().clear()
 
-        if trans_type == KeepAliveIntervals.TRANS_TYPE_KEEP_ALIVE and self.config.host.keep_alive_mode:
-            custom_interval_name: str = KeepAliveIntervals.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
+        if trans_type == KeepAlive.TransTypes.TRANS_TYPE_KEEP_ALIVE and self.config.host.keep_alive_mode:
+            custom_interval_name: str = KeepAlive.IntervalNames.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
 
             if self.config.host.keep_alive_interval == 1:
                 custom_interval_name: str = custom_interval_name.removesuffix("s")
@@ -472,7 +486,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         for action, function in button_action_menu.items():
             if action == interval_name:
-                action: str = f"{ButtonActions.CURRENT_ACTION_MARK} {action}"  # Set checked
+                action: str = f"{ButtonActions.Marks.CURRENT_ACTION_MARK} {action}"  # Set checked
 
             button.menu().addAction(action, function)
             button.menu().addSeparator()
