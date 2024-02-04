@@ -6,6 +6,7 @@ This file runs SIGNAL GUI. The GUI runs once the file is imported, no additional
 e.g.: "import signal"
 """
 
+
 # Correct way to run
 if __name__ != "__main__":  # Runs only by import command
     from signal import signal
@@ -15,6 +16,7 @@ if __name__ != "__main__":  # Runs only by import command
     except Exception as run_signal_exception:
         print(run_signal_exception)
         exit(100)
+
 
 # Incorrect way to run
 if __name__ == "__main__":  # Do not run directly
