@@ -1,0 +1,38 @@
+{
+    "host": {
+        "keep_alive_mode": true,
+        "keep_alive_interval": 300,
+        "header_length": 2,
+        "header_length_exists": true
+    },
+    "terminal": {
+        "process_default_dump": true,
+        "connect_on_startup": true,
+        "load_remote_spec": false
+    },
+    "debug": {
+        "level": "INFO",
+        "clear_log": true,
+        "parse_subfields": false,
+        "backup_storage_depth": 30
+    },
+    "validation": {
+        "validation_enabled": true,
+        "validate_incoming": false,
+        "validation_mode": "FLEXIBLE"
+    },
+    "fields": {
+        "max_amount": 100,
+        "max_amount_limited": true,
+        "build_fld_90": true,
+        "send_internal_id": true,
+        "json_mode": true,
+        "hide_secrets": true
+    },
+    "remote_spec": {
+        "rewrite_local_spec": false,
+        "remote_spec_url": "",
+        "backup_storage_depth": 30,
+        "backup_storage":  false
+    }
+}

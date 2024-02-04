@@ -1,5 +1,5 @@
 .gitignore
 .idea
 venv
-/common/log/sv_terminal.log
+/signal/log/sv_terminal.log
 /.github/
