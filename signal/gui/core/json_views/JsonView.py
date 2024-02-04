@@ -478,7 +478,7 @@ class JsonView(TreeView):
             if not item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
                 continue
 
-            transaction.json_fields[item.field_number] = True
+            transaction.json_fields.append(item.field_number)
 
         self.clean()
 
@@ -566,7 +566,7 @@ class JsonView(TreeView):
                 is_checked = self.config.fields.json_mode
 
                 if item.field_number in transaction.json_fields:
-                    is_checked = transaction.json_fields.get(item.field_number)
+                    is_checked = True
 
             item.set_checkbox(is_checked)
 
