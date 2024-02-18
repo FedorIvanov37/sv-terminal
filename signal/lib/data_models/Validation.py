@@ -17,7 +17,7 @@ class ValidationTypes(StrEnum):
     FIELD_DATA_VALIDATION = "FIELD_DATA_VALIDATION"
     COUNTRY_VALIDATION = "COUNTRY_VALIDATION"
     CURRENCY_VALIDATION = "CURRENCY_VALIDATION"
-
+    OTHER_VALIDATION = "OTHER_VALIDATION"
 
 class ValidationResult(BaseModel):
     errors: dict[ValidationTypes, set[str]] = dict.fromkeys([validation for validation in ValidationTypes])

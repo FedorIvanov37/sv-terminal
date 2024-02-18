@@ -2,7 +2,6 @@ from signal.lib.core.validators.Validator import Validator
 from signal.lib.core.EpaySpecification import EpaySpecification
 from signal.lib.data_models.Config import Config
 from signal.gui.core.json_items.FIeldItem import FieldItem
-from signal.lib.data_models.Types import FieldPath
 from signal.lib.data_models.Validation import ValidationResult
 from signal.lib.exceptions.exceptions import DataValidationError
 from signal.lib.data_models.EpaySpecificationModel import IsoField, Justification
@@ -16,10 +15,17 @@ class ItemsValidator(Validator):
         self.config: Config = config
 
     def validate_item(self, item: FieldItem):
-        field_path: FieldPath = item.get_field_path()
+        if not item.field_number:
+            raise DataValidationError("Lost field number")
+
+        if not (field_path := item.get_field_path()):
+            raise DataValidationError(f"Cannot get field path for field {item.field_number}")
 
         if not item.spec:
-            raise ValueError(f"Lost spec for field {item.get_field_path(string=True)}")
+            raise DataValidationError(f"Lost spec for field {item.get_field_path(string=True)}")
+
+        if all([not item.field_data and not self.spec.is_field_complex(field_path)]):
+            raise DataValidationError(f"Lost field value for field {item.get_field_path(string=True)}")
 
         self.validate_field_path(field_path)
 
@@ -46,13 +52,18 @@ class ItemsValidator(Validator):
         if item is None:
             return
 
+        if not item.field_number:
+            return
+
         if parent is None and not (parent := item.parent()):
             return
 
         for child in item.get_children():
             self.validate_duplicates(child)
 
-        if [child_item.field_number for child_item in parent.get_children()].count(item.field_number) > 1:
+        field_numbers = [child_item.field_number for child_item in parent.get_children()]
+
+        if field_numbers.count(item.field_number) > 1:
             raise DataValidationError(f"Duplicated field number {item.get_field_path(string=True)}")
 
     def modify_all_fields_data(self, parent: FieldItem):

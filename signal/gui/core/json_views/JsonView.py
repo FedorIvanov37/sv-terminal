@@ -8,11 +8,10 @@ from signal.lib.core.Parser import Parser
 from signal.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 from signal.lib.data_models.Transaction import Transaction, TypeFields
 from signal.lib.data_models.Config import Config
-from signal.lib.data_models.EpaySpecificationModel import RawFieldSet, Justification, IsoField
+from signal.lib.data_models.EpaySpecificationModel import RawFieldSet
 from signal.gui.core.json_items.FIeldItem import FieldItem
 from signal.gui.core.validators.ItemsValidator import ItemsValidator
 from signal.gui.core.json_views.TreeView import TreeView
-from signal.gui.core.Undo import UndoAddChildCommand, UndoRemoveChildCommand
 from signal.gui.decorators.void_qt_signals import void_qt_signals
 from signal.gui.enums.CheckBoxesDefinition import CheckBoxesDefinition
 from signal.gui.enums.Colors import Colors
@@ -365,16 +364,10 @@ class JsonView(TreeView):
             parent = self.root
 
         item = FieldItem([])
-        index = parent.indexOfChild(current_item)
-
-        if current_item is self.root:
-            index = index + 1
-
+        index = parent.indexOfChild(current_item) + 1
         parent.insertChild(index, item)
-
         self.set_new_item(item)
         self.field_added.emit()
-        self.undo_stack.push(UndoAddChildCommand(item, parent))
 
     @void_qt_signals
     def minus(self, *args):
@@ -390,12 +383,15 @@ class JsonView(TreeView):
         if not (parent := item.parent()):
             return
 
-        self.undo_stack.push(UndoRemoveChildCommand(item, parent))
-
         parent.removeChild(item)
+        self.previousInFocusChain()
         parent.set_length(fill_length=self.len_fill)
 
-        self.check_duplicates_after_remove(item, parent)
+        try:
+            self.check_duplicates_after_remove(item, parent)
+        except (DataValidationError, ValueError) as duplication_error:
+            error(duplication_error)
+
         self.setFocus()
         self.field_removed.emit()
 
@@ -419,7 +415,6 @@ class JsonView(TreeView):
         current_item.setText(FieldsSpec.ColumnsOrder.VALUE, str())
         current_item.insertChild(int(), item)
         self.set_new_item(item)
-        self.undo_stack.push(UndoAddChildCommand(item, current_item))
 
     def set_new_item(self, item: FieldItem):
         self.setCurrentItem(item)
@@ -428,10 +423,7 @@ class JsonView(TreeView):
         self.editItem(item, int())
 
     def check_duplicates_after_remove(self, removed_item: FieldItem, parent_item: FieldItem):
-        try:
-            self.validator.validate_duplicates(removed_item, parent=parent_item)
-        except ValueError:
-            return
+        self.validator.validate_duplicates(removed_item, parent=parent_item)
 
         for item in parent_item.get_children():
             if not item.field_number == removed_item.field_number:
@@ -439,9 +431,9 @@ class JsonView(TreeView):
 
             try:
                 self.validate_item(item)
-            except ValueError:
+            except (ValueError, DataValidationError) as duplication_error:
                 item.set_item_color(Colors.RED)
-                return
+                raise duplication_error
 
             item.set_item_color()
 
@@ -610,6 +602,9 @@ class JsonView(TreeView):
         for row in parent.get_children():
             if row.field_number in result:
                 warning(f"Duplicated field number {row.get_field_path(string=True)}")
+
+            if self.config.validation.validation_enabled:
+                self.validator.validate_item(row)
 
             if row.childCount():
                 if flat:

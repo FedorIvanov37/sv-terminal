@@ -391,13 +391,21 @@ class SvTerminalGui(SvTerminal):
         if not (message_type := self.window.get_mti(MessageLength.MESSAGE_TYPE_LENGTH)):
             raise ValueError("Invalid MTI")
 
-        transaction: Transaction = Transaction(
-            generate_fields=self.window.get_fields_to_generate(),
-            data_fields=data_fields,
-            message_type=message_type,
-            max_amount=self.config.fields.max_amount,
-            is_reversal=self.spec.is_reversal(message_type)
-        )
+        if self.config.validation.validation_enabled and self.validator.validate_fields(fields=data_fields):
+            raise DataValidationError("Transaction aborted due to validation errors")
+
+        try:
+            transaction: Transaction = Transaction(
+                generate_fields=self.window.get_fields_to_generate(),
+                data_fields=data_fields,
+                message_type=message_type,
+                max_amount=self.config.fields.max_amount,
+                is_reversal=self.spec.is_reversal(message_type)
+            )
+
+        except (ValidationError, ValueError) as validation_error:
+            [error(err.get("msg")) for err in validation_error.errors()]
+            raise DataValidationError
 
         if self.config.fields.send_internal_id:
             transaction: Transaction = self.generator.set_trans_id(transaction)

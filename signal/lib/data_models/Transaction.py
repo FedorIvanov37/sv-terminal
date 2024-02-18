@@ -75,8 +75,7 @@ class Transaction(BaseModel):
 
         return val
 
-
-    @field_validator("data_fields")
+    @field_validator("data_fields", mode="before")
     @classmethod
     def top_level_fields_in_range(cls, val: TypeFields):
         for field in val.keys():
@@ -84,8 +83,8 @@ class Transaction(BaseModel):
                 raise ValueError(f"Incorrect field number {field}. Field numbers must contain digits only")
 
             if int(field) not in range(1, MessageLength.SECOND_BITMAP_CAPACITY + 1):
-                raise ValueError(f"Wrong field number {field}. " 
-                                 f"Top level fields must be in range 1 - {MessageLength.SECOND_BITMAP_CAPACITY}")
+                raise ValueError(f"Wrong field number {field}. Top level fields must be in range 1 - {MessageLength.SECOND_BITMAP_CAPACITY}")
+
         return val
 
 

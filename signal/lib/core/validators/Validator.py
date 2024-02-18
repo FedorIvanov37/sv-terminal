@@ -57,8 +57,7 @@ class Validator:
 
         return status
 
-    @staticmethod
-    def validate_field_number(field_number: int | str, is_top_level_field=True):
+    def validate_field_number(self, field_number: int | str, is_top_level_field=True):
         # Field number validations, such as the number should contain digits only, etc
 
         if not field_number:
@@ -72,11 +71,13 @@ class Validator:
         if not is_top_level_field:
             return
 
-        if field_number not in range(1, MessageLength.SECOND_BITMAP_CAPACITY):
-            error_text = f"Incorrect field number {field_number}. Top level field number must be in range 1 " \
-                         f"- {MessageLength.SECOND_BITMAP_CAPACITY}"
+        min_field = int(self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER)
+        max_field = int(self.spec.FIELD_SET.FIELD_128_SECONDARY_MAC_DATA)
 
-            raise ValueError(error_text)
+        if field_number not in range(min_field, max_field + 1):
+            raise ValueError(
+                f"Incorrect field number {field_number}. Top level field must be in range {min_field} - {max_field}"
+            )
 
     def validate_field_path(self, path: FieldPath):
         def path_to_str(field_path: FieldPath):
@@ -328,7 +329,11 @@ class Validator:
         # The method validate_field_data execution begins here
 
         path = ".".join(field_path)
-        field_spec = self.spec.get_field_spec(field_path)
+
+        if not (field_spec := self.spec.get_field_spec(field_path)):
+            validation_result.errors[ValidationTypes.OTHER_VALIDATION] = {f"Field {path} - validation failed due to lost specification for the field"}
+            return validation_result
+
         path_desc: str = f"{path} - {field_spec.description}"
 
         if field_spec.validators.field_type_validators.do_not_validate:  # When all the field validations should be ignored
