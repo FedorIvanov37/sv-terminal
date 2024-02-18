@@ -366,6 +366,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def validate_fields(self, check_config: bool = True) -> None:
         self.json_view.check_all_items(check_config=check_config)
 
+    def modify_fields_data(self):
+        self.json_view.modify_all_fields_data()
+
     def refresh_fields(self):
         self.json_view.refresh_fields()
 

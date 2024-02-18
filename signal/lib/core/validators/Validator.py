@@ -2,6 +2,7 @@ from typing import Callable
 from datetime import datetime
 from string import digits, ascii_letters, punctuation, whitespace 
 from pydantic import AnyHttpUrl
+from copy import deepcopy
 from logging import error, warning
 from signal.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 from signal.lib.core.EpaySpecification import EpaySpecification
@@ -56,7 +57,8 @@ class Validator:
 
         return status
 
-    def validate_field_number(self, field_number: int | str, is_top_level_field=True):
+    @staticmethod
+    def validate_field_number(field_number: int | str, is_top_level_field=True):
         # Field number validations, such as the number should contain digits only, etc
 
         if not field_number:
@@ -280,24 +282,31 @@ class Validator:
 
                     case ExtendedValidations.DATE_FORMAT:  # Date format and timeframes
                         date: datetime | None = None
+                        date_format: str = field_spec.validators.field_type_validators.date_format
 
                         if field_spec.validators.field_type_validators.date_format:
                             try:
-                                date: datetime = datetime.strptime(field_value, field_spec.validators.field_type_validators.date_format)
+                                date: datetime = datetime.strptime(field_value, date_format)
                             except ValueError:
-                                errors.add(f'Field {path_desc} - must contain date in the following format: "{field_spec.validators.field_type_validators.date_format}"')
+                                errors.add(f'Field {path_desc} - must contain date in the following format: "{date_format}"')
 
                         if date is not None:
-                            if not field_spec.validators.field_type_validators.past and date < datetime.now():
+                            current_date = datetime.strptime(datetime.strftime(datetime.now(), date_format), date_format)
+
+                            if not field_spec.validators.field_type_validators.past and date < current_date:
                                 errors.add(f"Field {path_desc} - past time not allowed")
 
-                            if not field_spec.validators.field_type_validators.future and date > datetime.now():
+                            if not field_spec.validators.field_type_validators.future and date > current_date:
                                 errors.add(f"Field {path_desc} - future time not allowed")
+
+                            if not field_spec.validators.field_type_validators.present and date == current_date:
+                                errors.add(f"Field {path_desc} - present time not allowed")
 
             return errors
 
-        if field_spec.validators.field_type_validators.do_not_validate:
-            return
+        if field_spec.validators.field_type_validators.do_not_validate:  # When all the field validations should be ignored
+            validation_result.errors = deepcopy(ValidationResult().errors)  # Clean the errors
+            return validation_result
 
         validators_map: dict[ValidationTypes, Callable] = {
             ValidationTypes.FIELD_DATA_PRE_VALIDATION: fields_pre_validation,

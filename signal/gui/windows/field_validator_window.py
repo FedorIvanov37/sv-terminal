@@ -149,6 +149,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
             FieldTypeParams.DATE: {
                 FieldTypeParams.DATE_FORMAT: QLineEdit(),
                 FieldTypeParams.PAST_TIME: QCheckBox(FieldTypeParams.PAST_TIME),
+                FieldTypeParams.PRESENT_TIME: QCheckBox(FieldTypeParams.PRESENT_TIME),
                 FieldTypeParams.FUTURE_TIME: QCheckBox(FieldTypeParams.FUTURE_TIME),
             },
 
@@ -240,20 +241,20 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         field_spec.validators.justification_element = None
         field_spec.validators.justification = None
 
-        if self.FillSide.currentText() != "Not set":
-            if self.FillUpTo.currentText() == "Min Length":
+        if self.FillSide.currentText() != FieldTypeParams.JUSTIFICATION_NONE:
+            if self.FillUpTo.currentText() == FieldTypeParams.JUSTIFICATION_MIN_LEN:
                 field_spec.validators.justification_length = field_spec.min_length
 
-            if self.FillUpTo.currentText() == "Max Length":
+            if self.FillUpTo.currentText() == FieldTypeParams.JUSTIFICATION_MAX_LEN:
                 field_spec.validators.justification_length = field_spec.max_length
 
             if self.FillUpTo.currentText().isdigit():
                 field_spec.validators.justification_length = int(self.FillUpTo.currentText())
 
-            if self.FillSide.currentText() == "Left Pad":
+            if self.FillSide.currentText() == FieldTypeParams.JUSTIFICATION_LEFT:
                 field_spec.validators.justification = Justification.LEFT
 
-            if self.FillSide.currentText() == "Right Pad":
+            if self.FillSide.currentText() == FieldTypeParams.JUSTIFICATION_RIGHT:
                 field_spec.validators.justification = Justification.RIGHT
 
             if self.FillSymbol.text():
@@ -291,6 +292,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
                 case FieldTypeParams.DATE:
                     logical_validators.date_format = validation_dict.get(FieldTypeParams.DATE_FORMAT, lineedit).text()
                     logical_validators.future = validation_dict.get(FieldTypeParams.FUTURE_TIME, checkbox).isChecked()
+                    logical_validators.present = validation_dict.get(FieldTypeParams.PRESENT_TIME, checkbox).isChecked()
                     logical_validators.past = validation_dict.get(FieldTypeParams.PAST_TIME, checkbox).isChecked()
 
                 case FieldTypeParams.OTHER:
@@ -404,7 +406,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         self.FillSide.setCurrentText(iso_field.validators.justification)
 
         if not iso_field.validators.justification:
-            self.FillSide.setCurrentText("Not set")
+            self.FillSide.setCurrentText(FieldTypeParams.JUSTIFICATION_NONE)
 
         self.FieldDescription.setText(f"Field {field_path}  - {field_desc}")
 
@@ -452,6 +454,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
                     case FieldTypeParams.DATE:
                         field_type_values[FieldTypeParams.DATE_FORMAT].setText(iso_field.validators.field_type_validators.date_format)
                         field_type_values[FieldTypeParams.PAST_TIME].setChecked(iso_field.validators.field_type_validators.past)
+                        field_type_values[FieldTypeParams.PRESENT_TIME].setChecked(iso_field.validators.field_type_validators.present)
                         field_type_values[FieldTypeParams.FUTURE_TIME].setChecked(iso_field.validators.field_type_validators.future)
 
                     case FieldTypeParams.OTHER:
@@ -473,27 +476,27 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         self.set_validation_items(self.CheckTypeBox.currentText())
 
         if iso_field.validators.justification is None:
-            self.FillSide.setCurrentText("Not set")
+            self.FillSide.setCurrentText(FieldTypeParams.JUSTIFICATION_NONE)
             return
 
         if iso_field.validators.justification == Justification.RIGHT:
-            self.FillSide.setCurrentText("Right Pad")
+            self.FillSide.setCurrentText(FieldTypeParams.JUSTIFICATION_RIGHT)
 
         if iso_field.validators.justification == Justification.LEFT:
-            self.FillSide.setCurrentText("Left Pad")
+            self.FillSide.setCurrentText(FieldTypeParams.JUSTIFICATION_LEFT)
 
         self.FillUpTo.setCurrentText(str(iso_field.validators.justification_length))
         self.FillSymbol.setText(iso_field.validators.justification_element)
 
         if iso_field.validators.justification_length == iso_field.max_length:
-            self.FillUpTo.setCurrentText("Max Length")
+            self.FillUpTo.setCurrentText(FieldTypeParams.JUSTIFICATION_MAX_LEN)
             return
 
         if iso_field.validators.justification_length == iso_field.min_length:
-            self.FillUpTo.setCurrentText("Min Length")
+            self.FillUpTo.setCurrentText(FieldTypeParams.JUSTIFICATION_MIN_LEN)
 
     def process_justification_change(self):
-        justification_enabled = self.FillSide.currentText().lower() != "not set".lower()
+        justification_enabled = self.FillSide.currentText() != FieldTypeParams.JUSTIFICATION_NONE
         
         for element in self.FillUpTo, self.FillSymbolLabel, self.FillUpToLabel, self.FillSymbol:
             element.setEnabled(justification_enabled)

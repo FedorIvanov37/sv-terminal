@@ -247,7 +247,7 @@ class JsonView(TreeView):
             match column:
                 case FieldsSpec.ColumnsOrder.VALUE:
                     self.generate_item_data(item)
-                    self.validator.modify_field_data(item)
+                    self.modify_field_data(item)
                     self.validate_item(item)
                     item.set_item_color()
 
@@ -579,8 +579,13 @@ class JsonView(TreeView):
 
         self.set_all_items_length()
         self.hide_secrets()
-        self.validator.modify_all_fields_data(self.root)
         self.make_order()
+
+    def modify_all_fields_data(self):
+        self.validator.modify_all_fields_data(self.root)
+
+    def modify_field_data(self, item):
+        self.validator.modify_field_data(item)
 
     def get_top_level_field_numbers(self) -> list[str]:
         field_numbers: list[str] = list()

@@ -204,9 +204,16 @@ class SvTerminalGui(SvTerminal):
 
         if self.config.validation.validation_enabled:
             info("Validate message after spec settings")
+            self.modify_fields_data()
             self.validate_main_window()
 
+    def modify_fields_data(self):  #  Set extended data modifications, set in field params
+        self.window.modify_fields_data()
+
     def validate_main_window(self, check_config: bool = True):
+        if not self.config.validation.validation_enabled:
+            return
+
         self.window.validate_fields(check_config=check_config)
         self.window.refresh_fields()
         info("Transaction data validated")
@@ -252,6 +259,7 @@ class SvTerminalGui(SvTerminal):
         info("Settings applied")
 
         if old_config.validation.validation_enabled != self.config.validation.validation_enabled:
+            self.modify_fields_data()
             self.validate_main_window()
 
         if old_config.fields.json_mode != self.config.fields.json_mode:
@@ -585,6 +593,9 @@ class SvTerminalGui(SvTerminal):
         except Exception as transaction_parsing_error:
             error(f"Cannot set transaction fields: {transaction_parsing_error}")
             return
+
+        if self.config.validation.validation_enabled:
+            self.modify_fields_data()
 
     def set_bitmap(self) -> None:
         bitmap: set[str] = set()

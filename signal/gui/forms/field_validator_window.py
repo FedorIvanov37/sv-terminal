@@ -412,7 +412,7 @@ class Ui_FieldDataSet(object):
         self.MinusButton.setText(_translate("FieldDataSet", "Remove"))
         self.ButtonClear.setText(_translate("FieldDataSet", "Clear"))
         self.ButtonClearAll.setText(_translate("FieldDataSet", "Clear all"))
-        self.groupBox_5.setTitle(_translate("FieldDataSet", "Field Type"))
+        self.groupBox_5.setTitle(_translate("FieldDataSet", "Field Type Validation"))
         self.OkButton.setText(_translate("FieldDataSet", "OK"))
         self.CancelButton.setText(_translate("FieldDataSet", "Cancel"))
         self.FieldDescription.setText(_translate("FieldDataSet", "Field Description"))

@@ -650,7 +650,7 @@
       <bool>true</bool>
      </property>
      <property name="title">
-      <string>Field Type</string>
+      <string>Field Type Validation</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

@@ -1,8 +1,8 @@
-from enum import Enum
+from enum import StrEnum
 from pydantic import BaseModel
 
 
-class ValidationTypes(str, Enum):
+class ValidationTypes(StrEnum):
     FIELD_DATA_PRE_VALIDATION = "FIELD_DATA_PRE_VALIDATION"
     FIELD_DATA_MAIN_VALIDATION = "FIELD_DATA_MAIN_VALIDATION"
     FIELD_DATA_CUSTOM_VALIDATION = "FIELD_DATA_CUSTOM_VALIDATION"

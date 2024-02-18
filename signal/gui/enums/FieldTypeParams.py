@@ -19,8 +19,9 @@ class FieldTypeParams(StrEnum):
     CURRENCY_CODE_A3 = "ISO 4217 Alpha 3"
 
     DATE_FORMAT = "Format in Python datetime"
-    PAST_TIME = "Past time"
-    FUTURE_TIME = "Future time"
+    PAST_TIME = "Past time allowed"
+    PRESENT_TIME = "Present time allowed"
+    FUTURE_TIME = "Future time allowed"
 
     CHECK_LUHN = "Check Luhn algorithm"
     UPPERCASE = "Upper case only"
@@ -29,3 +30,8 @@ class FieldTypeParams(StrEnum):
     TO_LOWERCASE = "Translate to lower case"
     IGNORE_VALIDATIONS = "Ignore all validations"
 
+    JUSTIFICATION_NONE = "Not set"
+    JUSTIFICATION_LEFT = "Left Pad"
+    JUSTIFICATION_RIGHT = ""
+    JUSTIFICATION_MIN_LEN = "Min Length"
+    JUSTIFICATION_MAX_LEN = "Max Length"

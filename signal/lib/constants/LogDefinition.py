@@ -14,7 +14,7 @@ class DebugLevels(StrEnum):
 
 
 DISPLAY_DATE_FORMAT: Final[str] = "%T"
-LOGFILE_DATE_FORMAT: Final[str] = "%d.%m.%Y %H:%M:%S"
+LOGFILE_DATE_FORMAT: Final[str] = "%d.%m.%Y %T"
 
 FORMAT: Final[str] = "{asctime} [{levelname}] {message}"
 MARK_STYLE: Final[str] = "{"

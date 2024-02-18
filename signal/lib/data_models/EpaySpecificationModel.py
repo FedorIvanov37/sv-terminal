@@ -40,6 +40,7 @@ class LogicalValidators(BaseModel):
     mcc: bool = False
     date_format: str = ""
     past: bool = False
+    present: bool = False
     future: bool = False
     check_luhn: bool = False
     only_upper: bool = False
