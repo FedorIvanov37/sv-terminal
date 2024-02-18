@@ -103,9 +103,14 @@ class Validator:
             raise ValueError(f"{str_path} - lost spec for field")
 
     def validate_field_data(self, field_path: FieldPath, field_value: str, validation_result: ValidationResult):
-        path = ".".join(field_path)
-        field_spec = self.spec.get_field_spec(field_path)
-        path_desc: str = f"{path} - {field_spec.description}"
+        """
+        The general validation method validates field data by all possible check
+
+        Each checklist is separated and added to its sub-function such as Validator.validate_field_data.main_validations,
+        Validator.validate_field_data.custom_validations, and so on
+
+        The method execution flow is written below, after the functions declaration
+        """
 
         def fields_pre_validation():  # Basic validations, actual for any field
             errors: set[str] = set()
@@ -319,6 +324,12 @@ class Validator:
                                 errors.add(f"Field {path_desc} - present time not allowed")
 
             return errors
+
+        # The method validate_field_data execution begins here
+
+        path = ".".join(field_path)
+        field_spec = self.spec.get_field_spec(field_path)
+        path_desc: str = f"{path} - {field_spec.description}"
 
         if field_spec.validators.field_type_validators.do_not_validate:  # When all the field validations should be ignored
             validation_result.errors = deepcopy(ValidationResult().errors)  # Clean the errors
