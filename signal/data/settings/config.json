@@ -21,7 +21,7 @@
     "validation": {
         "validation_enabled": true,
         "validate_incoming": true,
-        "validation_mode": "FLEXIBLE"
+        "validation_mode": "WARNING"
     },
     "fields": {
         "max_amount": 100,

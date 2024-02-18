@@ -26,8 +26,13 @@ from signal.lib.core.Logger import LogStream, getLogger, Formatter
 from signal.lib.core.Terminal import SvTerminal
 from signal.lib.data_models.Config import Config
 from signal.lib.data_models.Transaction import Transaction, TypeFields
-from signal.lib.exceptions.exceptions import LicenceAlreadyAccepted, LicenseDataLoadingError, DataValidationWarning
 from signal.lib.constants import LogDefinition
+from signal.lib.exceptions.exceptions import (
+    LicenceAlreadyAccepted,
+    LicenseDataLoadingError,
+    DataValidationWarning,
+    DataValidationError
+)
 
 
 """
@@ -149,7 +154,7 @@ class SvTerminalGui(SvTerminal):
             window.about: lambda: AboutWindow(),
             window.keep_alive: self.set_keep_alive_interval,
             window.repeat: self.trans_timer.set_trans_loop_interval,
-            window.validate_message: self.process_message_validation,
+            window.validate_message: self.validate_main_window,
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
             self.connector.stateChanged: self.set_connection_status,
             self.set_remote_spec: self.connector.set_remote_spec,
@@ -189,23 +194,22 @@ class SvTerminalGui(SvTerminal):
     @set_json_view_focus
     def run_specification_window(self) -> None:
         spec_window: SpecWindow = SpecWindow(self.connector, self.config)
-        spec_window.accepted.connect(self.window.hide_secrets)
         getLogger().removeHandler(self.wireless_handler)
         spec_window.exec()
         getLogger().removeHandler(spec_window.wireless_handler)
         self.create_window_logger()
 
-    def process_message_validation(self):
-        try:
-            self.validate_message(check_config=False)
-        except ValidationError as validation_error:
-            error(validation_error)
+        if self.config.fields.hide_secrets:
+            self.window.hide_secrets()
 
-        info("Message validated")
+        if self.config.validation.validation_enabled:
+            info("Validate message after spec settings")
+            self.validate_main_window()
 
-    def validate_message(self, check_config: bool = True):
+    def validate_main_window(self, check_config: bool = True):
         self.window.validate_fields(check_config=check_config)
         self.window.refresh_fields()
+        info("Transaction data validated")
 
     def echo_test(self) -> None:
         try:
@@ -248,7 +252,7 @@ class SvTerminalGui(SvTerminal):
         info("Settings applied")
 
         if old_config.validation.validation_enabled != self.config.validation.validation_enabled:
-            self.validate_message()
+            self.validate_main_window()
 
         if old_config.fields.json_mode != self.config.fields.json_mode:
             self.window.set_json_mode(self.config.fields.json_mode)
@@ -396,13 +400,13 @@ class SvTerminalGui(SvTerminal):
         return transaction
 
     def send(self, transaction: Transaction | None = None) -> None:
-        sender: MainWindow | None = None
+        if self.connector.connection_in_progress():
+            error("Cannot send the transaction while the host connection is in progress")
+            return
 
         if not transaction:
             try:
-                sender: MainWindow = self.window
                 transaction: Transaction = self.parse_main_window()
-
             except Exception as building_error:
                 [error(err) for err in str(building_error).splitlines()]
                 return
@@ -412,20 +416,31 @@ class SvTerminalGui(SvTerminal):
 
         if not transaction.is_keep_alive:
             info(f"Processing transaction ID [{transaction.trans_id}]")
-            info(str())
 
-        if self.connector.connection_in_progress():
-            error("Cannot send the transaction while the host connection is in progress")
-            return
-        
+        if transaction.generate_fields:
+            transaction: Transaction = self.generator.set_generated_fields(transaction)
+            self.set_generated_fields(transaction)
+
+        if self.config.fields.send_internal_id:
+            transaction: Transaction = self.generator.set_trans_id(transaction)
+
+        if self.config.validation.validation_enabled:
+            try:
+                self.validator.validate_transaction(transaction)
+
+            except DataValidationError:
+                error("Transaction aborted due to validation errors")
+                return
+
+            except Exception as validation_error:
+                error(validation_error)
+                return
+
         try:
             SvTerminal.send(self, transaction)  # SvTerminal always used to real data processing
         except Exception as sending_error:
             error(f"Transaction sending error: {sending_error}")
             return
-
-        if sender is self.window:
-            self.set_generated_fields(transaction)
 
     @staticmethod
     def get_output_filename() -> str:

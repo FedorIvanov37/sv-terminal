@@ -236,6 +236,23 @@ class JsonView(TreeView):
 
             child_item.setText(FieldsSpec.ColumnsOrder.LENGTH, child_item.field_length.removeprefix(prefix))
 
+    def modify_field_data(self, item: FieldItem) -> None:
+        if not self.config.validation.validation_enabled:
+            return
+
+        if not (validations := self.spec.get_field_validations(item.get_field_path())):
+            return
+
+        field_data = self.get_justified_field_data(item.spec, item.field_data)
+
+        if validations.field_type_validators.change_to_lower:
+            field_data = field_data.lower()
+
+        if validations.field_type_validators.change_to_upper:
+            field_data = field_data.upper()
+
+        item.field_data = field_data
+
     @void_qt_signals
     def process_change_item(self, item: FieldItem, column):
         if item is self.root:
@@ -245,10 +262,9 @@ class JsonView(TreeView):
 
         try:
             match column:
-
                 case FieldsSpec.ColumnsOrder.VALUE:
                     self.generate_item_data(item)
-                    item.field_data = self.get_justified_field_data(item.spec, item.field_data)
+                    self.modify_field_data(item)
                     self.validate_item(item)
                     item.set_item_color()
 
@@ -264,12 +280,12 @@ class JsonView(TreeView):
                     self.set_subfields_length(item)
 
         except (ValueError, DataValidationError) as validation_error:
-            item.set_item_color(Colors.RED)
-            [warning(err) for err in str(validation_error).splitlines()]
+            self.set_error(item, validation_error, error)
             return
 
-        except DataValidationWarning:
-            item.set_item_color(Colors.RED)
+        except DataValidationWarning as validation_warning:
+            self.set_error(item, validation_warning, warning)
+            return
 
         if column != FieldsSpec.ColumnsOrder.PROPERTY:
             self.set_item_description(item)
@@ -335,31 +351,27 @@ class JsonView(TreeView):
 
         self.validator.validate_item(item)
 
-    def validate_items(self, parent: FieldItem):  # Validate item and child-items when the item has children
-        for row in parent.get_children():
-            self.validate_item(row)
+    def set_error(self, item: FieldItem, exception: Exception, level=error):
+        item.set_item_color(Colors.RED)
 
-            if row.childCount():
-                self.validate_items(row)
+        for string in str(exception).splitlines():
+            level(f"Validation: {string}")
+
+        self.setFocus()
 
     @void_qt_signals
     def check_all_items(self, parent: FieldItem | None = None, check_config: bool = True):  # Validate and paint item without raising ValueError
-        def set_error(item: FieldItem, exception: Exception):
-            item.set_item_color(Colors.RED)
-
-            for string in str(exception).splitlines():
-                warning(string)
-
-            self.setFocus()
-
         if parent is None:
             parent = self.root
 
         try:
             self.validate_item(parent, check_config=check_config)
 
-        except (ValueError, DataValidationError, DataValidationWarning) as validation_error:
-            set_error(parent, validation_error)
+        except (ValueError, DataValidationError) as validation_error:
+            self.set_error(parent, validation_error, error)
+
+        except DataValidationWarning as validation_warning:
+            self.set_error(parent, validation_warning, warning)
 
         else:
             parent.set_item_color()
@@ -373,7 +385,7 @@ class JsonView(TreeView):
                 self.validate_item(child_item, check_config=check_config)
 
             except (ValueError, DataValidationError, DataValidationWarning) as validation_error:
-                set_error(child_item, validation_error)
+                self.set_error(child_item, validation_error)
                 continue
 
             child_item.set_item_color(Colors.BLACK)
@@ -623,9 +635,6 @@ class JsonView(TreeView):
         row: FieldItem
 
         for row in parent.get_children():
-            if self.config.validation.validation_enabled:
-                self.validate_items(row)
-
             if row.field_number in result:
                 warning(f"Duplicated field number {row.get_field_path(string=True)}")
 
@@ -643,8 +652,6 @@ class JsonView(TreeView):
 
             if not self.config.validation.validation_enabled:
                 return fields
-
-            self.validator.validate_fields(fields)
 
         return result
 

@@ -793,9 +793,9 @@
                     "country_a2": false,
                     "country_n3": false,
                     "mcc": false,
-                    "date_format": "",
+                    "date_format": "%y%m",
                     "past": false,
-                    "future": false,
+                    "future": true,
                     "check_luhn": false,
                     "only_upper": false,
                     "only_lower": false,
@@ -2452,7 +2452,7 @@
                     "check_luhn": false,
                     "only_upper": false,
                     "only_lower": false,
-                    "change_to_upper": false,
+                    "change_to_upper": true,
                     "change_to_lower": false,
                     "do_not_validate": false
                 }
@@ -21728,7 +21728,7 @@
                             "only_upper": false,
                             "only_lower": false,
                             "change_to_upper": false,
-                            "change_to_lower": false,
+                            "change_to_lower": true,
                             "do_not_validate": false
                         }
                     },

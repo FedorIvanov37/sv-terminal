@@ -2,6 +2,7 @@ from typing import Callable
 from datetime import datetime
 from string import digits, ascii_letters, punctuation, whitespace 
 from pydantic import AnyHttpUrl
+from logging import error, warning
 from signal.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 from signal.lib.core.EpaySpecification import EpaySpecification
 from signal.lib.data_models.Types import FieldPath
@@ -11,6 +12,7 @@ from signal.lib.enums.Validation import ValidationMode, CustomValidations, Exten
 from signal.lib.data_models.Transaction import TypeFields
 from signal.gui.enums.FieldTypeParams import FieldTypeParams
 from signal.lib.enums.MessageLength import MessageLength
+from signal.lib.core.Parser import Parser
 
 
 class Validator:
@@ -84,7 +86,7 @@ class Validator:
         if str() in path:
             path: map = map(lambda field_data: field_data if field_data else '<empty>', path)
             path: str = path_to_str(list(path))
-            raise ValueError(f"Empty field number in field path: {path}")
+            raise ValueError(f"{path} - empty field number in field path")
 
         str_path = path_to_str(path)
 
@@ -96,7 +98,7 @@ class Validator:
                 raise ValueError(f"{validation_error}. Path: {str_path}")
 
         if not self.spec.get_field_spec(path=path):
-            raise ValueError(f"Lost spec for field {str_path}")
+            raise ValueError(f"{str_path} - lost spec for field")
 
     def validate_field_data(self, field_path: FieldPath, field_value: str, validation_result: ValidationResult):
         path = ".".join(field_path)
@@ -108,16 +110,16 @@ class Validator:
             length = len(field_value)
 
             if not field_value:  # Field should contain the data
-                errors.add(f"Lost field value for field {path}")
+                errors.add(f"{path} - lost field value for field")
 
             if not all(field.isdigit() for field in field_path):  # Field number should be digit
                 errors.add(f"Field numbers can be digits only. {path} is wrong value")
 
             if length > field_spec.max_length:  # Max length validation
-                errors.add(f"Field {path} over MaxLength. Max length: {field_spec.max_length} got: {length}")
+                errors.add(f"Field {path} - over MaxLength. Max length: {field_spec.max_length} got: {length}")
 
             if length < field_spec.min_length:  # Min length validation
-                errors.add(f"Field {path} less MinLength. Min length: {field_spec.min_length} got: {length}")
+                errors.add(f"Field {path} - less MinLength. Min length: {field_spec.min_length} got: {length}")
 
             return errors
 
@@ -130,16 +132,16 @@ class Validator:
 
             for letter in field_value:
                 if letter not in valid_values:  # Only ascii-printable allowed
-                    errors.add(f"Non-printable letters in field {path}. Seems like a problem with encoding")
+                    errors.add(f"Field {path} - non-printable letters in field. Seems like a problem with encoding")
 
                 if letter in ascii_letters and not field_spec.alpha:  # Validation charset - alphabetic
-                    errors.add(f"Alphabetic values not allowed in field {path_desc}")
+                    errors.add(f"Field {path_desc} - alphabetic values not allowed")
 
                 if letter in digits and not field_spec.numeric:  # Validation charset - numeric
-                    errors.add(f"Numeric values not allowed in field {path_desc}")
+                    errors.add(f"Field {path_desc} - numeric values not allowed")
 
                 if letter in specials and not field_spec.special:  # Validation charset - special
-                    errors.add(f"Special values not allowed in field {path_desc}")
+                    errors.add(f"Field {path_desc} - special values not allowed")
 
             return errors
 
@@ -260,21 +262,21 @@ class Validator:
                 match field:
                     case ExtendedValidations.CHECK_LUHN:  # Check by the Luhn algorithm
                         if not self.check_luhn(field_value):
-                            errors.add(f"Field {path_desc} did not pass validation by the Luhn algorithm")
+                            errors.add(f"Field {path_desc} - did not pass validation by the Luhn algorithm")
 
                     case ExtendedValidations.MCC:  # Valid merchant category code
                         mcc_list = (mcc.code for mcc in self.spec.dictionary.merch_cat_codes.merchant_category_codes)
 
                         if field_value not in mcc_list:
-                            errors.add(f"Field {path_desc} must contain valid {FieldTypeParams.MCC_ISO}")
+                            errors.add(f"Field {path_desc} - must contain valid {FieldTypeParams.MCC_ISO}")
 
                     case ExtendedValidations.ONLY_UPPER:  # Only UPPER case allowed
                         if not field_value.isupper():
-                            errors.add(f"Field {path_desc} allowed UPPER case only")
+                            errors.add(f"Field {path_desc} - allowed UPPER case only")
 
                     case ExtendedValidations.ONLY_LOWER:  # Only lower case allowed
                         if not field_value.islower():
-                            errors.add(f"Field {path_desc} allowed lower case only")
+                            errors.add(f"Field {path_desc} - allowed lower case only")
 
                     case ExtendedValidations.DATE_FORMAT:  # Date format and timeframes
                         date: datetime | None = None
@@ -283,14 +285,14 @@ class Validator:
                             try:
                                 date: datetime = datetime.strptime(field_value, field_spec.validators.field_type_validators.date_format)
                             except ValueError:
-                                errors.add(f'Field {path_desc} must contain date in the following format: "{field_spec.validators.field_type_validators.date_format}"')
+                                errors.add(f'Field {path_desc} - must contain date in the following format: "{field_spec.validators.field_type_validators.date_format}"')
 
                         if date is not None:
                             if not field_spec.validators.field_type_validators.past and date < datetime.now():
-                                errors.add(f"Field {path_desc} past time not allowed")
+                                errors.add(f"Field {path_desc} - past time not allowed")
 
                             if not field_spec.validators.field_type_validators.future and date > datetime.now():
-                                errors.add(f"Field {path_desc} future time not allowed")
+                                errors.add(f"Field {path_desc} - future time not allowed")
 
             return errors
 
@@ -347,7 +349,7 @@ class Validator:
 
                     raise DataValidationWarning(errors_string)
 
-    def validate_fields(self, fields: TypeFields, field_path: FieldPath | None = None, validation_result: ValidationResult = None) -> ValidationResult:
+    def validate_fields(self, fields: TypeFields, field_path: FieldPath | None = None, validation_result: ValidationResult = None, val_error: bool = False):
         if validation_result is None:
             validation_result: ValidationResult = ValidationResult()
 
@@ -357,13 +359,28 @@ class Validator:
         for field, value in fields.items():
             field_path.append(field)
 
-            if isinstance(value, dict):
-                self.validate_fields(fields=value, field_path=field_path, validation_result=validation_result)
+            if self.spec.is_field_complex(field_path):
+                field_value_dict = value
+
+                if not isinstance(value, dict):
+                    field_value_dict = Parser.split_complex_field(field_path[int()], value)
+
+                self.validate_fields(fields=field_value_dict, field_path=field_path, validation_result=validation_result, val_error=val_error)
                 field_path.pop()
                 continue
 
-            validation_result: ValidationResult = self.validate_field_data(field_path, value, validation_result)
+            validation_result: ValidationResult = self.validate_field_data(field_path, value, ValidationResult())
+
+            try:
+                self.process_validation_result(validation_result)
+
+            except DataValidationError as validation_error:
+                [error(f"Validation: {err}") for err in str(validation_error).splitlines()]
+                val_error = True
+
+            except DataValidationWarning as validation_warning:
+                [warning(warn) for warn in str(validation_warning).splitlines()]
 
             field_path.pop()
 
-        return validation_result
+        return val_error

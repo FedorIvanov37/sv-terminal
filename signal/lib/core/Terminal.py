@@ -9,8 +9,7 @@ from signal.lib.core.Logger import Logger
 from signal.lib.core.TransactionQueue import TransactionQueue
 from signal.lib.core.EpaySpecification import EpaySpecification
 from signal.lib.core.FieldsGenerator import FieldsGenerator
-from signal.lib.core.validators.TransValidator import TransValidator as Validator
-from signal.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
+from signal.lib.core.validators.TransValidator import TransValidator
 from signal.lib.data_models.Config import Config
 from signal.lib.data_models.Transaction import Transaction
 from signal.lib.core.Connector import Connector
@@ -23,7 +22,6 @@ from signal.lib.enums import KeepAlive
 from signal.lib.enums.TermFilesPath import TermFilesPath
 
 
-
 class SvTerminal(QObject):
     pyqt_application: QtWidgets.QApplication = QtWidgets.QApplication([])
     spec: EpaySpecification = EpaySpecification(TermFilesPath.SPECIFICATION)
@@ -34,13 +32,13 @@ class SvTerminal(QObject):
     with open(TermFilesPath.CONFIG) as json_file:
         config: Config = Config.model_validate_json(json_file.read())
 
-    validator: Validator
+    validator: TransValidator
     need_reconnect: pyqtSignal = pyqtSignal()
 
     def __init__(self, config: Config, connector: ConnectionInterface | None = None):
         super(SvTerminal, self).__init__()
         self.config: Config = config
-        self.validator = Validator(self.config)
+        self.validator = TransValidator(self.config)
 
         if connector is None:
             connector: Connector = Connector(self.config)
@@ -108,23 +106,6 @@ class SvTerminal(QObject):
             file.write(config.model_dump_json(indent=4))
 
     def send(self, transaction: Transaction | None = None) -> None:
-        if transaction.generate_fields:
-            transaction: Transaction = self.generator.set_generated_fields(transaction)
-
-        if self.config.fields.send_internal_id:
-            transaction: Transaction = self.generator.set_trans_id(transaction)
-
-        if self.config.validation.validation_enabled:
-            try:
-                self.validator.validate_transaction(transaction)
-
-            except (ValueError, TypeError, DataValidationError) as validation_error:
-                [error(err) for err in str(validation_error).splitlines()]
-                return
-
-            except DataValidationWarning as validation_warning:
-                [warning(warn) for warn in str(validation_warning).splitlines()]
-
         self.trans_queue.put_transaction(transaction)
 
     def transaction_sent(self, request: Transaction) -> None:
