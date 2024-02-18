@@ -65,6 +65,9 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         self.process_check_type_change()
         self.connect_all()
 
+        for combo_box in self.CheckTypeBox, self.FieldType:
+            combo_box.set_active_index()
+
     def connect_all(self):
         connection_map = {
             self.FillSide.currentIndexChanged: self.process_justification_change,
@@ -233,35 +236,37 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         field_spec.generate = self.CheckBoxGeneratible.isChecked()
         field_spec.is_secret = self.CheckBoxSecret.isChecked()
 
-        field_spec.validators.justification_element = str()
         field_spec.validators.justification_length = int()
+        field_spec.validators.justification_element = None
+        field_spec.validators.justification = None
 
-        if self.FillUpTo.currentText() == "Min Length":
-            field_spec.validators.justification_length = field_spec.min_length
+        if self.FillSide.currentText() != "Not set":
+            if self.FillUpTo.currentText() == "Min Length":
+                field_spec.validators.justification_length = field_spec.min_length
 
-        if self.FillUpTo.currentText() == "Max Length":
-            field_spec.validators.justification_length = field_spec.max_length
+            if self.FillUpTo.currentText() == "Max Length":
+                field_spec.validators.justification_length = field_spec.max_length
 
-        if self.FillUpTo.currentText().isdigit():
-            field_spec.validators.justification_length = int(self.FillUpTo.currentText())
+            if self.FillUpTo.currentText().isdigit():
+                field_spec.validators.justification_length = int(self.FillUpTo.currentText())
 
-        if self.FillSide.currentText() == "Left Pad":
-            field_spec.validators.justification = Justification.LEFT
+            if self.FillSide.currentText() == "Left Pad":
+                field_spec.validators.justification = Justification.LEFT
 
-        if self.FillSide.currentText() == "Right Pad":
-            field_spec.validators.justification = Justification.RIGHT
+            if self.FillSide.currentText() == "Right Pad":
+                field_spec.validators.justification = Justification.RIGHT
 
-        if self.FillSymbol.text():
-            field_spec.validators.justification_element = self.FillSymbol.text()
+            if self.FillSymbol.text():
+                field_spec.validators.justification_element = self.FillSymbol.text()
 
         logical_validators = LogicalValidators()
 
         for check_type in (
-                FieldTypeParams.CURRENCY,
-                FieldTypeParams.COUNTRY,
-                FieldTypeParams.MCC,
-                FieldTypeParams.DATE,
-                FieldTypeParams.OTHER
+            FieldTypeParams.CURRENCY,
+            FieldTypeParams.COUNTRY,
+            FieldTypeParams.MCC,
+            FieldTypeParams.DATE,
+            FieldTypeParams.OTHER
         ):
 
             if not (validation_dict := self._field_type_checkboxes.get(check_type)):

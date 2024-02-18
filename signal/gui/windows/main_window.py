@@ -310,18 +310,19 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             },
 
             self.ButtonPrintData: {
-                DataFormats.DUMP: lambda: self.print.emit(DataFormats.DUMP),
-                DataFormats.JSON: lambda: self.print.emit(DataFormats.JSON),
-                DataFormats.INI: lambda: self.print.emit(DataFormats.INI),
-                DataFormats.SPEC: lambda: self.print.emit(DataFormats.SPEC),
-                DataFormats.TERM: lambda: self.print.emit(DataFormats.TERM),
-                DataFormats.CONFIG: lambda: self.print.emit(DataFormats.CONFIG),
+                ButtonActions.PrintButtonDataFormats.DUMP: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.DUMP),
+                ButtonActions.PrintButtonDataFormats.JSON: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.JSON),
+                ButtonActions.PrintButtonDataFormats.INI: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.INI),
+                ButtonActions.PrintButtonDataFormats.SPEC: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.SPEC),
+                ButtonActions.PrintButtonDataFormats.TERM: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.TERM),
+                ButtonActions.PrintButtonDataFormats.CONFIG: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.CONFIG),
+                # ButtonActions.PrintButtonDataFormats.TRANS_DATA: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.TRANS_DATA)
             },
 
             self.ButtonSave: {
-                DataFormats.JSON: lambda: self.save.emit(DataFormats.JSON),
-                DataFormats.INI: lambda: self.save.emit(DataFormats.INI),
-                DataFormats.DUMP: lambda: self.save.emit(DataFormats.DUMP),
+                ButtonActions.SaveButtonDataFormats.JSON: lambda: self.save.emit(ButtonActions.SaveButtonDataFormats.JSON),
+                ButtonActions.SaveButtonDataFormats.INI: lambda: self.save.emit(ButtonActions.SaveButtonDataFormats.INI),
+                ButtonActions.SaveButtonDataFormats.DUMP: lambda: self.save.emit(ButtonActions.SaveButtonDataFormats.DUMP),
             }
         }
 

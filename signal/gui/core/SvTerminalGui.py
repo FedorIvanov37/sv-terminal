@@ -456,6 +456,7 @@ class SvTerminalGui(SvTerminal):
             DataFormats.TERM: lambda: TextConstants.HELLO_MESSAGE + "\n",
             DataFormats.SPEC: lambda: self.spec.spec.model_dump_json(indent=4),
             DataFormats.CONFIG: lambda: self.config.model_dump_json(indent=4),
+            ButtonActions.PrintButtonDataFormats.TRANS_DATA: self.print_trans_data,
         }
 
         if not (function := data_processing_map.get(data_format)):
@@ -467,6 +468,29 @@ class SvTerminalGui(SvTerminal):
         except (ValidationError, ValueError, LookupError, AttributeError) as validation_error:
             error(f"{validation_error}")
 
+    def print_trans_data(self):
+        trans_id: str = self.show_reversal_window()
+        transactions: list[Transaction] = list()
+
+        if trans_id is None:
+            raise ValueError("Cannot get transaction ID")
+
+        if not (request := self.trans_queue.get_transaction(trans_id)):
+            raise LookupError(f"Transaction lookup error {trans_id}")
+
+        transactions.append(request)
+
+        if request.matched:
+            response = self.trans_queue.get_transaction(request.match_id)
+            transactions.append(response)
+
+        trans_data: str = ""
+
+        for transaction in transactions:
+            trans_data = f"{trans_data}\n{self.parser.transaction_to_ini_string(transaction)}"
+
+        return trans_data
+
     def copy_log(self) -> None:
         self.set_clipboard_text(self.window.get_log_data())
 
@@ -477,7 +501,7 @@ class SvTerminalGui(SvTerminal):
     def set_clipboard_text(data: str = str()) -> None:
         QApplication.clipboard().setText(data)
 
-    def show_reversal_window(self) -> None:
+    def show_reversal_window(self) -> str:
         reversible_transactions_list: list[Transaction] = self.trans_queue.get_reversible_transactions()
         reversal_window: ReversalWindow = ReversalWindow(reversible_transactions_list)
         accepted: int = reversal_window.exec()

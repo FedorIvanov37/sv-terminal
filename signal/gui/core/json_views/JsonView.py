@@ -1,5 +1,5 @@
 from copy import deepcopy
-from logging import error, warning
+from logging import error, warning, debug
 from PyQt6.QtCore import pyqtSignal, QModelIndex
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QLineEdit
 from signal.lib.core.EpaySpecification import EpaySpecification
@@ -279,8 +279,11 @@ class JsonView(TreeView):
         if field_spec.validators.justification is None:
             return value
 
-        just_letter: str = field_spec.validators.justification_element
-        just_length: int = field_spec.validators.justification_length
+        if not (just_letter := field_spec.validators.justification_element):
+            return value
+
+        if not (just_length := field_spec.validators.justification_length):
+            return value
 
         if field_spec.validators.justification == Justification.RIGHT:
             return value.ljust(just_length, just_letter)
@@ -288,12 +291,14 @@ class JsonView(TreeView):
         if field_spec.validators.justification == Justification.LEFT:
             return value.rjust(just_length, just_letter)
 
+        return value
+
     @void_qt_signals
     def set_item_description(self, item: FieldItem):
         try:
             item.set_spec()
-        except Exception:
-            pass
+        except Exception as set_spec_error:
+            debug(set_spec_error)
 
         specification_found = any((item.spec, self.config.validation.validation_enabled))
 

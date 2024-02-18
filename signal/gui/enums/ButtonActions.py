@@ -1,5 +1,6 @@
 from enum import StrEnum
 from signal.lib.enums import KeepAlive
+from signal.lib.enums.DataFormats import PrintDataFormats
 
 
 class ButtonActionSigns(StrEnum):
@@ -12,10 +13,28 @@ class ButtonActionSigns(StrEnum):
     BUTTON_RIGHT_SIGN = "🡺"
 
 
+PrintButtonDataFormats = StrEnum("PrintButtonDataFormats", PrintDataFormats.__dict__.get('_member_map_'))
+
+
+PrintButtonDataFormats.TRANS_DATA = "TRANS_DATA"
+
+
+save_button_data_formats = {
+    data_format.name: data_format.value for data_format in [
+        PrintButtonDataFormats.JSON,
+        PrintButtonDataFormats.INI,
+        PrintButtonDataFormats.DUMP,
+    ]
+}
+
+
+SaveButtonDataFormats = StrEnum("SaveButtonDataFormats", save_button_data_formats)
+
+
 class ClearMenuActions(StrEnum):
     ALL = "All"
     STRING = "String"
-    JSON = "JSON"
+    JSON = PrintButtonDataFormats.JSON
 
 
 class DataMenuActions(StrEnum):

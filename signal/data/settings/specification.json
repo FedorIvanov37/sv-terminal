@@ -23858,8 +23858,8 @@
                         "must_not_start_with": [],
                         "must_not_contain_only": [],
                         "justification": null,
-                        "justification_element": null,
-                        "justification_length": 0,
+                        "justification_element": "",
+                        "justification_length": 3,
                         "field_type_validators": {
                             "currency_a3": false,
                             "currency_n3": false,
@@ -23895,7 +23895,7 @@
                     "special": false,
                     "reserved_for_future": false,
                     "description": "CVV2",
-                    "is_secret": false,
+                    "is_secret": true,
                     "fields": null
                 },
                 "93": {
