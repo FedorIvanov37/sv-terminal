@@ -96,6 +96,9 @@ class ItemsValidator(Validator):
 
     @staticmethod
     def get_justified_field_data(field_spec: IsoField, value: str) -> str:
+        if not field_spec:
+            return value
+
         if field_spec.validators.justification is None:
             return value
 

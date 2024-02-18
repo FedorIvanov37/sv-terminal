@@ -1,4 +1,4 @@
-from logging import debug, info, error
+from logging import debug, info, warning
 from signal.lib.data_models.Transaction import Transaction
 from signal.lib.core.EpaySpecification import EpaySpecification
 from signal.lib.core.Parser import Parser
@@ -67,17 +67,11 @@ class LogPrinter(QObject):
 
             if all((hide_secrets, self.spec.is_field_complex([field]), isinstance(field_data, str))):
                 try:
-                    field_data = Parser.split_complex_field(field, field_data)
-                except Exception:
-                    pass
+                    split_field_data: dict = Parser.split_complex_field(field, field_data)
+                    field_data: str = Parser.join_complex_field(field, split_field_data, hide_secrets=hide_secrets)
 
-            if isinstance(field_data, dict):
-                try:
-                    field_data: str = Parser.join_complex_field(field, field_data, hide_secrets=hide_secrets)
-                except Exception as parsing_error:
-                    error(f"Cannot print field {field}")
-                    error(f"data parsing error: {parsing_error}")
-                    continue
+                except Exception as field_parsing_error:
+                    warning(field_parsing_error)
 
             match field:
                 case self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
