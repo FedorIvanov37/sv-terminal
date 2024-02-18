@@ -2279,7 +2279,7 @@
             "reversal": false,
             "matching": false,
             "alpha": true,
-            "numeric": false,
+            "numeric": true,
             "special": false,
             "reserved_for_future": false,
             "description": "Authorization response code",

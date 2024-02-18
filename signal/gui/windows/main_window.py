@@ -182,6 +182,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.setWindowTitle(f"{TextConstants.SYSTEM_NAME} {ReleaseDefinition.VERSION}")
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
         self.ButtonSend.setFocus()
+        self.enable_validation(enable=self.config.validation.validation_enabled)
 
         for trans_type in KeepAlive.TransTypes.TRANS_TYPE_KEEP_ALIVE, KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION:
             self.process_transaction_loop_change(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_STOP, trans_type)
@@ -366,11 +367,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def validate_fields(self, check_config: bool = True) -> None:
         self.json_view.check_all_items(check_config=check_config)
 
+    def enable_validation(self, enable=True):
+        self.ButtonValidate.setEnabled(enable)
+
     def modify_fields_data(self):
         self.json_view.modify_all_fields_data()
 
-    def refresh_fields(self):
-        self.json_view.refresh_fields()
+    def refresh_fields(self, color=None):
+        self.json_view.refresh_fields(color=color)
 
     def clean_window_log(self) -> None:
         self.LogArea.setText(str())

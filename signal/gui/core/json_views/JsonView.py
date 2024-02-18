@@ -109,7 +109,7 @@ class JsonView(TreeView):
 
             child_item.set_length(fill_length=self.len_fill)
 
-    def refresh_fields(self, parent: FieldItem | None = None):
+    def refresh_fields(self, parent: FieldItem | None = None, color: Colors | None = None):
         if parent is None:
             parent = self.root
 
@@ -117,10 +117,13 @@ class JsonView(TreeView):
 
         for child_item in parent.get_children():
             if child_item.childCount():
-                self.refresh_fields(child_item)
+                self.refresh_fields(child_item, color=color)
                 continue
 
             self.set_item_description(child_item)
+
+            if color is not None:
+                child_item.set_item_color(color)
 
         self.set_all_items_length(self.root)
 

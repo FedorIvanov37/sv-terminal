@@ -15,6 +15,7 @@ from signal.gui.windows.license_window import LicenseWindow
 from signal.gui.core.WirelessHandler import WirelessHandler
 from signal.gui.core.ConnectionThread import ConnectionThread
 from signal.gui.enums import ButtonActions
+from signal.gui.enums.Colors import Colors
 from signal.lib.enums import KeepAlive
 from signal.lib.enums.TermFilesPath import TermFilesPath
 from signal.lib.enums.DataFormats import DataFormats, PrintDataFormats
@@ -207,11 +208,16 @@ class SvTerminalGui(SvTerminal):
             self.modify_fields_data()
             self.validate_main_window()
 
+        if not self.config.validation.validation_enabled:
+            self.window.refresh_fields(Colors.BLACK)
+
     def modify_fields_data(self):  #  Set extended data modifications, set in field params
         self.window.modify_fields_data()
 
     def validate_main_window(self, check_config: bool = True):
         if not self.config.validation.validation_enabled:
+            error("Validation disabled in settings")
+            self.window.refresh_fields(color=Colors.BLACK)
             return
 
         self.window.validate_fields(check_config=check_config)
@@ -253,14 +259,19 @@ class SvTerminalGui(SvTerminal):
                 raise ValueError
 
         except ValueError:
-            warning(f"Incorrect SV port value: {self.config.host.port}. "
-                    f"Must be a number in the range of 0 to 65535")
+            warning(f"Incorrect SV port value: {self.config.host.port}. Must be a number in the range of 0 to 65535")
 
         info("Settings applied")
 
+        self.window.enable_validation(self.config.validation.validation_enabled)
+
         if old_config.validation.validation_enabled != self.config.validation.validation_enabled:
-            self.modify_fields_data()
-            self.validate_main_window()
+            if self.config.validation.validation_enabled:
+                self.modify_fields_data()
+                self.validate_main_window()
+
+            if not self.config.validation.validation_enabled:
+                self.window.refresh_fields(Colors.BLACK)
 
         if old_config.fields.json_mode != self.config.fields.json_mode:
             self.window.set_json_mode(self.config.fields.json_mode)
