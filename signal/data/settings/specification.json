@@ -88,7 +88,10 @@
                 "max_value": 0,
                 "must_not_contain": [],
                 "possible_values": [],
-                "must_start_with": [],
+                "must_start_with": [
+                    "4",
+                    "5"
+                ],
                 "must_end_with": [],
                 "must_contain": [],
                 "valid_values": [],
@@ -111,7 +114,7 @@
                     "past": false,
                     "present": false,
                     "future": false,
-                    "check_luhn": true,
+                    "check_luhn": false,
                     "only_upper": false,
                     "only_lower": false,
                     "change_to_upper": false,

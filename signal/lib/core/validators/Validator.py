@@ -107,7 +107,7 @@ class Validator:
         field_spec = self.spec.get_field_spec(field_path)
         path_desc: str = f"{path} - {field_spec.description}"
 
-        def fields_pre_validation():
+        def fields_pre_validation():  # Basic validations, actual for any field
             errors: set[str] = set()
             length = len(field_value)
 
@@ -147,59 +147,77 @@ class Validator:
 
             return errors
 
-        def custom_validations():  # Custom validations set by user
+        def custom_validations():  # Custom string validations set by user on Field Validations window
             errors: set[str] = set()
 
             for validation, patterns in field_spec.validators.model_dump().items():
                 if not patterns or not isinstance(patterns, list):
                     continue
 
+                patterns_str = ", ".join(patterns)
+
                 match validation:
                     case CustomValidations.VALID_VALUES:  # Exact allowed value validation
                         if not field_value in patterns:
-                            bad_patterns = ", ".join(patterns)
-                            errors.add(f'Field {path_desc} must contain one of the following: {bad_patterns}')
+                            errors.add(f'Field {path_desc} must contain one of the following: {patterns_str}')
 
                     case CustomValidations.INVALID_VALUES:  # Exact not allowed value validation
                         if field_value in patterns:
-                            bad_patterns = ", ".join(patterns)
-                            errors.add(f'Field {path_desc} must not contain one of the following: {bad_patterns}')
+                            errors.add(f'Field {path_desc} must not contain one of the following: {patterns_str}')
 
-                for pattern in patterns:
-                    match validation:
-                        case CustomValidations.MUST_CONTAIN:
-                            if pattern not in field_value:
-                                errors.add(f'Field {path_desc} must contain "{pattern}"')
+                    case CustomValidations.MUST_START_WITH:
+                        value_start_with = [True for pattern in patterns if field_value.startswith(pattern)]
 
-                        case CustomValidations.MUST_CONTAIN_ONLY:
-                            bad_patterns = ", ".join(patterns)
+                        if not any(value_start_with):
+                            errors.add(f"Field {path_desc} must start with one of the following: {patterns_str}")
 
-                            if [letter for letter in field_value if letter not in patterns]:
-                                errors.add(f"Field {path_desc} must contain only one or multiple: {bad_patterns}")
+                    case CustomValidations.MUST_NOT_START_WITH:
+                        value_start_with = [True for pattern in patterns if field_value.startswith(pattern)]
 
-                        case CustomValidations.MUST_NOT_CONTAIN:
-                            if pattern in field_value:
-                                errors.add(f'Field {path_desc} must not contain {pattern}')
+                        if any(value_start_with):
+                            errors.add(f"Field {path_desc} must not start with one of the following: {patterns_str}")
 
-                        case CustomValidations.MUST_NOT_CONTAIN_ONLY:
-                            if not [letter for letter in field_value if letter not in pattern]:
-                                errors.add(f"Field {path_desc} must not contain only one or multiple {pattern}")
+                    case CustomValidations.MUST_END_WITH:
+                        value_end_with = [True for pattern in patterns if field_value.endswith(pattern)]
 
-                        case CustomValidations.MUST_START_WITH:
-                            if not field_value.startswith(pattern):
-                                errors.add(f"Field {path_desc} must start with {pattern}")
+                        if not any(value_end_with):
+                            errors.add(f"Field {path_desc} must end with one of the following: {patterns_str}")
 
-                        case CustomValidations.MUST_NOT_START_WITH:
-                            if field_value.startswith(pattern):
-                                errors.add(f"Field {path_desc} must not start with {pattern}")
+                    case CustomValidations.MUST_NOT_END_WITH:
+                        value_end_with = [True for pattern in patterns if field_value.endswith(pattern)]
 
-                        case CustomValidations.MUST_END_WITH:
-                            if not field_value.endswith(pattern):
-                                errors.add(f"Field {path_desc} must end with {pattern}")
+                        if any(value_end_with):
+                            errors.add(f"Field {path_desc} must not end with one of the following: {patterns_str}")
 
-                        case CustomValidations.MUST_NOT_END_WITH:
-                            if field_value.endswith(pattern):
-                                errors.add(f"Field {path_desc} must not end with {pattern}")
+                    case CustomValidations.MUST_CONTAIN:
+                        value_contains = [True for pattern in patterns if pattern in field_value]
+
+                        if not any(value_contains):
+                            errors.add(f"Field {path_desc} must contain one of the following: {patterns_str}")
+
+                    case CustomValidations.MUST_NOT_CONTAIN:
+                        value_contains = [True for pattern in patterns if pattern in field_value]
+
+                        if any(value_contains):
+                            errors.add(f"Field {path_desc} must not contain one of the following: {patterns_str}")
+
+                    case CustomValidations.MUST_CONTAIN_ONLY:
+                        value = field_value
+
+                        for pattern in patterns:
+                            value = value.replace(pattern, str())
+
+                        if value:
+                            errors.add(f"Field {path_desc} must contain only one or multiple: {patterns_str}")
+
+                    case CustomValidations.MUST_NOT_CONTAIN_ONLY:
+                        value = field_value
+
+                        for pattern in patterns:
+                            value = value.replace(pattern, str())
+
+                        if not value:
+                            errors.add(f"Field {path_desc} must not contain only one or multiple: {patterns_str}")
 
             return errors
 
@@ -230,7 +248,7 @@ class Validator:
 
             return errors
 
-        def currency_validation():
+        def currency_validation():  # Check valid currency code by the currency dictionary
             errors: set[str] = set()
             allowed_currency_codes: list[str] = list()
 
@@ -247,10 +265,8 @@ class Validator:
                 if field not in (ExtendedValidations.CURRENCY_A3, ExtendedValidations.COUNTRY_N3):
                     continue
 
-                if field_value in allowed_currency_codes:
-                    continue
-
-                errors.add(f"Field {path_desc} must contain valid ISO currency code")
+                if field_value not in allowed_currency_codes:
+                    errors.add(f'Field {path_desc} must contain valid ISO currency code. The value "{field_value}" is not allowed')
 
             return errors
 
@@ -293,13 +309,13 @@ class Validator:
                         if date is not None:
                             current_date = datetime.strptime(datetime.strftime(datetime.now(), date_format), date_format)
 
-                            if not field_spec.validators.field_type_validators.past and date < current_date:
+                            if date < current_date and not field_spec.validators.field_type_validators.past:
                                 errors.add(f"Field {path_desc} - past time not allowed")
 
-                            if not field_spec.validators.field_type_validators.future and date > current_date:
+                            if date > current_date and not field_spec.validators.field_type_validators.future:
                                 errors.add(f"Field {path_desc} - future time not allowed")
 
-                            if not field_spec.validators.field_type_validators.present and date == current_date:
+                            if date == current_date and not field_spec.validators.field_type_validators.present:
                                 errors.add(f"Field {path_desc} - present time not allowed")
 
             return errors
