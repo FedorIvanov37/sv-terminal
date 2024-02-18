@@ -5,6 +5,7 @@ from signal.gui.core.json_items.FIeldItem import FieldItem
 from signal.lib.data_models.Types import FieldPath
 from signal.lib.data_models.Validation import ValidationResult
 from signal.lib.exceptions.exceptions import DataValidationError
+from signal.lib.data_models.EpaySpecificationModel import IsoField, Justification
 
 
 class ItemsValidator(Validator):
@@ -53,3 +54,50 @@ class ItemsValidator(Validator):
 
         if [child_item.field_number for child_item in parent.get_children()].count(item.field_number) > 1:
             raise DataValidationError(f"Duplicated field number {item.get_field_path(string=True)}")
+
+    def modify_all_fields_data(self, parent: FieldItem):
+        for child_item in parent.get_children():
+            if child_item.childCount():
+                self.modify_all_fields_data(parent=child_item)
+                continue
+
+            self.modify_field_data(child_item)
+
+    def modify_field_data(self, item: FieldItem) -> None:
+        if not self.config.validation.validation_enabled:
+            return
+
+        if not (validations := self.spec.get_field_validations(item.get_field_path())):
+            return
+
+        if validations.justification:
+            item.field_data = self.get_justified_field_data(item.spec, item.field_data)
+
+        if validations.field_type_validators.change_to_lower and validations.field_type_validators.change_to_upper:
+            item.field_data = item.field_data.upper()
+            return
+
+        if validations.field_type_validators.change_to_lower:
+            item.field_data = item.field_data.lower()
+
+        if validations.field_type_validators.change_to_upper:
+            item.field_data = item.field_data.upper()
+
+    @staticmethod
+    def get_justified_field_data(field_spec: IsoField, value: str) -> str:
+        if field_spec.validators.justification is None:
+            return value
+
+        if not (just_letter := field_spec.validators.justification_element):
+            return value
+
+        if not (just_length := field_spec.validators.justification_length):
+            return value
+
+        if field_spec.validators.justification == Justification.RIGHT:
+            return value.ljust(just_length, just_letter)
+
+        if field_spec.validators.justification == Justification.LEFT:
+            return value.rjust(just_length, just_letter)
+
+        return value

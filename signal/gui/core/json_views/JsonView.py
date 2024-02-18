@@ -236,23 +236,6 @@ class JsonView(TreeView):
 
             child_item.setText(FieldsSpec.ColumnsOrder.LENGTH, child_item.field_length.removeprefix(prefix))
 
-    def modify_field_data(self, item: FieldItem) -> None:
-        if not self.config.validation.validation_enabled:
-            return
-
-        if not (validations := self.spec.get_field_validations(item.get_field_path())):
-            return
-
-        field_data = self.get_justified_field_data(item.spec, item.field_data)
-
-        if validations.field_type_validators.change_to_lower:
-            field_data = field_data.lower()
-
-        if validations.field_type_validators.change_to_upper:
-            field_data = field_data.upper()
-
-        item.field_data = field_data
-
     @void_qt_signals
     def process_change_item(self, item: FieldItem, column):
         if item is self.root:
@@ -264,7 +247,7 @@ class JsonView(TreeView):
             match column:
                 case FieldsSpec.ColumnsOrder.VALUE:
                     self.generate_item_data(item)
-                    self.modify_field_data(item)
+                    self.validator.modify_field_data(item)
                     self.validate_item(item)
                     item.set_item_color()
 
@@ -289,25 +272,6 @@ class JsonView(TreeView):
 
         if column != FieldsSpec.ColumnsOrder.PROPERTY:
             self.set_item_description(item)
-
-    @staticmethod
-    def get_justified_field_data(field_spec: IsoField, value: str) -> str:
-        if field_spec.validators.justification is None:
-            return value
-
-        if not (just_letter := field_spec.validators.justification_element):
-            return value
-
-        if not (just_length := field_spec.validators.justification_length):
-            return value
-
-        if field_spec.validators.justification == Justification.RIGHT:
-            return value.ljust(just_length, just_letter)
-
-        if field_spec.validators.justification == Justification.LEFT:
-            return value.rjust(just_length, just_letter)
-
-        return value
 
     @void_qt_signals
     def set_item_description(self, item: FieldItem):
@@ -605,7 +569,7 @@ class JsonView(TreeView):
                 self.parse_fields(field_data, parent=child, specification=specification.fields.get(field))
 
             else:
-                field_data = self.get_justified_field_data(field_spec, str(field_data))
+                field_data = self.validator.get_justified_field_data(field_spec, str(field_data))
                 string_data = [field, field_data, None, description]
                 child: FieldItem = FieldItem(string_data)
 
@@ -615,6 +579,7 @@ class JsonView(TreeView):
 
         self.set_all_items_length()
         self.hide_secrets()
+        self.validator.modify_all_fields_data(self.root)
         self.make_order()
 
     def get_top_level_field_numbers(self) -> list[str]:

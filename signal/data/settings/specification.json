@@ -24625,7 +24625,7 @@
                     "only_upper": false,
                     "only_lower": false,
                     "change_to_upper": false,
-                    "change_to_lower": false,
+                    "change_to_lower": true,
                     "do_not_validate": false
                 }
             },
@@ -24634,7 +24634,7 @@
                 "54"
             ],
             "min_length": 1,
-            "max_length": 123,
+            "max_length": 99,
             "var_length": 3,
             "tag_length": 0,
             "generate": false,
