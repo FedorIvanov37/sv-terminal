@@ -20,8 +20,8 @@
     },
     "validation": {
         "validation_enabled": true,
-        "validate_incoming": false,
-        "validation_mode": "FLEXIBLE"
+        "validate_incoming": true,
+        "validation_mode": "ERROR"
     },
     "fields": {
         "max_amount": 100,

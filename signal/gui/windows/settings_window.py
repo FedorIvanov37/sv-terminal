@@ -158,7 +158,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         config.remote_spec.backup_storage_depth = self.StorageDepth.value()
         config.validation.validation_enabled = self.ValidationEnabled.isChecked()
         config.validation.validation_enabled = self.ValidationEnabled.isChecked()
-        config.validation.validate_incoming = self.ValidateIncoming.isChecked() and self.ValidateIncoming.isEnabled()
+        config.validation.validate_incoming = self.ValidateIncoming.isChecked()
         config.validation.validation_mode = self.ValidationReaction.currentText()
         config.remote_spec.remote_spec_url = self.RemoteSpecUrl.text()
 

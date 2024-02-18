@@ -258,19 +258,22 @@ class JsonView(TreeView):
                     self.process_change_property(item)
 
                 case FieldsSpec.ColumnsOrder.FIELD:
-                    self.check_all_items(item)
+                    if item.get_children():
+                        self.check_all_items(item)
+
+                    else:
+                        self.validate_item(item)
+
                     item.set_checkbox()
 
                 case FieldsSpec.ColumnsOrder.LENGTH:
                     self.set_subfields_length(item)
 
-        except (ValueError, DataValidationError) as validation_error:
+        except DataValidationError as validation_error:
             self.set_error(item, validation_error, error)
-            return
 
         except DataValidationWarning as validation_warning:
             self.set_error(item, validation_warning, warning)
-            return
 
         if column != FieldsSpec.ColumnsOrder.PROPERTY:
             self.set_item_description(item)
@@ -330,29 +333,13 @@ class JsonView(TreeView):
         if parent is None:
             parent = self.root
 
-        try:
-            self.validate_item(parent, check_config=check_config)
-
-        except (ValueError, DataValidationError) as validation_error:
-            self.set_error(parent, validation_error, error)
-
-        except DataValidationWarning as validation_warning:
-            self.set_error(parent, validation_warning, warning)
-
-        else:
-            parent.set_item_color()
-
         for child_item in parent.get_children():
             if child_item.childCount():
                 self.check_all_items(parent=child_item, check_config=check_config)
                 continue
 
-            try:
+            if self.config.validation.validation_enabled:
                 self.validate_item(child_item, check_config=check_config)
-
-            except (ValueError, DataValidationError, DataValidationWarning) as validation_error:
-                self.set_error(child_item, validation_error)
-                continue
 
             child_item.set_item_color(Colors.BLACK)
 
@@ -546,6 +533,18 @@ class JsonView(TreeView):
 
             item.set_checkbox(is_checked)
 
+    def enable_json_mode_checkboxes(self, enable=True):
+        item: FieldItem
+
+        for item in self.root.get_children():
+            if not (checkbox := item.get_checkbox()):
+                continue
+
+            if not checkbox.text() == CheckBoxesDefinition.JSON_MODE:
+                continue
+
+            checkbox.setEnabled(enable)
+
     def parse_fields(self, input_json: dict, parent: QTreeWidgetItem = None, specification=None):
         if parent is None:
             parent = self.root
@@ -616,7 +615,11 @@ class JsonView(TreeView):
                 result[row.field_number] = row.field_data
 
         if parent is self.root:
-            fields = {field: result[field] for field in sorted(result, key=int)}
+            try:
+                fields = {field: result[field] for field in sorted(result, key=int)}
+            except ValueError:
+                warning("Cannot sort top-level data fields, usually it happens due to non-digit field number")
+                fields = result
 
             if not self.config.validation.validation_enabled:
                 return fields

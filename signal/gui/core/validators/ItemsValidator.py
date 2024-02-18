@@ -21,6 +21,12 @@ class ItemsValidator(Validator):
         if not (field_path := item.get_field_path()):
             raise DataValidationError(f"Cannot get field path for field {item.field_number}")
 
+        for field_number in field_path:
+            if field_number.isdigit():
+                continue
+
+            raise DataValidationError(f"Wrong field numbers {field_number} in path {item.get_field_path(string=True)}. Field number can contain digits only")
+
         if not item.spec:
             raise DataValidationError(f"Lost spec for field {item.get_field_path(string=True)}")
 

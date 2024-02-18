@@ -125,7 +125,7 @@ class SvTerminal(QObject):
 
         info(f"Incoming transaction ID [{resp_trans_id}] received")
 
-        if self.config.validation.validate_incoming:
+        if self.config.validation.validation_enabled and self.config.validation.validate_incoming:
             try:
                 self.validator.validate_transaction(transaction=response)
 

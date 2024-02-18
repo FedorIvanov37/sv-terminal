@@ -383,6 +383,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.json_view.clean()
         self.json_view.parse_fields(fields)
 
+    def enable_json_mode_checkboxes(self, enable=True):
+        self.json_view.enable_json_mode_checkboxes(enable=enable)
+
     # Return transaction data fields in dict-representation
     def get_fields(self, flat=False) -> TypeFields:
         return self.json_view.generate_fields(flat=flat)

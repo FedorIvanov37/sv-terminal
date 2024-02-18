@@ -124,6 +124,8 @@ class SvTerminalGui(SvTerminal):
         if self.config.terminal.connect_on_startup:
             self.reconnect()
 
+        self.window.enable_json_mode_checkboxes(enable=self.config.validation.validation_enabled)
+
         self._startup_finished: bool = True
 
     def connect_widgets(self):
@@ -264,6 +266,7 @@ class SvTerminalGui(SvTerminal):
         info("Settings applied")
 
         self.window.enable_validation(self.config.validation.validation_enabled)
+        self.window.enable_json_mode_checkboxes(enable=self.config.validation.validation_enabled)
 
         if old_config.validation.validation_enabled != self.config.validation.validation_enabled:
             if self.config.validation.validation_enabled:
@@ -490,7 +493,6 @@ class SvTerminalGui(SvTerminal):
         SvTerminal.save_transaction(self, transaction, file_format, filename)
 
     def print_data(self, data_format: PrintDataFormats) -> None:
-
         data_processing_map: dict[str, Callable] = {
             DataFormats.JSON: lambda: self.parse_main_window(flat_fields=False, clean=True).model_dump_json(indent=4),
             DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window()),
@@ -507,7 +509,7 @@ class SvTerminalGui(SvTerminal):
 
         try:
             self.window.set_log_data(function())
-        except (ValidationError, ValueError, LookupError, AttributeError) as validation_error:
+        except Exception as validation_error:
             error(f"{validation_error}")
 
     def print_trans_data(self):

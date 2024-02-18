@@ -105,6 +105,14 @@ class FieldItem(Item):
         self._secret = ""
         self.masked = False
 
+    def get_checkbox(self):
+        if not (tree := self.treeWidget()):
+            return
+
+        checkbox: QWidget | QCheckBox = tree.itemWidget(self, FieldsSpec.ColumnsOrder.PROPERTY)
+
+        return checkbox
+
     def checkbox_checked(self, checkbox_type: str):
         if checkbox_type not in (CheckBoxesDefinition.GENERATE, CheckBoxesDefinition.JSON_MODE):
             return False
