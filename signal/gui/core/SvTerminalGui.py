@@ -216,13 +216,8 @@ class SvTerminalGui(SvTerminal):
     def modify_fields_data(self):  #  Set extended data modifications, set in field params
         self.window.modify_fields_data()
 
-    def validate_main_window(self, check_config: bool = True):
-        if not self.config.validation.validation_enabled:
-            error("Validation disabled in settings")
-            self.window.refresh_fields(color=Colors.BLACK)
-            return
-
-        self.window.validate_fields(check_config=check_config)
+    def validate_main_window(self):
+        self.window.validate_fields()
         self.window.refresh_fields()
         info("Transaction data validated")
 
@@ -268,7 +263,12 @@ class SvTerminalGui(SvTerminal):
         self.window.enable_validation(self.config.validation.validation_enabled)
         self.window.enable_json_mode_checkboxes(enable=self.config.validation.validation_enabled)
 
-        if old_config.validation.validation_enabled != self.config.validation.validation_enabled:
+        validation_conditions = [
+            old_config.validation.validation_enabled != self.config.validation.validation_enabled,
+            old_config.validation.validation_mode != self.config.validation.validation_mode
+        ]
+
+        if any(validation_conditions):
             if self.config.validation.validation_enabled:
                 self.modify_fields_data()
                 self.validate_main_window()
@@ -288,8 +288,10 @@ class SvTerminalGui(SvTerminal):
         ]
 
         if all(spec_loading_conditions):
+            self.set_remote_spec.emit()
+
             try:
-                self.validator.validate_url(self.config.remote_spec.remote_spec_url)
+                self.data_validator.validate_url(self.config.remote_spec.remote_spec_url)
 
             except ValidationError as url_validation_error:
                 error(f"Remote spec URL validation error: {url_validation_error}")
@@ -394,9 +396,6 @@ class SvTerminalGui(SvTerminal):
         if not (message_type := self.window.get_mti(MessageLength.MESSAGE_TYPE_LENGTH)):
             raise ValueError("Invalid MTI")
 
-        if self.config.validation.validation_enabled and self.validator.validate_fields(fields=data_fields):
-            raise DataValidationError("Transaction aborted due to validation errors")
-
         try:
             transaction: Transaction = Transaction(
                 generate_fields=self.window.get_fields_to_generate(),
@@ -454,17 +453,15 @@ class SvTerminalGui(SvTerminal):
         if self.config.fields.send_internal_id:
             transaction: Transaction = self.generator.set_trans_id(transaction)
 
-        if self.config.validation.validation_enabled:
-            try:
-                self.validator.validate_transaction(transaction)
+        try:
+            self.trans_validator.validate_transaction(transaction)
 
-            except DataValidationError:
-                error("Transaction aborted due to validation errors")
-                return
+        except DataValidationWarning as validation_warning:
+            warning(validation_warning)
 
-            except Exception as validation_error:
-                error(validation_error)
-                return
+        except Exception as validation_error:
+            error(validation_error)
+            return
 
         try:
             SvTerminal.send(self, transaction)  # SvTerminal always used to real data processing

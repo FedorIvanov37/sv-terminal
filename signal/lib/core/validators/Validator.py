@@ -1,18 +1,17 @@
 from typing import Callable
 from datetime import datetime
 from string import digits, ascii_letters, punctuation, whitespace 
-from pydantic import AnyHttpUrl
+from pydantic import AnyHttpUrl, ValidationError
 from copy import deepcopy
-from logging import error, warning
 from signal.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 from signal.lib.core.EpaySpecification import EpaySpecification
 from signal.lib.data_models.Types import FieldPath
 from signal.lib.data_models.Config import Config
 from signal.lib.data_models.Validation import ValidationResult, ValidationTypes
+from signal.lib.data_models.EpaySpecificationModel import IsoField
 from signal.lib.enums.Validation import ValidationMode, CustomValidations, ExtendedValidations
 from signal.lib.data_models.Transaction import TypeFields
 from signal.gui.enums.FieldTypeParams import FieldTypeParams
-from signal.lib.enums.MessageLength import MessageLength
 from signal.lib.core.Parser import Parser
 
 
@@ -27,14 +26,29 @@ class Validator:
         self.config = config
 
     @staticmethod
-    def validate_url(url: str):
-        AnyHttpUrl(url)
+    def validate_url(url: str, validation_result: ValidationResult):
+        errors = validation_result.errors[ValidationTypes.URL_VALIDATION]
 
-    def validate_mti(self, mti):
+        try:
+            AnyHttpUrl(url)
+        except ValidationError as validation_error:
+            errors.add(str(validation_error))
+
+        return validation_result
+
+    @staticmethod
+    def field_path_to_str(field_path: list[str]) -> str:
+        return ".".join(field_path)
+
+    def validate_mti(self, mti, validation_result: ValidationResult):
+        errors = validation_result.errors[ValidationTypes.MTI_VALIDATION]
+
         if mti in self.spec.get_mti_codes():
-            return
+            return validation_result
 
-        raise DataValidationError(f"Unknown MTI: {mti}")
+        errors.add(f"Unknown MTI: {mti}")
+
+        return validation_result
 
     @staticmethod
     def check_luhn(value: str) -> bool:  # Based on code example from https://en.wikipedia.org/wiki/Luhn_algorithm
@@ -57,51 +71,58 @@ class Validator:
 
         return status
 
-    def validate_field_number(self, field_number: int | str, is_top_level_field=True):
-        # Field number validations, such as the number should contain digits only, etc
+    def validate_field_number(self, field_number: int | str, validation_result: ValidationResult, is_top_level_field=True): # Field number validations, such as the number should contain digits only, etc
+        errors = validation_result.errors[ValidationTypes.FIELD_NUMBER_VALIDATION]
 
-        if not field_number:
-            raise ValueError("Lost field number")
+        if not field_number:  # Field number should be not empty
+            errors.add("Lost field number")
 
-        try:
-            field_number = int(field_number)
-        except ValueError:
-            raise ValueError(f'Non-digit field number "{field_number}"')
+        if not str(field_number).isdigit():  # Field number should be a number
+            errors.add(f'Non-digit field number "{field_number}"')
 
         if not is_top_level_field:
-            return
+            return validation_result
+
+        # Top level fields should be in range 2-128
 
         min_field = int(self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER)
         max_field = int(self.spec.FIELD_SET.FIELD_128_SECONDARY_MAC_DATA)
 
-        if field_number not in range(min_field, max_field + 1):
-            raise ValueError(
-                f"Incorrect field number {field_number}. Top level field must be in range {min_field} - {max_field}"
-            )
+        if int(field_number) not in range(min_field, max_field + 1):
+            err = f"Incorrect field number {field_number}. Top level field must be in range {min_field} - {max_field}"
+            errors.add(err)
 
-    def validate_field_path(self, path: FieldPath):
-        def path_to_str(field_path: FieldPath):
-            return ".".join(field_path)
+        return validation_result
 
-        if not path:
-            raise ValueError("Lost field path")
+    def validate_field_spec(self, field_path: FieldPath, validation_result: ValidationResult):
+        errors: set[str] = validation_result.errors[ValidationTypes.FIELD_SPEC_VALIDATION]
 
-        if str() in path:
-            path: map = map(lambda field_data: field_data if field_data else '<empty>', path)
-            path: str = path_to_str(list(path))
-            raise ValueError(f"{path} - empty field number in field path")
+        spec: IsoField | None = self.spec.get_field_spec(field_path)
 
-        str_path = path_to_str(path)
+        if spec is not None:
+            return validation_result
 
-        for level, field in enumerate(path, start=1):
-            try:
-                self.validate_field_number(field, is_top_level_field=level == 1)
+        errors.add(f"Field {self.field_path_to_str(field_path)} - lost field specification")
 
-            except ValueError as validation_error:
-                raise ValueError(f"{validation_error}. Path: {str_path}")
+        return validation_result
 
-        if not self.spec.get_field_spec(path=path):
-            raise ValueError(f"{str_path} - lost spec for field")
+    def validate_field_path(self, field_path: FieldPath, validation_result: ValidationResult):
+        errors = validation_result.errors[ValidationTypes.FIELD_PATH_VALIDATION]
+
+        if not field_path:
+            errors.add("Empty field path")
+            return validation_result
+
+        if str() in field_path:
+            field_path: map = map(lambda field_data: field_data if field_data else '<empty>', field_path)
+            field_path: str = self.field_path_to_str(list(field_path))
+            errors.add(f"{field_path} - empty field number in field path")
+            return validation_result
+
+        for level, field in enumerate(field_path, start=1):
+            validation_result = self.validate_field_number(field, validation_result, level == 1)
+
+        return validation_result
 
     def validate_field_data(self, field_path: FieldPath, field_value: str, validation_result: ValidationResult):
         """
@@ -328,10 +349,9 @@ class Validator:
 
         # The method validate_field_data execution begins here
 
-        path = ".".join(field_path)
+        path: str = self.field_path_to_str(field_path)
 
         if not (field_spec := self.spec.get_field_spec(field_path)):
-            validation_result.errors[ValidationTypes.OTHER_VALIDATION] = {f"Field {path} - validation failed due to lost specification for the field"}
             return validation_result
 
         path_desc: str = f"{path} - {field_spec.description}"
@@ -360,6 +380,9 @@ class Validator:
         return validation_result
 
     def process_validation_result(self, validation_result: ValidationResult):
+        if not self.config.validation.validation_enabled:
+            return
+
         errors: set[str] = set()
 
         for error_set in validation_result.errors.values():
@@ -390,12 +413,9 @@ class Validator:
 
                     raise DataValidationWarning(errors_string)
 
-    def validate_fields(self, fields: TypeFields, field_path: FieldPath | None = None, validation_result: ValidationResult = None, val_error: bool = False):
-        if validation_result is None:
-            validation_result: ValidationResult = ValidationResult()
-
+    def validate_fields(self, fields: TypeFields, validation_result: ValidationResult, field_path: FieldPath | None = None):
         if field_path is None:
-            field_path = []
+            field_path: FieldPath = []
 
         for field, value in fields.items():
             field_path.append(field)
@@ -406,22 +426,13 @@ class Validator:
                 if not isinstance(value, dict):
                     field_value_dict = Parser.split_complex_field(field_path[int()], value)
 
-                self.validate_fields(fields=field_value_dict, field_path=field_path, validation_result=validation_result, val_error=val_error)
+                validation_result = self.validate_fields(fields=field_value_dict, validation_result=validation_result, field_path=field_path)
                 field_path.pop()
                 continue
 
-            validation_result: ValidationResult = self.validate_field_data(field_path, value, ValidationResult())
-
-            try:
-                self.process_validation_result(validation_result)
-
-            except DataValidationError as validation_error:
-                [error(f"Validation: {err}") for err in str(validation_error).splitlines()]
-                val_error = True
-
-            except DataValidationWarning as validation_warning:
-                [warning(warn) for warn in str(validation_warning).splitlines()]
+            validation_result = self.validate_field_spec(field_path, validation_result)
+            validation_result = self.validate_field_data(field_path, value, validation_result)
 
             field_path.pop()
 
-        return val_error
+        return validation_result

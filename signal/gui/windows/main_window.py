@@ -364,8 +364,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.json_view.switch_json_mode(json_mode)
 
     # Validate whole transaction data, presented on MainWindow
-    def validate_fields(self, check_config: bool = True) -> None:
-        self.json_view.check_all_items(check_config=check_config)
+    def validate_fields(self) -> None:
+        self.json_view.check_all_items()
 
     def enable_validation(self, enable=True):
         self.ButtonValidate.setEnabled(enable)

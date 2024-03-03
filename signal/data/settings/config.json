@@ -14,14 +14,14 @@
     },
     "debug": {
         "level": "INFO",
-        "clear_log": true,
+        "clear_log": false,
         "parse_subfields": false,
         "backup_storage_depth": 30
     },
     "validation": {
         "validation_enabled": true,
         "validate_incoming": true,
-        "validation_mode": "ERROR"
+        "validation_mode": "WARNING"
     },
     "fields": {
         "max_amount": 100,

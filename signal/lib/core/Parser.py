@@ -133,8 +133,7 @@ class Parser:
 
         return result
 
-    @staticmethod
-    def join_complex_item(parent):
+    def join_complex_item(self, parent):
         if not parent.field_number:
             raise ValueError(f"Lost field number for field {parent.get_field_path(string=True)}")
 
@@ -142,7 +141,7 @@ class Parser:
 
         for child_item in parent.get_children():
             if child_item.childCount():
-                result += Parser.join_complex_item(parent=child_item)
+                result += self.join_complex_item(parent=child_item)
                 continue
 
             if not child_item.field_data:
@@ -155,8 +154,12 @@ class Parser:
 
             if child_item.spec:
                 length = length.zfill(child_item.spec.var_length)
-            else:
-                length = length.zfill(len(child_item.field_length))
+
+            if not child_item.spec:
+                if self.config.validation.validation_enabled:
+                    length = length.zfill(parent.spec.tag_length)
+                else:
+                    length = length.zfill(len(child_item.field_length))
 
             result = f"{result}{child_item.field_number}{length}{child_item.field_data}"
 

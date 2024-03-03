@@ -26,6 +26,7 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
         super(ComplexFieldsParser, self).__init__()
         self.config: Config = config
         self.terminal = terminal
+        self.parser = Parser(self.config)
         self.setupUi(self)
         self._setup()
 
@@ -214,7 +215,7 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
                 continue
 
             try:
-                string_data = string_data + Parser.join_complex_item(item)
+                string_data = string_data + self.parser.join_complex_item(item)
             except Exception as parsing_error:
                 error(f"JSON parsing error: {parsing_error}")
                 return

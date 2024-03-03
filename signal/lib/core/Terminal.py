@@ -10,6 +10,7 @@ from signal.lib.core.TransactionQueue import TransactionQueue
 from signal.lib.core.EpaySpecification import EpaySpecification
 from signal.lib.core.FieldsGenerator import FieldsGenerator
 from signal.lib.core.validators.TransValidator import TransValidator
+from signal.lib.core.validators.DataValidator import DataValidator
 from signal.lib.data_models.Config import Config
 from signal.lib.data_models.Transaction import Transaction
 from signal.lib.core.Connector import Connector
@@ -32,13 +33,14 @@ class SvTerminal(QObject):
     with open(TermFilesPath.CONFIG) as json_file:
         config: Config = Config.model_validate_json(json_file.read())
 
-    validator: TransValidator
+    trans_validator: TransValidator
     need_reconnect: pyqtSignal = pyqtSignal()
 
     def __init__(self, config: Config, connector: ConnectionInterface | None = None):
         super(SvTerminal, self).__init__()
         self.config: Config = config
-        self.validator = TransValidator(self.config)
+        self.trans_validator = TransValidator(self.config)
+        self.data_validator = DataValidator(self.config)
 
         if connector is None:
             connector: Connector = Connector(self.config)
@@ -127,7 +129,7 @@ class SvTerminal(QObject):
 
         if self.config.validation.validation_enabled and self.config.validation.validate_incoming:
             try:
-                self.validator.validate_transaction(transaction=response)
+                self.trans_validator.validate_transaction(transaction=response)
 
             except Exception as validation_error:
                 [warning(warn) for warn in str(validation_error).splitlines()]

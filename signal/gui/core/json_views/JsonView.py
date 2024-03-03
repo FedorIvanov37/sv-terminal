@@ -1,5 +1,5 @@
 from copy import deepcopy
-from logging import error, warning, debug
+from logging import error, warning, debug, info
 from PyQt6.QtCore import pyqtSignal, QModelIndex
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QLineEdit
 from signal.lib.core.EpaySpecification import EpaySpecification
@@ -50,6 +50,7 @@ class JsonView(TreeView):
         self.config: Config = config
         self.delegate = JsonView.Delegate()
         self.validator = ItemsValidator(self.config)
+        self.parser = Parser(self.config)
         self._setup()
 
     def _setup(self):
@@ -245,12 +246,14 @@ class JsonView(TreeView):
 
         item.set_spec()
 
+        validation_args = (item,)
+
         try:
             match column:
                 case FieldsSpec.ColumnsOrder.VALUE:
                     self.generate_item_data(item)
                     self.modify_field_data(item)
-                    self.validate_item(item)
+                    self.validator.validate_item(item)
                     item.set_item_color()
 
                 case FieldsSpec.ColumnsOrder.PROPERTY:
@@ -258,25 +261,23 @@ class JsonView(TreeView):
                     self.process_change_property(item)
 
                 case FieldsSpec.ColumnsOrder.FIELD:
-                    if item.get_children():
-                        self.check_all_items(item)
-
-                    else:
-                        self.validate_item(item)
-
                     item.set_checkbox()
+                    self.generate_item_data(item)
+                    self.modify_field_data(item)
+                    self.set_item_description(item)
+                    self.validator.validate_item(item)
 
                 case FieldsSpec.ColumnsOrder.LENGTH:
                     self.set_subfields_length(item)
 
         except DataValidationError as validation_error:
-            self.set_error(item, validation_error, error)
+            validation_args = (item, validation_error, error)
 
         except DataValidationWarning as validation_warning:
-            self.set_error(item, validation_warning, warning)
+            validation_args = (item, validation_warning, warning)
 
-        if column != FieldsSpec.ColumnsOrder.PROPERTY:
-            self.set_item_description(item)
+        finally:
+            self.set_validation_status(*validation_args)
 
     @void_qt_signals
     def set_item_description(self, item: FieldItem):
@@ -285,19 +286,17 @@ class JsonView(TreeView):
         except Exception as set_spec_error:
             debug(set_spec_error)
 
-        specification_found = any((item.spec, self.config.validation.validation_enabled))
+        if not self.spec.get_field_spec(item.get_field_path()):
+            warn_text = f"⚠ ️No specification for field {item.get_field_path(string=True)}"
 
-        if specification_found:
-            item.set_description()
-
-        if not specification_found:
-            warn_text = f"⚠ ️No specification for field {item.get_field_path(string=True)}, set field length manually"
-
-            if not item.field_number:
-                error(f"Lost field number for field {item.get_field_path(string=True)}")
-                return
+            if not self.config.validation.validation_enabled:
+                warn_text = f"{warn_text}. set field length manually"
 
             item.set_description(warn_text)
+            item.set_item_color(Colors.BLUE)
+            return
+
+        item.set_description()
 
         if not item.childCount():
             return
@@ -305,23 +304,17 @@ class JsonView(TreeView):
         for child in item.get_children():
             self.set_item_description(child)
 
-    def validate_item(self, item, check_config: bool = True):  # Validate single item, no auto children validate
-        if check_config and not self.config.validation.validation_enabled:
+    def set_validation_status(self, item: FieldItem, exception: Exception | None = None, level=info):
+        colors_map = {
+            error: Colors.RED,
+            warning: Colors.BLUE,
+            info: Colors.BLACK
+        }
+
+        item.set_item_color(colors_map.get(level, Colors.BLACK))
+
+        if exception is None:
             return
-
-        if item is self.root:
-            return
-
-        if self.spec.can_be_generated(item.get_field_path()):
-            self.validator.validate_duplicates(item)
-
-            if item.checkbox_checked(CheckBoxesDefinition.GENERATE):
-                return
-
-        self.validator.validate_item(item)
-
-    def set_error(self, item: FieldItem, exception: Exception, level=error):
-        item.set_item_color(Colors.RED)
 
         for string in str(exception).splitlines():
             level(f"Validation: {string}")
@@ -329,19 +322,28 @@ class JsonView(TreeView):
         self.setFocus()
 
     @void_qt_signals
-    def check_all_items(self, parent: FieldItem | None = None, check_config: bool = True):  # Validate and paint item without raising ValueError
+    def check_all_items(self, parent: FieldItem = None):  # Validate and paint item without raising ValueError
         if parent is None:
             parent = self.root
 
         for child_item in parent.get_children():
             if child_item.childCount():
-                self.check_all_items(parent=child_item, check_config=check_config)
+                self.check_all_items(child_item)
                 continue
 
-            if self.config.validation.validation_enabled:
-                self.validate_item(child_item, check_config=check_config)
+            validation_status_args = (child_item,)
 
-            child_item.set_item_color(Colors.BLACK)
+            try:
+                self.validator.validate_item(child_item)
+
+            except DataValidationError as validation_error:
+                validation_status_args = (child_item, validation_error, error,)
+
+            except DataValidationWarning as validation_warning:
+                validation_status_args = (child_item, validation_warning, warning,)
+
+            finally:
+                self.set_validation_status(*validation_status_args)
 
     def plus(self):
         if not (current_item := self.currentItem()):
@@ -410,19 +412,27 @@ class JsonView(TreeView):
         self.editItem(item, int())
 
     def check_duplicates_after_remove(self, removed_item: FieldItem, parent_item: FieldItem):
-        self.validator.validate_duplicates(removed_item, parent=parent_item)
+        self.validator.validate_duplicates(removed_item, parent_item)
 
         for item in parent_item.get_children():
             if not item.field_number == removed_item.field_number:
                 continue
 
+            color = Colors.BLACK
+
             try:
-                self.validate_item(item)
+                self.validator.validate_item(item)
+
             except (ValueError, DataValidationError) as duplication_error:
-                item.set_item_color(Colors.RED)
+                color = Colors.RED
                 raise duplication_error
 
-            item.set_item_color()
+            except DataValidationWarning as validation_warning:
+                color = Colors.BLUE
+                warning(validation_warning)
+
+            finally:
+                item.set_item_color(color)
 
     def clean(self):
         TreeView.clean(self)
@@ -505,7 +515,7 @@ class JsonView(TreeView):
             return
 
         try:
-            item.field_data = Parser.join_complex_item(item)
+            item.field_data = self.parser.join_complex_item(item)
             item.takeChildren()
 
         except Exception as parsing_error:
@@ -569,7 +579,6 @@ class JsonView(TreeView):
 
             parent.addChild(child, fill_len=self.len_fill)
             child.set_spec(field_spec)
-            self.set_item_description(child)
 
         self.set_all_items_length()
         self.hide_secrets()
@@ -602,12 +611,14 @@ class JsonView(TreeView):
             if row.field_number in result:
                 warning(f"Duplicated field number {row.get_field_path(string=True)}")
 
-            if self.config.validation.validation_enabled:
+            try:
                 self.validator.validate_item(row)
+            except DataValidationWarning:
+                pass
 
             if row.childCount():
                 if flat:
-                    result[row.field_number] = Parser.join_complex_item(row)
+                    result[row.field_number] = self.parser.join_complex_item(row)
                 else:
                     result[row.field_number] = self.generate_fields(row, flat=flat)
 

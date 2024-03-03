@@ -2,75 +2,69 @@ from signal.lib.core.validators.Validator import Validator
 from signal.lib.core.EpaySpecification import EpaySpecification
 from signal.lib.data_models.Config import Config
 from signal.gui.core.json_items.FIeldItem import FieldItem
-from signal.lib.data_models.Validation import ValidationResult
-from signal.lib.exceptions.exceptions import DataValidationError
+from signal.lib.data_models.Validation import ValidationResult, ValidationTypes
 from signal.lib.data_models.EpaySpecificationModel import IsoField, Justification
 
 
-class ItemsValidator(Validator):
+class ItemsValidator:
     spec: EpaySpecification = EpaySpecification()
 
     def __init__(self, config: Config):
-        super(ItemsValidator, self).__init__(config)
         self.config: Config = config
+        self.validator = Validator(self.config)
 
     def validate_item(self, item: FieldItem):
-        if not item.field_number:
-            raise DataValidationError("Lost field number")
+        field_path = item.get_field_path()
 
-        if not (field_path := item.get_field_path()):
-            raise DataValidationError(f"Cannot get field path for field {item.field_number}")
+        validation_result: ValidationResult = ValidationResult()
 
-        for field_number in field_path:
-            if field_number.isdigit():
-                continue
+        validation_map = {
+            self.validator.validate_field_path: (field_path, validation_result),
+            self.validator.validate_field_spec: (field_path, validation_result),
+            self._validate_duplicates: (item, validation_result),
+        }
 
-            raise DataValidationError(f"Wrong field numbers {field_number} in path {item.get_field_path(string=True)}. Field number can contain digits only")
+        for validation, args in validation_map.items():
+            validation_result: ValidationResult = validation(*args)
 
-        if not item.spec:
-            raise DataValidationError(f"Lost spec for field {item.get_field_path(string=True)}")
+        if not self.spec.is_field_complex(field_path):
+            validation_result: ValidationResult = self.validator.validate_field_data(field_path, item.field_data, validation_result)
 
-        if all([not item.field_data and not self.spec.is_field_complex(field_path)]):
-            raise DataValidationError(f"Lost field value for field {item.get_field_path(string=True)}")
+        self.validator.process_validation_result(validation_result)
 
-        self.validate_field_path(field_path)
+    def validate_item_spec(self, item: FieldItem):
+        validation_result: ValidationResult = ValidationResult()
 
-        self.validate_duplicates(item)
+        if field_path := item.get_field_path():
+            validation_result: ValidationResult = self.validator.validate_field_spec(field_path, validation_result)
+        else:
+            validation_result.errors[ValidationTypes.FIELD_PATH_VALIDATION].add("Lost field path")
 
-        if self.spec.is_field_complex(field_path):
-            return
+        self.validator.process_validation_result(validation_result)
 
-        validation_result: ValidationResult = self.validate_field_data(field_path, item.field_data, ValidationResult())
+    def validate_duplicates(self, item: FieldItem, parent: FieldItem):
+        validation_result: ValidationResult = self._validate_duplicates(item, ValidationResult(), parent)
+        self.validator.process_validation_result(validation_result)
 
-        self.process_validation_result(validation_result)
+    @staticmethod
+    def _validate_duplicates(item: FieldItem, validation_result: ValidationResult, parent: FieldItem = None):
+        errors = validation_result.errors[ValidationTypes.DUPLICATED_FIELDS_VALIDATION]
 
-    def validate_complex_field(self, parent: FieldItem):
-        child_item: FieldItem
-
-        for child_item in parent.get_children():
-            if not child_item.childCount():
-                self.validate_item(child_item)
-                continue
-
-            self.validate_complex_field(child_item)
-
-    def validate_duplicates(self, item: FieldItem, parent: FieldItem = None):
         if item is None:
-            return
+            return validation_result
 
         if not item.field_number:
-            return
+            return validation_result
 
         if parent is None and not (parent := item.parent()):
-            return
+            return validation_result
 
-        for child in item.get_children():
-            self.validate_duplicates(child)
-
-        field_numbers = [child_item.field_number for child_item in parent.get_children()]
+        field_numbers = [child_item.field_number for child_item in parent.get_children() if child_item.field_number]
 
         if field_numbers.count(item.field_number) > 1:
-            raise DataValidationError(f"Duplicated field number {item.get_field_path(string=True)}")
+            errors.add(f"Duplicated field number {item.get_field_path(string=True)}")
+
+        return validation_result
 
     def modify_all_fields_data(self, parent: FieldItem):
         for child_item in parent.get_children():

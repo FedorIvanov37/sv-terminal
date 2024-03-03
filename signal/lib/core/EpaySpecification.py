@@ -227,17 +227,17 @@ class EpaySpecification(EpaySpecificationData):
         if spec is None:
             spec = self.spec
 
-        field_data = None
+        spec_data = None
 
         for field in path:
             try:
-                field_data = spec.fields.get(str(field))
+                spec_data = spec.fields.get(str(field))
             except AttributeError:
                 return
 
-            spec = field_data
+            spec = spec_data
 
-        return field_data
+        return spec_data
 
     def is_field_complex(self, field_path: FieldPath):
         if not (field_spec := self.get_field_spec(field_path)):
