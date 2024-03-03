@@ -501,7 +501,7 @@ class SvTerminalGui(SvTerminal):
             DataFormats.JSON: f"{DataFormats.JSON} (*.{DataFormats.JSON.lower()})",
             DataFormats.INI: f"{DataFormats.INI} (*.{DataFormats.INI.lower()})",
             DataFormats.DUMP: f"{DataFormats.DUMP} (*.txt)",
-            "All": f"Any (*)"
+            "All": f"Any (*)",
         }
 
         file_name_filter = ";;".join(file_name_filters.values())
