@@ -27,7 +27,7 @@
         "max_amount": 100,
         "max_amount_limited": true,
         "build_fld_90": true,
-        "send_internal_id": true,
+        "send_internal_id": false,
         "json_mode": true,
         "hide_secrets": true
     },

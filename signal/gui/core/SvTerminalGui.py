@@ -470,15 +470,56 @@ class SvTerminalGui(SvTerminal):
             return
 
     @staticmethod
-    def get_output_filename() -> str:
+    def get_output_filename() -> tuple[str, str] | None:
+        file_name_filters = {
+            f"{DataFormats.JSON} (*.{DataFormats.JSON.lower()})": DataFormats.JSON,
+            f"{DataFormats.INI} (*.{DataFormats.INI.lower()})": DataFormats.INI,
+            f"{DataFormats.DUMP} (*.{DataFormats.TXT.lower()})": DataFormats.DUMP,
+        }
+
+        file_name_filter = ";;".join(file_name_filters)
         file_dialog: QFileDialog = QFileDialog()
         file_dialog.setFileMode(QFileDialog.FileMode.AnyFile)
-        filename: str = file_dialog.getSaveFileName()[0]
-        return filename
 
-    def save_transaction_to_file(self, file_format: str) -> None:
-        if not (filename := self.get_output_filename()):
-            error("No output filename recognized")
+        filename_data: list[str] = file_dialog.getSaveFileName(filter=file_name_filter)
+
+        if not (file_name := filename_data[int()]):
+            return
+
+        try:
+            file_format = filename_data[-1]
+            file_format = file_name_filters[file_format]
+
+        except KeyError | IndexError:
+            return
+
+        return file_name, file_format
+
+    @staticmethod
+    def get_input_filename():
+        file_name_filters = {
+            DataFormats.JSON: f"{DataFormats.JSON} (*.{DataFormats.JSON.lower()})",
+            DataFormats.INI: f"{DataFormats.INI} (*.{DataFormats.INI.lower()})",
+            DataFormats.DUMP: f"{DataFormats.DUMP} (*.txt)",
+            "All": f"Any (*)"
+        }
+
+        file_name_filter = ";;".join(file_name_filters.values())
+        file_init_filter = file_name_filters.get(DataFormats.JSON, "JSON (*.json)")
+        file_dialog = QFileDialog()
+        file_data = file_dialog.getOpenFileName(filter=file_name_filter, initialFilter=file_init_filter)
+
+        return file_data[int()]
+
+    def save_transaction_to_file(self) -> None:
+        if not (file_data := self.get_output_filename()):
+            warning("No output filename recognized")
+            return
+
+        file_name, file_format = file_data
+
+        if not file_name or not file_format:
+            warning("No output filename recognized")
             return
 
         try:
@@ -487,7 +528,17 @@ class SvTerminalGui(SvTerminal):
             error("File saving error: %s", file_saving_error)
             return
 
-        SvTerminal.save_transaction(self, transaction, file_format, filename)
+        try:
+            self.trans_validator.validate_transaction(transaction)
+
+        except DataValidationWarning as validation_warning:
+            warning(validation_warning)
+
+        except Exception as validation_error:
+            error(validation_error)
+            return
+
+        SvTerminal.save_transaction(self, transaction, file_format, file_name)
 
     def print_data(self, data_format: PrintDataFormats) -> None:
         data_processing_map: dict[str, Callable] = {
@@ -563,19 +614,14 @@ class SvTerminalGui(SvTerminal):
 
     @set_json_view_focus
     def parse_file(self, filename: str | None = None) -> None:
-        filename_found: str = ""
-
-        if not filename:
-            if not (filename := QFileDialog.getOpenFileName()[0]):
-                warning("No input filename recognized")
-                return
-
-            filename_found: str = filename
+        if not filename and not (filename := self.get_input_filename()):
+            warning("No input filename recognized")
+            return
 
         try:
             transaction: Transaction = self.parser.parse_file(filename)
 
-        except ValidationError as validation_error:
+        except (DataValidationError, ValidationError, ValueError) as validation_error:
             error(f"File parsing error: {validation_error}")
             return
 
@@ -583,17 +629,10 @@ class SvTerminalGui(SvTerminal):
             error(f"File parsing error: {parsing_error}")
             return
 
-        if not transaction.max_amount:
-            transaction.max_amount = self.config.fields.max_amount
-
         try:
             self.parse_transaction(transaction)
-
-        except ValueError as fields_setting_error:
+        except Exception as fields_setting_error:
             error(fields_setting_error)
-            return
-
-        if not filename_found:
             return
 
         info(f"File parsed: {filename}")

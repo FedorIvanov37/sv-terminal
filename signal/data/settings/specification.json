@@ -251,7 +251,7 @@
             "generate": true,
             "reversal": false,
             "matching": false,
-            "alpha": false,
+            "alpha": true,
             "numeric": true,
             "special": false,
             "reserved_for_future": false,

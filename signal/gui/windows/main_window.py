@@ -41,7 +41,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     _window_close: pyqtSignal = pyqtSignal()
     _print: pyqtSignal = pyqtSignal(str)
-    _save: pyqtSignal = pyqtSignal(str)
+    _save: pyqtSignal = pyqtSignal()
     _reverse: pyqtSignal = pyqtSignal(str)
     _about: pyqtSignal = pyqtSignal()
     _field_changed: pyqtSignal = pyqtSignal()
@@ -231,6 +231,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonCopyBitmap: self.copy_bitmap,
             self.ButtonFieldsParser: self.parse_complex_field,
             self.ButtonValidate: self.validate_message,
+            self.ButtonSave: self.save,
         }
 
         json_view_connection_map = {
@@ -257,7 +258,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             QKeySequence.StandardKey.Delete: self.json_view.minus,
             QKeySequence.StandardKey.HelpContents: self.about,
             QKeySequence.StandardKey.Print: self.ButtonPrintData.showMenu,
-            QKeySequence.StandardKey.Save: self.ButtonSave.showMenu,
+            QKeySequence.StandardKey.Save: self.save,
             QKeySequence.StandardKey.Open: self.parse_file,
             QKeySequence.StandardKey.Undo: self.json_view.undo,
             QKeySequence.StandardKey.Redo: self.json_view.redo,
@@ -319,12 +320,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 ButtonActions.PrintButtonDataFormats.CONFIG: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.CONFIG),
                 # ButtonActions.PrintButtonDataFormats.TRANS_DATA: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.TRANS_DATA)
             },
-
-            self.ButtonSave: {
-                ButtonActions.SaveButtonDataFormats.JSON: lambda: self.save.emit(ButtonActions.SaveButtonDataFormats.JSON),
-                ButtonActions.SaveButtonDataFormats.INI: lambda: self.save.emit(ButtonActions.SaveButtonDataFormats.INI),
-                ButtonActions.SaveButtonDataFormats.DUMP: lambda: self.save.emit(ButtonActions.SaveButtonDataFormats.DUMP),
-            }
         }
 
         # The mapping is defined, let's connect them all
