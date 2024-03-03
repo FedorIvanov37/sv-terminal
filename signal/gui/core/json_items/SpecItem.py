@@ -110,6 +110,10 @@ class SpecItem(Item):
                 checkboxes[box] = False
 
         for column, state in checkboxes.items():
+            if column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
+                self.setCheckState(int(column), Qt.CheckState.PartiallyChecked if state else Qt.CheckState.Unchecked)
+                continue
+
             self.setCheckState(int(column), Qt.CheckState.Checked if state else Qt.CheckState.Unchecked)
 
     def is_checked(self, column):

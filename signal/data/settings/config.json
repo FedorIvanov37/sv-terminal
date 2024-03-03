@@ -14,7 +14,7 @@
     },
     "debug": {
         "level": "INFO",
-        "clear_log": false,
+        "clear_log": true,
         "parse_subfields": false,
         "backup_storage_depth": 30
     },

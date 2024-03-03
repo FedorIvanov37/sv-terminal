@@ -16,7 +16,7 @@ class Transaction(BaseModel):
         validate_assignment=True
     )
 
-    trans_id: str = Field(default_factory=generate_trans_id)
+    trans_id: str | None = Field(default_factory=generate_trans_id)
     message_type: str
     data_fields: TypeFields
     max_amount: int = 100

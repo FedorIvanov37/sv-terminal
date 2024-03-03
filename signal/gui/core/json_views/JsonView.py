@@ -17,6 +17,7 @@ from signal.gui.enums.CheckBoxesDefinition import CheckBoxesDefinition
 from signal.gui.enums.Colors import Colors
 from signal.gui.enums import MainFieldSpec as FieldsSpec
 from signal.gui.enums.RootItemNames import RootItemNames
+from signal.lib.toolkit.generate_trans_id import generate_trans_id
 
 
 class JsonView(TreeView):
@@ -186,6 +187,11 @@ class JsonView(TreeView):
         if not item.checkbox_checked(CheckBoxesDefinition.GENERATE):
             return
 
+        if item.is_trans_id:
+            item.field_data = generate_trans_id()
+            item.set_length()
+            return
+
         item.field_data = FieldsGenerator.generate_field(item.field_number, self.config.fields.max_amount)
 
     def process_change_property(self, item: FieldItem) -> None:
@@ -209,6 +215,52 @@ class JsonView(TreeView):
                     return
 
                 item.set_item_color(Colors.BLACK)
+
+    def get_trans_id(self) -> str | None:
+        if not (field_item := self.get_trans_id_item()):
+            return
+
+        if not field_item.is_trans_id:
+            return
+
+        if field_item.checkbox_checked(CheckBoxesDefinition.GENERATE):
+            trans_id = generate_trans_id()
+            self.set_trans_id(trans_id)
+            return trans_id
+
+        return field_item.field_data
+
+    @void_qt_signals
+    def set_trans_id(self, trans_id: str):
+        if not (field_item := self.get_trans_id_item()):
+            return
+
+        if spec := field_item.get_field_spec():
+            if len(trans_id) > spec.max_length or len(trans_id) < spec.min_length:
+                warning("Invalid trans ID")
+                return
+
+        field_item.field_data = trans_id
+
+    def get_trans_id_item(self) -> FieldItem | None:
+        field_item: FieldItem = self.root
+        trans_id_path: list[str] = self.spec.get_trans_id_path()
+
+        for field in trans_id_path:
+            for item in field_item.get_children():
+                if not item.field_number == field:
+                    continue
+
+                field_item: FieldItem = item
+                break
+
+        try:
+            if not field_item.is_trans_id:
+                return
+        except AttributeError:
+            return
+
+        return field_item
 
     def set_subfields_length(self, item: FieldItem):
         parent: FieldItem
@@ -524,6 +576,12 @@ class JsonView(TreeView):
             item.set_checkbox()
 
         self.hide_secrets()
+
+    def set_trans_id_checkbox(self, checked=True):
+        if not (trans_id_item := self.get_trans_id_item()):
+            return
+
+        trans_id_item.set_checkbox(checked)
 
     @void_qt_signals
     def set_checkboxes(self, transaction: Transaction):

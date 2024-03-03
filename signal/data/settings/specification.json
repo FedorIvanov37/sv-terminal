@@ -14136,7 +14136,7 @@
                     "max_length": 36,
                     "var_length": 3,
                     "tag_length": 0,
-                    "generate": false,
+                    "generate": true,
                     "reversal": false,
                     "matching": false,
                     "alpha": true,

@@ -84,10 +84,25 @@ class SpecView(TreeView):
                 return
 
         if column in list(SpecFieldDef.Checkboxes) and self.window.read_only:
-            warning("Read only mode. Uncheck the checkbox on top of the window")
-            state = item.checkState(column)
-            state = Qt.CheckState.Checked if state == Qt.CheckState.Unchecked else Qt.CheckState.Unchecked
-            item.setCheckState(column, state)
+            warning("Read only mode. Switch mode by checkbox on top of the window")
+            current_state = item.checkState(column)
+
+            new_state = Qt.CheckState.Unchecked
+
+            if current_state == Qt.CheckState.Unchecked:
+                new_state = Qt.CheckState.Checked
+
+            if current_state == Qt.CheckState.Checked:
+                new_state = Qt.CheckState.Unchecked
+
+            if item.field_number in self.spec.get_generated_fields_dict().values():
+                new_state = Qt.CheckState.PartiallyChecked
+
+            if item.get_field_path() == self.spec.get_trans_id_path():
+                new_state = Qt.CheckState.PartiallyChecked
+
+            item.setCheckState(column, new_state)
+
             return
 
         if column == SpecFieldDef.ColumnsOrder.SECRET:
@@ -95,6 +110,18 @@ class SpecView(TreeView):
 
         if column == SpecFieldDef.ColumnsOrder.TAG_LENGTH:
             self.cascade_tag_length(item)
+
+        if column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
+            warning('Checkboxes "generate fields" are pre-defined, not possible to change the state')
+
+            if item.field_number in self.spec.get_generated_fields_dict().values():
+                item.setCheckState(SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED, Qt.CheckState.PartiallyChecked)
+
+            if item.field_number not in self.spec.get_generated_fields_dict().values():
+                item.setCheckState(SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED, Qt.CheckState.Unchecked)
+
+            if item.get_field_path() == self.spec.get_trans_id_path():
+                item.setCheckState(SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED, Qt.CheckState.PartiallyChecked)
 
         self.validate_item(item, column, validate_all=True)
 
@@ -130,6 +157,9 @@ class SpecView(TreeView):
             return
 
         if column > SpecFieldDef.ColumnsOrder.TAG_LENGTH:
+            return
+
+        if column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
             return
 
         if self.window.read_only:

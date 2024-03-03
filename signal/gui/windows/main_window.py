@@ -390,6 +390,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def get_fields(self, flat=False) -> TypeFields:
         return self.json_view.generate_fields(flat=flat)
 
+    def trans_id_exists(self) -> bool:
+        return bool(self.json_view.get_trans_id_item())
+
+    def get_trans_id(self) -> str:
+        return self.json_view.get_trans_id()
+
+    def set_trans_id(self, trans_id: str):
+        self.json_view.set_trans_id(trans_id)
+
     # Return fields list, no subfields included
     def get_top_level_field_numbers(self) -> list[str]:
         return self.json_view.get_top_level_field_numbers()
@@ -441,8 +450,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         self.msgtype.setCurrentIndex(index)
 
-    def set_transaction_fields(self, transaction: Transaction) -> None:
+    def set_transaction_fields(self, transaction: Transaction, generate_trans_id: bool = True) -> None:
         self.json_view.parse_transaction(transaction)
+        self.json_view.set_trans_id_checkbox(checked=generate_trans_id)
         self.json_view.expandAll()
         self.json_view.resize_all()
 

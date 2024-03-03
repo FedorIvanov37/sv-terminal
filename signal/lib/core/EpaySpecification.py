@@ -239,6 +239,10 @@ class EpaySpecification(EpaySpecificationData):
 
         return spec_data
 
+    @staticmethod
+    def get_trans_id_path() -> list[str]:
+        return ["47", "072"]
+
     def is_field_complex(self, field_path: FieldPath):
         if not (field_spec := self.get_field_spec(field_path)):
             return False

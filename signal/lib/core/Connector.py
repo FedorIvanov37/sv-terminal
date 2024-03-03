@@ -13,7 +13,8 @@ from signal.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from signal.lib.core.EpaySpecification import EpaySpecification
 from signal.lib.enums.TermFilesPath import TermDirs
 from signal.lib.core.SpecFilesRotator import SpecFilesRotator
-from signal.lib.core.validators.TransValidator import TransValidator as Validator
+from signal.lib.core.validators.DataValidator import DataValidator
+from signal.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 
 
 class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
@@ -118,11 +119,15 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
         if commit is None:
             commit = self.config.remote_spec.rewrite_local_spec
 
-        validator = Validator(self.config)
+        validator = DataValidator(self.config)
 
         try:
             validator.validate_url(self.config.remote_spec.remote_spec_url)
-        except ValidationError as url_validation_error:
+
+        except DataValidationWarning as url_validation_warning:
+            warning(url_validation_warning)
+
+        except (ValidationError, DataValidationError) as url_validation_error:
             error(f"Cannot load remote specification due to incorrect URL: {url_validation_error}")
             return
 

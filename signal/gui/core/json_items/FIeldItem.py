@@ -57,6 +57,10 @@ class FieldItem(Item):
     def description(self):
         return self.text(FieldsSpec.ColumnsOrder.DESCRIPTION)
 
+    @property
+    def is_trans_id(self):
+        return self.get_field_path() == self.epay_spec.get_trans_id_path()
+
     def __init__(self, item_data: list[str], spec=None):
         super(FieldItem, self).__init__(item_data)
         self.spec = spec if spec else self.spec
@@ -122,7 +126,7 @@ class FieldItem(Item):
                 return False
 
         if checkbox_type == CheckBoxesDefinition.GENERATE:
-            if self.field_number not in list(FieldsSpec.GeneratedFields):
+            if self.field_number not in list(FieldsSpec.GeneratedFields) and not self.is_trans_id:
                 return False
 
         if not (tree := self.treeWidget()):
@@ -137,7 +141,7 @@ class FieldItem(Item):
 
     @void_tree_signals
     def set_checkbox(self, checked=True):
-        if self.get_field_depth() != 1:
+        if self.get_field_depth() != 1 and not self.is_trans_id:
             return
 
         column_number = FieldsSpec.ColumnsOrder.PROPERTY
@@ -150,7 +154,7 @@ class FieldItem(Item):
 
         tree.removeItemWidget(self, FieldsSpec.ColumnsOrder.PROPERTY)
 
-        if self.field_number in list(FieldsSpec.GeneratedFields):
+        if self.field_number in list(FieldsSpec.GeneratedFields) or self.is_trans_id:
             checkbox.setText(CheckBoxesDefinition.GENERATE)
             tree.setItemWidget(self, column_number, checkbox)
 

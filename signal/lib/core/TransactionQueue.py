@@ -1,4 +1,4 @@
-from logging import error
+from logging import error, warning
 from collections import deque
 from datetime import datetime, timedelta
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -51,6 +51,23 @@ class TransactionQueue(QObject):
             self.put_transaction(transaction)
 
     def put_transaction(self, transaction, send=True):
+        transactions_to_delete = []
+
+        for old_transaction in self.queue:
+            if transaction.trans_id not in (old_transaction.trans_id, old_transaction.match_id):
+                continue
+
+            if transaction.trans_id == old_transaction.trans_id:
+                warning(f"Transaction with ID [{transaction.trans_id}] already exists. The transaction will be rewritten")
+
+            if transaction.trans_id == old_transaction.match_id:
+                warning(f"Transaction with match ID [{transaction.trans_id}] already exists. The transaction will be rewritten")
+
+            transactions_to_delete.append(old_transaction)
+
+        for old_transaction in transactions_to_delete:
+            self.remove_from_queue(old_transaction)
+
         transaction.is_request = self.spec.is_request(transaction)
         self.queue.append(transaction)
 

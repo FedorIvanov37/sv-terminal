@@ -288,12 +288,10 @@ class SvTerminalGui(SvTerminal):
         ]
 
         if all(spec_loading_conditions):
-            self.set_remote_spec.emit()
-
             try:
                 self.data_validator.validate_url(self.config.remote_spec.remote_spec_url)
 
-            except ValidationError as url_validation_error:
+            except (ValidationError, DataValidationError, DataValidationWarning) as url_validation_error:
                 error(f"Remote spec URL validation error: {url_validation_error}")
 
             else:
@@ -376,7 +374,7 @@ class SvTerminalGui(SvTerminal):
 
         match command:
             case ButtonActions.ReversalMenuActions.SET_REVERSAL:
-                self.parse_transaction(reversal)
+                self.parse_transaction(reversal, generate_trans_id=False)
 
             case ButtonActions.ReversalMenuActions.LAST | ButtonActions.ReversalMenuActions.OTHER:
                 try:
@@ -389,6 +387,7 @@ class SvTerminalGui(SvTerminal):
 
     def parse_main_window(self, flat_fields: bool = True, clean: bool = False) -> Transaction:
         data_fields: TypeFields = self.window.get_fields(flat=flat_fields)
+        trans_id: str = self.window.get_trans_id()
 
         if not data_fields:
             raise ValueError("No transaction data found")
@@ -398,6 +397,7 @@ class SvTerminalGui(SvTerminal):
 
         try:
             transaction: Transaction = Transaction(
+                trans_id=trans_id,
                 generate_fields=self.window.get_fields_to_generate(),
                 data_fields=data_fields,
                 message_type=message_type,
@@ -446,12 +446,12 @@ class SvTerminalGui(SvTerminal):
         if not transaction.is_keep_alive:
             info(f"Processing transaction ID [{transaction.trans_id}]")
 
-        if transaction.generate_fields:
-            transaction: Transaction = self.generator.set_generated_fields(transaction)
-            self.set_generated_fields(transaction)
-
         if self.config.fields.send_internal_id:
             transaction: Transaction = self.generator.set_trans_id(transaction)
+
+        if transaction.generate_fields:
+            transaction: Transaction = self.generator.set_generated_fields(transaction)
+            self.set_generated_fields_to_gui(transaction)
 
         try:
             self.trans_validator.validate_transaction(transaction)
@@ -599,10 +599,10 @@ class SvTerminalGui(SvTerminal):
         info(f"File parsed: {filename}")
 
     @set_json_view_focus
-    def parse_transaction(self, transaction: Transaction) -> None:
+    def parse_transaction(self, transaction: Transaction, generate_trans_id=True) -> None:
         try:
             self.window.set_mti_value(transaction.message_type)
-            self.window.set_transaction_fields(transaction)
+            self.window.set_transaction_fields(transaction, generate_trans_id=generate_trans_id)
             self.set_bitmap()
 
         except DataValidationWarning as validation_warning:
@@ -640,7 +640,7 @@ class SvTerminalGui(SvTerminal):
         self.window.clear_message()
         self.set_bitmap()
 
-    def set_generated_fields(self, transaction: Transaction) -> None:
+    def set_generated_fields_to_gui(self, transaction: Transaction) -> None:
         for field in transaction.generate_fields:
 
             if not self.spec.can_be_generated([field]):
@@ -650,3 +650,5 @@ class SvTerminalGui(SvTerminal):
                 transaction.data_fields[field]: str = self.generator.generate_field(field)
 
             self.window.set_field_value(field, transaction.data_fields.get(field))
+
+        self.window.set_trans_id(transaction.trans_id)

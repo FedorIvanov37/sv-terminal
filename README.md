@@ -100,7 +100,8 @@ of SIGNAL evolution.
   * Added config.json to the "Print" menu
   * SettingsWindow form optimization
   * Manual setting of logfiles backup storage depth
-  
+  * Generative trans_id
+
 
 * Fixed
   * Small code optimization
