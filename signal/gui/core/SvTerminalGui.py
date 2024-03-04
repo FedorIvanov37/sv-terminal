@@ -18,7 +18,7 @@ from signal.gui.enums import ButtonActions
 from signal.gui.enums.Colors import Colors
 from signal.lib.enums import KeepAlive
 from signal.lib.enums.TermFilesPath import TermFilesPath
-from signal.lib.enums.DataFormats import DataFormats, PrintDataFormats
+from signal.lib.enums.DataFormats import DataFormats, PrintDataFormats, OutputFilesFormat, InputFilesFormat
 from signal.lib.enums.MessageLength import MessageLength
 from signal.lib.enums.TextConstants import TextConstants
 from signal.lib.core.TransTimer import TransactionTimer
@@ -471,45 +471,40 @@ class SvTerminalGui(SvTerminal):
 
     @staticmethod
     def get_output_filename() -> tuple[str, str] | None:
-        file_name_filters = {
-            f"{DataFormats.JSON} (*.{DataFormats.JSON.lower()})": DataFormats.JSON,
-            f"{DataFormats.INI} (*.{DataFormats.INI.lower()})": DataFormats.INI,
-            f"{DataFormats.DUMP} (*.{DataFormats.TXT.lower()})": DataFormats.DUMP,
-        }
-
+        file_name_filters = [f"{data_format} (*.{data_format.lower()})" for data_format in OutputFilesFormat]
         file_name_filter = ";;".join(file_name_filters)
-        file_dialog: QFileDialog = QFileDialog()
-        file_dialog.setFileMode(QFileDialog.FileMode.AnyFile)
+        filename_data: list[str] = list(QFileDialog.getSaveFileName(filter=file_name_filter))
 
-        filename_data: list[str] = file_dialog.getSaveFileName(filter=file_name_filter)
-
-        if not (file_name := filename_data[int()]):
+        if not (file_format := filename_data.pop()):
             return
 
-        try:
-            file_format = filename_data[-1]
-            file_format = file_name_filters[file_format]
-
-        except KeyError | IndexError:
+        if not (file_name := filename_data.pop()):
             return
 
-        return file_name, file_format
+        output_file_format: OutputFilesFormat | None = None
+
+        for data_format in OutputFilesFormat:
+            if data_format in file_format:
+                output_file_format = data_format
+                break
+
+        if not output_file_format:
+            return
+
+        return file_name, output_file_format
 
     @staticmethod
-    def get_input_filename():
-        file_name_filters = {
-            DataFormats.JSON: f"{DataFormats.JSON} (*.{DataFormats.JSON.lower()})",
-            DataFormats.INI: f"{DataFormats.INI} (*.{DataFormats.INI.lower()})",
-            DataFormats.DUMP: f"{DataFormats.DUMP} (*.txt)",
-            "All": f"Any (*)",
-        }
+    def get_input_filename() -> str | None:
+        file_name_filters = [f"{data_format} (*.{data_format.lower()})" for data_format in InputFilesFormat]
+        file_name_filters.append("Any (*.*)")
+        file_name_filter = ";;".join(file_name_filters)
 
-        file_name_filter = ";;".join(file_name_filters.values())
-        file_init_filter = file_name_filters.get(DataFormats.JSON, "JSON (*.json)")
-        file_dialog = QFileDialog()
-        file_data = file_dialog.getOpenFileName(filter=file_name_filter, initialFilter=file_init_filter)
+        file_data = QFileDialog.getOpenFileName(filter=file_name_filter, initialFilter=InputFilesFormat.JSON)
 
-        return file_data[int()]
+        if not (file_name := file_data[int()]):
+            return
+
+        return file_name
 
     def save_transaction_to_file(self) -> None:
         if not (file_data := self.get_output_filename()):

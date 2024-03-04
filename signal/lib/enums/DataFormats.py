@@ -6,7 +6,6 @@ class DataFormats(StrEnum):
     JSON = "JSON"
     DUMP = "DUMP"
     SPEC = "SPEC"
-    TXT = "TXT"
     OTHER = "OTHER"
     TERM = "SIGNAL"
     CONFIG = "CONFIG"
@@ -31,7 +30,7 @@ input_files_formats: data_format_dict = {
     files_formats.name: files_formats.value for files_formats in [
         DataFormats.JSON,
         DataFormats.INI,
-        DataFormats.TXT,
+        DataFormats.DUMP,
     ]
 }
 

@@ -359,7 +359,7 @@ class Parser:
         data_processing_map = {
             DataFormats.JSON: self._parse_json_file,
             DataFormats.INI: self._parse_ini_file,
-            DataFormats.TXT: self._parse_dump_file
+            DataFormats.DUMP: self._parse_dump_file
         }
 
         transaction: Transaction | None = None

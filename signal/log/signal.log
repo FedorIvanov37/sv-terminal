@@ -28666,3 +28666,1710 @@ Field 22 - over MaxLength. Max length: 3 got: 4
 04.03.2024 00:04:09 [INFO] Connection DISCONNECTED
 04.03.2024 00:04:09 [INFO] Connection ESTABLISHED
 04.03.2024 00:04:13 [INFO] Connection DISCONNECTED
+04.03.2024 20:50:42 [INFO] 
+04.03.2024 20:50:42 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 20:50:42 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 20:50:42 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 20:50:42 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 20:50:42 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 20:50:42 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 20:50:42 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 20:50:42 [INFO] 
+04.03.2024 20:50:42 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 20:50:42 [INFO] 
+04.03.2024 20:50:42 [INFO] ## Configuration parameters ##
+04.03.2024 20:50:42 [INFO] {
+04.03.2024 20:50:42 [INFO]     "host": {
+04.03.2024 20:50:42 [INFO]         "host": "172.21.30.5",
+04.03.2024 20:50:42 [INFO]         "port": 16677,
+04.03.2024 20:50:42 [INFO]         "keep_alive_mode": false,
+04.03.2024 20:50:42 [INFO]         "keep_alive_interval": 300,
+04.03.2024 20:50:42 [INFO]         "header_length": 2,
+04.03.2024 20:50:42 [INFO]         "header_length_exists": true
+04.03.2024 20:50:42 [INFO]     },
+04.03.2024 20:50:42 [INFO]     "terminal": {
+04.03.2024 20:50:42 [INFO]         "process_default_dump": true,
+04.03.2024 20:50:42 [INFO]         "connect_on_startup": true,
+04.03.2024 20:50:42 [INFO]         "load_remote_spec": false
+04.03.2024 20:50:42 [INFO]     },
+04.03.2024 20:50:42 [INFO]     "debug": {
+04.03.2024 20:50:42 [INFO]         "level": "INFO",
+04.03.2024 20:50:42 [INFO]         "clear_log": true,
+04.03.2024 20:50:42 [INFO]         "parse_subfields": false,
+04.03.2024 20:50:42 [INFO]         "backup_storage_depth": 30
+04.03.2024 20:50:42 [INFO]     },
+04.03.2024 20:50:42 [INFO]     "validation": {
+04.03.2024 20:50:42 [INFO]         "validation_enabled": true,
+04.03.2024 20:50:42 [INFO]         "validate_incoming": true,
+04.03.2024 20:50:42 [INFO]         "validation_mode": "WARNING"
+04.03.2024 20:50:42 [INFO]     },
+04.03.2024 20:50:42 [INFO]     "fields": {
+04.03.2024 20:50:42 [INFO]         "max_amount": 100,
+04.03.2024 20:50:42 [INFO]         "max_amount_limited": true,
+04.03.2024 20:50:42 [INFO]         "build_fld_90": true,
+04.03.2024 20:50:42 [INFO]         "send_internal_id": false,
+04.03.2024 20:50:42 [INFO]         "json_mode": true,
+04.03.2024 20:50:42 [INFO]         "hide_secrets": true
+04.03.2024 20:50:42 [INFO]     },
+04.03.2024 20:50:42 [INFO]     "remote_spec": {
+04.03.2024 20:50:42 [INFO]         "rewrite_local_spec": false,
+04.03.2024 20:50:42 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 20:50:42 [INFO]         "backup_storage_depth": 30,
+04.03.2024 20:50:42 [INFO]         "backup_storage": false
+04.03.2024 20:50:42 [INFO]     }
+04.03.2024 20:50:42 [INFO] }
+04.03.2024 20:50:42 [INFO] ## End of configuration parameters ##
+04.03.2024 20:50:42 [INFO] 
+04.03.2024 20:50:43 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 20:50:43 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 20:50:43 [INFO] Thank you for using SIGNAL
+04.03.2024 20:50:43 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 20:50:43 [INFO] Default file parsed
+04.03.2024 20:50:43 [INFO] [Re]connecting...
+04.03.2024 20:50:43 [INFO] Connection ESTABLISHED
+04.03.2024 20:50:50 [WARNING] No input filename recognized
+04.03.2024 20:50:56 [WARNING] No output filename recognized
+04.03.2024 20:50:57 [INFO] Connection DISCONNECTED
+04.03.2024 20:53:58 [INFO] 
+04.03.2024 20:53:58 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 20:53:58 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 20:53:58 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 20:53:58 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 20:53:58 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 20:53:58 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 20:53:58 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 20:53:58 [INFO] 
+04.03.2024 20:53:58 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 20:53:58 [INFO] 
+04.03.2024 20:53:58 [INFO] ## Configuration parameters ##
+04.03.2024 20:53:58 [INFO] {
+04.03.2024 20:53:58 [INFO]     "host": {
+04.03.2024 20:53:58 [INFO]         "host": "172.21.30.5",
+04.03.2024 20:53:58 [INFO]         "port": 16677,
+04.03.2024 20:53:58 [INFO]         "keep_alive_mode": false,
+04.03.2024 20:53:58 [INFO]         "keep_alive_interval": 300,
+04.03.2024 20:53:58 [INFO]         "header_length": 2,
+04.03.2024 20:53:58 [INFO]         "header_length_exists": true
+04.03.2024 20:53:58 [INFO]     },
+04.03.2024 20:53:58 [INFO]     "terminal": {
+04.03.2024 20:53:58 [INFO]         "process_default_dump": true,
+04.03.2024 20:53:58 [INFO]         "connect_on_startup": true,
+04.03.2024 20:53:58 [INFO]         "load_remote_spec": false
+04.03.2024 20:53:58 [INFO]     },
+04.03.2024 20:53:58 [INFO]     "debug": {
+04.03.2024 20:53:58 [INFO]         "level": "INFO",
+04.03.2024 20:53:58 [INFO]         "clear_log": true,
+04.03.2024 20:53:58 [INFO]         "parse_subfields": false,
+04.03.2024 20:53:58 [INFO]         "backup_storage_depth": 30
+04.03.2024 20:53:58 [INFO]     },
+04.03.2024 20:53:58 [INFO]     "validation": {
+04.03.2024 20:53:58 [INFO]         "validation_enabled": true,
+04.03.2024 20:53:58 [INFO]         "validate_incoming": true,
+04.03.2024 20:53:58 [INFO]         "validation_mode": "WARNING"
+04.03.2024 20:53:58 [INFO]     },
+04.03.2024 20:53:58 [INFO]     "fields": {
+04.03.2024 20:53:58 [INFO]         "max_amount": 100,
+04.03.2024 20:53:58 [INFO]         "max_amount_limited": true,
+04.03.2024 20:53:58 [INFO]         "build_fld_90": true,
+04.03.2024 20:53:58 [INFO]         "send_internal_id": false,
+04.03.2024 20:53:58 [INFO]         "json_mode": true,
+04.03.2024 20:53:58 [INFO]         "hide_secrets": true
+04.03.2024 20:53:58 [INFO]     },
+04.03.2024 20:53:58 [INFO]     "remote_spec": {
+04.03.2024 20:53:58 [INFO]         "rewrite_local_spec": false,
+04.03.2024 20:53:58 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 20:53:58 [INFO]         "backup_storage_depth": 30,
+04.03.2024 20:53:58 [INFO]         "backup_storage": false
+04.03.2024 20:53:58 [INFO]     }
+04.03.2024 20:53:58 [INFO] }
+04.03.2024 20:53:58 [INFO] ## End of configuration parameters ##
+04.03.2024 20:53:58 [INFO] 
+04.03.2024 20:53:59 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 20:53:59 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 20:53:59 [INFO] Thank you for using SIGNAL
+04.03.2024 20:53:59 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 20:53:59 [INFO] Default file parsed
+04.03.2024 20:53:59 [INFO] [Re]connecting...
+04.03.2024 20:53:59 [INFO] Connection ESTABLISHED
+04.03.2024 20:54:07 [WARNING] No input filename recognized
+04.03.2024 20:54:09 [INFO] Connection DISCONNECTED
+04.03.2024 20:56:45 [INFO] 
+04.03.2024 20:56:45 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 20:56:45 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 20:56:45 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 20:56:45 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 20:56:45 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 20:56:45 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 20:56:45 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 20:56:45 [INFO] 
+04.03.2024 20:56:45 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 20:56:45 [INFO] 
+04.03.2024 20:56:45 [INFO] ## Configuration parameters ##
+04.03.2024 20:56:45 [INFO] {
+04.03.2024 20:56:45 [INFO]     "host": {
+04.03.2024 20:56:45 [INFO]         "host": "172.21.30.5",
+04.03.2024 20:56:45 [INFO]         "port": 16677,
+04.03.2024 20:56:45 [INFO]         "keep_alive_mode": false,
+04.03.2024 20:56:45 [INFO]         "keep_alive_interval": 300,
+04.03.2024 20:56:45 [INFO]         "header_length": 2,
+04.03.2024 20:56:45 [INFO]         "header_length_exists": true
+04.03.2024 20:56:45 [INFO]     },
+04.03.2024 20:56:45 [INFO]     "terminal": {
+04.03.2024 20:56:45 [INFO]         "process_default_dump": true,
+04.03.2024 20:56:45 [INFO]         "connect_on_startup": true,
+04.03.2024 20:56:45 [INFO]         "load_remote_spec": false
+04.03.2024 20:56:45 [INFO]     },
+04.03.2024 20:56:45 [INFO]     "debug": {
+04.03.2024 20:56:45 [INFO]         "level": "INFO",
+04.03.2024 20:56:45 [INFO]         "clear_log": true,
+04.03.2024 20:56:45 [INFO]         "parse_subfields": false,
+04.03.2024 20:56:45 [INFO]         "backup_storage_depth": 30
+04.03.2024 20:56:45 [INFO]     },
+04.03.2024 20:56:45 [INFO]     "validation": {
+04.03.2024 20:56:45 [INFO]         "validation_enabled": true,
+04.03.2024 20:56:45 [INFO]         "validate_incoming": true,
+04.03.2024 20:56:45 [INFO]         "validation_mode": "WARNING"
+04.03.2024 20:56:45 [INFO]     },
+04.03.2024 20:56:45 [INFO]     "fields": {
+04.03.2024 20:56:45 [INFO]         "max_amount": 100,
+04.03.2024 20:56:45 [INFO]         "max_amount_limited": true,
+04.03.2024 20:56:45 [INFO]         "build_fld_90": true,
+04.03.2024 20:56:45 [INFO]         "send_internal_id": false,
+04.03.2024 20:56:45 [INFO]         "json_mode": true,
+04.03.2024 20:56:45 [INFO]         "hide_secrets": true
+04.03.2024 20:56:45 [INFO]     },
+04.03.2024 20:56:45 [INFO]     "remote_spec": {
+04.03.2024 20:56:45 [INFO]         "rewrite_local_spec": false,
+04.03.2024 20:56:45 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 20:56:45 [INFO]         "backup_storage_depth": 30,
+04.03.2024 20:56:45 [INFO]         "backup_storage": false
+04.03.2024 20:56:45 [INFO]     }
+04.03.2024 20:56:45 [INFO] }
+04.03.2024 20:56:45 [INFO] ## End of configuration parameters ##
+04.03.2024 20:56:45 [INFO] 
+04.03.2024 20:56:46 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 20:56:46 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 20:56:46 [INFO] Thank you for using SIGNAL
+04.03.2024 20:56:46 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 20:56:46 [INFO] Default file parsed
+04.03.2024 20:56:46 [INFO] [Re]connecting...
+04.03.2024 20:56:46 [INFO] Connection ESTABLISHED
+04.03.2024 20:56:56 [WARNING] No output filename recognized
+04.03.2024 20:56:57 [INFO] Connection DISCONNECTED
+04.03.2024 20:58:09 [INFO] 
+04.03.2024 20:58:09 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 20:58:09 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 20:58:09 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 20:58:09 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 20:58:09 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 20:58:09 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 20:58:09 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 20:58:09 [INFO] 
+04.03.2024 20:58:09 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 20:58:09 [INFO] 
+04.03.2024 20:58:09 [INFO] ## Configuration parameters ##
+04.03.2024 20:58:09 [INFO] {
+04.03.2024 20:58:09 [INFO]     "host": {
+04.03.2024 20:58:09 [INFO]         "host": "172.21.30.5",
+04.03.2024 20:58:09 [INFO]         "port": 16677,
+04.03.2024 20:58:09 [INFO]         "keep_alive_mode": false,
+04.03.2024 20:58:09 [INFO]         "keep_alive_interval": 300,
+04.03.2024 20:58:09 [INFO]         "header_length": 2,
+04.03.2024 20:58:09 [INFO]         "header_length_exists": true
+04.03.2024 20:58:09 [INFO]     },
+04.03.2024 20:58:09 [INFO]     "terminal": {
+04.03.2024 20:58:09 [INFO]         "process_default_dump": true,
+04.03.2024 20:58:09 [INFO]         "connect_on_startup": true,
+04.03.2024 20:58:09 [INFO]         "load_remote_spec": false
+04.03.2024 20:58:09 [INFO]     },
+04.03.2024 20:58:09 [INFO]     "debug": {
+04.03.2024 20:58:09 [INFO]         "level": "INFO",
+04.03.2024 20:58:09 [INFO]         "clear_log": true,
+04.03.2024 20:58:09 [INFO]         "parse_subfields": false,
+04.03.2024 20:58:09 [INFO]         "backup_storage_depth": 30
+04.03.2024 20:58:09 [INFO]     },
+04.03.2024 20:58:09 [INFO]     "validation": {
+04.03.2024 20:58:09 [INFO]         "validation_enabled": true,
+04.03.2024 20:58:09 [INFO]         "validate_incoming": true,
+04.03.2024 20:58:09 [INFO]         "validation_mode": "WARNING"
+04.03.2024 20:58:09 [INFO]     },
+04.03.2024 20:58:09 [INFO]     "fields": {
+04.03.2024 20:58:09 [INFO]         "max_amount": 100,
+04.03.2024 20:58:09 [INFO]         "max_amount_limited": true,
+04.03.2024 20:58:09 [INFO]         "build_fld_90": true,
+04.03.2024 20:58:09 [INFO]         "send_internal_id": false,
+04.03.2024 20:58:09 [INFO]         "json_mode": true,
+04.03.2024 20:58:09 [INFO]         "hide_secrets": true
+04.03.2024 20:58:09 [INFO]     },
+04.03.2024 20:58:09 [INFO]     "remote_spec": {
+04.03.2024 20:58:09 [INFO]         "rewrite_local_spec": false,
+04.03.2024 20:58:09 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 20:58:09 [INFO]         "backup_storage_depth": 30,
+04.03.2024 20:58:09 [INFO]         "backup_storage": false
+04.03.2024 20:58:09 [INFO]     }
+04.03.2024 20:58:09 [INFO] }
+04.03.2024 20:58:09 [INFO] ## End of configuration parameters ##
+04.03.2024 20:58:09 [INFO] 
+04.03.2024 20:58:09 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 20:58:09 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 20:58:09 [INFO] Thank you for using SIGNAL
+04.03.2024 20:58:09 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 20:58:09 [INFO] Default file parsed
+04.03.2024 20:58:09 [INFO] [Re]connecting...
+04.03.2024 20:58:09 [INFO] Connection ESTABLISHED
+04.03.2024 21:00:04 [ERROR] Received a socket error from host: The remote host closed the connection
+04.03.2024 21:00:04 [INFO] Connection DISCONNECTED
+04.03.2024 21:17:56 [INFO] 
+04.03.2024 21:17:56 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:17:56 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:17:56 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:17:56 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:17:56 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:17:56 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:17:56 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:17:56 [INFO] 
+04.03.2024 21:17:56 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:17:56 [INFO] 
+04.03.2024 21:17:56 [INFO] ## Configuration parameters ##
+04.03.2024 21:17:56 [INFO] {
+04.03.2024 21:17:56 [INFO]     "host": {
+04.03.2024 21:17:56 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:17:56 [INFO]         "port": 16677,
+04.03.2024 21:17:56 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:17:56 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:17:56 [INFO]         "header_length": 2,
+04.03.2024 21:17:56 [INFO]         "header_length_exists": true
+04.03.2024 21:17:56 [INFO]     },
+04.03.2024 21:17:56 [INFO]     "terminal": {
+04.03.2024 21:17:56 [INFO]         "process_default_dump": true,
+04.03.2024 21:17:56 [INFO]         "connect_on_startup": true,
+04.03.2024 21:17:56 [INFO]         "load_remote_spec": false
+04.03.2024 21:17:56 [INFO]     },
+04.03.2024 21:17:56 [INFO]     "debug": {
+04.03.2024 21:17:56 [INFO]         "level": "INFO",
+04.03.2024 21:17:56 [INFO]         "clear_log": true,
+04.03.2024 21:17:56 [INFO]         "parse_subfields": false,
+04.03.2024 21:17:56 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:17:56 [INFO]     },
+04.03.2024 21:17:56 [INFO]     "validation": {
+04.03.2024 21:17:56 [INFO]         "validation_enabled": true,
+04.03.2024 21:17:56 [INFO]         "validate_incoming": true,
+04.03.2024 21:17:56 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:17:56 [INFO]     },
+04.03.2024 21:17:56 [INFO]     "fields": {
+04.03.2024 21:17:56 [INFO]         "max_amount": 100,
+04.03.2024 21:17:56 [INFO]         "max_amount_limited": true,
+04.03.2024 21:17:56 [INFO]         "build_fld_90": true,
+04.03.2024 21:17:56 [INFO]         "send_internal_id": false,
+04.03.2024 21:17:56 [INFO]         "json_mode": true,
+04.03.2024 21:17:56 [INFO]         "hide_secrets": true
+04.03.2024 21:17:56 [INFO]     },
+04.03.2024 21:17:56 [INFO]     "remote_spec": {
+04.03.2024 21:17:56 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:17:56 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:17:56 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:17:56 [INFO]         "backup_storage": false
+04.03.2024 21:17:56 [INFO]     }
+04.03.2024 21:17:56 [INFO] }
+04.03.2024 21:17:56 [INFO] ## End of configuration parameters ##
+04.03.2024 21:17:56 [INFO] 
+04.03.2024 21:17:56 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:17:56 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:17:56 [INFO] Thank you for using SIGNAL
+04.03.2024 21:17:56 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:17:56 [INFO] Default file parsed
+04.03.2024 21:17:56 [INFO] [Re]connecting...
+04.03.2024 21:17:56 [INFO] Connection ESTABLISHED
+04.03.2024 21:22:19 [WARNING] No output filename recognized
+04.03.2024 21:22:24 [INFO] Connection DISCONNECTED
+04.03.2024 21:26:50 [INFO] 
+04.03.2024 21:26:50 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:26:50 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:26:50 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:26:50 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:26:50 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:26:50 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:26:50 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:26:50 [INFO] 
+04.03.2024 21:26:50 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:26:50 [INFO] 
+04.03.2024 21:26:50 [INFO] ## Configuration parameters ##
+04.03.2024 21:26:50 [INFO] {
+04.03.2024 21:26:50 [INFO]     "host": {
+04.03.2024 21:26:50 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:26:50 [INFO]         "port": 16677,
+04.03.2024 21:26:50 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:26:50 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:26:50 [INFO]         "header_length": 2,
+04.03.2024 21:26:50 [INFO]         "header_length_exists": true
+04.03.2024 21:26:50 [INFO]     },
+04.03.2024 21:26:50 [INFO]     "terminal": {
+04.03.2024 21:26:50 [INFO]         "process_default_dump": true,
+04.03.2024 21:26:50 [INFO]         "connect_on_startup": true,
+04.03.2024 21:26:50 [INFO]         "load_remote_spec": false
+04.03.2024 21:26:50 [INFO]     },
+04.03.2024 21:26:50 [INFO]     "debug": {
+04.03.2024 21:26:50 [INFO]         "level": "INFO",
+04.03.2024 21:26:50 [INFO]         "clear_log": true,
+04.03.2024 21:26:50 [INFO]         "parse_subfields": false,
+04.03.2024 21:26:50 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:26:50 [INFO]     },
+04.03.2024 21:26:50 [INFO]     "validation": {
+04.03.2024 21:26:50 [INFO]         "validation_enabled": true,
+04.03.2024 21:26:50 [INFO]         "validate_incoming": true,
+04.03.2024 21:26:50 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:26:50 [INFO]     },
+04.03.2024 21:26:50 [INFO]     "fields": {
+04.03.2024 21:26:50 [INFO]         "max_amount": 100,
+04.03.2024 21:26:50 [INFO]         "max_amount_limited": true,
+04.03.2024 21:26:50 [INFO]         "build_fld_90": true,
+04.03.2024 21:26:50 [INFO]         "send_internal_id": false,
+04.03.2024 21:26:50 [INFO]         "json_mode": true,
+04.03.2024 21:26:50 [INFO]         "hide_secrets": true
+04.03.2024 21:26:50 [INFO]     },
+04.03.2024 21:26:50 [INFO]     "remote_spec": {
+04.03.2024 21:26:50 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:26:50 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:26:50 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:26:50 [INFO]         "backup_storage": false
+04.03.2024 21:26:50 [INFO]     }
+04.03.2024 21:26:50 [INFO] }
+04.03.2024 21:26:50 [INFO] ## End of configuration parameters ##
+04.03.2024 21:26:50 [INFO] 
+04.03.2024 21:26:50 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:26:50 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:26:50 [INFO] Thank you for using SIGNAL
+04.03.2024 21:26:50 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:26:50 [INFO] Default file parsed
+04.03.2024 21:26:50 [INFO] [Re]connecting...
+04.03.2024 21:26:50 [INFO] Connection ESTABLISHED
+04.03.2024 21:27:54 [WARNING] No input filename recognized
+04.03.2024 21:27:58 [WARNING] No output filename recognized
+04.03.2024 21:30:04 [INFO] 
+04.03.2024 21:30:04 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:30:04 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:30:04 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:30:04 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:30:04 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:30:04 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:30:04 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:30:04 [INFO] 
+04.03.2024 21:30:04 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:30:04 [INFO] 
+04.03.2024 21:30:04 [INFO] ## Configuration parameters ##
+04.03.2024 21:30:04 [INFO] {
+04.03.2024 21:30:04 [INFO]     "host": {
+04.03.2024 21:30:04 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:30:04 [INFO]         "port": 16677,
+04.03.2024 21:30:04 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:30:04 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:30:04 [INFO]         "header_length": 2,
+04.03.2024 21:30:04 [INFO]         "header_length_exists": true
+04.03.2024 21:30:04 [INFO]     },
+04.03.2024 21:30:04 [INFO]     "terminal": {
+04.03.2024 21:30:04 [INFO]         "process_default_dump": true,
+04.03.2024 21:30:04 [INFO]         "connect_on_startup": true,
+04.03.2024 21:30:04 [INFO]         "load_remote_spec": false
+04.03.2024 21:30:04 [INFO]     },
+04.03.2024 21:30:04 [INFO]     "debug": {
+04.03.2024 21:30:04 [INFO]         "level": "INFO",
+04.03.2024 21:30:04 [INFO]         "clear_log": true,
+04.03.2024 21:30:04 [INFO]         "parse_subfields": false,
+04.03.2024 21:30:04 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:30:04 [INFO]     },
+04.03.2024 21:30:04 [INFO]     "validation": {
+04.03.2024 21:30:04 [INFO]         "validation_enabled": true,
+04.03.2024 21:30:04 [INFO]         "validate_incoming": true,
+04.03.2024 21:30:04 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:30:04 [INFO]     },
+04.03.2024 21:30:04 [INFO]     "fields": {
+04.03.2024 21:30:04 [INFO]         "max_amount": 100,
+04.03.2024 21:30:04 [INFO]         "max_amount_limited": true,
+04.03.2024 21:30:04 [INFO]         "build_fld_90": true,
+04.03.2024 21:30:04 [INFO]         "send_internal_id": false,
+04.03.2024 21:30:04 [INFO]         "json_mode": true,
+04.03.2024 21:30:04 [INFO]         "hide_secrets": true
+04.03.2024 21:30:04 [INFO]     },
+04.03.2024 21:30:04 [INFO]     "remote_spec": {
+04.03.2024 21:30:04 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:30:04 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:30:04 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:30:04 [INFO]         "backup_storage": false
+04.03.2024 21:30:04 [INFO]     }
+04.03.2024 21:30:04 [INFO] }
+04.03.2024 21:30:04 [INFO] ## End of configuration parameters ##
+04.03.2024 21:30:04 [INFO] 
+04.03.2024 21:30:05 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:30:05 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:30:05 [INFO] Thank you for using SIGNAL
+04.03.2024 21:30:05 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:30:05 [INFO] Default file parsed
+04.03.2024 21:30:05 [INFO] [Re]connecting...
+04.03.2024 21:30:11 [ERROR] Received a socket error from host: Connection refused
+04.03.2024 21:30:38 [ERROR] Received a socket error from host: Connection timed out
+04.03.2024 21:31:56 [WARNING] No output filename recognized
+04.03.2024 21:36:39 [INFO] 
+04.03.2024 21:36:39 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:36:39 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:36:39 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:36:39 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:36:39 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:36:39 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:36:39 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:36:39 [INFO] 
+04.03.2024 21:36:39 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:36:39 [INFO] 
+04.03.2024 21:36:39 [INFO] ## Configuration parameters ##
+04.03.2024 21:36:39 [INFO] {
+04.03.2024 21:36:39 [INFO]     "host": {
+04.03.2024 21:36:39 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:36:39 [INFO]         "port": 16677,
+04.03.2024 21:36:39 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:36:39 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:36:39 [INFO]         "header_length": 2,
+04.03.2024 21:36:39 [INFO]         "header_length_exists": true
+04.03.2024 21:36:39 [INFO]     },
+04.03.2024 21:36:39 [INFO]     "terminal": {
+04.03.2024 21:36:39 [INFO]         "process_default_dump": true,
+04.03.2024 21:36:39 [INFO]         "connect_on_startup": true,
+04.03.2024 21:36:39 [INFO]         "load_remote_spec": false
+04.03.2024 21:36:39 [INFO]     },
+04.03.2024 21:36:39 [INFO]     "debug": {
+04.03.2024 21:36:39 [INFO]         "level": "INFO",
+04.03.2024 21:36:39 [INFO]         "clear_log": true,
+04.03.2024 21:36:39 [INFO]         "parse_subfields": false,
+04.03.2024 21:36:39 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:36:39 [INFO]     },
+04.03.2024 21:36:39 [INFO]     "validation": {
+04.03.2024 21:36:39 [INFO]         "validation_enabled": true,
+04.03.2024 21:36:39 [INFO]         "validate_incoming": true,
+04.03.2024 21:36:39 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:36:39 [INFO]     },
+04.03.2024 21:36:39 [INFO]     "fields": {
+04.03.2024 21:36:39 [INFO]         "max_amount": 100,
+04.03.2024 21:36:39 [INFO]         "max_amount_limited": true,
+04.03.2024 21:36:39 [INFO]         "build_fld_90": true,
+04.03.2024 21:36:39 [INFO]         "send_internal_id": false,
+04.03.2024 21:36:39 [INFO]         "json_mode": true,
+04.03.2024 21:36:39 [INFO]         "hide_secrets": true
+04.03.2024 21:36:39 [INFO]     },
+04.03.2024 21:36:39 [INFO]     "remote_spec": {
+04.03.2024 21:36:39 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:36:39 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:36:39 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:36:39 [INFO]         "backup_storage": false
+04.03.2024 21:36:39 [INFO]     }
+04.03.2024 21:36:39 [INFO] }
+04.03.2024 21:36:39 [INFO] ## End of configuration parameters ##
+04.03.2024 21:36:39 [INFO] 
+04.03.2024 21:36:39 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:36:39 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:36:39 [INFO] Thank you for using SIGNAL
+04.03.2024 21:36:39 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:36:39 [INFO] Default file parsed
+04.03.2024 21:36:39 [INFO] [Re]connecting...
+04.03.2024 21:36:39 [INFO] Connection ESTABLISHED
+04.03.2024 21:39:34 [ERROR] Unknown output file format
+04.03.2024 21:39:53 [INFO] 
+04.03.2024 21:39:53 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:39:53 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:39:53 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:39:53 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:39:53 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:39:53 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:39:53 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:39:53 [INFO] 
+04.03.2024 21:39:53 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:39:53 [INFO] 
+04.03.2024 21:39:53 [INFO] ## Configuration parameters ##
+04.03.2024 21:39:53 [INFO] {
+04.03.2024 21:39:53 [INFO]     "host": {
+04.03.2024 21:39:53 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:39:53 [INFO]         "port": 16677,
+04.03.2024 21:39:53 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:39:53 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:39:53 [INFO]         "header_length": 2,
+04.03.2024 21:39:53 [INFO]         "header_length_exists": true
+04.03.2024 21:39:53 [INFO]     },
+04.03.2024 21:39:53 [INFO]     "terminal": {
+04.03.2024 21:39:53 [INFO]         "process_default_dump": true,
+04.03.2024 21:39:53 [INFO]         "connect_on_startup": true,
+04.03.2024 21:39:53 [INFO]         "load_remote_spec": false
+04.03.2024 21:39:53 [INFO]     },
+04.03.2024 21:39:53 [INFO]     "debug": {
+04.03.2024 21:39:53 [INFO]         "level": "INFO",
+04.03.2024 21:39:53 [INFO]         "clear_log": true,
+04.03.2024 21:39:53 [INFO]         "parse_subfields": false,
+04.03.2024 21:39:53 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:39:53 [INFO]     },
+04.03.2024 21:39:53 [INFO]     "validation": {
+04.03.2024 21:39:53 [INFO]         "validation_enabled": true,
+04.03.2024 21:39:53 [INFO]         "validate_incoming": true,
+04.03.2024 21:39:53 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:39:53 [INFO]     },
+04.03.2024 21:39:53 [INFO]     "fields": {
+04.03.2024 21:39:53 [INFO]         "max_amount": 100,
+04.03.2024 21:39:53 [INFO]         "max_amount_limited": true,
+04.03.2024 21:39:53 [INFO]         "build_fld_90": true,
+04.03.2024 21:39:53 [INFO]         "send_internal_id": false,
+04.03.2024 21:39:53 [INFO]         "json_mode": true,
+04.03.2024 21:39:53 [INFO]         "hide_secrets": true
+04.03.2024 21:39:53 [INFO]     },
+04.03.2024 21:39:53 [INFO]     "remote_spec": {
+04.03.2024 21:39:53 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:39:53 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:39:53 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:39:53 [INFO]         "backup_storage": false
+04.03.2024 21:39:53 [INFO]     }
+04.03.2024 21:39:53 [INFO] }
+04.03.2024 21:39:53 [INFO] ## End of configuration parameters ##
+04.03.2024 21:39:53 [INFO] 
+04.03.2024 21:39:54 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:39:54 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:39:54 [INFO] Thank you for using SIGNAL
+04.03.2024 21:39:54 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:39:54 [INFO] Default file parsed
+04.03.2024 21:39:54 [INFO] [Re]connecting...
+04.03.2024 21:39:54 [INFO] Connection ESTABLISHED
+04.03.2024 21:40:04 [INFO] The transaction was saved successfully to C:/Users/admin/PycharmProjects/sv-terminal/def.json
+04.03.2024 21:40:06 [INFO] Connection DISCONNECTED
+04.03.2024 21:51:05 [INFO] 
+04.03.2024 21:51:05 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:51:05 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:51:05 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:51:05 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:51:05 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:51:05 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:51:05 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:51:05 [INFO] 
+04.03.2024 21:51:05 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:51:05 [INFO] 
+04.03.2024 21:51:05 [INFO] ## Configuration parameters ##
+04.03.2024 21:51:05 [INFO] {
+04.03.2024 21:51:05 [INFO]     "host": {
+04.03.2024 21:51:05 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:51:05 [INFO]         "port": 16677,
+04.03.2024 21:51:05 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:51:05 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:51:05 [INFO]         "header_length": 2,
+04.03.2024 21:51:05 [INFO]         "header_length_exists": true
+04.03.2024 21:51:05 [INFO]     },
+04.03.2024 21:51:05 [INFO]     "terminal": {
+04.03.2024 21:51:05 [INFO]         "process_default_dump": true,
+04.03.2024 21:51:05 [INFO]         "connect_on_startup": true,
+04.03.2024 21:51:05 [INFO]         "load_remote_spec": false
+04.03.2024 21:51:05 [INFO]     },
+04.03.2024 21:51:05 [INFO]     "debug": {
+04.03.2024 21:51:05 [INFO]         "level": "INFO",
+04.03.2024 21:51:05 [INFO]         "clear_log": true,
+04.03.2024 21:51:05 [INFO]         "parse_subfields": false,
+04.03.2024 21:51:05 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:51:05 [INFO]     },
+04.03.2024 21:51:05 [INFO]     "validation": {
+04.03.2024 21:51:05 [INFO]         "validation_enabled": true,
+04.03.2024 21:51:05 [INFO]         "validate_incoming": true,
+04.03.2024 21:51:05 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:51:05 [INFO]     },
+04.03.2024 21:51:05 [INFO]     "fields": {
+04.03.2024 21:51:05 [INFO]         "max_amount": 100,
+04.03.2024 21:51:05 [INFO]         "max_amount_limited": true,
+04.03.2024 21:51:05 [INFO]         "build_fld_90": true,
+04.03.2024 21:51:05 [INFO]         "send_internal_id": false,
+04.03.2024 21:51:05 [INFO]         "json_mode": true,
+04.03.2024 21:51:05 [INFO]         "hide_secrets": true
+04.03.2024 21:51:05 [INFO]     },
+04.03.2024 21:51:05 [INFO]     "remote_spec": {
+04.03.2024 21:51:05 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:51:05 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:51:05 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:51:05 [INFO]         "backup_storage": false
+04.03.2024 21:51:05 [INFO]     }
+04.03.2024 21:51:05 [INFO] }
+04.03.2024 21:51:05 [INFO] ## End of configuration parameters ##
+04.03.2024 21:51:05 [INFO] 
+04.03.2024 21:51:06 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:51:06 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:51:06 [INFO] Thank you for using SIGNAL
+04.03.2024 21:51:06 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:51:06 [INFO] Default file parsed
+04.03.2024 21:51:06 [INFO] [Re]connecting...
+04.03.2024 21:51:06 [INFO] Connection ESTABLISHED
+04.03.2024 21:51:18 [WARNING] No output filename recognized
+04.03.2024 21:51:19 [INFO] Connection DISCONNECTED
+04.03.2024 21:52:09 [INFO] 
+04.03.2024 21:52:09 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:52:09 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:52:09 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:52:09 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:52:09 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:52:09 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:52:09 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:52:09 [INFO] 
+04.03.2024 21:52:09 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:52:09 [INFO] 
+04.03.2024 21:52:09 [INFO] ## Configuration parameters ##
+04.03.2024 21:52:09 [INFO] {
+04.03.2024 21:52:09 [INFO]     "host": {
+04.03.2024 21:52:09 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:52:09 [INFO]         "port": 16677,
+04.03.2024 21:52:09 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:52:09 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:52:09 [INFO]         "header_length": 2,
+04.03.2024 21:52:09 [INFO]         "header_length_exists": true
+04.03.2024 21:52:09 [INFO]     },
+04.03.2024 21:52:09 [INFO]     "terminal": {
+04.03.2024 21:52:09 [INFO]         "process_default_dump": true,
+04.03.2024 21:52:09 [INFO]         "connect_on_startup": true,
+04.03.2024 21:52:09 [INFO]         "load_remote_spec": false
+04.03.2024 21:52:09 [INFO]     },
+04.03.2024 21:52:09 [INFO]     "debug": {
+04.03.2024 21:52:09 [INFO]         "level": "INFO",
+04.03.2024 21:52:09 [INFO]         "clear_log": true,
+04.03.2024 21:52:09 [INFO]         "parse_subfields": false,
+04.03.2024 21:52:09 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:52:09 [INFO]     },
+04.03.2024 21:52:09 [INFO]     "validation": {
+04.03.2024 21:52:09 [INFO]         "validation_enabled": true,
+04.03.2024 21:52:09 [INFO]         "validate_incoming": true,
+04.03.2024 21:52:09 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:52:09 [INFO]     },
+04.03.2024 21:52:09 [INFO]     "fields": {
+04.03.2024 21:52:09 [INFO]         "max_amount": 100,
+04.03.2024 21:52:09 [INFO]         "max_amount_limited": true,
+04.03.2024 21:52:09 [INFO]         "build_fld_90": true,
+04.03.2024 21:52:09 [INFO]         "send_internal_id": false,
+04.03.2024 21:52:09 [INFO]         "json_mode": true,
+04.03.2024 21:52:09 [INFO]         "hide_secrets": true
+04.03.2024 21:52:09 [INFO]     },
+04.03.2024 21:52:09 [INFO]     "remote_spec": {
+04.03.2024 21:52:09 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:52:09 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:52:09 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:52:09 [INFO]         "backup_storage": false
+04.03.2024 21:52:09 [INFO]     }
+04.03.2024 21:52:09 [INFO] }
+04.03.2024 21:52:09 [INFO] ## End of configuration parameters ##
+04.03.2024 21:52:09 [INFO] 
+04.03.2024 21:52:10 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:52:10 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:52:10 [INFO] Thank you for using SIGNAL
+04.03.2024 21:52:10 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:52:10 [INFO] Default file parsed
+04.03.2024 21:52:10 [INFO] [Re]connecting...
+04.03.2024 21:52:10 [INFO] Connection ESTABLISHED
+04.03.2024 21:52:28 [WARNING] No output filename recognized
+04.03.2024 21:52:30 [INFO] Connection DISCONNECTED
+04.03.2024 21:53:21 [INFO] 
+04.03.2024 21:53:21 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:53:21 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:53:21 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:53:21 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:53:21 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:53:21 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:53:21 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:53:21 [INFO] 
+04.03.2024 21:53:21 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:53:21 [INFO] 
+04.03.2024 21:53:21 [INFO] ## Configuration parameters ##
+04.03.2024 21:53:21 [INFO] {
+04.03.2024 21:53:21 [INFO]     "host": {
+04.03.2024 21:53:21 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:53:21 [INFO]         "port": 16677,
+04.03.2024 21:53:21 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:53:21 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:53:21 [INFO]         "header_length": 2,
+04.03.2024 21:53:21 [INFO]         "header_length_exists": true
+04.03.2024 21:53:21 [INFO]     },
+04.03.2024 21:53:21 [INFO]     "terminal": {
+04.03.2024 21:53:21 [INFO]         "process_default_dump": true,
+04.03.2024 21:53:21 [INFO]         "connect_on_startup": true,
+04.03.2024 21:53:21 [INFO]         "load_remote_spec": false
+04.03.2024 21:53:21 [INFO]     },
+04.03.2024 21:53:21 [INFO]     "debug": {
+04.03.2024 21:53:21 [INFO]         "level": "INFO",
+04.03.2024 21:53:21 [INFO]         "clear_log": true,
+04.03.2024 21:53:21 [INFO]         "parse_subfields": false,
+04.03.2024 21:53:21 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:53:21 [INFO]     },
+04.03.2024 21:53:21 [INFO]     "validation": {
+04.03.2024 21:53:21 [INFO]         "validation_enabled": true,
+04.03.2024 21:53:21 [INFO]         "validate_incoming": true,
+04.03.2024 21:53:21 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:53:21 [INFO]     },
+04.03.2024 21:53:21 [INFO]     "fields": {
+04.03.2024 21:53:21 [INFO]         "max_amount": 100,
+04.03.2024 21:53:21 [INFO]         "max_amount_limited": true,
+04.03.2024 21:53:21 [INFO]         "build_fld_90": true,
+04.03.2024 21:53:21 [INFO]         "send_internal_id": false,
+04.03.2024 21:53:21 [INFO]         "json_mode": true,
+04.03.2024 21:53:21 [INFO]         "hide_secrets": true
+04.03.2024 21:53:21 [INFO]     },
+04.03.2024 21:53:21 [INFO]     "remote_spec": {
+04.03.2024 21:53:21 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:53:21 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:53:21 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:53:21 [INFO]         "backup_storage": false
+04.03.2024 21:53:21 [INFO]     }
+04.03.2024 21:53:21 [INFO] }
+04.03.2024 21:53:21 [INFO] ## End of configuration parameters ##
+04.03.2024 21:53:21 [INFO] 
+04.03.2024 21:53:22 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:53:22 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:53:22 [INFO] Thank you for using SIGNAL
+04.03.2024 21:53:22 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:53:22 [INFO] Default file parsed
+04.03.2024 21:53:22 [INFO] [Re]connecting...
+04.03.2024 21:53:22 [INFO] Connection ESTABLISHED
+04.03.2024 21:53:39 [WARNING] No output filename recognized
+04.03.2024 21:53:41 [INFO] Connection DISCONNECTED
+04.03.2024 21:54:13 [INFO] 
+04.03.2024 21:54:13 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:54:13 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:54:13 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:54:13 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:54:13 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:54:13 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:54:13 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:54:13 [INFO] 
+04.03.2024 21:54:13 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:54:13 [INFO] 
+04.03.2024 21:54:13 [INFO] ## Configuration parameters ##
+04.03.2024 21:54:13 [INFO] {
+04.03.2024 21:54:13 [INFO]     "host": {
+04.03.2024 21:54:13 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:54:13 [INFO]         "port": 16677,
+04.03.2024 21:54:13 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:54:13 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:54:13 [INFO]         "header_length": 2,
+04.03.2024 21:54:13 [INFO]         "header_length_exists": true
+04.03.2024 21:54:13 [INFO]     },
+04.03.2024 21:54:13 [INFO]     "terminal": {
+04.03.2024 21:54:13 [INFO]         "process_default_dump": true,
+04.03.2024 21:54:13 [INFO]         "connect_on_startup": true,
+04.03.2024 21:54:13 [INFO]         "load_remote_spec": false
+04.03.2024 21:54:13 [INFO]     },
+04.03.2024 21:54:13 [INFO]     "debug": {
+04.03.2024 21:54:13 [INFO]         "level": "INFO",
+04.03.2024 21:54:13 [INFO]         "clear_log": true,
+04.03.2024 21:54:13 [INFO]         "parse_subfields": false,
+04.03.2024 21:54:13 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:54:13 [INFO]     },
+04.03.2024 21:54:13 [INFO]     "validation": {
+04.03.2024 21:54:13 [INFO]         "validation_enabled": true,
+04.03.2024 21:54:13 [INFO]         "validate_incoming": true,
+04.03.2024 21:54:13 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:54:13 [INFO]     },
+04.03.2024 21:54:13 [INFO]     "fields": {
+04.03.2024 21:54:13 [INFO]         "max_amount": 100,
+04.03.2024 21:54:13 [INFO]         "max_amount_limited": true,
+04.03.2024 21:54:13 [INFO]         "build_fld_90": true,
+04.03.2024 21:54:13 [INFO]         "send_internal_id": false,
+04.03.2024 21:54:13 [INFO]         "json_mode": true,
+04.03.2024 21:54:13 [INFO]         "hide_secrets": true
+04.03.2024 21:54:13 [INFO]     },
+04.03.2024 21:54:13 [INFO]     "remote_spec": {
+04.03.2024 21:54:13 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:54:13 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:54:13 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:54:13 [INFO]         "backup_storage": false
+04.03.2024 21:54:13 [INFO]     }
+04.03.2024 21:54:13 [INFO] }
+04.03.2024 21:54:13 [INFO] ## End of configuration parameters ##
+04.03.2024 21:54:13 [INFO] 
+04.03.2024 21:54:13 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:54:13 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:54:13 [INFO] Thank you for using SIGNAL
+04.03.2024 21:54:13 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:54:13 [INFO] Default file parsed
+04.03.2024 21:54:13 [INFO] [Re]connecting...
+04.03.2024 21:54:13 [INFO] Connection ESTABLISHED
+04.03.2024 21:54:28 [WARNING] No output filename recognized
+04.03.2024 21:54:29 [INFO] Connection DISCONNECTED
+04.03.2024 21:54:39 [INFO] 
+04.03.2024 21:54:39 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:54:39 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:54:39 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:54:39 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:54:39 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:54:39 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:54:39 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:54:39 [INFO] 
+04.03.2024 21:54:39 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:54:39 [INFO] 
+04.03.2024 21:54:39 [INFO] ## Configuration parameters ##
+04.03.2024 21:54:39 [INFO] {
+04.03.2024 21:54:39 [INFO]     "host": {
+04.03.2024 21:54:39 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:54:39 [INFO]         "port": 16677,
+04.03.2024 21:54:39 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:54:39 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:54:39 [INFO]         "header_length": 2,
+04.03.2024 21:54:39 [INFO]         "header_length_exists": true
+04.03.2024 21:54:39 [INFO]     },
+04.03.2024 21:54:39 [INFO]     "terminal": {
+04.03.2024 21:54:39 [INFO]         "process_default_dump": true,
+04.03.2024 21:54:39 [INFO]         "connect_on_startup": true,
+04.03.2024 21:54:39 [INFO]         "load_remote_spec": false
+04.03.2024 21:54:39 [INFO]     },
+04.03.2024 21:54:39 [INFO]     "debug": {
+04.03.2024 21:54:39 [INFO]         "level": "INFO",
+04.03.2024 21:54:39 [INFO]         "clear_log": true,
+04.03.2024 21:54:39 [INFO]         "parse_subfields": false,
+04.03.2024 21:54:39 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:54:39 [INFO]     },
+04.03.2024 21:54:39 [INFO]     "validation": {
+04.03.2024 21:54:39 [INFO]         "validation_enabled": true,
+04.03.2024 21:54:39 [INFO]         "validate_incoming": true,
+04.03.2024 21:54:39 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:54:39 [INFO]     },
+04.03.2024 21:54:39 [INFO]     "fields": {
+04.03.2024 21:54:39 [INFO]         "max_amount": 100,
+04.03.2024 21:54:39 [INFO]         "max_amount_limited": true,
+04.03.2024 21:54:39 [INFO]         "build_fld_90": true,
+04.03.2024 21:54:39 [INFO]         "send_internal_id": false,
+04.03.2024 21:54:39 [INFO]         "json_mode": true,
+04.03.2024 21:54:39 [INFO]         "hide_secrets": true
+04.03.2024 21:54:39 [INFO]     },
+04.03.2024 21:54:39 [INFO]     "remote_spec": {
+04.03.2024 21:54:39 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:54:39 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:54:39 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:54:39 [INFO]         "backup_storage": false
+04.03.2024 21:54:39 [INFO]     }
+04.03.2024 21:54:39 [INFO] }
+04.03.2024 21:54:39 [INFO] ## End of configuration parameters ##
+04.03.2024 21:54:39 [INFO] 
+04.03.2024 21:54:40 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:54:40 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:54:40 [INFO] Thank you for using SIGNAL
+04.03.2024 21:54:40 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:54:40 [INFO] Default file parsed
+04.03.2024 21:54:40 [INFO] [Re]connecting...
+04.03.2024 21:54:40 [INFO] Connection ESTABLISHED
+04.03.2024 21:55:01 [WARNING] No output filename recognized
+04.03.2024 21:55:03 [INFO] Connection DISCONNECTED
+04.03.2024 21:55:47 [INFO] 
+04.03.2024 21:55:47 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:55:47 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:55:47 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:55:47 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:55:47 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:55:47 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:55:47 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:55:47 [INFO] 
+04.03.2024 21:55:47 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:55:47 [INFO] 
+04.03.2024 21:55:47 [INFO] ## Configuration parameters ##
+04.03.2024 21:55:47 [INFO] {
+04.03.2024 21:55:47 [INFO]     "host": {
+04.03.2024 21:55:47 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:55:47 [INFO]         "port": 16677,
+04.03.2024 21:55:47 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:55:47 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:55:47 [INFO]         "header_length": 2,
+04.03.2024 21:55:47 [INFO]         "header_length_exists": true
+04.03.2024 21:55:47 [INFO]     },
+04.03.2024 21:55:47 [INFO]     "terminal": {
+04.03.2024 21:55:47 [INFO]         "process_default_dump": true,
+04.03.2024 21:55:47 [INFO]         "connect_on_startup": true,
+04.03.2024 21:55:47 [INFO]         "load_remote_spec": false
+04.03.2024 21:55:47 [INFO]     },
+04.03.2024 21:55:47 [INFO]     "debug": {
+04.03.2024 21:55:47 [INFO]         "level": "INFO",
+04.03.2024 21:55:47 [INFO]         "clear_log": true,
+04.03.2024 21:55:47 [INFO]         "parse_subfields": false,
+04.03.2024 21:55:47 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:55:47 [INFO]     },
+04.03.2024 21:55:47 [INFO]     "validation": {
+04.03.2024 21:55:47 [INFO]         "validation_enabled": true,
+04.03.2024 21:55:47 [INFO]         "validate_incoming": true,
+04.03.2024 21:55:47 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:55:47 [INFO]     },
+04.03.2024 21:55:47 [INFO]     "fields": {
+04.03.2024 21:55:47 [INFO]         "max_amount": 100,
+04.03.2024 21:55:47 [INFO]         "max_amount_limited": true,
+04.03.2024 21:55:47 [INFO]         "build_fld_90": true,
+04.03.2024 21:55:47 [INFO]         "send_internal_id": false,
+04.03.2024 21:55:47 [INFO]         "json_mode": true,
+04.03.2024 21:55:47 [INFO]         "hide_secrets": true
+04.03.2024 21:55:47 [INFO]     },
+04.03.2024 21:55:47 [INFO]     "remote_spec": {
+04.03.2024 21:55:47 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:55:47 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:55:47 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:55:47 [INFO]         "backup_storage": false
+04.03.2024 21:55:47 [INFO]     }
+04.03.2024 21:55:47 [INFO] }
+04.03.2024 21:55:47 [INFO] ## End of configuration parameters ##
+04.03.2024 21:55:47 [INFO] 
+04.03.2024 21:55:47 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:55:47 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:55:47 [INFO] Thank you for using SIGNAL
+04.03.2024 21:55:47 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:55:47 [INFO] Default file parsed
+04.03.2024 21:55:47 [INFO] [Re]connecting...
+04.03.2024 21:55:47 [INFO] Connection ESTABLISHED
+04.03.2024 21:55:51 [WARNING] No output filename recognized
+04.03.2024 21:55:52 [INFO] Connection DISCONNECTED
+04.03.2024 21:59:10 [INFO] 
+04.03.2024 21:59:10 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 21:59:10 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 21:59:10 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 21:59:10 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 21:59:10 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 21:59:10 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 21:59:10 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 21:59:10 [INFO] 
+04.03.2024 21:59:10 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 21:59:10 [INFO] 
+04.03.2024 21:59:10 [INFO] ## Configuration parameters ##
+04.03.2024 21:59:10 [INFO] {
+04.03.2024 21:59:10 [INFO]     "host": {
+04.03.2024 21:59:10 [INFO]         "host": "172.21.30.5",
+04.03.2024 21:59:10 [INFO]         "port": 16677,
+04.03.2024 21:59:10 [INFO]         "keep_alive_mode": false,
+04.03.2024 21:59:10 [INFO]         "keep_alive_interval": 300,
+04.03.2024 21:59:10 [INFO]         "header_length": 2,
+04.03.2024 21:59:10 [INFO]         "header_length_exists": true
+04.03.2024 21:59:10 [INFO]     },
+04.03.2024 21:59:10 [INFO]     "terminal": {
+04.03.2024 21:59:10 [INFO]         "process_default_dump": true,
+04.03.2024 21:59:10 [INFO]         "connect_on_startup": true,
+04.03.2024 21:59:10 [INFO]         "load_remote_spec": false
+04.03.2024 21:59:10 [INFO]     },
+04.03.2024 21:59:10 [INFO]     "debug": {
+04.03.2024 21:59:10 [INFO]         "level": "INFO",
+04.03.2024 21:59:10 [INFO]         "clear_log": true,
+04.03.2024 21:59:10 [INFO]         "parse_subfields": false,
+04.03.2024 21:59:10 [INFO]         "backup_storage_depth": 30
+04.03.2024 21:59:10 [INFO]     },
+04.03.2024 21:59:10 [INFO]     "validation": {
+04.03.2024 21:59:10 [INFO]         "validation_enabled": true,
+04.03.2024 21:59:10 [INFO]         "validate_incoming": true,
+04.03.2024 21:59:10 [INFO]         "validation_mode": "WARNING"
+04.03.2024 21:59:10 [INFO]     },
+04.03.2024 21:59:10 [INFO]     "fields": {
+04.03.2024 21:59:10 [INFO]         "max_amount": 100,
+04.03.2024 21:59:10 [INFO]         "max_amount_limited": true,
+04.03.2024 21:59:10 [INFO]         "build_fld_90": true,
+04.03.2024 21:59:10 [INFO]         "send_internal_id": false,
+04.03.2024 21:59:10 [INFO]         "json_mode": true,
+04.03.2024 21:59:10 [INFO]         "hide_secrets": true
+04.03.2024 21:59:10 [INFO]     },
+04.03.2024 21:59:10 [INFO]     "remote_spec": {
+04.03.2024 21:59:10 [INFO]         "rewrite_local_spec": false,
+04.03.2024 21:59:10 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 21:59:10 [INFO]         "backup_storage_depth": 30,
+04.03.2024 21:59:10 [INFO]         "backup_storage": false
+04.03.2024 21:59:10 [INFO]     }
+04.03.2024 21:59:10 [INFO] }
+04.03.2024 21:59:10 [INFO] ## End of configuration parameters ##
+04.03.2024 21:59:10 [INFO] 
+04.03.2024 21:59:10 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 21:59:10 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 21:59:10 [INFO] Thank you for using SIGNAL
+04.03.2024 21:59:10 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 21:59:10 [INFO] Default file parsed
+04.03.2024 21:59:10 [INFO] [Re]connecting...
+04.03.2024 21:59:10 [INFO] Connection ESTABLISHED
+04.03.2024 21:59:25 [INFO] The transaction was saved successfully to C:/Users/admin/PycharmProjects/sv-terminal/d.dump
+04.03.2024 21:59:48 [INFO] File parsed: C:/Users/admin/PycharmProjects/sv-terminal/d.dump
+04.03.2024 21:59:52 [INFO] Connection DISCONNECTED
+04.03.2024 22:00:18 [INFO] 
+04.03.2024 22:00:18 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 22:00:18 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 22:00:18 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 22:00:18 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 22:00:18 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 22:00:18 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 22:00:18 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 22:00:18 [INFO] 
+04.03.2024 22:00:18 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 22:00:18 [INFO] 
+04.03.2024 22:00:18 [INFO] ## Configuration parameters ##
+04.03.2024 22:00:18 [INFO] {
+04.03.2024 22:00:18 [INFO]     "host": {
+04.03.2024 22:00:18 [INFO]         "host": "172.21.30.5",
+04.03.2024 22:00:18 [INFO]         "port": 16677,
+04.03.2024 22:00:18 [INFO]         "keep_alive_mode": false,
+04.03.2024 22:00:18 [INFO]         "keep_alive_interval": 300,
+04.03.2024 22:00:18 [INFO]         "header_length": 2,
+04.03.2024 22:00:18 [INFO]         "header_length_exists": true
+04.03.2024 22:00:18 [INFO]     },
+04.03.2024 22:00:18 [INFO]     "terminal": {
+04.03.2024 22:00:18 [INFO]         "process_default_dump": true,
+04.03.2024 22:00:18 [INFO]         "connect_on_startup": true,
+04.03.2024 22:00:18 [INFO]         "load_remote_spec": false
+04.03.2024 22:00:18 [INFO]     },
+04.03.2024 22:00:18 [INFO]     "debug": {
+04.03.2024 22:00:18 [INFO]         "level": "INFO",
+04.03.2024 22:00:18 [INFO]         "clear_log": true,
+04.03.2024 22:00:18 [INFO]         "parse_subfields": false,
+04.03.2024 22:00:18 [INFO]         "backup_storage_depth": 30
+04.03.2024 22:00:18 [INFO]     },
+04.03.2024 22:00:18 [INFO]     "validation": {
+04.03.2024 22:00:18 [INFO]         "validation_enabled": true,
+04.03.2024 22:00:18 [INFO]         "validate_incoming": true,
+04.03.2024 22:00:18 [INFO]         "validation_mode": "WARNING"
+04.03.2024 22:00:18 [INFO]     },
+04.03.2024 22:00:18 [INFO]     "fields": {
+04.03.2024 22:00:18 [INFO]         "max_amount": 100,
+04.03.2024 22:00:18 [INFO]         "max_amount_limited": true,
+04.03.2024 22:00:18 [INFO]         "build_fld_90": true,
+04.03.2024 22:00:18 [INFO]         "send_internal_id": false,
+04.03.2024 22:00:18 [INFO]         "json_mode": true,
+04.03.2024 22:00:18 [INFO]         "hide_secrets": true
+04.03.2024 22:00:18 [INFO]     },
+04.03.2024 22:00:18 [INFO]     "remote_spec": {
+04.03.2024 22:00:18 [INFO]         "rewrite_local_spec": false,
+04.03.2024 22:00:18 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 22:00:18 [INFO]         "backup_storage_depth": 30,
+04.03.2024 22:00:18 [INFO]         "backup_storage": false
+04.03.2024 22:00:18 [INFO]     }
+04.03.2024 22:00:18 [INFO] }
+04.03.2024 22:00:18 [INFO] ## End of configuration parameters ##
+04.03.2024 22:00:18 [INFO] 
+04.03.2024 22:00:18 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 22:00:18 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 22:00:18 [INFO] Thank you for using SIGNAL
+04.03.2024 22:00:18 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 22:00:18 [INFO] Default file parsed
+04.03.2024 22:00:18 [INFO] [Re]connecting...
+04.03.2024 22:00:24 [ERROR] Received a socket error from host: Connection refused
+04.03.2024 22:00:31 [WARNING] Unknown file extension, trying to guess the format
+04.03.2024 22:00:31 [INFO] Trying to parse file as JSON
+04.03.2024 22:00:31 [WARNING] Cannot parse file as JSON: tuple index out of range
+04.03.2024 22:00:31 [INFO] Trying to parse file as INI
+04.03.2024 22:00:31 [WARNING] Cannot parse file as INI: File contains no section headers.
+file: 'C:/Users/admin/PycharmProjects/sv-terminal/d.dump1', line: 1
+'30.32.30.30.72.34.44.00.08.E3.80.00.31.36.35.34    0200........1654\n'
+04.03.2024 22:00:31 [INFO] Trying to parse file as DUMP
+04.03.2024 22:00:31 [INFO] File parsed: C:/Users/admin/PycharmProjects/sv-terminal/d.dump1
+04.03.2024 22:05:26 [INFO] 
+04.03.2024 22:05:26 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 22:05:26 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 22:05:26 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 22:05:26 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 22:05:26 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 22:05:26 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 22:05:26 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 22:05:26 [INFO] 
+04.03.2024 22:05:26 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 22:05:26 [INFO] 
+04.03.2024 22:05:26 [INFO] ## Configuration parameters ##
+04.03.2024 22:05:26 [INFO] {
+04.03.2024 22:05:26 [INFO]     "host": {
+04.03.2024 22:05:26 [INFO]         "host": "172.21.30.5",
+04.03.2024 22:05:26 [INFO]         "port": 16677,
+04.03.2024 22:05:26 [INFO]         "keep_alive_mode": false,
+04.03.2024 22:05:26 [INFO]         "keep_alive_interval": 300,
+04.03.2024 22:05:26 [INFO]         "header_length": 2,
+04.03.2024 22:05:26 [INFO]         "header_length_exists": true
+04.03.2024 22:05:26 [INFO]     },
+04.03.2024 22:05:26 [INFO]     "terminal": {
+04.03.2024 22:05:26 [INFO]         "process_default_dump": true,
+04.03.2024 22:05:26 [INFO]         "connect_on_startup": true,
+04.03.2024 22:05:26 [INFO]         "load_remote_spec": false
+04.03.2024 22:05:26 [INFO]     },
+04.03.2024 22:05:26 [INFO]     "debug": {
+04.03.2024 22:05:26 [INFO]         "level": "INFO",
+04.03.2024 22:05:26 [INFO]         "clear_log": true,
+04.03.2024 22:05:26 [INFO]         "parse_subfields": false,
+04.03.2024 22:05:26 [INFO]         "backup_storage_depth": 30
+04.03.2024 22:05:26 [INFO]     },
+04.03.2024 22:05:26 [INFO]     "validation": {
+04.03.2024 22:05:26 [INFO]         "validation_enabled": true,
+04.03.2024 22:05:26 [INFO]         "validate_incoming": true,
+04.03.2024 22:05:26 [INFO]         "validation_mode": "WARNING"
+04.03.2024 22:05:26 [INFO]     },
+04.03.2024 22:05:26 [INFO]     "fields": {
+04.03.2024 22:05:26 [INFO]         "max_amount": 100,
+04.03.2024 22:05:26 [INFO]         "max_amount_limited": true,
+04.03.2024 22:05:26 [INFO]         "build_fld_90": true,
+04.03.2024 22:05:26 [INFO]         "send_internal_id": false,
+04.03.2024 22:05:26 [INFO]         "json_mode": true,
+04.03.2024 22:05:26 [INFO]         "hide_secrets": true
+04.03.2024 22:05:26 [INFO]     },
+04.03.2024 22:05:26 [INFO]     "remote_spec": {
+04.03.2024 22:05:26 [INFO]         "rewrite_local_spec": false,
+04.03.2024 22:05:26 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 22:05:26 [INFO]         "backup_storage_depth": 30,
+04.03.2024 22:05:26 [INFO]         "backup_storage": false
+04.03.2024 22:05:26 [INFO]     }
+04.03.2024 22:05:26 [INFO] }
+04.03.2024 22:05:26 [INFO] ## End of configuration parameters ##
+04.03.2024 22:05:26 [INFO] 
+04.03.2024 22:05:26 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 22:05:26 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 22:05:26 [INFO] Thank you for using SIGNAL
+04.03.2024 22:05:26 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 22:05:26 [INFO] Default file parsed
+04.03.2024 22:05:26 [INFO] [Re]connecting...
+04.03.2024 22:05:27 [INFO] Connection ESTABLISHED
+04.03.2024 22:05:32 [WARNING] No input filename recognized
+04.03.2024 22:08:00 [INFO] 
+04.03.2024 22:08:00 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 22:08:00 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 22:08:00 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 22:08:00 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 22:08:00 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 22:08:00 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 22:08:00 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 22:08:00 [INFO] 
+04.03.2024 22:08:00 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 22:08:00 [INFO] 
+04.03.2024 22:08:00 [INFO] ## Configuration parameters ##
+04.03.2024 22:08:00 [INFO] {
+04.03.2024 22:08:00 [INFO]     "host": {
+04.03.2024 22:08:00 [INFO]         "host": "172.21.30.5",
+04.03.2024 22:08:00 [INFO]         "port": 16677,
+04.03.2024 22:08:00 [INFO]         "keep_alive_mode": false,
+04.03.2024 22:08:00 [INFO]         "keep_alive_interval": 300,
+04.03.2024 22:08:00 [INFO]         "header_length": 2,
+04.03.2024 22:08:00 [INFO]         "header_length_exists": true
+04.03.2024 22:08:00 [INFO]     },
+04.03.2024 22:08:00 [INFO]     "terminal": {
+04.03.2024 22:08:00 [INFO]         "process_default_dump": true,
+04.03.2024 22:08:00 [INFO]         "connect_on_startup": true,
+04.03.2024 22:08:00 [INFO]         "load_remote_spec": false
+04.03.2024 22:08:00 [INFO]     },
+04.03.2024 22:08:00 [INFO]     "debug": {
+04.03.2024 22:08:00 [INFO]         "level": "INFO",
+04.03.2024 22:08:00 [INFO]         "clear_log": true,
+04.03.2024 22:08:00 [INFO]         "parse_subfields": false,
+04.03.2024 22:08:00 [INFO]         "backup_storage_depth": 30
+04.03.2024 22:08:00 [INFO]     },
+04.03.2024 22:08:00 [INFO]     "validation": {
+04.03.2024 22:08:00 [INFO]         "validation_enabled": true,
+04.03.2024 22:08:00 [INFO]         "validate_incoming": true,
+04.03.2024 22:08:00 [INFO]         "validation_mode": "WARNING"
+04.03.2024 22:08:00 [INFO]     },
+04.03.2024 22:08:00 [INFO]     "fields": {
+04.03.2024 22:08:00 [INFO]         "max_amount": 100,
+04.03.2024 22:08:00 [INFO]         "max_amount_limited": true,
+04.03.2024 22:08:00 [INFO]         "build_fld_90": true,
+04.03.2024 22:08:00 [INFO]         "send_internal_id": false,
+04.03.2024 22:08:00 [INFO]         "json_mode": true,
+04.03.2024 22:08:00 [INFO]         "hide_secrets": true
+04.03.2024 22:08:00 [INFO]     },
+04.03.2024 22:08:00 [INFO]     "remote_spec": {
+04.03.2024 22:08:00 [INFO]         "rewrite_local_spec": false,
+04.03.2024 22:08:00 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 22:08:00 [INFO]         "backup_storage_depth": 30,
+04.03.2024 22:08:00 [INFO]         "backup_storage": false
+04.03.2024 22:08:00 [INFO]     }
+04.03.2024 22:08:00 [INFO] }
+04.03.2024 22:08:00 [INFO] ## End of configuration parameters ##
+04.03.2024 22:08:00 [INFO] 
+04.03.2024 22:08:00 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 22:08:00 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 22:08:00 [INFO] Thank you for using SIGNAL
+04.03.2024 22:08:00 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 22:08:00 [INFO] Default file parsed
+04.03.2024 22:08:00 [INFO] [Re]connecting...
+04.03.2024 22:08:01 [INFO] Connection ESTABLISHED
+04.03.2024 22:08:17 [WARNING] No input filename recognized
+04.03.2024 22:08:18 [INFO] Connection DISCONNECTED
+04.03.2024 22:08:25 [INFO] 
+04.03.2024 22:08:25 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 22:08:25 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 22:08:25 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 22:08:25 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 22:08:25 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 22:08:25 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 22:08:25 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 22:08:25 [INFO] 
+04.03.2024 22:08:25 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 22:08:25 [INFO] 
+04.03.2024 22:08:25 [INFO] ## Configuration parameters ##
+04.03.2024 22:08:25 [INFO] {
+04.03.2024 22:08:25 [INFO]     "host": {
+04.03.2024 22:08:25 [INFO]         "host": "172.21.30.5",
+04.03.2024 22:08:25 [INFO]         "port": 16677,
+04.03.2024 22:08:25 [INFO]         "keep_alive_mode": false,
+04.03.2024 22:08:25 [INFO]         "keep_alive_interval": 300,
+04.03.2024 22:08:25 [INFO]         "header_length": 2,
+04.03.2024 22:08:25 [INFO]         "header_length_exists": true
+04.03.2024 22:08:25 [INFO]     },
+04.03.2024 22:08:25 [INFO]     "terminal": {
+04.03.2024 22:08:25 [INFO]         "process_default_dump": true,
+04.03.2024 22:08:25 [INFO]         "connect_on_startup": true,
+04.03.2024 22:08:25 [INFO]         "load_remote_spec": false
+04.03.2024 22:08:25 [INFO]     },
+04.03.2024 22:08:25 [INFO]     "debug": {
+04.03.2024 22:08:25 [INFO]         "level": "INFO",
+04.03.2024 22:08:25 [INFO]         "clear_log": true,
+04.03.2024 22:08:25 [INFO]         "parse_subfields": false,
+04.03.2024 22:08:25 [INFO]         "backup_storage_depth": 30
+04.03.2024 22:08:25 [INFO]     },
+04.03.2024 22:08:25 [INFO]     "validation": {
+04.03.2024 22:08:25 [INFO]         "validation_enabled": true,
+04.03.2024 22:08:25 [INFO]         "validate_incoming": true,
+04.03.2024 22:08:25 [INFO]         "validation_mode": "WARNING"
+04.03.2024 22:08:25 [INFO]     },
+04.03.2024 22:08:25 [INFO]     "fields": {
+04.03.2024 22:08:25 [INFO]         "max_amount": 100,
+04.03.2024 22:08:25 [INFO]         "max_amount_limited": true,
+04.03.2024 22:08:25 [INFO]         "build_fld_90": true,
+04.03.2024 22:08:25 [INFO]         "send_internal_id": false,
+04.03.2024 22:08:25 [INFO]         "json_mode": true,
+04.03.2024 22:08:25 [INFO]         "hide_secrets": true
+04.03.2024 22:08:25 [INFO]     },
+04.03.2024 22:08:25 [INFO]     "remote_spec": {
+04.03.2024 22:08:25 [INFO]         "rewrite_local_spec": false,
+04.03.2024 22:08:25 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 22:08:25 [INFO]         "backup_storage_depth": 30,
+04.03.2024 22:08:25 [INFO]         "backup_storage": false
+04.03.2024 22:08:25 [INFO]     }
+04.03.2024 22:08:25 [INFO] }
+04.03.2024 22:08:25 [INFO] ## End of configuration parameters ##
+04.03.2024 22:08:25 [INFO] 
+04.03.2024 22:08:26 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 22:08:26 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 22:08:26 [INFO] Thank you for using SIGNAL
+04.03.2024 22:08:26 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 22:08:26 [INFO] Default file parsed
+04.03.2024 22:08:26 [INFO] [Re]connecting...
+04.03.2024 22:08:26 [INFO] Connection ESTABLISHED
+04.03.2024 22:08:38 [INFO] 
+04.03.2024 22:08:38 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 22:08:38 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 22:08:38 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 22:08:38 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 22:08:38 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 22:08:38 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 22:08:38 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 22:08:38 [INFO] 
+04.03.2024 22:08:38 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 22:08:38 [INFO] 
+04.03.2024 22:08:38 [INFO] ## Configuration parameters ##
+04.03.2024 22:08:38 [INFO] {
+04.03.2024 22:08:38 [INFO]     "host": {
+04.03.2024 22:08:38 [INFO]         "host": "172.21.30.5",
+04.03.2024 22:08:38 [INFO]         "port": 16677,
+04.03.2024 22:08:38 [INFO]         "keep_alive_mode": false,
+04.03.2024 22:08:38 [INFO]         "keep_alive_interval": 300,
+04.03.2024 22:08:38 [INFO]         "header_length": 2,
+04.03.2024 22:08:38 [INFO]         "header_length_exists": true
+04.03.2024 22:08:38 [INFO]     },
+04.03.2024 22:08:38 [INFO]     "terminal": {
+04.03.2024 22:08:38 [INFO]         "process_default_dump": true,
+04.03.2024 22:08:38 [INFO]         "connect_on_startup": true,
+04.03.2024 22:08:38 [INFO]         "load_remote_spec": false
+04.03.2024 22:08:38 [INFO]     },
+04.03.2024 22:08:38 [INFO]     "debug": {
+04.03.2024 22:08:38 [INFO]         "level": "INFO",
+04.03.2024 22:08:38 [INFO]         "clear_log": true,
+04.03.2024 22:08:38 [INFO]         "parse_subfields": false,
+04.03.2024 22:08:38 [INFO]         "backup_storage_depth": 30
+04.03.2024 22:08:38 [INFO]     },
+04.03.2024 22:08:38 [INFO]     "validation": {
+04.03.2024 22:08:38 [INFO]         "validation_enabled": true,
+04.03.2024 22:08:38 [INFO]         "validate_incoming": true,
+04.03.2024 22:08:38 [INFO]         "validation_mode": "WARNING"
+04.03.2024 22:08:38 [INFO]     },
+04.03.2024 22:08:38 [INFO]     "fields": {
+04.03.2024 22:08:38 [INFO]         "max_amount": 100,
+04.03.2024 22:08:38 [INFO]         "max_amount_limited": true,
+04.03.2024 22:08:38 [INFO]         "build_fld_90": true,
+04.03.2024 22:08:38 [INFO]         "send_internal_id": false,
+04.03.2024 22:08:38 [INFO]         "json_mode": true,
+04.03.2024 22:08:38 [INFO]         "hide_secrets": true
+04.03.2024 22:08:38 [INFO]     },
+04.03.2024 22:08:38 [INFO]     "remote_spec": {
+04.03.2024 22:08:38 [INFO]         "rewrite_local_spec": false,
+04.03.2024 22:08:38 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 22:08:38 [INFO]         "backup_storage_depth": 30,
+04.03.2024 22:08:38 [INFO]         "backup_storage": false
+04.03.2024 22:08:38 [INFO]     }
+04.03.2024 22:08:38 [INFO] }
+04.03.2024 22:08:38 [INFO] ## End of configuration parameters ##
+04.03.2024 22:08:38 [INFO] 
+04.03.2024 22:08:39 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 22:08:39 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 22:08:39 [INFO] Thank you for using SIGNAL
+04.03.2024 22:08:39 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 22:08:39 [INFO] Default file parsed
+04.03.2024 22:08:39 [INFO] [Re]connecting...
+04.03.2024 22:08:39 [INFO] Connection ESTABLISHED
+04.03.2024 22:08:46 [WARNING] No input filename recognized
+04.03.2024 22:08:48 [INFO] Connection DISCONNECTED
+04.03.2024 22:09:19 [INFO] 
+04.03.2024 22:09:19 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 22:09:19 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 22:09:19 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 22:09:19 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 22:09:19 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 22:09:19 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 22:09:19 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 22:09:19 [INFO] 
+04.03.2024 22:09:19 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 22:09:19 [INFO] 
+04.03.2024 22:09:19 [INFO] ## Configuration parameters ##
+04.03.2024 22:09:19 [INFO] {
+04.03.2024 22:09:19 [INFO]     "host": {
+04.03.2024 22:09:19 [INFO]         "host": "172.21.30.5",
+04.03.2024 22:09:19 [INFO]         "port": 16677,
+04.03.2024 22:09:19 [INFO]         "keep_alive_mode": false,
+04.03.2024 22:09:19 [INFO]         "keep_alive_interval": 300,
+04.03.2024 22:09:19 [INFO]         "header_length": 2,
+04.03.2024 22:09:19 [INFO]         "header_length_exists": true
+04.03.2024 22:09:19 [INFO]     },
+04.03.2024 22:09:19 [INFO]     "terminal": {
+04.03.2024 22:09:19 [INFO]         "process_default_dump": true,
+04.03.2024 22:09:19 [INFO]         "connect_on_startup": true,
+04.03.2024 22:09:19 [INFO]         "load_remote_spec": false
+04.03.2024 22:09:19 [INFO]     },
+04.03.2024 22:09:19 [INFO]     "debug": {
+04.03.2024 22:09:19 [INFO]         "level": "INFO",
+04.03.2024 22:09:19 [INFO]         "clear_log": true,
+04.03.2024 22:09:19 [INFO]         "parse_subfields": false,
+04.03.2024 22:09:19 [INFO]         "backup_storage_depth": 30
+04.03.2024 22:09:19 [INFO]     },
+04.03.2024 22:09:19 [INFO]     "validation": {
+04.03.2024 22:09:19 [INFO]         "validation_enabled": true,
+04.03.2024 22:09:19 [INFO]         "validate_incoming": true,
+04.03.2024 22:09:19 [INFO]         "validation_mode": "WARNING"
+04.03.2024 22:09:19 [INFO]     },
+04.03.2024 22:09:19 [INFO]     "fields": {
+04.03.2024 22:09:19 [INFO]         "max_amount": 100,
+04.03.2024 22:09:19 [INFO]         "max_amount_limited": true,
+04.03.2024 22:09:19 [INFO]         "build_fld_90": true,
+04.03.2024 22:09:19 [INFO]         "send_internal_id": false,
+04.03.2024 22:09:19 [INFO]         "json_mode": true,
+04.03.2024 22:09:19 [INFO]         "hide_secrets": true
+04.03.2024 22:09:19 [INFO]     },
+04.03.2024 22:09:19 [INFO]     "remote_spec": {
+04.03.2024 22:09:19 [INFO]         "rewrite_local_spec": false,
+04.03.2024 22:09:19 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 22:09:19 [INFO]         "backup_storage_depth": 30,
+04.03.2024 22:09:19 [INFO]         "backup_storage": false
+04.03.2024 22:09:19 [INFO]     }
+04.03.2024 22:09:19 [INFO] }
+04.03.2024 22:09:19 [INFO] ## End of configuration parameters ##
+04.03.2024 22:09:19 [INFO] 
+04.03.2024 22:09:19 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 22:09:19 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 22:09:19 [INFO] Thank you for using SIGNAL
+04.03.2024 22:09:19 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 22:09:19 [INFO] Default file parsed
+04.03.2024 22:09:19 [INFO] [Re]connecting...
+04.03.2024 22:09:19 [INFO] Connection ESTABLISHED
+04.03.2024 22:09:27 [WARNING] No input filename recognized
+04.03.2024 22:09:28 [INFO] Connection DISCONNECTED
+04.03.2024 22:09:37 [INFO] 
+04.03.2024 22:09:37 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 22:09:37 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 22:09:37 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 22:09:37 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 22:09:37 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 22:09:37 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 22:09:37 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 22:09:37 [INFO] 
+04.03.2024 22:09:37 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 22:09:37 [INFO] 
+04.03.2024 22:09:37 [INFO] ## Configuration parameters ##
+04.03.2024 22:09:37 [INFO] {
+04.03.2024 22:09:37 [INFO]     "host": {
+04.03.2024 22:09:37 [INFO]         "host": "172.21.30.5",
+04.03.2024 22:09:37 [INFO]         "port": 16677,
+04.03.2024 22:09:37 [INFO]         "keep_alive_mode": false,
+04.03.2024 22:09:37 [INFO]         "keep_alive_interval": 300,
+04.03.2024 22:09:37 [INFO]         "header_length": 2,
+04.03.2024 22:09:37 [INFO]         "header_length_exists": true
+04.03.2024 22:09:37 [INFO]     },
+04.03.2024 22:09:37 [INFO]     "terminal": {
+04.03.2024 22:09:37 [INFO]         "process_default_dump": true,
+04.03.2024 22:09:37 [INFO]         "connect_on_startup": true,
+04.03.2024 22:09:37 [INFO]         "load_remote_spec": false
+04.03.2024 22:09:37 [INFO]     },
+04.03.2024 22:09:37 [INFO]     "debug": {
+04.03.2024 22:09:37 [INFO]         "level": "INFO",
+04.03.2024 22:09:37 [INFO]         "clear_log": true,
+04.03.2024 22:09:37 [INFO]         "parse_subfields": false,
+04.03.2024 22:09:37 [INFO]         "backup_storage_depth": 30
+04.03.2024 22:09:37 [INFO]     },
+04.03.2024 22:09:37 [INFO]     "validation": {
+04.03.2024 22:09:37 [INFO]         "validation_enabled": true,
+04.03.2024 22:09:37 [INFO]         "validate_incoming": true,
+04.03.2024 22:09:37 [INFO]         "validation_mode": "WARNING"
+04.03.2024 22:09:37 [INFO]     },
+04.03.2024 22:09:37 [INFO]     "fields": {
+04.03.2024 22:09:37 [INFO]         "max_amount": 100,
+04.03.2024 22:09:37 [INFO]         "max_amount_limited": true,
+04.03.2024 22:09:37 [INFO]         "build_fld_90": true,
+04.03.2024 22:09:37 [INFO]         "send_internal_id": false,
+04.03.2024 22:09:37 [INFO]         "json_mode": true,
+04.03.2024 22:09:37 [INFO]         "hide_secrets": true
+04.03.2024 22:09:37 [INFO]     },
+04.03.2024 22:09:37 [INFO]     "remote_spec": {
+04.03.2024 22:09:37 [INFO]         "rewrite_local_spec": false,
+04.03.2024 22:09:37 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 22:09:37 [INFO]         "backup_storage_depth": 30,
+04.03.2024 22:09:37 [INFO]         "backup_storage": false
+04.03.2024 22:09:37 [INFO]     }
+04.03.2024 22:09:37 [INFO] }
+04.03.2024 22:09:37 [INFO] ## End of configuration parameters ##
+04.03.2024 22:09:37 [INFO] 
+04.03.2024 22:09:38 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 22:09:38 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 22:09:38 [INFO] Thank you for using SIGNAL
+04.03.2024 22:09:38 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 22:09:38 [INFO] Default file parsed
+04.03.2024 22:09:38 [INFO] [Re]connecting...
+04.03.2024 22:09:38 [INFO] Connection ESTABLISHED
+04.03.2024 22:09:46 [WARNING] No input filename recognized
+04.03.2024 22:09:47 [INFO] Connection DISCONNECTED
+04.03.2024 22:11:08 [INFO] 
+04.03.2024 22:11:08 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 22:11:08 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 22:11:08 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 22:11:08 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 22:11:08 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 22:11:08 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 22:11:08 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 22:11:08 [INFO] 
+04.03.2024 22:11:08 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 22:11:08 [INFO] 
+04.03.2024 22:11:08 [INFO] ## Configuration parameters ##
+04.03.2024 22:11:08 [INFO] {
+04.03.2024 22:11:08 [INFO]     "host": {
+04.03.2024 22:11:08 [INFO]         "host": "172.21.30.5",
+04.03.2024 22:11:08 [INFO]         "port": 16677,
+04.03.2024 22:11:08 [INFO]         "keep_alive_mode": false,
+04.03.2024 22:11:08 [INFO]         "keep_alive_interval": 300,
+04.03.2024 22:11:08 [INFO]         "header_length": 2,
+04.03.2024 22:11:08 [INFO]         "header_length_exists": true
+04.03.2024 22:11:08 [INFO]     },
+04.03.2024 22:11:08 [INFO]     "terminal": {
+04.03.2024 22:11:08 [INFO]         "process_default_dump": true,
+04.03.2024 22:11:08 [INFO]         "connect_on_startup": true,
+04.03.2024 22:11:08 [INFO]         "load_remote_spec": false
+04.03.2024 22:11:08 [INFO]     },
+04.03.2024 22:11:08 [INFO]     "debug": {
+04.03.2024 22:11:08 [INFO]         "level": "INFO",
+04.03.2024 22:11:08 [INFO]         "clear_log": true,
+04.03.2024 22:11:08 [INFO]         "parse_subfields": false,
+04.03.2024 22:11:08 [INFO]         "backup_storage_depth": 30
+04.03.2024 22:11:08 [INFO]     },
+04.03.2024 22:11:08 [INFO]     "validation": {
+04.03.2024 22:11:08 [INFO]         "validation_enabled": true,
+04.03.2024 22:11:08 [INFO]         "validate_incoming": true,
+04.03.2024 22:11:08 [INFO]         "validation_mode": "WARNING"
+04.03.2024 22:11:08 [INFO]     },
+04.03.2024 22:11:08 [INFO]     "fields": {
+04.03.2024 22:11:08 [INFO]         "max_amount": 100,
+04.03.2024 22:11:08 [INFO]         "max_amount_limited": true,
+04.03.2024 22:11:08 [INFO]         "build_fld_90": true,
+04.03.2024 22:11:08 [INFO]         "send_internal_id": false,
+04.03.2024 22:11:08 [INFO]         "json_mode": true,
+04.03.2024 22:11:08 [INFO]         "hide_secrets": true
+04.03.2024 22:11:08 [INFO]     },
+04.03.2024 22:11:08 [INFO]     "remote_spec": {
+04.03.2024 22:11:08 [INFO]         "rewrite_local_spec": false,
+04.03.2024 22:11:08 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 22:11:08 [INFO]         "backup_storage_depth": 30,
+04.03.2024 22:11:08 [INFO]         "backup_storage": false
+04.03.2024 22:11:08 [INFO]     }
+04.03.2024 22:11:08 [INFO] }
+04.03.2024 22:11:08 [INFO] ## End of configuration parameters ##
+04.03.2024 22:11:08 [INFO] 
+04.03.2024 22:11:09 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 22:11:09 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 22:11:09 [INFO] Thank you for using SIGNAL
+04.03.2024 22:11:09 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 22:11:09 [INFO] Default file parsed
+04.03.2024 22:11:09 [INFO] [Re]connecting...
+04.03.2024 22:11:09 [INFO] Connection ESTABLISHED
+04.03.2024 22:11:12 [WARNING] No input filename recognized
+04.03.2024 22:11:13 [INFO] Connection DISCONNECTED
+04.03.2024 22:11:19 [INFO] 
+04.03.2024 22:11:19 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 22:11:19 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 22:11:19 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 22:11:19 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 22:11:19 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 22:11:19 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 22:11:19 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 22:11:19 [INFO] 
+04.03.2024 22:11:19 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 22:11:19 [INFO] 
+04.03.2024 22:11:19 [INFO] ## Configuration parameters ##
+04.03.2024 22:11:19 [INFO] {
+04.03.2024 22:11:19 [INFO]     "host": {
+04.03.2024 22:11:19 [INFO]         "host": "172.21.30.5",
+04.03.2024 22:11:19 [INFO]         "port": 16677,
+04.03.2024 22:11:19 [INFO]         "keep_alive_mode": false,
+04.03.2024 22:11:19 [INFO]         "keep_alive_interval": 300,
+04.03.2024 22:11:19 [INFO]         "header_length": 2,
+04.03.2024 22:11:19 [INFO]         "header_length_exists": true
+04.03.2024 22:11:19 [INFO]     },
+04.03.2024 22:11:19 [INFO]     "terminal": {
+04.03.2024 22:11:19 [INFO]         "process_default_dump": true,
+04.03.2024 22:11:19 [INFO]         "connect_on_startup": true,
+04.03.2024 22:11:19 [INFO]         "load_remote_spec": false
+04.03.2024 22:11:19 [INFO]     },
+04.03.2024 22:11:19 [INFO]     "debug": {
+04.03.2024 22:11:19 [INFO]         "level": "INFO",
+04.03.2024 22:11:19 [INFO]         "clear_log": true,
+04.03.2024 22:11:19 [INFO]         "parse_subfields": false,
+04.03.2024 22:11:19 [INFO]         "backup_storage_depth": 30
+04.03.2024 22:11:19 [INFO]     },
+04.03.2024 22:11:19 [INFO]     "validation": {
+04.03.2024 22:11:19 [INFO]         "validation_enabled": true,
+04.03.2024 22:11:19 [INFO]         "validate_incoming": true,
+04.03.2024 22:11:19 [INFO]         "validation_mode": "WARNING"
+04.03.2024 22:11:19 [INFO]     },
+04.03.2024 22:11:19 [INFO]     "fields": {
+04.03.2024 22:11:19 [INFO]         "max_amount": 100,
+04.03.2024 22:11:19 [INFO]         "max_amount_limited": true,
+04.03.2024 22:11:19 [INFO]         "build_fld_90": true,
+04.03.2024 22:11:19 [INFO]         "send_internal_id": false,
+04.03.2024 22:11:19 [INFO]         "json_mode": true,
+04.03.2024 22:11:19 [INFO]         "hide_secrets": true
+04.03.2024 22:11:19 [INFO]     },
+04.03.2024 22:11:19 [INFO]     "remote_spec": {
+04.03.2024 22:11:19 [INFO]         "rewrite_local_spec": false,
+04.03.2024 22:11:19 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 22:11:19 [INFO]         "backup_storage_depth": 30,
+04.03.2024 22:11:19 [INFO]         "backup_storage": false
+04.03.2024 22:11:19 [INFO]     }
+04.03.2024 22:11:19 [INFO] }
+04.03.2024 22:11:19 [INFO] ## End of configuration parameters ##
+04.03.2024 22:11:19 [INFO] 
+04.03.2024 22:11:19 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 22:11:19 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 22:11:19 [INFO] Thank you for using SIGNAL
+04.03.2024 22:11:20 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 22:11:20 [INFO] Default file parsed
+04.03.2024 22:11:20 [INFO] [Re]connecting...
+04.03.2024 22:11:20 [INFO] Connection ESTABLISHED
+04.03.2024 22:11:24 [WARNING] No input filename recognized
+04.03.2024 22:11:25 [INFO] Connection DISCONNECTED
+04.03.2024 22:11:34 [INFO] 
+04.03.2024 22:11:34 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 22:11:34 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 22:11:34 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 22:11:34 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 22:11:34 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 22:11:34 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 22:11:34 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 22:11:34 [INFO] 
+04.03.2024 22:11:34 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 22:11:34 [INFO] 
+04.03.2024 22:11:34 [INFO] ## Configuration parameters ##
+04.03.2024 22:11:34 [INFO] {
+04.03.2024 22:11:34 [INFO]     "host": {
+04.03.2024 22:11:34 [INFO]         "host": "172.21.30.5",
+04.03.2024 22:11:34 [INFO]         "port": 16677,
+04.03.2024 22:11:34 [INFO]         "keep_alive_mode": false,
+04.03.2024 22:11:34 [INFO]         "keep_alive_interval": 300,
+04.03.2024 22:11:34 [INFO]         "header_length": 2,
+04.03.2024 22:11:34 [INFO]         "header_length_exists": true
+04.03.2024 22:11:34 [INFO]     },
+04.03.2024 22:11:34 [INFO]     "terminal": {
+04.03.2024 22:11:34 [INFO]         "process_default_dump": true,
+04.03.2024 22:11:34 [INFO]         "connect_on_startup": true,
+04.03.2024 22:11:34 [INFO]         "load_remote_spec": false
+04.03.2024 22:11:34 [INFO]     },
+04.03.2024 22:11:34 [INFO]     "debug": {
+04.03.2024 22:11:34 [INFO]         "level": "INFO",
+04.03.2024 22:11:34 [INFO]         "clear_log": true,
+04.03.2024 22:11:34 [INFO]         "parse_subfields": false,
+04.03.2024 22:11:34 [INFO]         "backup_storage_depth": 30
+04.03.2024 22:11:34 [INFO]     },
+04.03.2024 22:11:34 [INFO]     "validation": {
+04.03.2024 22:11:34 [INFO]         "validation_enabled": true,
+04.03.2024 22:11:34 [INFO]         "validate_incoming": true,
+04.03.2024 22:11:34 [INFO]         "validation_mode": "WARNING"
+04.03.2024 22:11:34 [INFO]     },
+04.03.2024 22:11:34 [INFO]     "fields": {
+04.03.2024 22:11:34 [INFO]         "max_amount": 100,
+04.03.2024 22:11:34 [INFO]         "max_amount_limited": true,
+04.03.2024 22:11:34 [INFO]         "build_fld_90": true,
+04.03.2024 22:11:34 [INFO]         "send_internal_id": false,
+04.03.2024 22:11:34 [INFO]         "json_mode": true,
+04.03.2024 22:11:34 [INFO]         "hide_secrets": true
+04.03.2024 22:11:34 [INFO]     },
+04.03.2024 22:11:34 [INFO]     "remote_spec": {
+04.03.2024 22:11:34 [INFO]         "rewrite_local_spec": false,
+04.03.2024 22:11:34 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 22:11:34 [INFO]         "backup_storage_depth": 30,
+04.03.2024 22:11:34 [INFO]         "backup_storage": false
+04.03.2024 22:11:34 [INFO]     }
+04.03.2024 22:11:34 [INFO] }
+04.03.2024 22:11:34 [INFO] ## End of configuration parameters ##
+04.03.2024 22:11:34 [INFO] 
+04.03.2024 22:11:34 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 22:11:34 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 22:11:34 [INFO] Thank you for using SIGNAL
+04.03.2024 22:11:34 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 22:11:34 [INFO] Default file parsed
+04.03.2024 22:11:34 [INFO] [Re]connecting...
+04.03.2024 22:11:34 [INFO] Connection ESTABLISHED
+04.03.2024 22:11:38 [WARNING] No input filename recognized
+04.03.2024 22:11:38 [INFO] Connection DISCONNECTED
+04.03.2024 22:12:18 [INFO] 
+04.03.2024 22:12:18 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+04.03.2024 22:12:18 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+04.03.2024 22:12:18 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+04.03.2024 22:12:18 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+04.03.2024 22:12:18 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+04.03.2024 22:12:18 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+04.03.2024 22:12:18 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+04.03.2024 22:12:18 [INFO] 
+04.03.2024 22:12:18 [INFO]   Simplified ISO generation algorithm v0.17
+04.03.2024 22:12:18 [INFO] 
+04.03.2024 22:12:18 [INFO] ## Configuration parameters ##
+04.03.2024 22:12:18 [INFO] {
+04.03.2024 22:12:18 [INFO]     "host": {
+04.03.2024 22:12:18 [INFO]         "host": "172.21.30.5",
+04.03.2024 22:12:18 [INFO]         "port": 16677,
+04.03.2024 22:12:18 [INFO]         "keep_alive_mode": false,
+04.03.2024 22:12:18 [INFO]         "keep_alive_interval": 300,
+04.03.2024 22:12:18 [INFO]         "header_length": 2,
+04.03.2024 22:12:18 [INFO]         "header_length_exists": true
+04.03.2024 22:12:18 [INFO]     },
+04.03.2024 22:12:18 [INFO]     "terminal": {
+04.03.2024 22:12:18 [INFO]         "process_default_dump": true,
+04.03.2024 22:12:18 [INFO]         "connect_on_startup": true,
+04.03.2024 22:12:18 [INFO]         "load_remote_spec": false
+04.03.2024 22:12:18 [INFO]     },
+04.03.2024 22:12:18 [INFO]     "debug": {
+04.03.2024 22:12:18 [INFO]         "level": "INFO",
+04.03.2024 22:12:18 [INFO]         "clear_log": true,
+04.03.2024 22:12:18 [INFO]         "parse_subfields": false,
+04.03.2024 22:12:18 [INFO]         "backup_storage_depth": 30
+04.03.2024 22:12:18 [INFO]     },
+04.03.2024 22:12:18 [INFO]     "validation": {
+04.03.2024 22:12:18 [INFO]         "validation_enabled": true,
+04.03.2024 22:12:18 [INFO]         "validate_incoming": true,
+04.03.2024 22:12:18 [INFO]         "validation_mode": "WARNING"
+04.03.2024 22:12:18 [INFO]     },
+04.03.2024 22:12:18 [INFO]     "fields": {
+04.03.2024 22:12:18 [INFO]         "max_amount": 100,
+04.03.2024 22:12:18 [INFO]         "max_amount_limited": true,
+04.03.2024 22:12:18 [INFO]         "build_fld_90": true,
+04.03.2024 22:12:18 [INFO]         "send_internal_id": false,
+04.03.2024 22:12:18 [INFO]         "json_mode": true,
+04.03.2024 22:12:18 [INFO]         "hide_secrets": true
+04.03.2024 22:12:18 [INFO]     },
+04.03.2024 22:12:18 [INFO]     "remote_spec": {
+04.03.2024 22:12:18 [INFO]         "rewrite_local_spec": false,
+04.03.2024 22:12:18 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+04.03.2024 22:12:18 [INFO]         "backup_storage_depth": 30,
+04.03.2024 22:12:18 [INFO]         "backup_storage": false
+04.03.2024 22:12:18 [INFO]     }
+04.03.2024 22:12:18 [INFO] }
+04.03.2024 22:12:18 [INFO] ## End of configuration parameters ##
+04.03.2024 22:12:18 [INFO] 
+04.03.2024 22:12:19 [INFO] Licence agreement accepted 2024-02-03 23:12:07.381186
+04.03.2024 22:12:19 [INFO] License ID 2728024a-c2e9-11ee-84c5-001a7dda7113
+04.03.2024 22:12:19 [INFO] Thank you for using SIGNAL
+04.03.2024 22:12:19 [INFO] File parsed: signal/data/default/default_message.json
+04.03.2024 22:12:19 [INFO] Default file parsed
+04.03.2024 22:12:19 [INFO] [Re]connecting...
+04.03.2024 22:12:19 [INFO] Connection ESTABLISHED
+04.03.2024 22:12:21 [WARNING] No input filename recognized
+04.03.2024 22:12:38 [WARNING] No input filename recognized
+04.03.2024 22:12:39 [INFO] Connection DISCONNECTED
