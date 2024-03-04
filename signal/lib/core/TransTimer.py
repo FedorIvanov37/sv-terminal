@@ -42,7 +42,7 @@ class TransactionTimer(QObject):
 
         except KeyError:
 
-            if not (interval_from_name := search("^\d+", interval_name)):
+            if not (interval_from_name := search(r"^\d+", interval_name)):
                 return
 
             interval: int = int(interval_from_name.group())

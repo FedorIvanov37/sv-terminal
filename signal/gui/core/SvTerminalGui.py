@@ -1,3 +1,4 @@
+import logging
 from typing import Callable
 from logging import error, info, warning, Logger
 from pydantic import ValidationError
@@ -60,7 +61,6 @@ class SvTerminalGui(SvTerminal):
     trans_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION)
     set_remote_spec: pyqtSignal = pyqtSignal()
     startup_finished: pyqtSignal = pyqtSignal()
-    wireless_handler: WirelessHandler
     _license_demonstrated: bool = False
     _startup_finished: bool = False
 
@@ -81,6 +81,7 @@ class SvTerminalGui(SvTerminal):
         self.connector = ConnectionThread(config)
         super(SvTerminalGui, self).__init__(config, self.connector)
         self.window: MainWindow = MainWindow(self.config)
+        self.wireless_handler: WirelessHandler = WirelessHandler()
         self.setup()
 
     @set_json_view_focus
@@ -338,7 +339,7 @@ class SvTerminalGui(SvTerminal):
 
     def create_window_logger(self) -> None:
         formatter: Formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
-        self.wireless_handler: WirelessHandler = WirelessHandler()
+
         stream: LogStream = LogStream(self.window.log_browser)
         self.wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
         self.wireless_handler.setFormatter(formatter)

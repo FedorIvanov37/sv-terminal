@@ -1,5 +1,0 @@
-.gitignore
-.idea
-venv
-/signal/log/sv_terminal.log
-/.github/

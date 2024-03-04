@@ -76,7 +76,6 @@
 + "No data to send" while printing
 + Correct default message to avoid 96 code
 + Cannot parse own dump again // wrong spe settings
-+ Add basic Undo / redo
 + Check the old files processing
 + Unknown fields in incoming files and messages - what are you going to do
 + Flat mode
@@ -143,13 +142,23 @@
 + Add MCC model and dictionary
 + Incoming message validation
 
++ Change data format .txt to .dump
++ Cannot get remote spec
++ Spec URL error singals twice
++ ID goes twice
++ Rewritten reversal trans_id
++ Add tick to generate trans_id
++ Disable column GENERATE in spec
++ Validators finalization
++ Make validations violation processing mode
++ Trans ID can be set in MainWindow
++ Move output_file_format from SaveButton to FileDialog
++ Change to Python 3.12.2
 
-• Make validations violation processing mode
+
+• Add custome data types like list[str]
 • Error on console when run AboutWindow - Could not find codec parameters for stream
 • Check all custom validations
-
-
-
 
 
 
@@ -163,7 +172,8 @@
 
 • Reflect in the document - Main settings, the specification+, files format+
 • Set complex fields full expanding when switch JSON mode
-• QTabWidget
+• Add tabs by QTabWidget
+
 
 • Licensing preparation
     • Change the framework to pyside
@@ -184,4 +194,5 @@
 
 • Console mode
 • API console mode
-• Python 3.12
+• Undo / Redo
+•

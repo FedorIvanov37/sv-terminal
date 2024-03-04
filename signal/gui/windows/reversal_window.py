@@ -42,7 +42,7 @@ class ReversalWindow(Ui_ReversalWindow, QDialog):
             self.ComboBoxId.addItem(item)
 
     def id_item_changed(self):
-        value = search("ID:\s+?(\S+)", self.ComboBoxId.currentText())
+        value = search(r"ID:\s+?(\S+)", self.ComboBoxId.currentText())
         value = value.group(1) if value else value
         self.TransactionIdField.setText(str())
         self.TransactionIdField.setText(value)
