@@ -197,16 +197,25 @@ class SvTerminalGui(SvTerminal):
 
     @set_json_view_focus
     def run_specification_window(self) -> None:
-        spec_window: SpecWindow = SpecWindow(self.connector, self.config)
+        old_spec = self.spec.spec.json()
+
+        spec_window: SpecWindow = SpecWindow(self.connector, self.config, getLogger())
+
         getLogger().removeHandler(self.wireless_handler)
+
         spec_window.exec()
-        getLogger().removeHandler(spec_window.wireless_handler)
-        self.create_window_logger()
+
+        getLogger().addHandler(self.wireless_handler)
 
         if self.config.fields.hide_secrets:
             self.window.hide_secrets()
 
-        if self.config.validation.validation_enabled:
+        specification_changed = old_spec != self.spec.spec.json()
+
+        if not specification_changed:
+            info("Specification wasn't changed")
+
+        if specification_changed and self.config.validation.validation_enabled:
             info("Validate message after spec settings")
             self.modify_fields_data()
             self.validate_main_window()
@@ -214,7 +223,7 @@ class SvTerminalGui(SvTerminal):
         if not self.config.validation.validation_enabled:
             self.window.refresh_fields(Colors.BLACK)
 
-    def modify_fields_data(self):  #  Set extended data modifications, set in field params
+    def modify_fields_data(self):  # Set extended data modifications, set in field params
         self.window.modify_fields_data()
 
     def validate_main_window(self):
@@ -410,8 +419,8 @@ class SvTerminalGui(SvTerminal):
             [error(err.get("msg")) for err in validation_error.errors()]
             raise DataValidationError
 
-        if self.config.fields.send_internal_id:
-            transaction: Transaction = self.generator.set_trans_id(transaction)
+        # if self.config.fields.send_internal_id:
+        #     transaction: Transaction = self.generator.set_trans_id(transaction)
 
         if clean:
             del (
@@ -602,14 +611,14 @@ class SvTerminalGui(SvTerminal):
     @set_json_view_focus
     def set_default_values(self) -> None:
         try:
-            self.parse_file(str(TermFilesPath.DEFAULT_FILE))
+            self.parse_file(str(TermFilesPath.DEFAULT_FILE), log=False)
             info("Default file parsed")
 
         except Exception as parsing_error:
             error("Default file parsing error! Exception: %s" % parsing_error)
 
     @set_json_view_focus
-    def parse_file(self, filename: str | None = None) -> None:
+    def parse_file(self, filename: str | None = None, log=True) -> None:
         if not filename and not (filename := self.get_input_filename()):
             warning("No input filename recognized")
             return
@@ -629,6 +638,9 @@ class SvTerminalGui(SvTerminal):
             self.parse_transaction(transaction)
         except Exception as fields_setting_error:
             error(fields_setting_error)
+            return
+
+        if not log:
             return
 
         info(f"File parsed: {filename}")

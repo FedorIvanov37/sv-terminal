@@ -1,4 +1,4 @@
-from logging import error, info
+from logging import error, info, getLogger, Logger
 from copy import deepcopy
 from typing import Optional
 from pydantic import ValidationError
@@ -63,7 +63,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def read_only(self, checked):
         self._read_only = checked
 
-    def __init__(self, connector, config: Config):
+    def __init__(self, connector, config: Config, logger: Logger):
         super(SpecWindow, self).__init__()
         self.connector = connector
         self.config = config
@@ -73,6 +73,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     @set_window_icon
     @has_close_button_only
     def _setup(self):
+
         self.SpecView: SpecView = SpecView(self)
         self._clean_spec = deepcopy(self.SpecView.generate_spec())
         self.PlusButton: QPushButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_PLUS_SIGN)
@@ -315,10 +316,12 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             if isinstance(spec_error, ValidationError):
                 error(spec_error)
 
+            getLogger().removeHandler(self.wireless_handler)
             close_event.accept()
             return
 
         if current_spec == self._clean_spec:
+            getLogger().removeHandler(self.wireless_handler)
             close_event.accept()
             return
 

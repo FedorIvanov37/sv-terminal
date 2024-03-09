@@ -155,11 +155,15 @@
 + Move output_file_format from SaveButton to FileDialog
 + Change to Python 3.12.2
 
+#
++ Fix double validation
++ Remove: "File parsed: signal/data/default/default_message.json"
++ Check all custom validations
 
-• Add custome data types like list[str]
+• Add custom data types like list[str]
 • Error on console when run AboutWindow - Could not find codec parameters for stream
-• Check all custom validations
 
+• Error RuntimeError: wrapped C/C++ object of type WirelessHandler has been deleted
 
 
 • Change name to SIGNAL
