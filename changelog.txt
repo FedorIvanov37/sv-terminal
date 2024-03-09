@@ -1,0 +1,192 @@
++ Hide project on GIT
++ Hide card data in log
++ Transaction does not block buttons
++ No complex fields in bitmap
++ Connection error return twice
++ Hide PCI DSS mode
++ Unlimit
++ Down when no spec for field
++ Exit error
++ Cannot apply spec in spec window
++ Spec backup does not work
++ Check the reversal fields
++ No warning after delete field and close spec
++ Spec applies after parsing file
++ Decide how to parse incoming message when no spec exists
++ Expand the MTI set window
++ No buttons enabled after transaction building error
++ No generated fields appear in message when they don't exist in file
++ Spec plus button does not work
++ Set connection timeouts in Connector
++ Create log when it does not exists
++ Add date to logfile, display log is staying as is
++ Changed pre-validation error level from ERROR to WARNING
++ Root spec item validates, should be ignored
++ Validate 1-128 for top-level items only
++ Spec window does not save spec even if error happens
++ Check the field duplicates before sent transaction
++ Change ascii logo
++ Add traceback to ErrorWindow
++ Remove window parsing from the parser
++ Optimize trans_id
++ Generated fields should be non-validated
++ Multiple validations
++ Property click validates field
++ F1 doesn't trigger About window
++ Remove points from bitmap
++ Rebrand
++ Utrnno in request
++ Add release info to the logfile
++ Logger refactoring
++ Echo-test stuck on log
++ Lost response for transaction
++ Add utrnno to reversal
++ Change buttons design
++ Work with empty fields
++ PAN mask in fields
++ Checkboxes generate fields when activate
++ Add hotkeys
++ Add hotkeys window
++ Add hotkeys button
++ Zero max amount possible
++ Max Amount from config field changes nothing
++ InputMethodHints
++ Remove "Press F1 to get SvTerminal Hotkeys info"
++ Add hotkeys to release info
++ Add Ctrl + v
++ Ctrl + C copies field data without focus
++ MainWindow fonts
++ Set item style
++ UnicodeError when unicode in field_number - add item validators
++ Ctrl + E removes the card number
++ Socket error returns twice
++ Spec disappear after close
++ Window type decorators
++ Spec window different colors
++ Card disappears while editing
++ Cancel save the config
++ Don't hide card in log on debug
++ Window signals isolated
++ Cannot parse own dump
++ Try to compile .exe
++ Beatify card mask
++ Fix response message parsing for incoming transactions
++ Add validation after parse file
++ Add validation after set validation flag in settings
++ "No data to send" while printing
++ Correct default message to avoid 96 code
++ Cannot parse own dump again // wrong spe settings
++ Check the old files processing
++ Unknown fields in incoming files and messages - what are you going to do
++ Flat mode
++ try / except around flat mode
++ Remove ErrorWindow
++ Remove config duplicate from lib
++ CTRL + ALT + N added subfield even in flat mode
++ Keep Alive: Button, Function start / stop, File, Default state in settings, Activate on startup, doc
++ No logo in frameless windows
++ No logo in SpecUnsaved window
++ Files structure
++ No icon changes when music is finished
++ Complex field parser - JSON mode
++ Prepare document
++ Flat mode uncheck all checkboxes - not confirmed
++ Move keep alive functions from GUI to core, from MainWindow to GUI
++ Old JSON support
++ Document logo
++ 20:20:19 [WARNING] Incorrect field number 222. Top level field number must be in range 1- 128 222
++ Enumerations for fields validation
++ Check Transaction.max_amount usage
+? Validation after edit doesn't work sometimes
+
+# v0.16
+
++ Fix all problems around old JSON files incompatibility
++ Transaction field max_amount has no effect
++ Correct default message according to mandatory changes 22Q4
++ Add pydantic native data validation
++ Secret Fields - Checkbox in spec window, Checkbox in config window with priority, Hide secret fields in log,
+  constructor, display; Restrict full PAN show, Show secret when checkbox changed in settings or spec, checkbox
+  cascade, config processing, invalid PAN hiding
++ Transaction repeat
++ Search: MW line, clear button, key sequence, key sequence hint
++ Instant fields length count
++ Add SvEmulator
++ Field names don't appear in message constructor
++ Abstract JSON view
++ Fix the search
++ 47.120=0601 terminal is down (WFT) - wrong exception handling ValueError | TypeError as parsing error
++ Non-spec fields in flat mode
++ Simplified JSON mode
++ Parser of complex fields WINDOW
++ Clean JSON in print menu
++ Flat transaction fields, split when need
++ Add default settings
++ Try to remove old order ID from message
++ Set reversal fields
++ Update pydantic
++ License window
+
+# v0.17
++ SpecWindow key sequences
++ SpecWindow log
++ Remote spec - settings, SpecWindow
++ Full read only mode for spec
++ Spec backup storage settings
++ Log backup storage settings
++ Complex fields constructor
++ Change style of SettingsWindow
++ Add custom validations
++ Add custom validations Window
++ Add spec URL validation
++ Add MCC model and dictionary
++ Incoming message validation
+
++ Change data format .txt to .dump
++ Cannot get remote spec
++ Spec URL error singals twice
++ ID goes twice
++ Rewritten reversal trans_id
++ Add tick to generate trans_id
++ Disable column GENERATE in spec
++ Validators finalization
++ Make validations violation processing mode
++ Trans ID can be set in MainWindow
++ Move output_file_format from SaveButton to FileDialog
++ Change to Python 3.12.2
+
+#
++ Fix double validation
++ Remove: "File parsed: signal/data/default/default_message.json"
++ Check all custom validations
++ Error RuntimeError: wrapped C/C++ object of type WirelessHandler has been deleted
++ Add custom data types like list[str]
++ Change approach to fields path
+
+
+• Error on console when run AboutWindow - Could not find codec parameters for stream
+
+• Change name to SIGNAL in Document
+• Reflect in the document - Main settings, the specification+, files format+, custom validations
+• Set complex fields full expanding when switch JSON mode
+• Add tabs by QTabWidget
+
+
+• Licensing preparation
+    • Change the framework to pyside
+    • Buy the logo
+    • Gif copyright
+    • Buy music
+    + Change the name
+    • Prepare code
+    • Get Unlimit's disclaimer
+
+• No data in socket if delete field in spec
+• Exceptions policy
+• Correct and publish the Specification
+• Publish on confluence
+• Spec explanation
+
+• Console mode
+• API console mode
+• Undo / Redo

@@ -20,4 +20,4 @@
 # Designed and developed by Fedor Ivanov
 #
 
-import common.signal
+import signal
