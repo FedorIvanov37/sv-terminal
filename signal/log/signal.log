@@ -42133,3 +42133,67 @@ Field 2 - Primary Account Number - did not pass validation by the Luhn algorithm
 10.03.2024 01:41:58 [INFO] [Re]connecting...
 10.03.2024 01:41:59 [INFO] Connection ESTABLISHED
 10.03.2024 01:44:34 [INFO] Connection DISCONNECTED
+10.03.2024 01:46:09 [INFO] 
+10.03.2024 01:46:09 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+10.03.2024 01:46:09 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+10.03.2024 01:46:09 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+10.03.2024 01:46:09 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+10.03.2024 01:46:09 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+10.03.2024 01:46:09 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+10.03.2024 01:46:09 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+10.03.2024 01:46:09 [INFO] 
+10.03.2024 01:46:09 [INFO]   Simplified ISO generation algorithm v0.17
+10.03.2024 01:46:09 [INFO] 
+10.03.2024 01:46:09 [INFO] ## Configuration parameters ##
+10.03.2024 01:46:09 [INFO] {
+10.03.2024 01:46:09 [INFO]     "host": {
+10.03.2024 01:46:09 [INFO]         "host": "172.21.30.5",
+10.03.2024 01:46:09 [INFO]         "port": 16677,
+10.03.2024 01:46:09 [INFO]         "keep_alive_mode": false,
+10.03.2024 01:46:09 [INFO]         "keep_alive_interval": 300,
+10.03.2024 01:46:09 [INFO]         "header_length": 2,
+10.03.2024 01:46:09 [INFO]         "header_length_exists": true
+10.03.2024 01:46:09 [INFO]     },
+10.03.2024 01:46:09 [INFO]     "terminal": {
+10.03.2024 01:46:09 [INFO]         "process_default_dump": true,
+10.03.2024 01:46:09 [INFO]         "connect_on_startup": true,
+10.03.2024 01:46:09 [INFO]         "load_remote_spec": false
+10.03.2024 01:46:09 [INFO]     },
+10.03.2024 01:46:09 [INFO]     "debug": {
+10.03.2024 01:46:09 [INFO]         "level": "INFO",
+10.03.2024 01:46:09 [INFO]         "clear_log": true,
+10.03.2024 01:46:09 [INFO]         "parse_subfields": false,
+10.03.2024 01:46:09 [INFO]         "backup_storage_depth": 30
+10.03.2024 01:46:09 [INFO]     },
+10.03.2024 01:46:09 [INFO]     "validation": {
+10.03.2024 01:46:09 [INFO]         "validation_enabled": true,
+10.03.2024 01:46:09 [INFO]         "validate_incoming": true,
+10.03.2024 01:46:09 [INFO]         "validation_mode": "WARNING"
+10.03.2024 01:46:09 [INFO]     },
+10.03.2024 01:46:09 [INFO]     "fields": {
+10.03.2024 01:46:09 [INFO]         "max_amount": 100,
+10.03.2024 01:46:09 [INFO]         "max_amount_limited": true,
+10.03.2024 01:46:09 [INFO]         "build_fld_90": true,
+10.03.2024 01:46:09 [INFO]         "send_internal_id": false,
+10.03.2024 01:46:09 [INFO]         "json_mode": true,
+10.03.2024 01:46:09 [INFO]         "hide_secrets": true
+10.03.2024 01:46:09 [INFO]     },
+10.03.2024 01:46:09 [INFO]     "remote_spec": {
+10.03.2024 01:46:09 [INFO]         "rewrite_local_spec": false,
+10.03.2024 01:46:09 [INFO]         "remote_spec_url": "http://172.21.30.20:4242/specification",
+10.03.2024 01:46:09 [INFO]         "backup_storage_depth": 30,
+10.03.2024 01:46:09 [INFO]         "backup_storage": false
+10.03.2024 01:46:09 [INFO]     }
+10.03.2024 01:46:09 [INFO] }
+10.03.2024 01:46:09 [INFO] ## End of configuration parameters ##
+10.03.2024 01:46:09 [INFO] 
+10.03.2024 01:46:10 [INFO] Licence agreement accepted 2024-03-09 23:22:37.614410
+10.03.2024 01:46:10 [INFO] License ID dce3dfdf-de6a-11ee-8c16-001a7dda7113
+10.03.2024 01:46:10 [INFO] Thank you for using SIGNAL
+10.03.2024 01:46:10 [WARNING] Validation: Field 2 - Primary Account Number - did not pass validation by the Luhn algorithm
+10.03.2024 01:46:10 [INFO] Default file parsed
+10.03.2024 01:46:10 [INFO] [Re]connecting...
+10.03.2024 01:46:10 [INFO] Connection ESTABLISHED
+10.03.2024 01:46:14 [INFO] [Re]connecting...
+10.03.2024 01:46:14 [INFO] Connection DISCONNECTED
+10.03.2024 01:46:14 [INFO] Connection ESTABLISHED

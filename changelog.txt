@@ -161,6 +161,7 @@
 + Check all custom validations
 + Error RuntimeError: wrapped C/C++ object of type WirelessHandler has been deleted
 + Add custom data types like list[str]
++ Change approach to fields path
 
 
 • Error on console when run AboutWindow - Could not find codec parameters for stream
@@ -180,8 +181,6 @@
     • Prepare code
     • Get Unlimit's disclaimer
 
-
-• Change approach to fields path
 • No data in socket if delete field in spec
 • Exceptions policy
 • Correct and publish the Specification
@@ -191,4 +190,3 @@
 • Console mode
 • API console mode
 • Undo / Redo
-•
