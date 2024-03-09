@@ -20,6 +20,7 @@ FORMAT: Final[str] = "{asctime} [{levelname}] {message}"
 MARK_STYLE: Final[str] = "{"
 LOG_MAX_SIZE_MEGABYTES: Final[int] = 10
 BACKUP_COUNT: Final[int] = 10
+RAISE_EXCEPTIONS: bool = False
 
 LOG_LEVEL: Final[list[str]] = list(Levels.values())
 

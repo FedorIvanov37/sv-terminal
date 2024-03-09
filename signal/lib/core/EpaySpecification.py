@@ -208,7 +208,7 @@ class EpaySpecification(EpaySpecificationData):
             if self.set_field_spec(field_spec=field_spec, parent=field_data.fields):
                 return
 
-    def get_field_validations(self, field_path: list[str], parent=None):
+    def get_field_validations(self, field_path: FieldPath, parent=None):
         if parent is None:
             parent = self.spec.fields
 
@@ -240,7 +240,7 @@ class EpaySpecification(EpaySpecificationData):
         return spec_data
 
     @staticmethod
-    def get_trans_id_path() -> list[str]:
+    def get_trans_id_path() -> FieldPath:
         return ["47", "072"]
 
     def is_field_complex(self, field_path: FieldPath):

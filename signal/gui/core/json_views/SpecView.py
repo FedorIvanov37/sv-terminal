@@ -277,7 +277,7 @@ class SpecView(TreeView):
         self.expandItem(self.root)
         self.set_current_item_by_path(current_path)
 
-    def get_item_by_path(self, field_path: list[str], parent: SpecItem | None = None) -> SpecItem:
+    def get_item_by_path(self, field_path: FieldPath, parent: SpecItem | None = None) -> SpecItem:
         if parent is None:
             parent = self.root
 
@@ -289,7 +289,7 @@ class SpecView(TreeView):
                 if child := self.get_item_by_path(field_path, parent=child):
                     return child
 
-    def set_current_item_by_path(self, field_path: list[str], parent: SpecItem | None = None):
+    def set_current_item_by_path(self, field_path: FieldPath, parent: SpecItem | None = None):
         if parent is None:
             parent = self.root
 

@@ -9,25 +9,25 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>760</width>
+    <width>800</width>
     <height>900</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>760</width>
+    <width>800</width>
     <height>900</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>760</width>
+    <width>800</width>
     <height>900</height>
    </size>
   </property>
@@ -96,7 +96,7 @@
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
      <property name="horizontalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
+      <enum>Qt::ScrollBarAsNeeded</enum>
      </property>
      <property name="documentTitle">
       <string>GNU/GPL license agreement</string>
@@ -105,7 +105,7 @@
       <bool>false</bool>
      </property>
      <property name="lineWrapMode">
-      <enum>QTextEdit::WidgetWidth</enum>
+      <enum>QTextEdit::NoWrap</enum>
      </property>
      <property name="readOnly">
       <bool>true</bool>

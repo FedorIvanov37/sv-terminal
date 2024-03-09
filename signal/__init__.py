@@ -17,7 +17,6 @@ if __name__ != "__main__":  # Runs only by import command
         print(run_signal_exception)
         exit(100)
 
-
 # Incorrect way to run
 if __name__ == "__main__":  # Do not run directly
     error_message = """

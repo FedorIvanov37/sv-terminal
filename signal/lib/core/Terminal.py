@@ -23,7 +23,7 @@ from signal.lib.enums import KeepAlive
 from signal.lib.enums.TermFilesPath import TermFilesPath
 
 
-class SvTerminal(QObject):
+class Terminal(QObject):
     pyqt_application: QtWidgets.QApplication = QtWidgets.QApplication([])
     spec: EpaySpecification = EpaySpecification(TermFilesPath.SPECIFICATION)
     keep_alive_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_KEEP_ALIVE)
@@ -37,7 +37,7 @@ class SvTerminal(QObject):
     need_reconnect: pyqtSignal = pyqtSignal()
 
     def __init__(self, config: Config, connector: ConnectionInterface | None = None):
-        super(SvTerminal, self).__init__()
+        super(Terminal, self).__init__()
         self.config: Config = config
         self.trans_validator = TransValidator(self.config)
         self.data_validator = DataValidator(self.config)

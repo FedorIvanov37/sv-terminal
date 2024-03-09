@@ -1,4 +1,6 @@
+import logging
 from logging import debug, getLevelName, getLogger, Formatter
+from signal.gui.core.WirelessHandler import WirelessHandler
 from logging.handlers import RotatingFileHandler
 from signal.lib.constants import LogDefinition
 from signal.lib.core.EpaySpecification import EpaySpecification
@@ -12,6 +14,7 @@ class LogStream:
 
     def write(self, data):
         self.log_browser.append(data)
+
 
 class Logger:
     _spec = EpaySpecification()
@@ -37,7 +40,9 @@ class Logger:
         logger = getLogger()
         logger.handlers.clear()
         logger.setLevel(getLevelName(self.config.debug.level))
+
         formatter = Formatter(LogDefinition.FORMAT, LogDefinition.LOGFILE_DATE_FORMAT, LogDefinition.MARK_STYLE)
+
         file_handler = RotatingFileHandler(
             filename=TermFilesPath.LOG_FILE_NAME,
             maxBytes=LogDefinition.LOG_MAX_SIZE_MEGABYTES * 1024000,
@@ -48,4 +53,24 @@ class Logger:
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
 
+        logging.raiseExceptions = LogDefinition.RAISE_EXCEPTIONS
+
         debug("Logger started")
+
+    @staticmethod
+    def create_window_logger(log_browser, formatter: Formatter | None = None) -> WirelessHandler:
+        if formatter is None:
+            formatter: Formatter = Formatter(
+                LogDefinition.FORMAT,
+                LogDefinition.DISPLAY_DATE_FORMAT,
+                LogDefinition.MARK_STYLE
+            )
+
+        stream: LogStream = LogStream(log_browser)
+        wireless_handler = WirelessHandler()
+        wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
+        wireless_handler.setFormatter(formatter)
+        logger = getLogger()
+        logger.addHandler(wireless_handler)
+
+        return wireless_handler

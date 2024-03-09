@@ -1,6 +1,5 @@
-import logging
 from typing import Callable
-from logging import error, info, warning, Logger
+from logging import error, info, warning
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication, QFileDialog
 from PyQt6.QtNetwork import QTcpSocket
@@ -24,11 +23,10 @@ from signal.lib.enums.MessageLength import MessageLength
 from signal.lib.enums.TextConstants import TextConstants
 from signal.lib.core.TransTimer import TransactionTimer
 from signal.lib.core.SpecFilesRotator import SpecFilesRotator
-from signal.lib.core.Logger import LogStream, getLogger, Formatter
-from signal.lib.core.Terminal import SvTerminal
+from signal.lib.core.Logger import getLogger
+from signal.lib.core.Terminal import Terminal
 from signal.lib.data_models.Config import Config
 from signal.lib.data_models.Transaction import Transaction, TypeFields
-from signal.lib.constants import LogDefinition
 from signal.lib.exceptions.exceptions import (
     LicenceAlreadyAccepted,
     LicenseDataLoadingError,
@@ -46,21 +44,22 @@ TransactionQueue for interaction with the target system, Connector for TCP integ
  
 Always tries not to do the work itself, managing corresponding modules instead
 
-SvTerminalGui is a basic executor for all user requests. Inherited from SvTerminal class, which does not interact 
-with GUI anyhow. Low-level data processing performs using the basic SvTerminal class.
+TerminalGui is a basic executor for all user requests. Inherited from Terminal class, which does not interact 
+with GUI anyhow. Low-level data processing performs using the basic Terminal class.
 
 Usually get data in the Transaction format. In any other case targeting to transform data into the Transaction and 
-proceed to work with this. The Transaction is a common I/O format for SvTerminalGui. 
+proceed to work with this. The Transaction is a common I/O format for TerminalGui. 
  
 Starts MainWindow when starting its work, being a kind of low-level adapter between the GUI and the system's core
 """
 
 
-class SvTerminalGui(SvTerminal):
+class SignalGui(Terminal):
     connector: ConnectionThread
     trans_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION)
     set_remote_spec: pyqtSignal = pyqtSignal()
     startup_finished: pyqtSignal = pyqtSignal()
+    _wireless_handler: WirelessHandler
     _license_demonstrated: bool = False
     _startup_finished: bool = False
 
@@ -79,15 +78,14 @@ class SvTerminalGui(SvTerminal):
 
     def __init__(self, config: Config):
         self.connector = ConnectionThread(config)
-        super(SvTerminalGui, self).__init__(config, self.connector)
+        super(SignalGui, self).__init__(config, self.connector)
         self.window: MainWindow = MainWindow(self.config)
-        self.wireless_handler: WirelessHandler = WirelessHandler()
         self.setup()
 
     @set_json_view_focus
     def setup(self) -> None:
         self.log_printer.print_startup_info()
-        self.create_window_logger()
+        self._wireless_handler = self.logger.create_window_logger(self.window.log_browser)
         self.connect_widgets()
         self.window.set_mti_values(self.spec.get_mti_list())
         self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
@@ -134,7 +132,7 @@ class SvTerminalGui(SvTerminal):
 
         terminal_connections_map: dict[pyqtSignal, Callable] = {
 
-            # Data processing request channels. Usually get the tasks from MainWindow or low-level SvTerminal
+            # Data processing request channels. Usually get the tasks from MainWindow or low-level Terminal
 
             window.clear_log: window.clean_window_log,
             window.send: self.send,
@@ -201,11 +199,11 @@ class SvTerminalGui(SvTerminal):
 
         spec_window: SpecWindow = SpecWindow(self.connector, self.config, getLogger())
 
-        getLogger().removeHandler(self.wireless_handler)
+        getLogger().removeHandler(self._wireless_handler)
 
         spec_window.exec()
 
-        getLogger().addHandler(self.wireless_handler)
+        getLogger().addHandler(self._wireless_handler)
 
         if self.config.fields.hide_secrets:
             self.window.hide_secrets()
@@ -233,7 +231,7 @@ class SvTerminalGui(SvTerminal):
 
     def echo_test(self) -> None:
         try:
-            SvTerminal.echo_test(self)
+            Terminal.echo_test(self)
 
         except ValidationError as validation_error:
             error(validation_error.json())
@@ -335,7 +333,7 @@ class SvTerminalGui(SvTerminal):
         self.connector.stop_thread()
 
     def reconnect(self) -> None:
-        SvTerminal.reconnect(self)
+        Terminal.reconnect(self)
 
     def set_connection_status(self) -> None:
         self.window.set_connection_status(self.connector.state())
@@ -345,15 +343,6 @@ class SvTerminalGui(SvTerminal):
             return
 
         self.window.unblock_connection_buttons()
-
-    def create_window_logger(self) -> None:
-        formatter: Formatter = Formatter(LogDefinition.FORMAT, LogDefinition.DISPLAY_DATE_FORMAT, LogDefinition.MARK_STYLE)
-
-        stream: LogStream = LogStream(self.window.log_browser)
-        self.wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
-        self.wireless_handler.setFormatter(formatter)
-        logger: Logger = getLogger()
-        logger.addHandler(self.wireless_handler)
 
     def perform_reversal(self, command: str) -> None:
         transaction_source_map: dict[str, Callable] = {
@@ -474,7 +463,7 @@ class SvTerminalGui(SvTerminal):
             return
 
         try:
-            SvTerminal.send(self, transaction)  # SvTerminal always used to real data processing
+            Terminal.send(self, transaction)  # Terminal always used to real data processing
         except Exception as sending_error:
             error(f"Transaction sending error: {sending_error}")
             return
@@ -543,7 +532,7 @@ class SvTerminalGui(SvTerminal):
             error(validation_error)
             return
 
-        SvTerminal.save_transaction(self, transaction, file_format, file_name)
+        Terminal.save_transaction(self, transaction, file_format, file_name)
 
     def print_data(self, data_format: PrintDataFormats) -> None:
         data_processing_map: dict[str, Callable] = {

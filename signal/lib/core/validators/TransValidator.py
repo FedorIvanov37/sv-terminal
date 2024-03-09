@@ -2,6 +2,7 @@ from signal.lib.core.validators.Validator import Validator
 from signal.lib.data_models.Config import Config
 from signal.lib.data_models.Transaction import Transaction
 from signal.lib.data_models.Validation import ValidationResult
+from signal.lib.data_models.Types import FieldPath
 
 
 class TransValidator:
@@ -19,6 +20,6 @@ class TransValidator:
         validation_result: ValidationResult = self.validator.validate_fields(fields, ValidationResult())
         self.validator.process_validation_result(validation_result)
 
-    def validate_field_spec(self, field_path: list[str]) -> None:
+    def validate_field_spec(self, field_path: FieldPath) -> None:
         validation_result: ValidationResult = self.validator.validate_field_spec(field_path, ValidationResult())
         self.validator.process_validation_result(validation_result)

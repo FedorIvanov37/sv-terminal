@@ -515,3 +515,4 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.hide()
         self.window_close.emit()
         a0.accept()
+

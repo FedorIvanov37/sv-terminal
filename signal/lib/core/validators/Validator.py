@@ -37,7 +37,7 @@ class Validator:
         return validation_result
 
     @staticmethod
-    def field_path_to_str(field_path: list[str]) -> str:
+    def field_path_to_str(field_path: FieldPath) -> str:
         return ".".join(field_path)
 
     def validate_mti(self, mti, validation_result: ValidationResult):

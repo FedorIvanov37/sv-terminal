@@ -159,22 +159,14 @@
 + Fix double validation
 + Remove: "File parsed: signal/data/default/default_message.json"
 + Check all custom validations
++ Error RuntimeError: wrapped C/C++ object of type WirelessHandler has been deleted
++ Add custom data types like list[str]
 
-• Add custom data types like list[str]
+
 • Error on console when run AboutWindow - Could not find codec parameters for stream
 
-• Error RuntimeError: wrapped C/C++ object of type WirelessHandler has been deleted
-
-
-• Change name to SIGNAL
-    • Document
-    • Text constants
-    • Windows titles
-    • Lic window
-    • Code?
-
-
-• Reflect in the document - Main settings, the specification+, files format+
+• Change name to SIGNAL in Document
+• Reflect in the document - Main settings, the specification+, files format+, custom validations
 • Set complex fields full expanding when switch JSON mode
 • Add tabs by QTabWidget
 
@@ -184,7 +176,7 @@
     • Buy the logo
     • Gif copyright
     • Buy music
-    • Change the name
+    + Change the name
     • Prepare code
     • Get Unlimit's disclaimer
 

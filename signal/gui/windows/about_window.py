@@ -1,4 +1,4 @@
-from os import getcwd, path
+from os import getcwd
 from signal.gui.forms.about import Ui_AboutWindow
 from signal.gui.enums.GuiFilesPath import GuiFilesPath
 from signal.lib.enums.ReleaseDefinition import ReleaseDefinition
@@ -48,7 +48,7 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         self.movie.start()
 
     def init_music_player(self):
-        music_file_path = path.normpath(f"{getcwd()}/{GuiFilesPath.VVVVVV}")
+        music_file_path = f"{getcwd()}/{GuiFilesPath.VVVVVV}"
         music_file_path = QUrl.fromLocalFile(music_file_path)
         audio_output = QAudioOutput()
         self.player.setAudioOutput(audio_output)
