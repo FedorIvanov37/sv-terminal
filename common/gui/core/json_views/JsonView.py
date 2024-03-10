@@ -35,6 +35,7 @@ class JsonView(TreeView):
     root: FieldItem
     need_disable_next_level: pyqtSignal = pyqtSignal()
     need_enable_next_level: pyqtSignal = pyqtSignal()
+    trans_id_set: pyqtSignal = pyqtSignal()
     spec: EpaySpecification = EpaySpecification()
 
     @property
@@ -189,6 +190,7 @@ class JsonView(TreeView):
 
         if item.is_trans_id:
             item.field_data = generate_trans_id()
+            self.trans_id_set.emit()
             item.set_length()
             return
 
@@ -242,25 +244,24 @@ class JsonView(TreeView):
 
         field_item.field_data = trans_id
 
-    def get_trans_id_item(self) -> FieldItem | None:
-        field_item: FieldItem = self.root
-        trans_id_path: list[str] = self.spec.get_trans_id_path()
+    def get_trans_id_item(self, parent: FieldItem | None = None) -> FieldItem | None:
+        if parent is None:
+            parent = self.root
 
-        for field in trans_id_path:
-            for item in field_item.get_children():
-                if not item.field_number == field:
-                    continue
+        trans_id_item: FieldItem | None = None
 
-                field_item: FieldItem = item
+        for child in parent.get_children():
+            if trans_id_item is not None:
                 break
 
-        try:
-            if not field_item.is_trans_id:
-                return
-        except AttributeError:
-            return
+            if child.childCount():
+                trans_id_item = self.get_trans_id_item(parent=child)
+                continue
 
-        return field_item
+            if child.is_trans_id:
+                trans_id_item = child
+
+        return trans_id_item
 
     def set_subfields_length(self, item: FieldItem):
         parent: FieldItem
@@ -497,6 +498,18 @@ class JsonView(TreeView):
                 continue
 
             item.field_data = value
+
+    def is_trans_id_generate_mode_on(self) -> bool | None:
+        if not (trans_id_item := self.get_trans_id_item()):
+            return
+
+        if not trans_id_item.is_trans_id:
+            return
+
+        if not trans_id_item.checkbox_checked(CheckBoxesDefinition.GENERATE):
+            return False
+
+        return True
 
     def parse_transaction(self, transaction: Transaction) -> None:
         for item in self.root.get_children():

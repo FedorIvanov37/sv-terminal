@@ -412,9 +412,6 @@ class SignalGui(Terminal):
             [error(err.get("msg")) for err in validation_error.errors()]
             raise DataValidationError
 
-        # if self.config.fields.send_internal_id:
-        #     transaction: Transaction = self.generator.set_trans_id(transaction)
-
         if clean:
             del (
                 transaction.resp_time_seconds,
@@ -445,6 +442,15 @@ class SignalGui(Terminal):
 
         if self.config.debug.clear_log and not transaction.is_keep_alive:
             self.window.clean_window_log()
+
+        reversal_suffix_conditions = (
+            self.spec.is_reversal(transaction.message_type),
+            self.window.is_trans_id_generate_mode_on(),
+            not transaction.trans_id.endswith("_R"),
+        )
+
+        if all(reversal_suffix_conditions):
+            transaction.trans_id = f"{transaction.trans_id}_R"
 
         if not transaction.is_keep_alive:
             info(f"Processing transaction ID [{transaction.trans_id}]")

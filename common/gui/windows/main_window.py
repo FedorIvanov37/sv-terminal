@@ -20,6 +20,7 @@ from common.lib.enums.DataFormats import DataFormats
 from common.lib.enums import KeepAlive
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
 from common.lib.enums.TextConstants import TextConstants
+from common.lib.core.EpaySpecification import EpaySpecification
 
 
 """
@@ -63,6 +64,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _repeat: pyqtSignal = pyqtSignal(str)
     _parse_complex_field: pyqtSignal = pyqtSignal()
     _validate_message: pyqtSignal = pyqtSignal()
+    _spec: EpaySpecification = EpaySpecification()
+
+    @property
+    def spec(self):
+        return self._spec
 
     @property
     def validate_message(self):
@@ -246,6 +252,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         main_window_connection_map = {
             self.SearchLine.textChanged: self.json_view.search,
             self.SearchLine.editingFinished: self.json_view.setFocus,
+            self.json_view.trans_id_set: self.set_reversal_trans_id,
         }
 
         keys_connection_map = {
@@ -340,6 +347,18 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             for action, function in actions.items():
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
+
+    def set_reversal_trans_id(self):
+        if not (trans_id := self.get_trans_id()):
+            return
+
+        if not self.spec.is_reversal(self.get_mti()):
+            return
+
+        if not self.is_trans_id_generate_mode_on():
+            return
+
+        self.set_trans_id(f"{trans_id}_R")
 
     def activate_search(self):
         self.SearchLine.setFocus()
@@ -444,6 +463,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             raise ValueError(f"Cannot set Message Type Identifier {mti}. Mti not in specification")
 
         self.msgtype.setCurrentIndex(index)
+
+    def is_trans_id_generate_mode_on(self) -> bool | None:
+        return self.json_view.is_trans_id_generate_mode_on()
 
     def set_transaction_fields(self, transaction: Transaction, generate_trans_id: bool = True) -> None:
         self.json_view.parse_transaction(transaction)
