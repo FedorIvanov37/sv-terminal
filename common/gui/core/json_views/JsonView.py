@@ -8,6 +8,7 @@ from common.lib.core.Parser import Parser
 from common.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.Config import Config
+from common.lib.data_models.Types import FieldPath
 from common.lib.data_models.EpaySpecificationModel import RawFieldSet
 from common.gui.core.json_items.FIeldItem import FieldItem
 from common.gui.core.validators.ItemsValidator import ItemsValidator
@@ -244,24 +245,28 @@ class JsonView(TreeView):
 
         field_item.field_data = trans_id
 
-    def get_trans_id_item(self, parent: FieldItem | None = None) -> FieldItem | None:
+    def get_item_by_path(self, field_path: FieldPath, parent: FieldItem | None = None):
         if parent is None:
             parent = self.root
 
-        trans_id_item: FieldItem | None = None
+        item: FieldItem | None = None
+        child: FieldItem
 
         for child in parent.get_children():
-            if trans_id_item is not None:
+            if item is not None:
                 break
 
             if child.childCount():
-                trans_id_item = self.get_trans_id_item(parent=child)
+                item = self.get_item_by_path(field_path=field_path, parent=child)
                 continue
 
-            if child.is_trans_id:
-                trans_id_item = child
+            if child.get_field_path() == field_path:
+                item = child
 
-        return trans_id_item
+        return item
+
+    def get_trans_id_item(self) -> FieldItem | None:
+        return self.get_item_by_path(self.spec.get_trans_id_path())
 
     def set_subfields_length(self, item: FieldItem):
         parent: FieldItem
@@ -498,6 +503,12 @@ class JsonView(TreeView):
                 continue
 
             item.field_data = value
+
+    def is_json_mode_on(self, field_path: FieldPath) -> bool | None:
+        if not (json_mode_item := self.get_item_by_path(field_path)):
+            return
+
+        return json_mode_item.checkbox_checked(CheckBoxesDefinition.JSON_MODE)
 
     def is_trans_id_generate_mode_on(self) -> bool | None:
         if not (trans_id_item := self.get_trans_id_item()):

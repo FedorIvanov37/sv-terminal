@@ -100,7 +100,6 @@
 ? Validation after edit doesn't work sometimes
 
 # v0.16
-
 + Fix all problems around old JSON files incompatibility
 + Transaction field max_amount has no effect
 + Correct default message according to mandatory changes 22Q4
@@ -139,22 +138,20 @@
 + Add custom validations
 + Add custom validations Window
 + Add spec URL validation
-+ Add MCC model and dictionary
++ Add MCC, currency, country model, dictionary and validator
 + Incoming message validation
-
 + Change data format .txt to .dump
 + Cannot get remote spec
-+ Spec URL error singals twice
++ Spec URL error signals twice
 + ID goes twice
 + Rewritten reversal trans_id
 + Add tick to generate trans_id
 + Disable column GENERATE in spec
 + Validators finalization
-+ Make validations violation processing mode
++ Set validations violation processing mode
 + Trans ID can be set in MainWindow
 + Move output_file_format from SaveButton to FileDialog
 + Change to Python 3.12.2
-
 #
 + Fix double validation
 + Remove: "File parsed: signal/data/default/default_message.json"
@@ -162,15 +159,16 @@
 + Error RuntimeError: wrapped C/C++ object of type WirelessHandler has been deleted
 + Add custom data types like list[str]
 + Change approach to fields path
++ Add reversal trans_id generation with suffix _R
++ Move log-browser creation to Logger
+• Respect JSON-mode when set field value from complex fields constructor
+
 
 
 • Error on console when run AboutWindow - Could not find codec parameters for stream
-
 • Change name to SIGNAL in Document
 • Reflect in the document - Main settings, the specification+, files format+, custom validations
 • Set complex fields full expanding when switch JSON mode
-• Add tabs by QTabWidget
-
 
 • Licensing preparation
     • Change the framework to pyside
@@ -190,3 +188,4 @@
 • Console mode
 • API console mode
 • Undo / Redo
+• Add tabs by QTabWidget

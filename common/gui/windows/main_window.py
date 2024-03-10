@@ -11,6 +11,7 @@ from common.gui.core.json_views.JsonView import JsonView
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.decorators.window_settings import set_window_icon
 from common.lib.data_models.Transaction import TypeFields, Transaction
+from common.lib.data_models.Types import FieldPath
 from common.lib.data_models.Config import Config
 from common.gui.enums import ButtonActions, MainFieldSpec as FieldsSpec
 from common.gui.enums.KeySequences import KeySequences
@@ -347,6 +348,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             for action, function in actions.items():
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
+
+    def is_json_mode_on(self, field_path: FieldPath):
+        return self.json_view.is_json_mode_on(field_path)
 
     def set_reversal_trans_id(self):
         if not (trans_id := self.get_trans_id()):
