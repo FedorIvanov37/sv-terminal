@@ -168,6 +168,11 @@ class EpaySpecification(EpaySpecificationData):
         self.spec.fields = spec.fields
         self.spec.name = spec.name
 
+        try:
+            self.spec.fields[self.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER].is_secret = True
+        except KeyError | AttributeError:
+            ...
+
         if not commit:
             return
 

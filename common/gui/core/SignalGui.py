@@ -109,11 +109,16 @@ class SignalGui(Terminal):
             self.set_keep_alive_interval(interval_name=KeepAlive.IntervalNames.KEEP_ALIVE_DEFAULT % interval)
 
         if self.config.terminal.load_remote_spec:
-            if not self.config.remote_spec.remote_spec_url:
-                warning("Remote specification was not loaded due to empty spec URL")
-                warning("The local specification will be used instead")
+            try:
+                self.data_validator.validate_url(self.config.remote_spec.remote_spec_url)
 
-            if self.config.remote_spec.remote_spec_url:
+            except DataValidationWarning as url_validation_warning:
+                warning(f"Remote spec URL validation warning: {url_validation_warning}")
+
+            except Exception as url_validation_error:
+                error(f"Remote spec URL validation error: {url_validation_error}")
+
+            else:
                 self.set_remote_spec.emit()
 
         if self.config.remote_spec.backup_storage:
@@ -197,21 +202,20 @@ class SignalGui(Terminal):
     def run_specification_window(self) -> None:
         old_spec = self.spec.spec.json()
 
+        logger = getLogger()
+
         spec_window: SpecWindow = SpecWindow(self.connector, self.config)
 
-        getLogger().removeHandler(self._wireless_handler)
+        logger.removeHandler(self._wireless_handler)
 
         spec_window.exec()
 
-        getLogger().addHandler(self._wireless_handler)
+        logger.addHandler(self._wireless_handler)
 
         if self.config.fields.hide_secrets:
             self.window.hide_secrets()
 
         specification_changed = old_spec != self.spec.spec.json()
-
-        if not specification_changed:
-            info("Specification wasn't changed")
 
         if specification_changed and self.config.validation.validation_enabled:
             info("Validate message after spec settings")
