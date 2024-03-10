@@ -561,8 +561,12 @@ class SignalGui(Terminal):
 
         try:
             self.window.set_log_data(function())
+
+        except AttributeError:
+            error("Cannot construct message: lost field specification. Correct spec or turn field validation off")
+
         except Exception as validation_error:
-            error(f"{validation_error}")
+            error(f"Cannot construct message: {validation_error}")
 
     def print_trans_data(self):
         trans_id: str = self.show_reversal_window()

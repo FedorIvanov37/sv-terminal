@@ -159,12 +159,13 @@
 + Error RuntimeError: wrapped C/C++ object of type WirelessHandler has been deleted
 + Add custom data types like list[str]
 + Change approach to fields path
-+ Add reversal trans_id generation with suffix _R
 + Move log-browser creation to Logger
++ Trans_id can be generated in MainWindow
++ Add reversal trans_id generation with suffix _R
+
+
+
 • Respect JSON-mode when set field value from complex fields constructor
-
-
-
 • Error on console when run AboutWindow - Could not find codec parameters for stream
 • Change name to SIGNAL in Document
 • Reflect in the document - Main settings, the specification+, files format+, custom validations
