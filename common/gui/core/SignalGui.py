@@ -72,7 +72,7 @@ class SignalGui(Terminal):
                 return function(self, *args, **kwargs)
 
             finally:
-                self.window.json_view.setFocus()
+                self.window.set_focus()
 
         return wrapper
 
@@ -87,8 +87,6 @@ class SignalGui(Terminal):
         self.log_printer.print_startup_info()
         self._wireless_handler = self.logger.create_window_logger(self.window.log_browser)
         self.connect_widgets()
-        self.window.set_mti_values(self.spec.get_mti_list())
-        self.window.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
         self.window.show()
 
     @set_json_view_focus
@@ -128,7 +126,7 @@ class SignalGui(Terminal):
         if self.config.terminal.connect_on_startup:
             self.reconnect()
 
-        self.window.enable_json_mode_checkboxes(enable=self.config.validation.validation_enabled)
+        self.window.json_view.enable_json_mode_checkboxes(enable=self.config.validation.validation_enabled)
 
         self._startup_finished: bool = True
 
@@ -145,7 +143,7 @@ class SignalGui(Terminal):
             window.echo_test: self.echo_test,
             window.clear: self.clear_message,
             window.copy_log: self.copy_log,
-            window.copy_bitmap: self.copy_bitmap,
+            # window.copy_bitmap: self.copy_bitmap,
             window.reconnect: self.reconnect,
             window.parse_file: self.parse_file,
             window.window_close: self.stop_signal,
@@ -213,7 +211,7 @@ class SignalGui(Terminal):
         logger.addHandler(self._wireless_handler)
 
         if self.config.fields.hide_secrets:
-            self.window.hide_secrets()
+            self.window.json_view.hide_secrets()
 
         specification_changed = old_spec != self.spec.spec.json()
 
@@ -223,14 +221,18 @@ class SignalGui(Terminal):
             self.validate_main_window()
 
         if not self.config.validation.validation_enabled:
-            self.window.refresh_fields(Colors.BLACK)
+            self.window.json_view.refresh_fields(Colors.BLACK)
 
     def modify_fields_data(self):  # Set extended data modifications, set in field params
-        self.window.modify_fields_data()
+        self.window.json_view.modify_all_fields_data()
 
     def validate_main_window(self):
+        if not self.config.validation.validation_enabled:
+            return
+
         self.window.validate_fields()
-        self.window.refresh_fields()
+        self.window.json_view.refresh_fields()
+
         info("Transaction data validated")
 
     def echo_test(self) -> None:
@@ -273,7 +275,7 @@ class SignalGui(Terminal):
         info("Settings applied")
 
         self.window.enable_validation(self.config.validation.validation_enabled)
-        self.window.enable_json_mode_checkboxes(enable=self.config.validation.validation_enabled)
+        self.window.json_view.enable_json_mode_checkboxes(enable=self.config.validation.validation_enabled)
 
         validation_conditions = [
             old_config.validation.validation_enabled != self.config.validation.validation_enabled,
@@ -286,13 +288,13 @@ class SignalGui(Terminal):
                 self.validate_main_window()
 
             if not self.config.validation.validation_enabled:
-                self.window.refresh_fields(Colors.BLACK)
+                self.window.json_view.refresh_fields(Colors.BLACK)
 
         if old_config.fields.json_mode != self.config.fields.json_mode:
-            self.window.set_json_mode(self.config.fields.json_mode)
+            self.window.json_view.set_json_mode(self.config.fields.json_mode)
 
         if old_config.fields.hide_secrets != self.config.fields.hide_secrets:
-            self.window.hide_secrets()
+            self.window.json_view.hide_secrets()
 
         spec_loading_conditions: list[bool] = [
             self.config.remote_spec.remote_spec_url,
@@ -389,8 +391,8 @@ class SignalGui(Terminal):
                 error("Cannot reverse transaction")
 
     def parse_main_window(self, flat_fields: bool = True, clean: bool = False) -> Transaction:
-        data_fields: TypeFields = self.window.get_fields(flat=flat_fields)
-        trans_id: str = self.window.get_trans_id()
+        data_fields: TypeFields = self.window.json_view.generate_fields(flat=flat_fields)
+        trans_id: str = self.window.json_view.get_trans_id()
 
         if not data_fields:
             raise ValueError("No transaction data found")
@@ -445,7 +447,7 @@ class SignalGui(Terminal):
 
         reversal_suffix_conditions = (
             self.spec.is_reversal(transaction.message_type),
-            self.window.is_trans_id_generate_mode_on(),
+            self.window.json_view.is_trans_id_generate_mode_on(),
             not transaction.trans_id.endswith("_R"),
         )
 
@@ -594,8 +596,8 @@ class SignalGui(Terminal):
     def copy_log(self) -> None:
         self.set_clipboard_text(self.window.get_log_data())
 
-    def copy_bitmap(self) -> None:
-        self.set_clipboard_text(self.window.get_bitmap_data())
+    # def copy_bitmap(self) -> None:
+    #     self.set_clipboard_text(self.window.get_bitmap_data())
 
     @staticmethod
     def set_clipboard_text(data: str = str()) -> None:
@@ -651,8 +653,8 @@ class SignalGui(Terminal):
     @set_json_view_focus
     def parse_transaction(self, transaction: Transaction, generate_trans_id=True) -> None:
         try:
-            self.window.set_mti_value(transaction.message_type)
-            self.window.set_transaction_fields(transaction, generate_trans_id=generate_trans_id)
+            self.window.tab_view.set_mti_value(transaction.message_type)
+            self.window.tab_view.set_transaction_fields(transaction, generate_trans_id=generate_trans_id)
             self.set_bitmap()
 
         except DataValidationWarning as validation_warning:
@@ -668,14 +670,14 @@ class SignalGui(Terminal):
     def set_bitmap(self) -> None:
         bitmap: set[str] = set()
 
-        for bit in self.window.get_top_level_field_numbers():
+        for bit in self.window.json_view.get_top_level_field_numbers():
             if not bit.isdigit():
                 continue
 
             if int(bit) not in range(1, MessageLength.SECOND_BITMAP_CAPACITY + 1):
                 continue
 
-            if not (self.window.field_has_data(bit) or bit in self.window.get_fields_to_generate()):
+            if not (self.window.json_view.field_has_data(bit) or bit in self.window.get_fields_to_generate()):
                 continue
 
             if int(bit) >= MessageLength.FIRST_BITMAP_CAPACITY:
@@ -687,7 +689,7 @@ class SignalGui(Terminal):
 
     @set_json_view_focus
     def clear_message(self) -> None:
-        self.window.clear_message()
+        self.window.tab_view.clear_message()
         self.set_bitmap()
 
     def set_generated_fields_to_gui(self, transaction: Transaction) -> None:
@@ -699,6 +701,6 @@ class SignalGui(Terminal):
             if not transaction.data_fields.get(field):
                 transaction.data_fields[field]: str = self.generator.generate_field(field)
 
-            self.window.set_field_value(field, transaction.data_fields.get(field))
+            self.window.json_view.set_field_value(field, transaction.data_fields.get(field))
 
-        self.window.set_trans_id(transaction.trans_id)
+        self.window.json_view.set_trans_id(transaction.trans_id)

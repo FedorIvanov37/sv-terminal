@@ -47,8 +47,8 @@ class JsonView(TreeView):
     def hide_secret_fields(self):
         return self.config.fields.hide_secrets
 
-    def __init__(self, config: Config, root_name: str = RootItemNames.TRANSACTION_ROOT_NAME):
-        super(JsonView, self).__init__()
+    def __init__(self, config: Config, root_name: str = RootItemNames.TRANSACTION_ROOT_NAME, parent=None):
+        super(JsonView, self).__init__(parent=parent)
         self.root: FieldItem = FieldItem([root_name])
         self.config: Config = config
         self.delegate = JsonView.Delegate()

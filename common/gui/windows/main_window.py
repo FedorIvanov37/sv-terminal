@@ -4,24 +4,22 @@ from copy import deepcopy
 from ctypes import windll
 from pydantic import FilePath
 from PyQt6.QtNetwork import QTcpSocket
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
-from common.gui.core.json_views.JsonView import JsonView
 from common.gui.forms.mainwindow import Ui_MainWindow
 from common.gui.decorators.window_settings import set_window_icon
-from common.lib.data_models.Transaction import TypeFields, Transaction
 from common.lib.data_models.Types import FieldPath
 from common.lib.data_models.Config import Config
 from common.gui.enums import ButtonActions, MainFieldSpec as FieldsSpec
 from common.gui.enums.KeySequences import KeySequences
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.gui.enums.ConnectionStatus import ConnectionStatus, ConnectionIcon
-from common.lib.enums.DataFormats import DataFormats
 from common.lib.enums import KeepAlive
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
 from common.lib.enums.TextConstants import TextConstants
 from common.lib.core.EpaySpecification import EpaySpecification
+from common.gui.core.tab_view.TabView import TabView
 
 
 """
@@ -55,7 +53,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _echo_test: pyqtSignal = pyqtSignal()
     _clear: pyqtSignal = pyqtSignal()
     _copy_log: pyqtSignal = pyqtSignal()
-    _copy_bitmap: pyqtSignal = pyqtSignal()
+    # _copy_bitmap: pyqtSignal = pyqtSignal()
     _reconnect: pyqtSignal = pyqtSignal()
     _parse_file: pyqtSignal = pyqtSignal()
     _hotkeys: pyqtSignal = pyqtSignal()
@@ -70,6 +68,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     @property
     def spec(self):
         return self._spec
+
+    @property
+    def json_view(self):
+        return self._tab_view.json_view
+
+    @property
+    def tab_view(self):
+        return self._tab_view
 
     @property
     def validate_message(self):
@@ -90,10 +96,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     @property
     def field_removed(self):
         return self._field_removed
-
-    @property
-    def json_view(self):
-        return self._json_view
 
     @property
     def log_browser(self):
@@ -135,9 +137,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def copy_log(self):
         return self._copy_log
 
-    @property
-    def copy_bitmap(self):
-        return self._copy_bitmap
+    # @property
+    # def copy_bitmap(self):
+    #     return self._copy_bitmap
 
     @property
     def save(self):
@@ -178,7 +180,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def __init__(self, config: Config):
         super().__init__()
         self.config = config
-        self._json_view: JsonView = JsonView(self.config)
+        self._tab_view: TabView = TabView(self.config)
         self._setup()
 
     @set_window_icon
@@ -190,14 +192,16 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
         self.ButtonSend.setFocus()
         self.enable_validation(enable=self.config.validation.validation_enabled)
+        self.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
 
         for trans_type in KeepAlive.TransTypes.TRANS_TYPE_KEEP_ALIVE, KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION:
             self.process_transaction_loop_change(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_STOP, trans_type)
 
+        self.TabViewLayout.addWidget(self._tab_view)
+
     def _add_json_control_buttons(self) -> None:
         # Create and place the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
 
-        self.FieldsTreeLayout.addWidget(self.json_view)
         self.PlusButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_PLUS_SIGN)
         self.MinusButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_MINUS_SIGN)
         self.NextLevelButton = QPushButton(ButtonActions.ButtonActionSigns.BUTTON_NEXT_LEVEL_SIGN)
@@ -221,9 +225,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         """
 
         buttons_connection_map = {  # Signals, which should be emitted by MainWindow key press event
-            self.PlusButton: self.json_view.plus,
-            self.MinusButton: self.json_view.minus,
-            self.NextLevelButton: self.json_view.next_level,
+            self.PlusButton: self._tab_view.plus,
+            self.MinusButton: self._tab_view.minus,
+            self.NextLevelButton: self._tab_view.next_level,
             self.ButtonSend: self.send,
             self.ButtonClearLog: self.clear_log,
             self.ButtonCopyLog: self.copy_log,
@@ -235,25 +239,24 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonSpecification: self.specification,
             self.ButtonHotkeys: self.hotkeys,
             self.ButtonSettings: self.settings,
-            self.ButtonCopyBitmap: self.copy_bitmap,
             self.ButtonFieldsParser: self.parse_complex_field,
             self.ButtonValidate: self.validate_message,
             self.ButtonSave: self.save,
         }
 
-        json_view_connection_map = {
-            self.json_view.itemChanged: self.field_changed,
-            self.json_view.field_changed: self.field_changed,
-            self.json_view.field_added: self.field_added,
-            self.json_view.field_removed: self.field_removed,
-            self.json_view.need_disable_next_level: self.disable_next_level_button,
-            self.json_view.need_enable_next_level: self.enable_next_level_button,
+        tab_view_connection_map = {
+            self._tab_view.field_changed: self.field_changed,
+            self._tab_view.field_added: self.field_added,
+            self._tab_view.field_removed: self.field_removed,
+            self._tab_view.disable_next_level_button: self.disable_next_level_button,
+            self._tab_view.enable_next_level_button: self.enable_next_level_button,
         }
 
         main_window_connection_map = {
             self.SearchLine.textChanged: self.json_view.search,
-            self.SearchLine.editingFinished: self.json_view.setFocus,
-            self.json_view.trans_id_set: self.set_reversal_trans_id,
+            self.SearchLine.editingFinished: self._tab_view.set_json_focus,
+            self._tab_view.trans_id_set: self.set_reversal_trans_id,
+            self._tab_view.tab_changed: self.process_tab_change,
         }
 
         keys_connection_map = {
@@ -262,8 +265,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             # The string argument (modifier) is a hint about a requested data format
 
             # Predefined Key Sequences
-            QKeySequence.StandardKey.New: self.json_view.plus,
-            QKeySequence.StandardKey.Delete: self.json_view.minus,
+            QKeySequence.StandardKey.New: self._tab_view.plus,
+            QKeySequence.StandardKey.Delete: self._tab_view.minus,
             QKeySequence.StandardKey.HelpContents: self.about,
             QKeySequence.StandardKey.Print: self.ButtonPrintData.showMenu,
             QKeySequence.StandardKey.Save: self.save,
@@ -271,20 +274,26 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             QKeySequence.StandardKey.Undo: self.json_view.undo,
             QKeySequence.StandardKey.Redo: self.json_view.redo,
             QKeySequence.StandardKey.Find: self.activate_search,
+            QKeySequence.StandardKey.Close: self._tab_view.close_current_tab,
 
             # Custom Key Sequences
             # The string argument (modifier) is a hint about a requested data format
-            KeySequences.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
+            # KeySequences.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
+            KeySequences.CTRL_T: self._tab_view.add_tab,
             KeySequences.CTRL_SHIFT_ENTER: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.LAST),
             KeySequences.CTRL_ENTER: self.send,
             KeySequences.CTRL_R: self.reconnect,
             KeySequences.CTRL_L: self.clear_log,
             KeySequences.CTRL_E: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.VALUE),
             KeySequences.CTRL_W: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.FIELD),
-            KeySequences.CTRL_SHIFT_N: self.json_view.next_level,
+            KeySequences.CTRL_Q: self._tab_view.close_current_tab,
+            KeySequences.CTRL_SHIFT_N: self._tab_view.next_level,
             KeySequences.CTRL_ALT_Q: exit,
             KeySequences.CTRL_ALT_ENTER: self.echo_test,
             KeySequences.CTRL_ALT_V: self.validate_message,
+            KeySequences.CTRL_PAGE_UP: self._tab_view.prev_tab,
+            KeySequences.CTRL_PAGE_DOWN: self._tab_view.next_tab,
+
         }
 
         self.buttons_menu_structure = {
@@ -338,7 +347,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for button, slot in buttons_connection_map.items():
             button.clicked.connect(slot)
 
-        for connection_map in json_view_connection_map, main_window_connection_map:  # Signals, activated by key event
+        for connection_map in tab_view_connection_map, main_window_connection_map:  # Signals, activated by key event
             for signal, slot in connection_map.items():
                 signal.connect(slot)
 
@@ -349,26 +358,31 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
 
+    def process_tab_change(self):
+        self.SearchLine.setText(str())
+        self.json_view.search(text=str())
+        self.json_view.expandAll()
+
     def is_json_mode_on(self, field_path: FieldPath):
         return self.json_view.is_json_mode_on(field_path)
 
     def set_reversal_trans_id(self):
-        if not (trans_id := self.get_trans_id()):
+        if not (trans_id := self.json_view.get_trans_id()):
             return
 
         if not self.spec.is_reversal(self.get_mti()):
             return
 
-        if not self.is_trans_id_generate_mode_on():
+        if not self.json_view.is_trans_id_generate_mode_on():
             return
 
-        self.set_trans_id(f"{trans_id}_R")
+        self.json_view.set_trans_id(f"{trans_id}_R")
+
+    def set_focus(self):
+        self.json_view.setFocus()
 
     def activate_search(self):
         self.SearchLine.setFocus()
-
-    def hide_secrets(self):
-        self.json_view.hide_secrets()
 
     # Usually disables in fields flat-mode to avoid subfields creation
     def disable_next_level_button(self, disable: bool = True) -> None:
@@ -377,10 +391,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def enable_next_level_button(self, enable: bool = True) -> None:
         self.NextLevelButton.setEnabled(enable)
 
-    # Switch from JSON mode to flat mode and back
-    def set_json_mode(self, json_mode: bool) -> None:
-        self.json_view.switch_json_mode(json_mode)
-
     # Validate whole transaction data, presented on MainWindow
     def validate_fields(self) -> None:
         self.json_view.check_all_items()
@@ -388,44 +398,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def enable_validation(self, enable=True):
         self.ButtonValidate.setEnabled(enable)
 
-    def modify_fields_data(self):
-        self.json_view.modify_all_fields_data()
-
-    def refresh_fields(self, color=None):
-        self.json_view.refresh_fields(color=color)
-
     def clean_window_log(self) -> None:
         self.LogArea.setText(str())
-
-    def parse_fields(self, fields):
-        self.json_view.clean()
-        self.json_view.parse_fields(fields)
-
-    def enable_json_mode_checkboxes(self, enable=True):
-        self.json_view.enable_json_mode_checkboxes(enable=enable)
-
-    # Return transaction data fields in dict-representation
-    def get_fields(self, flat=False) -> TypeFields:
-        return self.json_view.generate_fields(flat=flat)
-
-    def trans_id_exists(self) -> bool:
-        return bool(self.json_view.get_trans_id_item())
-
-    def get_trans_id(self) -> str:
-        return self.json_view.get_trans_id()
-
-    def set_trans_id(self, trans_id: str):
-        self.json_view.set_trans_id(trans_id)
-
-    # Return fields list, no subfields included
-    def get_top_level_field_numbers(self) -> list[str]:
-        return self.json_view.get_top_level_field_numbers()
 
     def get_fields_to_generate(self) -> list[str]:
         return self.json_view.get_checkboxes()
 
     def get_mti(self, length: int = 4) -> str:
-        message_type = self.msgtype.currentText()
+        message_type = self._tab_view.msg_type.currentText()
         message_type = message_type[:length]
         return message_type
 
@@ -436,7 +416,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         return self.LogArea.toPlainText()
 
     def get_bitmap_data(self) -> str:
-        return self.Bitmap.text()
+        return self._tab_view.bit_map.text()
 
     # To avoid errors connection buttons will be disabled during the network connection opening
     def block_connection_buttons(self) -> None:
@@ -449,37 +429,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def change_connection_buttons_state(self, enabled: bool) -> None:
         for button in (self.ButtonReconnect, self.ButtonSend, self.ButtonEchoTest, self.ButtonReverse):
             button.setEnabled(enabled)
-
-    def set_mti_values(self, mti_list: list[str]):
-        self.msgtype.addItems(mti_list)
-
-    def field_has_data(self, field_number: str) -> bool:
-        return self.json_view.field_has_data(field_number)
-
-    # Set value of specific field
-    def set_field_value(self, field, field_data) -> None:
-        self.json_view.set_field_value(field, field_data)
-
-    def set_mti_value(self, mti: str) -> None:
-        index = self.msgtype.findText(mti, flags=Qt.MatchFlag.MatchContains)
-
-        if index == -1:
-            raise ValueError(f"Cannot set Message Type Identifier {mti}. Mti not in specification")
-
-        self.msgtype.setCurrentIndex(index)
-
-    def is_trans_id_generate_mode_on(self) -> bool | None:
-        return self.json_view.is_trans_id_generate_mode_on()
-
-    def set_transaction_fields(self, transaction: Transaction, generate_trans_id: bool = True) -> None:
-        self.json_view.parse_transaction(transaction)
-        self.json_view.set_trans_id_checkbox(checked=generate_trans_id)
-        self.json_view.expandAll()
-        self.json_view.resize_all()
-
-    def clear_message(self) -> None:
-        self.msgtype.setCurrentIndex(-1)
-        self.json_view.clean()
 
     def set_connection_status(self, status: QTcpSocket.SocketState) -> None:
         try:
@@ -534,11 +483,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             button.menu().addSeparator()
 
     def set_bitmap(self, bitmap: str = str()) -> None:
-        self.Bitmap.setText(bitmap)
+        self._tab_view.bit_map.setText(bitmap)
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         # Closing network connections and so on before MainWindow switch off
         self.hide()
         self.window_close.emit()
         a0.accept()
-

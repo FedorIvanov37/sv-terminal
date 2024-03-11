@@ -12,8 +12,8 @@ class TreeView(QTreeWidget):
     field_added: pyqtSignal = pyqtSignal()
     root = None
 
-    def __init__(self):
-        super(TreeView, self).__init__()
+    def __init__(self, parent=None):
+        super(TreeView, self).__init__(parent=parent)
         self.undo_stack = QUndoStack()
         self.setup()
 

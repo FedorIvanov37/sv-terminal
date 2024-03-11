@@ -152,7 +152,6 @@
 + Trans ID can be set in MainWindow
 + Move output_file_format from SaveButton to FileDialog
 + Change to Python 3.12.2
-#
 + Fix double validation
 + Remove: "File parsed: signal/data/default/default_message.json"
 + Check all custom validations
@@ -163,8 +162,18 @@
 + Trans_id can be generated in MainWindow
 + Add reversal trans_id generation with suffix _R
 
+# v0.18
+• Add tabs by QTabWidget
+    • Add / Close buttons style
+    + Fix search in different tabs
+    + Add fill method
+    + Open / close new tab
+    + Hotkeys - new tab+, close tab+, next+, previous+
+    + Go to new tab after opening
+    + Refactoring
+    + Active tab highlighting
 
-
+• Drag and drop files to JsonView
 • Respect JSON-mode when set field value from complex fields constructor
 • Error on console when run AboutWindow - Could not find codec parameters for stream
 • Change name to SIGNAL in Document
@@ -189,4 +198,4 @@
 • Console mode
 • API console mode
 • Undo / Redo
-• Add tabs by QTabWidget
+
