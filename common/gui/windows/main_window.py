@@ -58,7 +58,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _parse_file: pyqtSignal = pyqtSignal()
     _hotkeys: pyqtSignal = pyqtSignal()
     _send: pyqtSignal = pyqtSignal()
-    _reset: pyqtSignal = pyqtSignal()
+    _reset: pyqtSignal = pyqtSignal(bool)
     _keep_alive: pyqtSignal = pyqtSignal(str)
     _repeat: pyqtSignal = pyqtSignal(str)
     _parse_complex_field: pyqtSignal = pyqtSignal()
@@ -250,6 +250,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self._tab_view.field_removed: self.field_removed,
             self._tab_view.disable_next_level_button: self.disable_next_level_button,
             self._tab_view.enable_next_level_button: self.enable_next_level_button,
+            self._tab_view.new_tab_opened: lambda: self.reset.emit(False),
         }
 
         main_window_connection_map = {

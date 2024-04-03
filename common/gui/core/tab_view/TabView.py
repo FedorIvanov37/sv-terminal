@@ -1,4 +1,5 @@
 from re import search
+from logging import error
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QTabWidget, QWidget, QGridLayout
 from PyQt6.QtGui import QFont, QIcon
@@ -8,6 +9,7 @@ from common.gui.core.tab_view.ComboBox import ComboBox
 from common.gui.core.tab_view.LineEdit import LineEdit
 from common.lib.data_models.Transaction import Transaction
 from common.gui.enums.GuiFilesPath import GuiFilesPath
+from common.gui.enums.TabViewParams import TabViewParams
 
 
 class TabView(QTabWidget):
@@ -18,6 +20,11 @@ class TabView(QTabWidget):
     _enable_next_level_button: pyqtSignal = pyqtSignal()
     _trans_id_set: pyqtSignal = pyqtSignal()
     _tab_changed: pyqtSignal = pyqtSignal()
+    _new_tab_opened: pyqtSignal = pyqtSignal()
+
+    @property
+    def new_tab_opened(self):
+        return self._new_tab_opened
 
     @property
     def tab_changed(self):
@@ -49,7 +56,10 @@ class TabView(QTabWidget):
 
     @property
     def json_view(self):
-        return self.tab_widget.findChild(JsonView)
+        if not (json_view := self.tab_widget.findChild(JsonView)):
+            return JsonView(self.config)
+
+        return json_view
 
     @property
     def msg_type(self):
@@ -133,8 +143,7 @@ class TabView(QTabWidget):
         self.json_view.parse_fields(fields)
 
     def set_transaction_fields(self, transaction: Transaction, generate_trans_id: bool = True) -> None:
-        self.json_view.parse_transaction(transaction)
-        self.json_view.set_trans_id_checkbox(checked=generate_trans_id)
+        self.json_view.parse_transaction(transaction, to_generate_trans_id=generate_trans_id)
         self.json_view.expandAll()
         self.json_view.resize_all()
 
@@ -146,6 +155,11 @@ class TabView(QTabWidget):
         self.json_view.setFocus()
 
     def add_tab(self):
+        if self.count() >= TabViewParams.TABS_LIMIT:
+            error(f"Cannot open a new tab, max open tabs limit {TabViewParams.TABS_LIMIT} tabs is reached")
+            error("Close some tab to open a new one")
+            return
+
         widget = QWidget()
         widget.setLayout(QGridLayout())
         widget.layout().addWidget(ComboBox(parent=widget))
@@ -156,6 +170,7 @@ class TabView(QTabWidget):
         self.setTabIcon(self.count() - 1, QIcon(GuiFilesPath.GREEN_CIRCLE))
         self.setCurrentIndex(self.count() - 1)
         self.setTabsClosable(self.count() > 1)
+        self.new_tab_opened.emit()
 
     def get_tab_name(self) -> str:
         tab_number: int = 1

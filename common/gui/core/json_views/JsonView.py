@@ -245,7 +245,7 @@ class JsonView(TreeView):
 
         field_item.field_data = trans_id
 
-    def get_item_by_path(self, field_path: FieldPath, parent: FieldItem | None = None):
+    def get_item_by_path(self, field_path: FieldPath, parent: FieldItem | None = None) -> FieldItem | None:
         if parent is None:
             parent = self.root
 
@@ -266,7 +266,10 @@ class JsonView(TreeView):
         return item
 
     def get_trans_id_item(self) -> FieldItem | None:
-        return self.get_item_by_path(self.spec.get_trans_id_path())
+        trans_id_path: FieldPath = self.spec.get_trans_id_path()
+        trans_id_item: FieldItem = self.get_item_by_path(trans_id_path)
+
+        return trans_id_item
 
     def set_subfields_length(self, item: FieldItem):
         parent: FieldItem
@@ -522,7 +525,7 @@ class JsonView(TreeView):
 
         return True
 
-    def parse_transaction(self, transaction: Transaction) -> None:
+    def parse_transaction(self, transaction: Transaction, to_generate_trans_id=True) -> None:
         for item in self.root.get_children():
             if not item.checkbox_checked(CheckBoxesDefinition.JSON_MODE):
                 continue
@@ -543,6 +546,9 @@ class JsonView(TreeView):
                 continue
 
             self.set_flat_mode(item)
+
+        if trans_id_item := self.get_trans_id_item():
+            trans_id_item.set_checkbox(to_generate_trans_id)
 
         self.set_all_items_length()
 
@@ -600,12 +606,6 @@ class JsonView(TreeView):
             item.set_checkbox()
 
         self.hide_secrets()
-
-    def set_trans_id_checkbox(self, checked=True):
-        if not (trans_id_item := self.get_trans_id_item()):
-            return
-
-        trans_id_item.set_checkbox(checked)
 
     @void_qt_signals
     def set_checkboxes(self, transaction: Transaction):
@@ -668,6 +668,7 @@ class JsonView(TreeView):
 
     def modify_all_fields_data(self):
         self.validator.modify_all_fields_data(self.root)
+        self.setCurrentItem(self.root)
 
     def modify_field_data(self, item):
         self.validator.modify_field_data(item)

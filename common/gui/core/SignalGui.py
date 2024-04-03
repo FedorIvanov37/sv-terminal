@@ -614,13 +614,15 @@ class SignalGui(Terminal):
         raise LookupError
 
     @set_json_view_focus
-    def set_default_values(self) -> None:
+    def set_default_values(self, log=True) -> None:
         try:
             self.parse_file(str(TermFilesPath.DEFAULT_FILE), log=False)
-            info("Default file parsed")
 
         except Exception as parsing_error:
-            error("Default file parsing error! Exception: %s" % parsing_error)
+            error(f"Default file parsing error! Exception: {parsing_error}")
+
+        else:
+            info("Default file parsed") if log else ...
 
     @set_json_view_focus
     def parse_file(self, filename: str | None = None, log=True) -> None:

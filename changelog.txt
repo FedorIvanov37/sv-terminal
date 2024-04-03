@@ -163,8 +163,15 @@
 + Add reversal trans_id generation with suffix _R
 
 # v0.18
+
++ Stop cascade process when try to parse a file with unknown extension and file not found
++ After parsing of default file focus restored in the middle of JSON
+
+
 • Add tabs by QTabWidget
-    • Add / Close buttons style
+    • Button "add tab"
+    • Dynamic tab name
+    + Tabs limit
     + Fix search in different tabs
     + Add fill method
     + Open / close new tab
@@ -172,6 +179,8 @@
     + Go to new tab after opening
     + Refactoring
     + Active tab highlighting
+    + Parse default message when open new tab (no logging)
+
 
 • Drag and drop files to JsonView
 • Respect JSON-mode when set field value from complex fields constructor
@@ -179,6 +188,7 @@
 • Change name to SIGNAL in Document
 • Reflect in the document - Main settings, the specification+, files format+, custom validations
 • Set complex fields full expanding when switch JSON mode
+• Multi-license window bug
 
 • Licensing preparation
     • Change the framework to pyside

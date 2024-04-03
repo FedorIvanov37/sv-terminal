@@ -381,6 +381,10 @@ class Parser:
                     if transaction := function(filename):
                         break
 
+                except FileNotFoundError as file_not_found_error:
+                    error(file_not_found_error)
+                    break
+
                 except Exception as parsing_error:
                     warning(f"Cannot parse file as {extension}: {parsing_error}")
                     continue
@@ -409,6 +413,9 @@ class Parser:
         return data.removeprefix('[').removesuffix(']')
 
     def _parse_ini_file(self, filename) -> Transaction:
+        if not Path(filename).is_file():
+            raise FileNotFoundError(f"No such file or directory: '{filename}'")
+
         ini = ConfigParser()
         ini.read(filename)
         fields: TypeFields = self._parse_ini_fields(ini)
