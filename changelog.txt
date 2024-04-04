@@ -173,6 +173,7 @@
     • Button "add tab"
     • Dynamic tab name
     • Restore "Copy bitmap" button
+    • Search line does not work
     + Tabs limit
     + Fix search in different tabs
     + Add fill method
