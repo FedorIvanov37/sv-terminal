@@ -184,6 +184,7 @@
     + Parse default message when open new tab (no logging)
 
 + Multi-license window bug
+• datetime.utcnow is deprecated
 • license window acceptance bug
 • Drag and drop files to JsonView
 • Respect JSON-mode when set field value from complex fields constructor
