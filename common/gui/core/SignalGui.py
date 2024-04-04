@@ -3,7 +3,7 @@ from logging import error, info, warning
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication, QFileDialog
 from PyQt6.QtNetwork import QTcpSocket
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import pyqtSignal
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
@@ -58,10 +58,7 @@ class SignalGui(Terminal):
     connector: ConnectionThread
     trans_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION)
     set_remote_spec: pyqtSignal = pyqtSignal()
-    startup_finished: pyqtSignal = pyqtSignal()
     _wireless_handler: WirelessHandler
-    _license_demonstrated: bool = False
-    _startup_finished: bool = False
 
     def set_json_view_focus(function: callable):
 
@@ -81,6 +78,7 @@ class SignalGui(Terminal):
         super(SignalGui, self).__init__(config, self.connector)
         self.window: MainWindow = MainWindow(self.config)
         self.setup()
+        self.on_startup()
 
     @set_json_view_focus
     def setup(self) -> None:
@@ -90,13 +88,7 @@ class SignalGui(Terminal):
         self.window.show()
 
     @set_json_view_focus
-    def on_startup(self, app_state) -> None:
-        if not app_state == Qt.ApplicationState.ApplicationActive:
-            return
-
-        if self._startup_finished:
-            return
-
+    def on_startup(self) -> None:
         self.print_data(DataFormats.TERM)
 
         if self.config.terminal.process_default_dump:
@@ -128,7 +120,7 @@ class SignalGui(Terminal):
 
         self.window.json_view.enable_json_mode_checkboxes(enable=self.config.validation.validation_enabled)
 
-        self._startup_finished: bool = True
+        self.show_license_dialog()
 
     def connect_widgets(self):
         window: MainWindow = self.window
@@ -166,35 +158,30 @@ class SignalGui(Terminal):
             self.trans_timer.send_transaction: window.send,
             self.trans_timer.interval_was_set: window.process_transaction_loop_change,
             self.keep_alive_timer.interval_was_set: window.process_transaction_loop_change,
-            self.startup_finished: self.log_printer.startup_finished,
         }
 
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
 
-        for slot in self.show_license_dialog, self.on_startup:
-            self.pyqt_application.applicationStateChanged.connect(slot)
-
-    def show_license_dialog(self, app_state) -> None:
-        if app_state != Qt.ApplicationState.ApplicationActive:
-            return
-
-        if self._license_demonstrated:
-            return
+    def show_license_dialog(self) -> None:
+        license_window: LicenseWindow | None = None
 
         try:
             license_window: LicenseWindow = LicenseWindow()
             license_window.exec()
 
-        except LicenceAlreadyAccepted:
-            self._license_demonstrated: bool = True
-            return
-
         except LicenseDataLoadingError as license_data_loading_error:
             error(license_data_loading_error)
             exit(100)
 
-        self._license_demonstrated: bool = True
+        except LicenceAlreadyAccepted:
+            return
+
+        finally:
+            if license_window is None:
+                return
+
+            license_window.destroy()
 
     @set_json_view_focus
     def run_specification_window(self) -> None:

@@ -15,7 +15,7 @@ from common.lib.enums.TextConstants import TextConstants
 
 class LicenseWindow(Ui_LicenseWindow, QDialog):
     def __init__(self):
-        super(LicenseWindow, self).__init__()
+        super().__init__()
         self.setupUi(self)
         self._setup()
 
@@ -37,7 +37,6 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
             raise LicenseDataLoadingError(f"GNU license info file parsing error: {license_parsing_error}")
 
         if self.license_info.accepted and not self.license_info.show_agreement:
-            self.print_acceptance_info()
             raise LicenceAlreadyAccepted
 
         self.CheckBoxAgreement.setChecked(self.license_info.accepted)
@@ -86,6 +85,6 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
         self.ButtonAccept.setEnabled(accepted)
 
     def print_acceptance_info(self):
-        info(f"Licence agreement accepted {self.license_info.last_acceptance_date}")
+        info(f"License agreement accepted {self.license_info.last_acceptance_date}")
         info(f"License ID {self.license_info.license_id}")
         info("Thank you for using SIGNAL")
