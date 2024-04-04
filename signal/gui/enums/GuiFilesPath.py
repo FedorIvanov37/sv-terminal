@@ -16,6 +16,7 @@ class GuiFiles(StrEnum):
     GREY_CIRCLE = "grey_circle.ico"
     RED_CIRCLE = "red_circle.ico"
     YELLOW_CIRCLE = "yellow_circle.ico"
+    NEW_TAB = "new_tab.ico"
 
 
 class GuiFilesPath(StrEnum):
@@ -28,3 +29,4 @@ class GuiFilesPath(StrEnum):
     GREY_CIRCLE = f"{GuiDirs.STYLE_DIR}/{GuiFiles.GREY_CIRCLE}"
     RED_CIRCLE = f"{GuiDirs.STYLE_DIR}/{GuiFiles.RED_CIRCLE}"
     YELLOW_CIRCLE = f"{GuiDirs.STYLE_DIR}/{GuiFiles.YELLOW_CIRCLE}"
+    NEW_TAB = f"{GuiDirs.STYLE_DIR}/{GuiFiles.NEW_TAB}"

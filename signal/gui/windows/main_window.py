@@ -361,7 +361,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 button.menu().addSeparator()
 
     def add_tab(self):
-        self._tab_view.add_tab()
+        try:
+            self._tab_view.add_tab()
+
+        except IndexError:
+            return
+
         self._tab_view.mark_active_tab()
         self._tab_view.new_tab_opened.emit()
 

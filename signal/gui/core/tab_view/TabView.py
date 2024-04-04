@@ -1,8 +1,8 @@
-from re import search
 from logging import error
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QTabWidget, QWidget, QGridLayout
 from PyQt6.QtGui import QFont, QIcon
+from signal.gui.core.tab_view.TabBar import TabBar
 from signal.lib.data_models.Config import Config
 from signal.gui.decorators.void_qt_signals import void_qt_signals
 from signal.gui.core.json_views.JsonView import JsonView
@@ -76,21 +76,28 @@ class TabView(QTabWidget):
 
     def __init__(self, config: Config):
         super(QTabWidget, self).__init__()
+        self.setTabBar(TabBar())
         self.config = config
         self._setup()
         self.connect_all()
 
     def _setup(self):
-        self.setTabsClosable(True)
+        self.setTabsClosable(False)
         self.setFont(QFont("Calibri", 12))
-        self.add_tab()
+
+        try:
+            self.add_tab()
+        except IndexError:
+            return
+
         self.mark_active_tab()
 
     def connect_all(self):
+        self.tabBar().tabBarDoubleClicked.connect(self.tabBarDoubleClicked)
         self.json_view.trans_id_set.connect(self.trans_id_set)
-        self.tabBarDoubleClicked.connect(self.remove_tab)
         self.tabBarClicked.connect(self.process_tab_click)
         self.currentChanged.connect(self.process_tab_change)
+        self.tabCloseRequested.connect(self.remove_tab)
 
         json_view_connection_map = {
             self.json_view.itemChanged: self.field_changed,
@@ -109,13 +116,20 @@ class TabView(QTabWidget):
             return
 
         self.removeTab(index)
+        self.setTabsClosable(not self.count() < 3)
+        self.mark_active_tab()
 
     def process_tab_click(self, index):
         if index != self.count() - 1:
             self.mark_active_tab()
             return
 
-        self.add_tab()
+        try:
+            self.add_tab()
+
+        except IndexError:
+            return
+
         self.mark_active_tab()
         self.new_tab_opened.emit()
 
@@ -125,13 +139,18 @@ class TabView(QTabWidget):
             return
 
         if self.currentIndex() == self.count() - 1:
-            self.setCurrentIndex(self.count() - 3)
+            self.setCurrentIndex(self.count() - 2)
+            return
 
         self.mark_active_tab()
 
     def mark_active_tab(self):
         grey_icon = QIcon(GuiFilesPath.GREY_CIRCLE)
         green_icon = QIcon(GuiFilesPath.GREEN_CIRCLE)
+
+        if self.count() <= 2:
+            self.setTabIcon(int(), green_icon)
+            return
 
         for tab_index in range(self.count() - 1):
             self.setTabIcon(tab_index, grey_icon)
@@ -184,10 +203,11 @@ class TabView(QTabWidget):
 
     @void_qt_signals
     def add_tab(self):
-        if self.count() >= TabViewParams.TABS_LIMIT:
+        if self.count() > TabViewParams.TABS_LIMIT:
             error(f"Cannot open a new tab, max open tabs limit {TabViewParams.TABS_LIMIT} tabs is reached")
             error("Close some tab to open a new one")
-            return
+
+            raise IndexError
 
         self.close_tab(self.count() - 1)
 
@@ -198,37 +218,26 @@ class TabView(QTabWidget):
         widget.layout().addWidget(JsonView(self.config, parent=widget))
 
         self.addTab(widget, self.get_tab_name())
-        # self.setTabIcon(self.count() - 1, QIcon(GuiFilesPath.GREEN_CIRCLE))
-        self.setCurrentIndex(self.count() - 1)
-        self.setTabsClosable(False)
-        self.addTab(QWidget(), '+')
+        self.addTab(QWidget(), '')
+        self.setTabIcon(self.count() - 1, QIcon(GuiFilesPath.NEW_TAB))
+        self.setTabsClosable(self.count() > 2)
+        self.setCurrentIndex(self.count() - 2)
+
+        try:
+            self.tabBar().tabButton(self.count() - 1, TabBar.ButtonPosition.RightSide).resize(0, 0)
+        except AttributeError:
+            return
 
     def get_tab_name(self) -> str:
-        tab_number: int = 1
-        tab_name: str = "Tab #%s"
+        tab_name_index = self.count() + 1
+        tab_name = f"Tab #{tab_name_index}"
+        tab_names = [self.tabText(index) for index in range(self.count())]
 
-        if self.count() < 1:
-            return tab_name % tab_number
+        while tab_name in tab_names:
+            tab_name_index += 1
+            tab_name = f"Tab #{tab_name_index}"
 
-        for index in range(self.count()):
-            tab_text: str = self.tabText(index)
-
-            try:
-                tab_text: str = search(r"#\d+", tab_text).group(int())
-            except AttributeError:
-                return tab_name % tab_number
-
-            tab_text: str = tab_text.replace("#", "")
-
-            try:
-                tab_text: int = int(tab_text) + 1
-            except ValueError:
-                return tab_name % tab_number
-
-            if tab_text > tab_number:
-                tab_number = tab_text
-
-        return tab_name % tab_number
+        return tab_name
 
     def set_mti_value(self, mti: str) -> None:
         index = self.msg_type.findText(mti, flags=Qt.MatchFlag.MatchContains)

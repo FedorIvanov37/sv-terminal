@@ -2,4 +2,4 @@ from enum import IntEnum
 
 
 class TabViewParams(IntEnum):
-    TABS_LIMIT = 100
+    TABS_LIMIT = 4
