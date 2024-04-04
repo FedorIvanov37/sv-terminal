@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QTabWidget, QWidget, QGridLayout
 from PyQt6.QtGui import QFont, QIcon
 from signal.lib.data_models.Config import Config
+from signal.gui.decorators.void_qt_signals import void_qt_signals
 from signal.gui.core.json_views.JsonView import JsonView
 from signal.gui.core.tab_view.ComboBox import ComboBox
 from signal.gui.core.tab_view.LineEdit import LineEdit
@@ -83,13 +84,13 @@ class TabView(QTabWidget):
         self.setTabsClosable(True)
         self.setFont(QFont("Calibri", 12))
         self.add_tab()
+        self.mark_active_tab()
 
     def connect_all(self):
-        self.tabBarDoubleClicked.connect(self.add_tab)
-        self.tabCloseRequested.connect(self.close_tab)
         self.json_view.trans_id_set.connect(self.trans_id_set)
-        self.currentChanged.connect(self.tab_changed)
-        self.tab_changed.connect(self.process_tab_change)
+        self.tabBarDoubleClicked.connect(self.remove_tab)
+        self.tabBarClicked.connect(self.process_tab_click)
+        self.currentChanged.connect(self.process_tab_change)
 
         json_view_connection_map = {
             self.json_view.itemChanged: self.field_changed,
@@ -103,17 +104,46 @@ class TabView(QTabWidget):
         for signal, slot in json_view_connection_map.items():
             signal.connect(slot)
 
+    def remove_tab(self, index):
+        if self.count() < 3:
+            return
+
+        self.removeTab(index)
+
+    def process_tab_click(self, index):
+        if index != self.count() - 1:
+            self.mark_active_tab()
+            return
+
+        self.add_tab()
+        self.mark_active_tab()
+        self.new_tab_opened.emit()
+
     def process_tab_change(self):
+        if self.count() < 3:
+            self.setCurrentIndex(int())
+            return
+
+        if self.currentIndex() == self.count() - 1:
+            self.setCurrentIndex(self.count() - 3)
+
+        self.mark_active_tab()
+
+    def mark_active_tab(self):
         grey_icon = QIcon(GuiFilesPath.GREY_CIRCLE)
         green_icon = QIcon(GuiFilesPath.GREEN_CIRCLE)
 
-        for tab_index in range(self.count()):
+        for tab_index in range(self.count() - 1):
             self.setTabIcon(tab_index, grey_icon)
 
         self.setTabIcon(self.currentIndex(), green_icon)
 
     def close_current_tab(self):
+        if self.count() < 3:
+            return
+
         self.close_tab(self.currentIndex())
+        self.mark_active_tab()
 
     def prev_tab(self):
         self.setCurrentIndex(self.currentIndex() - 1)
@@ -136,8 +166,6 @@ class TabView(QTabWidget):
 
         self.removeTab(index)
 
-        self.setTabsClosable(self.count() > 1)
-
     def parse_fields(self, fields):
         self.json_view.clean()
         self.json_view.parse_fields(fields)
@@ -154,11 +182,14 @@ class TabView(QTabWidget):
     def set_json_focus(self):
         self.json_view.setFocus()
 
+    @void_qt_signals
     def add_tab(self):
         if self.count() >= TabViewParams.TABS_LIMIT:
             error(f"Cannot open a new tab, max open tabs limit {TabViewParams.TABS_LIMIT} tabs is reached")
             error("Close some tab to open a new one")
             return
+
+        self.close_tab(self.count() - 1)
 
         widget = QWidget()
         widget.setLayout(QGridLayout())
@@ -167,10 +198,10 @@ class TabView(QTabWidget):
         widget.layout().addWidget(JsonView(self.config, parent=widget))
 
         self.addTab(widget, self.get_tab_name())
-        self.setTabIcon(self.count() - 1, QIcon(GuiFilesPath.GREEN_CIRCLE))
+        # self.setTabIcon(self.count() - 1, QIcon(GuiFilesPath.GREEN_CIRCLE))
         self.setCurrentIndex(self.count() - 1)
-        self.setTabsClosable(self.count() > 1)
-        self.new_tab_opened.emit()
+        self.setTabsClosable(False)
+        self.addTab(QWidget(), '+')
 
     def get_tab_name(self) -> str:
         tab_number: int = 1

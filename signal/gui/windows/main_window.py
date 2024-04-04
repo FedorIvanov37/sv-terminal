@@ -280,13 +280,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             # Custom Key Sequences
             # The string argument (modifier) is a hint about a requested data format
             # KeySequences.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
-            KeySequences.CTRL_T: self._tab_view.add_tab,
+            KeySequences.CTRL_W: self._tab_view.close_current_tab,
+            KeySequences.CTRL_T: self.add_tab,
             KeySequences.CTRL_SHIFT_ENTER: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.LAST),
             KeySequences.CTRL_ENTER: self.send,
             KeySequences.CTRL_R: self.reconnect,
             KeySequences.CTRL_L: self.clear_log,
             KeySequences.CTRL_E: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.VALUE),
-            KeySequences.CTRL_W: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.FIELD),
+            # KeySequences.CTRL_W: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.FIELD),
             KeySequences.CTRL_Q: self._tab_view.close_current_tab,
             KeySequences.CTRL_SHIFT_N: self._tab_view.next_level,
             KeySequences.CTRL_ALT_Q: exit,
@@ -358,6 +359,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             for action, function in actions.items():
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
+
+    def add_tab(self):
+        self._tab_view.add_tab()
+        self._tab_view.mark_active_tab()
+        self._tab_view.new_tab_opened.emit()
 
     def search(self, text):
         self.json_view.search(text)

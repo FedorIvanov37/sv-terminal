@@ -179,14 +179,11 @@
 • Reflect in the document - Main settings, the specification+, files format+, custom validations
 • Set complex fields full expanding when switch JSON mode
 
-
-
-
 • Add tabs by QTabWidget
     • Button "add tab"
     • Dynamic tab name
     • Restore "Copy bitmap" button
-
+    • New tab opens when press on the tab icon
     + Search line does not work for tabs
     + Disappearing field value when add new field
     + Tabs limit
