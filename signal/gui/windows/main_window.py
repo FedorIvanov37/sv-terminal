@@ -254,7 +254,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         }
 
         main_window_connection_map = {
-            self.SearchLine.textChanged: self.json_view.search,
+            self.SearchLine.textChanged: self.search,
             self.SearchLine.editingFinished: self._tab_view.set_json_focus,
             self._tab_view.trans_id_set: self.set_reversal_trans_id,
             self._tab_view.tab_changed: self.process_tab_change,
@@ -359,9 +359,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
 
+    def search(self, text):
+        self.json_view.search(text)
+
     def process_tab_change(self):
         self.SearchLine.setText(str())
-        self.json_view.search(text=str())
+        self.json_view.search(str())
         self.json_view.expandAll()
 
     def is_json_mode_on(self, field_path: FieldPath):

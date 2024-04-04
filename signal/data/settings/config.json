@@ -29,7 +29,7 @@
         "build_fld_90": true,
         "send_internal_id": false,
         "json_mode": true,
-        "hide_secrets": true
+        "hide_secrets": false
     },
     "remote_spec": {
         "rewrite_local_spec": false,

@@ -14,6 +14,15 @@ class FieldItem(Item):
     spec: IsoField = None
     _secret: str = ""
     _masked: bool = False
+    _is_new: bool = True
+
+    @property
+    def is_new(self):
+        return self._is_new
+
+    @is_new.setter
+    def is_new(self, is_new):
+        self._is_new = is_new
 
     @property
     def masked(self):
@@ -32,6 +41,7 @@ class FieldItem(Item):
 
     @field_data.setter
     def field_data(self, field_data):
+        self.is_new = False
         self.setText(FieldsSpec.ColumnsOrder.VALUE, field_data)
         self._secret = ""
         self.set_spec()
@@ -163,6 +173,12 @@ class FieldItem(Item):
             tree.setItemWidget(self, column_number, checkbox)
 
         checkbox.stateChanged.connect(lambda: tree.itemChanged.emit(self, FieldsSpec.ColumnsOrder.PROPERTY))
+
+    def remove_checkbox(self):
+        if not (tree := self.treeWidget()):
+            return
+
+        tree.removeItemWidget(self, FieldsSpec.ColumnsOrder.PROPERTY)
 
     def process_change_item(self):
         self.set_spec()

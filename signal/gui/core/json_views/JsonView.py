@@ -326,7 +326,11 @@ class JsonView(TreeView):
                     self.generate_item_data(item)
                     self.modify_field_data(item)
                     self.set_item_description(item)
-                    self.validator.validate_item(item)
+
+                    if not item.is_new:
+                        self.validator.validate_item(item)
+
+                    item.is_new = False
 
                 case FieldsSpec.ColumnsOrder.LENGTH:
                     self.set_subfields_length(item)
@@ -437,6 +441,10 @@ class JsonView(TreeView):
         self.previousInFocusChain()
         parent.set_length(fill_length=self.len_fill)
 
+        if not parent.childCount() and parent.field_number in self.spec.get_fields_to_generate():
+            parent.set_checkbox()
+            self.generate_item_data(parent)
+
         try:
             self.check_duplicates_after_remove(item, parent)
         except (DataValidationError, ValueError) as duplication_error:
@@ -445,6 +453,7 @@ class JsonView(TreeView):
         self.setFocus()
         self.field_removed.emit()
 
+    @void_qt_signals
     def next_level(self, *args):
         current_item: FieldItem | None = self.currentItem()
 
@@ -462,6 +471,10 @@ class JsonView(TreeView):
         if current_item is None:
             return
 
+        if current_item.checkbox_checked(CheckBoxesDefinition.GENERATE):
+            current_item.remove_checkbox()
+
+        current_item.hide_secret(False)
         current_item.setText(FieldsSpec.ColumnsOrder.VALUE, str())
         current_item.insertChild(int(), item)
         self.set_new_item(item)

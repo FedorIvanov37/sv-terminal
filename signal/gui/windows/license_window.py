@@ -2,7 +2,7 @@ from sys import exit
 from json.decoder import JSONDecodeError
 from logging import warning, info
 from pydantic import ValidationError
-from datetime import datetime
+from datetime import datetime, UTC
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog
 from signal.gui.forms.license_window import Ui_LicenseWindow
@@ -51,7 +51,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
         if not self.license_info.accepted:
             return
 
-        self.license_info.last_acceptance_date = datetime.utcnow()
+        self.license_info.last_acceptance_date = datetime.now(UTC)
         self.license_info.show_agreement = not bool(self.CheckBoxDontShowAgain.checkState().value)
 
         license_data: LicenseInfo = self.license_info.model_copy(deep=True)
