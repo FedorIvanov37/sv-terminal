@@ -111,6 +111,12 @@ class TabView(QTabWidget):
         for signal, slot in json_view_connection_map.items():
             signal.connect(slot)
 
+    def set_tab_name(self, tab_name, index=None):
+        if index is None:
+            index = self.currentIndex()
+
+        self.setTabText(index, tab_name)
+
     def remove_tab(self, index):
         if self.count() < 3:
             return
@@ -126,11 +132,10 @@ class TabView(QTabWidget):
 
         try:
             self.add_tab()
-
         except IndexError:
             return
 
-        self.mark_active_tab()
+        # self.mark_active_tab()
         self.new_tab_opened.emit()
 
     def process_tab_change(self):
@@ -202,7 +207,7 @@ class TabView(QTabWidget):
         self.json_view.setFocus()
 
     @void_qt_signals
-    def add_tab(self):
+    def add_tab(self, parse_default_file=True):
         if self.count() > TabViewParams.TABS_LIMIT:
             error(f"Cannot open a new tab, max open tabs limit {TabViewParams.TABS_LIMIT} tabs is reached")
             error("Close some tab to open a new one")
@@ -218,7 +223,14 @@ class TabView(QTabWidget):
         widget.layout().addWidget(JsonView(self.config, parent=widget))
 
         self.addTab(widget, self.get_tab_name())
-        self.addTab(QWidget(), '')
+
+        if not parse_default_file:
+            return
+
+        self.add_plus_tab()
+
+    def add_plus_tab(self):
+        self.addTab(QWidget(), '')  # Add the technical "plus" tab
         self.setTabIcon(self.count() - 1, QIcon(GuiFilesPath.NEW_TAB))
         self.setTabsClosable(self.count() > 2)
         self.setCurrentIndex(self.count() - 2)
@@ -227,6 +239,8 @@ class TabView(QTabWidget):
             self.tabBar().tabButton(self.count() - 1, TabBar.ButtonPosition.RightSide).resize(0, 0)
         except AttributeError:
             return
+
+        self.mark_active_tab()
 
     def get_tab_name(self) -> str:
         tab_name_index = self.count() + 1

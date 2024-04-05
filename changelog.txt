@@ -170,7 +170,7 @@
 + Reduce validation
 + datetime.utcnow is deprecated
 
-
+• Tick - ignore spec violations
 • Add fields trim property to spec
 • license window acceptance bug
 • Drag and drop files to JsonView
@@ -181,10 +181,9 @@
 • Set complex fields full expanding when switch JSON mode
 
 • Add tabs by QTabWidget
-    • Multi file parsing
-    • Settings - open file in new tab, can the tabs be closed and so on
     • Restore "Copy bitmap" button
-    • Las tab bug - cannot process tab limits correctly
+    • Last tab bug - cannot process tab limits correctly
+    + Multi file parsing
     + New tab opens when press on the tab icon
     + Key seq
     + Dynamic tab name

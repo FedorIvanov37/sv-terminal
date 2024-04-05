@@ -360,15 +360,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
 
-    def add_tab(self):
-        try:
-            self._tab_view.add_tab()
+    def set_tab_name(self, tab_name):
+        self._tab_view.set_tab_name(tab_name)
 
+    def add_tab(self, parse_default_file=True):
+        try:
+            self._tab_view.add_tab(parse_default_file=parse_default_file)
+            self._tab_view.add_plus_tab()
         except IndexError:
             return
-
-        self._tab_view.mark_active_tab()
-        self._tab_view.new_tab_opened.emit()
 
     def search(self, text):
         self.json_view.search(text)

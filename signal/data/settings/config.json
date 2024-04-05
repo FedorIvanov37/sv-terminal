@@ -19,7 +19,7 @@
         "backup_storage_depth": 30
     },
     "validation": {
-        "validation_enabled": true,
+        "validation_enabled": false,
         "validate_incoming": true,
         "validation_mode": "WARNING"
     },

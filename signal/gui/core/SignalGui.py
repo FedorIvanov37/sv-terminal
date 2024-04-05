@@ -1,3 +1,4 @@
+from os.path import basename
 from typing import Callable
 from logging import error, info, warning
 from pydantic import ValidationError
@@ -492,7 +493,28 @@ class SignalGui(Terminal):
         return file_name, output_file_format
 
     @staticmethod
-    def get_input_filename() -> str | None:
+    def get_input_filename(multiple_files=False) -> list[str] | str | None:
+        file_name_filters = [f"{data_format} (*.{data_format.lower()})" for data_format in InputFilesFormat]
+        file_name_filters.append("Any (*.*)")
+        file_name_filter = ";;".join(file_name_filters)
+
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
+        file_function = file_dialog.getOpenFileNames
+
+        if not multiple_files:
+            file_dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+            file_function = file_dialog.getOpenFileName
+
+        file_data = file_function(filter=file_name_filter, initialFilter=InputFilesFormat.JSON)
+
+        if not (file_name := file_data[int()]):
+            return
+
+        return file_name
+
+    @staticmethod
+    def _get_input_filename() -> str | None:
         file_name_filters = [f"{data_format} (*.{data_format.lower()})" for data_format in InputFilesFormat]
         file_name_filters.append("Any (*.*)")
         file_name_filter = ";;".join(file_name_filters)
@@ -583,8 +605,8 @@ class SignalGui(Terminal):
     def copy_log(self) -> None:
         self.set_clipboard_text(self.window.get_log_data())
 
-    # def copy_bitmap(self) -> None:
-    #     self.set_clipboard_text(self.window.get_bitmap_data())
+    def copy_bitmap(self) -> None:
+        self.set_clipboard_text(self.window.get_bitmap_data())
 
     @staticmethod
     def set_clipboard_text(data: str = str()) -> None:
@@ -611,9 +633,23 @@ class SignalGui(Terminal):
         else:
             info("Default file parsed") if log else ...
 
-    @set_json_view_focus
     def parse_file(self, filename: str | None = None, log=True) -> None:
-        if not filename and not (filename := self.get_input_filename()):
+        if filename:
+            self._parse_file(filename, log=log)
+            return
+
+        if not (filenames := self.get_input_filename(multiple_files=True)):
+            warning("No input filename recognized")
+            return
+
+        for filename in filenames:
+            self.window.add_tab(parse_default_file=False)
+            self.window.set_tab_name(basename(filename))
+            self._parse_file(filename)
+
+    @set_json_view_focus
+    def _parse_file(self, filename: str | None = None, log=True) -> None:
+        if not filename and not (filename := self.get_input_filename(multiple_files=True)):
             warning("No input filename recognized")
             return
 
