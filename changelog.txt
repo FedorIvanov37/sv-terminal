@@ -182,9 +182,9 @@
 
 • Add tabs by QTabWidget
     • Multi file parsing
-    • Parse file in new window
     • Settings - open file in new tab, can the tabs be closed and so on
     • Restore "Copy bitmap" button
+    • Las tab bug - cannot process tab limits correctly
     + New tab opens when press on the tab icon
     + Key seq
     + Dynamic tab name

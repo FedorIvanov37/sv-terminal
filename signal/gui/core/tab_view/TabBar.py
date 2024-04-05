@@ -7,7 +7,7 @@ class TabBar(QTabBar):
         self.setMovable(True)
 
     def mouseDoubleClickEvent(self, event):
-        tab_index = self.tabAt(event.position())
+        tab_index = self.tabAt(event.pos())
         self.tabBarDoubleClicked.emit(tab_index)
         self.start_rename(tab_index)
 
