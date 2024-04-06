@@ -155,11 +155,23 @@ class Parser:
             if child_item.spec:
                 length = length.zfill(child_item.spec.var_length)
 
-            if not child_item.spec:
-                if self.config.specification.manual_input_mode:
-                    length = length.zfill(len(child_item.field_length))
-                else:
-                    length = length.zfill(parent.spec.tag_length)
+            try:
+                if not child_item.spec:
+                    if self.config.specification.manual_input_mode:
+                        length = length.zfill(len(child_item.field_length))
+                    else:
+                        length = length.zfill(parent.spec.tag_length)
+
+            except AttributeError:
+
+                for err in (f"Field: {child_item.get_field_path(string=True)}: "
+                            "Unable to parse nested structure without the Specification",
+                            "To work with such message add the field to the Specification or set the Manual entry mode "
+                            "in the Configuration window"):
+
+                    error(err)
+
+                raise ValueError
 
             result = f"{result}{child_item.field_number}{length}{child_item.field_data}"
 

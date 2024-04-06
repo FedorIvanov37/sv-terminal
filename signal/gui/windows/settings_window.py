@@ -40,7 +40,9 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.LoadSpec2.stateChanged.connect(lambda: self.LoadSpec.setChecked(self.LoadSpec2.isChecked()))
         self.LoadSpec.stateChanged.connect(lambda: self.LoadSpec2.setChecked(self.LoadSpec.isChecked()))
         self.ValidationEnabled.stateChanged.connect(self.process_validation_change)
+        self.ManualInputMode.stateChanged.connect(self.process_manual_entry_mode_change)
         self.process_validation_change()
+        self.process_manual_entry_mode_change()
         self.process_config(self.config)
 
     @staticmethod
@@ -91,6 +93,12 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
             self.MaxAmount.insertItem(index, max_amount)
 
         self.MaxAmount.setCurrentIndex(index)
+
+    def process_manual_entry_mode_change(self):
+        if not self.ManualInputMode.isChecked():
+            return
+
+        self.ValidationEnabled.setChecked(False)
 
     def process_validation_change(self):
         validation_elements = (

@@ -164,14 +164,14 @@ class JsonView(TreeView):
 
         self.setCurrentItem(item)
 
-    def editItem(self, item, column):
+    def editItem(self, item: FieldItem, column: int):
         if item is self.root:
             return
 
         if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.LENGTH):
             return
 
-        if column == FieldsSpec.ColumnsOrder.LENGTH and self.config.validation.validate_window:
+        if column == FieldsSpec.ColumnsOrder.LENGTH and not self.config.specification.manual_input_mode:
             return
 
         if column == FieldsSpec.ColumnsOrder.VALUE:
@@ -328,9 +328,11 @@ class JsonView(TreeView):
                     self.set_item_description(item)
 
                     if not item.is_new:
-                        self.validator.validate_item(item)
+                        self.validate_item(item)
 
                     item.is_new = False
+
+                    self.resizeColumnToContents(FieldsSpec.ColumnsOrder.FIELD)
 
                 case FieldsSpec.ColumnsOrder.LENGTH:
                     self.set_subfields_length(item)
