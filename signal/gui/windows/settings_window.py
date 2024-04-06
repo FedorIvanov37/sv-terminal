@@ -40,8 +40,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.LoadSpec2.stateChanged.connect(lambda: self.LoadSpec.setChecked(self.LoadSpec2.isChecked()))
         self.LoadSpec.stateChanged.connect(lambda: self.LoadSpec2.setChecked(self.LoadSpec.isChecked()))
         self.ValidationEnabled.stateChanged.connect(self.process_validation_change)
-        self.process_config(self.config)
         self.process_validation_change()
+        self.process_config(self.config)
 
     @staticmethod
     def about() -> None:
@@ -58,7 +58,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.ParseSubfields.setChecked(config.debug.parse_subfields)
         self.BuildFld90.setChecked(config.fields.build_fld_90)
         self.SendInternalId.setChecked(config.fields.send_internal_id)
-        self.ValidationEnabled.setChecked(config.validation.validation_enabled)
+        self.ValidateWindow.setChecked(config.validation.validate_window)
         self.JsonMode.setChecked(config.fields.json_mode)
         self.KeepAliveMode.setChecked(config.host.keep_alive_mode)
         self.KeepAliveInterval.setValue(int(config.host.keep_alive_interval))
@@ -68,15 +68,18 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.HideSecrets.setChecked(config.fields.hide_secrets)
         self.KeepAliveInterval.setEnabled(self.KeepAliveMode.isChecked())
         self.MaxAmount.setEnabled(self.MaxAmountBox.isChecked())
-        self.RemoteSpecUrl.setText(config.remote_spec.remote_spec_url)
+        self.RemoteSpecUrl.setText(config.specification.remote_spec_url)
         self.RemoteSpecUrl.setCursorPosition(int())
-        self.RewriteLocalSpec.setChecked(config.remote_spec.rewrite_local_spec)
-        self.StorageDepth.setValue(config.remote_spec.backup_storage_depth)
+        self.RewriteLocalSpec.setChecked(config.specification.rewrite_local_spec)
+        self.StorageDepth.setValue(config.specification.backup_storage_depth)
         self.LoadSpec.setChecked(config.terminal.load_remote_spec)
         self.LoadSpec2.setChecked(config.terminal.load_remote_spec)
         self.ValidateIncoming.setChecked(config.validation.validate_incoming)
+        self.ValidateOutgoing.setChecked(config.validation.validate_outgoing)
         self.ValidationReaction.setCurrentIndex(self.ValidationReaction.findText(config.validation.validation_mode))
-        self.LogStorageDepth.setValue(self.config.debug.backup_storage_depth)
+        self.LogStorageDepth.setValue(config.debug.backup_storage_depth)
+        self.ManualInputMode.setChecked(config.specification.manual_input_mode)
+        self.ValidationEnabled.setChecked(config.validation.validation_enabled)
 
         if not config.fields.max_amount_limited:
             return
@@ -89,6 +92,18 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
         self.MaxAmount.setCurrentIndex(index)
 
+    def process_validation_change(self):
+        validation_elements = (
+            self.ValidateWindow,
+            self.ValidateIncoming,
+            self.ValidateOutgoing,
+            self.ValidationModeLabel,
+            self.ValidationReaction,
+        )
+
+        for element in validation_elements:
+            element.setEnabled(self.ValidationEnabled.isChecked())
+
     def set_default_settings(self) -> None:
         try:
             with open(TermFilesPath.DEFAULT_CONFIG) as json_file:
@@ -100,8 +115,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
         default_config.host.host = self.config.host.host
         default_config.host.port = self.config.host.port
-        default_config.remote_spec.remote_spec_url = self.config.remote_spec.remote_spec_url
-        default_config.remote_spec.rewrite_local_spec = self.config.remote_spec.rewrite_local_spec
+        default_config.specification.remote_spec_url = self.config.specification.remote_spec_url
+        default_config.specification.rewrite_local_spec = self.config.specification.rewrite_local_spec
 
         self.process_config(default_config)
 
@@ -125,10 +140,6 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         for checkbox in self.ClearLog, self.HideSecrets:
             checkbox.setChecked(checked)
             checkbox.setDisabled(disabled)
-
-    def process_validation_change(self):
-        for element in self.ValidateIncoming, self.ValidationModeLabel, self.ValidationReaction:
-            element.setEnabled(self.ValidationEnabled.isChecked())
 
     def ok(self) -> None:
         getLogger().setLevel(getLevelName(self.DebugLevel.currentText()))
@@ -154,13 +165,15 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         config.fields.send_internal_id = self.SendInternalId.isChecked()
         config.fields.json_mode = self.JsonMode.isChecked()
         config.fields.hide_secrets = self.HideSecrets.isChecked()
-        config.remote_spec.rewrite_local_spec = self.RewriteLocalSpec.isChecked()
-        config.remote_spec.backup_storage_depth = self.StorageDepth.value()
-        config.validation.validation_enabled = self.ValidationEnabled.isChecked()
-        config.validation.validation_enabled = self.ValidationEnabled.isChecked()
+        config.specification.rewrite_local_spec = self.RewriteLocalSpec.isChecked()
+        config.specification.backup_storage_depth = self.StorageDepth.value()
+        config.validation.validate_window = self.ValidateWindow.isChecked()
         config.validation.validate_incoming = self.ValidateIncoming.isChecked()
+        config.validation.validate_outgoing = self.ValidateOutgoing.isChecked()
         config.validation.validation_mode = self.ValidationReaction.currentText()
-        config.remote_spec.remote_spec_url = self.RemoteSpecUrl.text()
+        config.specification.remote_spec_url = self.RemoteSpecUrl.text()
+        config.specification.manual_input_mode = self.ManualInputMode.isChecked()
+        config.validation.validation_enabled = self.ValidationEnabled.isChecked()
 
         if not config.fields.max_amount_limited:
             config.fields.max_amount = 9_999_999_999

@@ -75,9 +75,6 @@ class ItemsValidator:
             self.modify_field_data(child_item)
 
     def modify_field_data(self, item: FieldItem) -> None:
-        if not self.config.validation.validation_enabled:
-            return
-
         if not (validations := self.spec.get_field_validations(item.get_field_path())):
             return
 

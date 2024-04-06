@@ -145,10 +145,10 @@ class Validator:
                 errors.add(f"Field numbers can be digits only. {path} is wrong value")
 
             if length > field_spec.max_length:  # Max length validation
-                errors.add(f"Field {path} - over MaxLength. Max length: {field_spec.max_length} got: {length}")
+                errors.add(f"Field {path} - Over MaxLength. Max length: {field_spec.max_length}, got: {length}")
 
             if length < field_spec.min_length:  # Min length validation
-                errors.add(f"Field {path} - less MinLength. Min length: {field_spec.min_length} got: {length}")
+                errors.add(f"Field {path} - Less MinLength. Min length: {field_spec.min_length}, got: {length}")
 
             return errors
 
@@ -380,9 +380,6 @@ class Validator:
         return validation_result
 
     def process_validation_result(self, validation_result: ValidationResult):
-        if not self.config.validation.validation_enabled:
-            return
-
         errors: set[str] = set()
 
         for error_set in validation_result.errors.values():

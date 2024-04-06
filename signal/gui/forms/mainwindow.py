@@ -326,7 +326,7 @@ class Ui_MainWindow(object):
         self.ButtonValidate.setText(_translate("MainWindow", "Validate"))
         self.ButtonClearLog.setText(_translate("MainWindow", "Clear log"))
         self.ButtonCopyLog.setText(_translate("MainWindow", "Copy log"))
-        self.ButtonParseDump.setText(_translate("MainWindow", "Parse file"))
+        self.ButtonParseDump.setText(_translate("MainWindow", "Parse file(s)"))
         self.ButtonSave.setText(_translate("MainWindow", "Save to file"))
         self.ButtonClearMessage.setText(_translate("MainWindow", "Clear message"))
         self.ButtonDefault.setText(_translate("MainWindow", "Reset message"))

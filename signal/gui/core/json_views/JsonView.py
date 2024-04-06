@@ -41,7 +41,7 @@ class JsonView(TreeView):
 
     @property
     def len_fill(self):
-        return 3 if self.config.validation.validation_enabled else None
+        return 3 if not self.config.specification.manual_input_mode else None
 
     @property
     def hide_secret_fields(self):
@@ -92,7 +92,7 @@ class JsonView(TreeView):
         if column not in (FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.LENGTH):
             return
 
-        if column == FieldsSpec.ColumnsOrder.LENGTH and not self.config.validation.validation_enabled:
+        if column == FieldsSpec.ColumnsOrder.LENGTH and not self.config.specification.manual_input_mode:
             return
 
         item.set_length(len(text), fill_length=self.len_fill)
@@ -120,7 +120,7 @@ class JsonView(TreeView):
 
         for child_item in parent.get_children():
             if child_item.childCount():
-                self.refresh_fields(child_item, color=color)
+                self.refresh_fields(parent=child_item, color=color)
                 continue
 
             self.set_item_description(child_item)
@@ -171,7 +171,7 @@ class JsonView(TreeView):
         if column not in (FieldsSpec.ColumnsOrder.FIELD, FieldsSpec.ColumnsOrder.VALUE, FieldsSpec.ColumnsOrder.LENGTH):
             return
 
-        if column == FieldsSpec.ColumnsOrder.LENGTH and self.config.validation.validation_enabled:
+        if column == FieldsSpec.ColumnsOrder.LENGTH and self.config.validation.validate_window:
             return
 
         if column == FieldsSpec.ColumnsOrder.VALUE:
@@ -314,7 +314,7 @@ class JsonView(TreeView):
                 case FieldsSpec.ColumnsOrder.VALUE:
                     self.generate_item_data(item)
                     self.modify_field_data(item)
-                    self.validator.validate_item(item)
+                    self.validate_item(item)
                     item.set_item_color()
 
                 case FieldsSpec.ColumnsOrder.PROPERTY:
@@ -344,6 +344,17 @@ class JsonView(TreeView):
         finally:
             self.set_validation_status(*validation_args)
 
+    def validate_item(self, item: FieldItem, force=False):
+        validation_conditions = (
+            force,
+            self.config.validation.validation_enabled and self.config.validation.validate_window,
+        )
+
+        if not any(validation_conditions):
+            return
+
+        self.validator.validate_item(item)
+
     @void_qt_signals
     def set_item_description(self, item: FieldItem):
         try:
@@ -354,7 +365,7 @@ class JsonView(TreeView):
         if not self.spec.get_field_spec(item.get_field_path()):
             warn_text = f"⚠ ️No specification for field {item.get_field_path(string=True)}"
 
-            if not self.config.validation.validation_enabled:
+            if self.config.specification.manual_input_mode:
                 warn_text = f"{warn_text}. set field length manually"
 
             item.set_description(warn_text)
@@ -387,19 +398,22 @@ class JsonView(TreeView):
         self.setFocus()
 
     @void_qt_signals
-    def check_all_items(self, parent: FieldItem = None):  # Validate and paint item without raising ValueError
+    def check_all_items(self, parent: FieldItem = None, force=False):  # Validate and paint item, don't raise ValueError
+        if not (self.config.validation.validation_enabled or force):
+            return
+
         if parent is None:
             parent = self.root
 
         for child_item in parent.get_children():
             if child_item.childCount():
-                self.check_all_items(child_item)
+                self.check_all_items(child_item, force=force)
                 continue
 
             validation_status_args = (child_item,)
 
             try:
-                self.validator.validate_item(child_item)
+                self.validate_item(child_item, force=force)
 
             except DataValidationError as validation_error:
                 validation_status_args = (child_item, validation_error, error,)
@@ -598,9 +612,7 @@ class JsonView(TreeView):
 
         item.field_data = ""
 
-        if self.config.validation.validation_enabled:
-            self.check_all_items(item)
-
+        self.check_all_items(item)
         self.hide_secrets(parent=item)
 
     def set_flat_mode(self, item):
@@ -684,6 +696,9 @@ class JsonView(TreeView):
         self.setCurrentItem(self.root)
 
     def modify_field_data(self, item):
+        if not self.config.validation.validate_window:
+            return
+
         self.validator.modify_field_data(item)
 
     def get_top_level_field_numbers(self) -> list[str]:
@@ -728,7 +743,7 @@ class JsonView(TreeView):
                 warning("Cannot sort top-level data fields, usually it happens due to non-digit field number")
                 fields = result
 
-            if not self.config.validation.validation_enabled:
+            if not self.config.validation.validate_window:
                 return fields
 
         return result

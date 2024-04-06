@@ -4,10 +4,14 @@ from PyQt6.QtWidgets import QTabBar, QLineEdit
 class TabBar(QTabBar):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setMovable(True)
+        self.setMovable(False)
 
     def mouseDoubleClickEvent(self, event):
         tab_index = self.tabAt(event.pos())
+
+        if tab_index == int():
+            return
+
         self.tabBarDoubleClicked.emit(tab_index)
         self.start_rename(tab_index)
 

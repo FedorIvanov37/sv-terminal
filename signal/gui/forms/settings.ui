@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>580</width>
-    <height>470</height>
+    <height>501</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>580</width>
-    <height>470</height>
+    <height>501</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>580</width>
-    <height>470</height>
+    <height>501</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -233,39 +233,7 @@
       <string>Specification</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="LoadSpec2">
-        <property name="text">
-         <string>Load remote specification on startup</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout_8">
-        <item>
-         <widget class="QLabel" name="UrlLabel">
-          <property name="text">
-           <string>URL</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="RemoteSpecUrl">
-          <property name="placeholderText">
-           <string>http://spec.example.url:7002/get_spec</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="0">
-       <widget class="QCheckBox" name="RewriteLocalSpec">
-        <property name="text">
-         <string>Overwrite local spec by remote one</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
          <widget class="QLabel" name="BackupStorageLabel">
@@ -296,7 +264,7 @@
         </item>
        </layout>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <spacer name="verticalSpacer_4">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -308,6 +276,38 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item row="0" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
+        <item>
+         <widget class="QLabel" name="UrlLabel">
+          <property name="text">
+           <string>URL</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="RemoteSpecUrl">
+          <property name="placeholderText">
+           <string>http://spec.example.url:7002/get_spec</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="RewriteLocalSpec">
+        <property name="text">
+         <string>Overwrite local spec by remote one</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="LoadSpec2">
+        <property name="text">
+         <string>Load remote specification on startup</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -425,6 +425,40 @@
       <string>Log</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_6">
+      <item row="0" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Debug level</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QComboBox" name="DebugLevel"/>
+        </item>
+       </layout>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="ClearLog">
+        <property name="text">
+         <string>Clear log before sent message</string>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout_10">
         <item>
@@ -463,40 +497,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <item>
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Debug level</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QComboBox" name="DebugLevel"/>
-        </item>
-       </layout>
-      </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="ClearLog">
-        <property name="text">
-         <string>Clear log before sent message</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -506,21 +506,21 @@
       <string>Validation</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="ValidateIncoming">
-        <property name="text">
-         <string>Validate incoming messages</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QCheckBox" name="ValidationEnabled">
         <property name="text">
-         <string>Fields validation enabled</string>
+         <string>Data validation enabled </string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
+       <widget class="QCheckBox" name="ValidateOutgoing">
+        <property name="text">
+         <string>Outgoing messages validation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout_9">
         <item>
          <widget class="QLabel" name="ValidationModeLabel">
@@ -563,18 +563,19 @@
         </item>
        </layout>
       </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="ValidateWindow">
+        <property name="text">
+         <string>Window fields validation</string>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="0">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
+       <widget class="QCheckBox" name="ValidateIncoming">
+        <property name="text">
+         <string>Incoming messages validation</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -588,6 +589,13 @@
       <string>Fields</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_5">
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="SendInternalId">
+        <property name="text">
+         <string>Send internal transaction ID to Host</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
@@ -647,13 +655,6 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="SendInternalId">
-        <property name="text">
-         <string>Send internal transaction ID to Host</string>
-        </property>
-       </widget>
-      </item>
       <item row="4" column="0">
        <widget class="QCheckBox" name="HideSecrets">
         <property name="text">
@@ -675,7 +676,7 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <spacer name="verticalSpacer_5">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -687,6 +688,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="ManualInputMode">
+        <property name="text">
+         <string>Fields data manual entry mode</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

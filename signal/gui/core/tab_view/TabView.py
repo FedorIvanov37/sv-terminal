@@ -86,7 +86,7 @@ class TabView(QTabWidget):
         self.setFont(QFont("Calibri", 12))
 
         try:
-            self.add_tab()
+            self.add_tab(tab_name="Main")
         except IndexError:
             return
 
@@ -135,8 +135,11 @@ class TabView(QTabWidget):
         except IndexError:
             return
 
-        # self.mark_active_tab()
+        self.set_tab_non_closeable()
         self.new_tab_opened.emit()
+
+    def set_tab_non_closeable(self, index=0):
+        self.tabBar().tabButton(index, TabBar.ButtonPosition.RightSide).resize(int(), int())
 
     def process_tab_change(self):
         if self.count() < 3:
@@ -207,7 +210,7 @@ class TabView(QTabWidget):
         self.json_view.setFocus()
 
     @void_qt_signals
-    def add_tab(self, parse_default_file=True):
+    def add_tab(self, tab_name=None, parse_default_file=True):
         if self.count() > TabViewParams.TABS_LIMIT:
             error(f"Cannot open a new tab, max open tabs limit {TabViewParams.TABS_LIMIT} tabs is reached")
             error("Close some tab to open a new one")
@@ -222,7 +225,7 @@ class TabView(QTabWidget):
         widget.layout().addWidget(LineEdit(parent=widget))
         widget.layout().addWidget(JsonView(self.config, parent=widget))
 
-        self.addTab(widget, self.get_tab_name())
+        self.addTab(widget, tab_name if tab_name else self.get_tab_name())
 
         if not parse_default_file:
             return
@@ -236,14 +239,14 @@ class TabView(QTabWidget):
         self.setCurrentIndex(self.count() - 2)
 
         try:
-            self.tabBar().tabButton(self.count() - 1, TabBar.ButtonPosition.RightSide).resize(0, 0)
+            self.tabBar().tabButton(self.count() - 1, TabBar.ButtonPosition.RightSide).resize(int(), int())
         except AttributeError:
             return
 
         self.mark_active_tab()
 
     def get_tab_name(self) -> str:
-        tab_name_index = self.count() + 1
+        tab_name_index = self.count()
         tab_name = f"Tab #{tab_name_index}"
         tab_names = [self.tabText(index) for index in range(self.count())]
 

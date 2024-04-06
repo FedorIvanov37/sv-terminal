@@ -156,10 +156,10 @@ class Parser:
                 length = length.zfill(child_item.spec.var_length)
 
             if not child_item.spec:
-                if self.config.validation.validation_enabled:
-                    length = length.zfill(parent.spec.tag_length)
-                else:
+                if self.config.specification.manual_input_mode:
                     length = length.zfill(len(child_item.field_length))
+                else:
+                    length = length.zfill(parent.spec.tag_length)
 
             result = f"{result}{child_item.field_number}{length}{child_item.field_data}"
 

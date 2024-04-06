@@ -117,12 +117,12 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
 
     def set_remote_spec(self, commit=None):
         if commit is None:
-            commit = self.config.remote_spec.rewrite_local_spec
+            commit = self.config.specification.rewrite_local_spec
 
         validator = DataValidator(self.config)
 
         try:
-            validator.validate_url(self.config.remote_spec.remote_spec_url)
+            validator.validate_url(self.config.specification.remote_spec_url)
 
         except DataValidationWarning as url_validation_warning:
             warning(url_validation_warning)
@@ -131,13 +131,13 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
             error(f"Cannot load remote specification due to incorrect URL: {url_validation_error}")
             return
 
-        info(f"Getting remote spec using url {self.config.remote_spec.remote_spec_url}")
+        info(f"Getting remote spec using url {self.config.specification.remote_spec_url}")
 
         use_local_spec_text = "Local specification will be used instead"
 
         try:
             try:
-                resp: HTTPResponse | str = urlopen(self.config.remote_spec.remote_spec_url)
+                resp: HTTPResponse | str = urlopen(self.config.specification.remote_spec_url)
             except Exception as spec_loading_error:
                 error(f"Cannot get remote specification: {spec_loading_error}")
                 warning(use_local_spec_text)
@@ -150,7 +150,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
 
             spec: EpaySpecification = EpaySpecification()
 
-            if commit and self.config.remote_spec.backup_storage:
+            if commit and self.config.specification.backup_storage:
                 rotator: SpecFilesRotator = SpecFilesRotator()
                 backup_filename: str = rotator.backup_spec()
                 debug(f"Backup local specification file name: {TermDirs.SPEC_BACKUP_DIR}/{backup_filename}")

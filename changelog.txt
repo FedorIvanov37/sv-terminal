@@ -169,10 +169,14 @@
 + Multi-license window bug
 + Reduce validation
 + datetime.utcnow is deprecated
++ Tick - ignore spec violations (Fields data manual entry mode)
++ Allow force-validation mode
++ license window acceptance bug
++ Disappearing field value when add new field
 
-• Tick - ignore spec violations
+
+• Expand column after field editing finished
 • Add fields trim property to spec
-• license window acceptance bug
 • Drag and drop files to JsonView
 • Respect JSON-mode when set field value from complex fields constructor
 • Error on console when run AboutWindow - Could not find codec parameters for stream
@@ -180,27 +184,27 @@
 • Reflect in the document - Main settings, the specification+, files format+, custom validations
 • Set complex fields full expanding when switch JSON mode
 
+
 • Add tabs by QTabWidget
     • Restore "Copy bitmap" button
-    • Last tab bug - cannot process tab limits correctly
+    + Hotkeys - new tab+, close tab+, next+, previous+
+    + Static tab "Main"
     + Multi file parsing
     + New tab opens when press on the tab icon
-    + Key seq
     + Dynamic tab name
     + Button "add tab"
     + Search line does not work for tabs
-    + Disappearing field value when add new field
     + Tabs limit
     + Fix search in different tabs
     + Add fill method
     + Open / close new tab
-    + Hotkeys - new tab+, close tab+, next+, previous+
     + Go to new tab after opening
-    + Refactoring
     + Active tab highlighting
     + Parse default message when open new tab (no logging)
 
-
+• Bugs
+    • CTRL+T with tab adding works incorrectly
+    • Last tab bug - cannot process tab limits correctly
 
 • Licensing preparation
     • Change the framework to pyside

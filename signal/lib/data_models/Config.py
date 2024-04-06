@@ -23,9 +23,12 @@ class Debug(BaseModel):
     parse_subfields: bool = False
     backup_storage_depth: int = 30
 
+
 class Validation(BaseModel):
     validation_enabled: bool = True
+    validate_window: bool = True
     validate_incoming: bool = False
+    validate_outgoing: bool = True
     validation_mode: ValidationMode = ValidationMode.ERROR
 
 
@@ -46,11 +49,12 @@ class Fields(BaseModel):
         return int(max_amount)
 
 
-class RemoteSpec(BaseModel):
+class Specification(BaseModel):
     rewrite_local_spec: bool = False
     remote_spec_url: str = str()
     backup_storage_depth: int = 100
     backup_storage: bool = True
+    manual_input_mode: bool = False
 
 
 class Config(BaseModel):
@@ -59,4 +63,4 @@ class Config(BaseModel):
     debug: Debug
     validation: Validation = None
     fields: Fields | None = None
-    remote_spec: RemoteSpec = RemoteSpec()
+    specification: Specification = Specification()

@@ -8,6 +8,7 @@ from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
 from signal.gui.forms.mainwindow import Ui_MainWindow
+from signal.lib.enums.DataFormats import DataFormats
 from signal.gui.decorators.window_settings import set_window_icon
 from signal.lib.data_models.Types import FieldPath
 from signal.lib.data_models.Config import Config
@@ -62,7 +63,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _keep_alive: pyqtSignal = pyqtSignal(str)
     _repeat: pyqtSignal = pyqtSignal(str)
     _parse_complex_field: pyqtSignal = pyqtSignal()
-    _validate_message: pyqtSignal = pyqtSignal()
+    _validate_message: pyqtSignal = pyqtSignal(bool)
     _spec: EpaySpecification = EpaySpecification()
 
     @property
@@ -191,7 +192,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.setWindowTitle(f"{TextConstants.SYSTEM_NAME} {ReleaseDefinition.VERSION}")
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
         self.ButtonSend.setFocus()
-        self.enable_validation(enable=self.config.validation.validation_enabled)
         self.set_connection_status(QTcpSocket.SocketState.UnconnectedState)
 
         for trans_type in KeepAlive.TransTypes.TRANS_TYPE_KEEP_ALIVE, KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION:
@@ -240,7 +240,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonHotkeys: self.hotkeys,
             self.ButtonSettings: self.settings,
             self.ButtonFieldsParser: self.parse_complex_field,
-            self.ButtonValidate: self.validate_message,
+            self.ButtonValidate: lambda: self.validate_message.emit(True),
             self.ButtonSave: self.save,
         }
 
@@ -279,9 +279,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
             # Custom Key Sequences
             # The string argument (modifier) is a hint about a requested data format
-            # KeySequences.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
+            KeySequences.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
             KeySequences.CTRL_W: self._tab_view.close_current_tab,
-            KeySequences.CTRL_T: self.add_tab,
+            # KeySequences.CTRL_T: self.add_tab,
             KeySequences.CTRL_SHIFT_ENTER: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.LAST),
             KeySequences.CTRL_ENTER: self.send,
             KeySequences.CTRL_R: self.reconnect,
@@ -292,7 +292,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             KeySequences.CTRL_SHIFT_N: self._tab_view.next_level,
             KeySequences.CTRL_ALT_Q: exit,
             KeySequences.CTRL_ALT_ENTER: self.echo_test,
-            KeySequences.CTRL_ALT_V: self.validate_message,
+            KeySequences.CTRL_ALT_V: lambda: self.validate_message.emit(True),
             KeySequences.CTRL_PAGE_UP: self._tab_view.prev_tab,
             KeySequences.CTRL_PAGE_DOWN: self._tab_view.next_tab,
 
@@ -364,11 +364,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self._tab_view.set_tab_name(tab_name)
 
     def add_tab(self, parse_default_file=True):
-        try:
-            self._tab_view.add_tab(parse_default_file=parse_default_file)
-            self._tab_view.add_plus_tab()
-        except IndexError:
-            return
+        self._tab_view.add_tab(parse_default_file=parse_default_file)
+        self._tab_view.add_plus_tab()
+        self._tab_view.set_tab_non_closeable()
 
     def search(self, text):
         self.json_view.search(text)
@@ -407,11 +405,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.NextLevelButton.setEnabled(enable)
 
     # Validate whole transaction data, presented on MainWindow
-    def validate_fields(self) -> None:
-        self.json_view.check_all_items()
-
-    def enable_validation(self, enable=True):
-        self.ButtonValidate.setEnabled(enable)
+    def validate_fields(self, force=False) -> None:
+        self.json_view.check_all_items(force=force)
 
     def clean_window_log(self) -> None:
         self.LogArea.setText(str())

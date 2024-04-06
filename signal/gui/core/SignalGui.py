@@ -101,7 +101,7 @@ class SignalGui(Terminal):
 
         if self.config.terminal.load_remote_spec:
             try:
-                self.data_validator.validate_url(self.config.remote_spec.remote_spec_url)
+                self.data_validator.validate_url(self.config.specification.remote_spec_url)
 
             except DataValidationWarning as url_validation_warning:
                 warning(f"Remote spec URL validation warning: {url_validation_warning}")
@@ -112,14 +112,14 @@ class SignalGui(Terminal):
             else:
                 self.set_remote_spec.emit()
 
-        if self.config.remote_spec.backup_storage:
+        if self.config.specification.backup_storage:
             rotator: SpecFilesRotator = SpecFilesRotator()
             rotator.clear_spec_backup(self.config)
 
         if self.config.terminal.connect_on_startup:
             self.reconnect()
 
-        self.window.json_view.enable_json_mode_checkboxes(enable=self.config.validation.validation_enabled)
+        self.window.json_view.enable_json_mode_checkboxes(enable=not self.config.specification.manual_input_mode)
 
         self.show_license_dialog()
 
@@ -152,7 +152,7 @@ class SignalGui(Terminal):
             window.about: lambda: AboutWindow(),
             window.keep_alive: self.set_keep_alive_interval,
             window.repeat: self.trans_timer.set_trans_loop_interval,
-            window.validate_message: self.validate_main_window,
+            window.validate_message: lambda: self.validate_main_window(force=True),
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
             self.connector.stateChanged: self.set_connection_status,
             self.set_remote_spec: self.connector.set_remote_spec,
@@ -164,7 +164,8 @@ class SignalGui(Terminal):
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
 
-    def show_license_dialog(self) -> None:
+    @staticmethod
+    def show_license_dialog() -> None:
         license_window: LicenseWindow | None = None
 
         try:
@@ -204,21 +205,19 @@ class SignalGui(Terminal):
         specification_changed = old_spec != self.spec.spec.json()
 
         if specification_changed and self.config.validation.validation_enabled:
-            info("Validate message after spec settings")
-            self.modify_fields_data()
-            self.validate_main_window()
+            if self.config.validation.validate_window:
+                info("Validate message after spec settings")
+                self.validate_main_window()
 
-        if not self.config.validation.validation_enabled:
-            self.window.json_view.refresh_fields(Colors.BLACK)
+            if self.config.specification.manual_input_mode:
+                self.modify_fields_data()
+                self.window.json_view.refresh_fields(Colors.BLACK)
 
     def modify_fields_data(self):  # Set extended data modifications, set in field params
         self.window.json_view.modify_all_fields_data()
 
-    def validate_main_window(self):
-        if not self.config.validation.validation_enabled:
-            return
-
-        self.window.validate_fields()
+    def validate_main_window(self, force=False):
+        self.window.validate_fields(force=force)
         self.window.json_view.refresh_fields()
 
         info("Transaction data validated")
@@ -262,36 +261,39 @@ class SignalGui(Terminal):
 
         info("Settings applied")
 
-        self.window.enable_validation(self.config.validation.validation_enabled)
-        self.window.json_view.enable_json_mode_checkboxes(enable=self.config.validation.validation_enabled)
+        self.window.json_view.enable_json_mode_checkboxes(enable=self.config.validation.validate_window)
 
         validation_conditions = [
-            old_config.validation.validation_enabled != self.config.validation.validation_enabled,
+            old_config.validation.validate_window != self.config.validation.validate_window,
             old_config.validation.validation_mode != self.config.validation.validation_mode
         ]
 
-        if any(validation_conditions):
-            if self.config.validation.validation_enabled:
+        if self.config.validation.validation_enabled and any(validation_conditions):
+
+            if self.config.validation.validate_window:
                 self.modify_fields_data()
                 self.validate_main_window()
 
-            if not self.config.validation.validation_enabled:
-                self.window.json_view.refresh_fields(Colors.BLACK)
+            if not self.config.validation.validate_window:
+                self.window.json_view.refresh_fields(color=Colors.BLACK)
+
+        if old_config.specification.manual_input_mode != self.config.specification.manual_input_mode:
+            self.window.json_view.refresh_fields(color=Colors.BLACK)
 
         if old_config.fields.json_mode != self.config.fields.json_mode:
-            self.window.json_view.set_json_mode(self.config.fields.json_mode)
+            self.window.json_view.switch_json_mode(self.config.fields.json_mode)
 
         if old_config.fields.hide_secrets != self.config.fields.hide_secrets:
             self.window.json_view.hide_secrets()
 
         spec_loading_conditions: list[bool] = [
-            self.config.remote_spec.remote_spec_url,
-            old_config.remote_spec.remote_spec_url != self.config.remote_spec.remote_spec_url,
+            self.config.specification.remote_spec_url,
+            old_config.specification.remote_spec_url != self.config.specification.remote_spec_url,
         ]
 
         if all(spec_loading_conditions):
             try:
-                self.data_validator.validate_url(self.config.remote_spec.remote_spec_url)
+                self.data_validator.validate_url(self.config.specification.remote_spec_url)
 
             except (ValidationError, DataValidationError, DataValidationWarning) as url_validation_error:
                 error(f"Remote spec URL validation error: {url_validation_error}")
@@ -452,15 +454,16 @@ class SignalGui(Terminal):
             transaction: Transaction = self.generator.set_generated_fields(transaction)
             self.set_generated_fields_to_gui(transaction)
 
-        try:
-            self.trans_validator.validate_transaction(transaction)
+        if self.config.validation.validation_enabled and self.config.validation.validate_outgoing:
+            try:
+                self.trans_validator.validate_transaction(transaction)
 
-        except DataValidationWarning as validation_warning:
-            warning(validation_warning)
+            except DataValidationWarning as validation_warning:
+                [warning(warn) for warn in str(validation_warning).splitlines()]
 
-        except Exception as validation_error:
-            error(validation_error)
-            return
+            except Exception as validation_error:
+                [error(err) for err in str(validation_error).splitlines()]
+                return
 
         try:
             Terminal.send(self, transaction)  # Terminal always used to real data processing
@@ -643,7 +646,11 @@ class SignalGui(Terminal):
             return
 
         for filename in filenames:
-            self.window.add_tab(parse_default_file=False)
+            try:
+                self.window.add_tab(parse_default_file=False)
+            except IndexError:
+                break
+
             self.window.set_tab_name(basename(filename))
             self._parse_file(filename)
 
@@ -689,7 +696,7 @@ class SignalGui(Terminal):
             error(f"Cannot set transaction fields: {transaction_parsing_error}")
             return
 
-        if self.config.validation.validation_enabled:
+        if self.config.validation.validation_enabled and self.config.validation.validate_window:
             self.modify_fields_data()
 
     def set_bitmap(self) -> None:

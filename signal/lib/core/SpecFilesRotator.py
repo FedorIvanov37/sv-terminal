@@ -21,9 +21,9 @@ class SpecFilesRotator:
         return filename
 
     def clear_spec_backup(self, config: Config):
-        storage_debt = config.remote_spec.backup_storage_depth
+        storage_debt = config.specification.backup_storage_depth
 
-        if not config.remote_spec.backup_storage:
+        if not config.specification.backup_storage:
             storage_debt = int()
 
         try:
