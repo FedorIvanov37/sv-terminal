@@ -16,9 +16,6 @@ class ButtonActionSigns(StrEnum):
 PrintButtonDataFormats = StrEnum("PrintButtonDataFormats", PrintDataFormats.__dict__.get('_member_map_'))
 
 
-PrintButtonDataFormats.TRANS_DATA = "TRANS_DATA"
-
-
 save_button_data_formats = {
     data_format.name: data_format.value for data_format in [
         PrintButtonDataFormats.JSON,

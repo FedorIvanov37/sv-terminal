@@ -337,7 +337,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 ButtonActions.PrintButtonDataFormats.SPEC: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.SPEC),
                 ButtonActions.PrintButtonDataFormats.TERM: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.TERM),
                 ButtonActions.PrintButtonDataFormats.CONFIG: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.CONFIG),
-                # ButtonActions.PrintButtonDataFormats.TRANS_DATA: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.TRANS_DATA)
             },
         }
 
