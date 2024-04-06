@@ -644,7 +644,7 @@ class SignalGui(Terminal):
 
         for filename in filenames:
             try:
-                self.window.add_tab(parse_default_file=False)
+                self.window.tab_view.add_tab()
             except IndexError:
                 break
 

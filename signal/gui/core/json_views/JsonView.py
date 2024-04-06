@@ -33,6 +33,27 @@ class JsonView(TreeView):
             editor.textEdited.connect(lambda text: self.text_edited.emit(text, index.column()))
             QItemDelegate.setEditorData(self, editor, index)
 
+    def check_validation_config(function: callable):
+        """
+        This decorator check the configuration before validate FieldItem. If the validation is not activated
+        the function will return None
+
+        Keyword argument "force" has a priority. When force=True validation will be performed not depending on config
+        """
+
+        def wrapper(self, *args, **kwargs):
+            validation_conditions = (
+                kwargs.get("force"),
+                self.config.validation.validation_enabled and self.config.validation.validate_window,
+            )
+
+            if not any(validation_conditions):
+                return
+
+            return function(self, *args, **kwargs)
+
+        return wrapper
+
     root: FieldItem
     need_disable_next_level: pyqtSignal = pyqtSignal()
     need_enable_next_level: pyqtSignal = pyqtSignal()
@@ -314,8 +335,8 @@ class JsonView(TreeView):
                 case FieldsSpec.ColumnsOrder.VALUE:
                     self.generate_item_data(item)
                     self.modify_field_data(item)
+                    item.is_new = False
                     self.validate_item(item)
-                    item.set_item_color()
 
                 case FieldsSpec.ColumnsOrder.PROPERTY:
                     self.generate_item_data(item)
@@ -326,13 +347,13 @@ class JsonView(TreeView):
                     self.generate_item_data(item)
                     self.modify_field_data(item)
                     self.set_item_description(item)
-
-                    if not item.is_new:
-                        self.validate_item(item)
-
-                    item.is_new = False
-
                     self.resizeColumnToContents(FieldsSpec.ColumnsOrder.FIELD)
+
+                    if item.is_new:
+                        item.is_new = False
+                        self.validate_field_number(item)
+                    else:
+                        self.validate_item(item)
 
                 case FieldsSpec.ColumnsOrder.LENGTH:
                     self.set_subfields_length(item)
@@ -346,15 +367,12 @@ class JsonView(TreeView):
         finally:
             self.set_validation_status(*validation_args)
 
+    @check_validation_config
+    def validate_field_number(self, item: FieldItem, force=False):
+        self.validator.validate_field_number(item)
+
+    @check_validation_config
     def validate_item(self, item: FieldItem, force=False):
-        validation_conditions = (
-            force,
-            self.config.validation.validation_enabled and self.config.validation.validate_window,
-        )
-
-        if not any(validation_conditions):
-            return
-
         self.validator.validate_item(item)
 
     @void_qt_signals
@@ -616,6 +634,7 @@ class JsonView(TreeView):
 
         self.check_all_items(item)
         self.hide_secrets(parent=item)
+        self.setCurrentItem(item)
 
     def set_flat_mode(self, item):
         parsing_error_text: str = "Cannot change JSON mode due to parsing error(s)"

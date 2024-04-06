@@ -14,9 +14,30 @@ class ItemsValidator:
         self.validator = Validator(self.config)
 
     def validate_item(self, item: FieldItem):
-        field_path = item.get_field_path()
-
         validation_result: ValidationResult = ValidationResult()
+        validation_result: ValidationResult = self._validate_field_number(item, validation_result)
+
+        field_path: list[str] = item.get_field_path()
+
+        if not self.spec.is_field_complex(field_path):
+            validation_result: ValidationResult = self.validator.validate_field_data(
+                field_path, item.field_data, validation_result)
+
+        self.validator.process_validation_result(validation_result)
+
+    def validate_field_number(self, item: FieldItem, validation_result: ValidationResult | None = None):
+        if validation_result is None:
+            validation_result: ValidationResult = ValidationResult()
+
+        validation_result: ValidationResult = self._validate_field_number(item, validation_result)
+
+        self.validator.process_validation_result(validation_result)
+
+    def _validate_field_number(self, item: FieldItem, validation_result: ValidationResult | None = None):
+        if validation_result is None:
+            validation_result = ValidationResult()
+
+        field_path = item.get_field_path()
 
         validation_map = {
             self.validator.validate_field_path: (field_path, validation_result),
@@ -27,10 +48,7 @@ class ItemsValidator:
         for validation, args in validation_map.items():
             validation_result: ValidationResult = validation(*args)
 
-        if not self.spec.is_field_complex(field_path):
-            validation_result: ValidationResult = self.validator.validate_field_data(field_path, item.field_data, validation_result)
-
-        self.validator.process_validation_result(validation_result)
+        return validation_result
 
     def validate_item_spec(self, item: FieldItem):
         validation_result: ValidationResult = ValidationResult()

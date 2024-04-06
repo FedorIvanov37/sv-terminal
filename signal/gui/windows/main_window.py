@@ -279,15 +279,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
             # Custom Key Sequences
             # The string argument (modifier) is a hint about a requested data format
-            KeySequences.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
-            KeySequences.CTRL_W: self._tab_view.close_current_tab,
-            # KeySequences.CTRL_T: self.add_tab,
+            # KeySequences.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
+            KeySequences.CTRL_T: self.add_tab,
             KeySequences.CTRL_SHIFT_ENTER: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.LAST),
             KeySequences.CTRL_ENTER: self.send,
             KeySequences.CTRL_R: self.reconnect,
             KeySequences.CTRL_L: self.clear_log,
             KeySequences.CTRL_E: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.VALUE),
-            # KeySequences.CTRL_W: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.FIELD),
+            KeySequences.CTRL_W: lambda: self.json_view.edit_column(FieldsSpec.ColumnsOrder.FIELD),
             KeySequences.CTRL_Q: self._tab_view.close_current_tab,
             KeySequences.CTRL_SHIFT_N: self._tab_view.next_level,
             KeySequences.CTRL_ALT_Q: exit,
@@ -362,10 +361,13 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def set_tab_name(self, tab_name):
         self._tab_view.set_tab_name(tab_name)
 
-    def add_tab(self, parse_default_file=True):
-        self._tab_view.add_tab(parse_default_file=parse_default_file)
-        self._tab_view.add_plus_tab()
-        self._tab_view.set_tab_non_closeable()
+    def add_tab(self):
+        try:
+            self._tab_view.add_tab()
+        except IndexError:
+            return
+
+        self.reset.emit(False)
 
     def search(self, text):
         self.json_view.search(text)

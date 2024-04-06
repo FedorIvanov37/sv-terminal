@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1550, 951)
+        MainWindow.resize(1552, 951)
         MainWindow.setMouseTracking(False)
         MainWindow.setFocusPolicy(QtCore.Qt.FocusPolicy.ClickFocus)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
