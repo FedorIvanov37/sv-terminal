@@ -142,6 +142,8 @@ class TabView(QTabWidget):
         self.tabBar().tabButton(index, TabBar.ButtonPosition.RightSide).resize(int(), int())
 
     def process_tab_change(self):
+        self.tab_changed.emit()
+
         if self.count() < 3:
             self.setCurrentIndex(int())
             return
