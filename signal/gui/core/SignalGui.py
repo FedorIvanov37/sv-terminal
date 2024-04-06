@@ -524,19 +524,6 @@ class SignalGui(Terminal):
 
         return file_name
 
-    @staticmethod
-    def _get_input_filename() -> str | None:
-        file_name_filters = [f"{data_format} (*.{data_format.lower()})" for data_format in InputFilesFormat]
-        file_name_filters.append("Any (*.*)")
-        file_name_filter = ";;".join(file_name_filters)
-
-        file_data = QFileDialog.getOpenFileName(filter=file_name_filter, initialFilter=InputFilesFormat.JSON)
-
-        if not (file_name := file_data[int()]):
-            return
-
-        return file_name
-
     def save_transaction_to_file(self) -> None:
         if not (file_data := self.get_output_filename()):
             warning("No output filename recognized")
@@ -644,13 +631,39 @@ class SignalGui(Terminal):
         else:
             info("Default file parsed") if log else ...
 
+    @set_json_view_focus
     def parse_file(self, filename: str | None = None, log=True) -> None:
+
+        def _parse_file(_filename: str, _log: bool) -> None:
+            try:
+                transaction: Transaction = self.parser.parse_file(_filename)
+
+            except (DataValidationError, ValidationError, ValueError) as validation_error:
+                error(f"File parsing error: {validation_error}")
+                return
+
+            except Exception as parsing_error:
+                error(f"File parsing error: {parsing_error}")
+                return
+
+            try:
+                self.parse_transaction(transaction)
+
+            except Exception as fields_setting_error:
+                error(fields_setting_error)
+                return
+
+            if not log:
+                return
+
+            info(f"File parsed: {filename}")
+
         if filename:
-            self._parse_file(filename, log=log)
+            _parse_file(filename, _log=log)
             return
 
         if not (filenames := self.get_input_filename(multiple_files=True)):
-            warning("No input filename recognized")
+            warning("No input filename(s) recognized")
             return
 
         for filename in filenames:
@@ -660,35 +673,8 @@ class SignalGui(Terminal):
                 break
 
             self.window.set_tab_name(basename(filename))
-            self._parse_file(filename)
 
-    @set_json_view_focus
-    def _parse_file(self, filename: str | None = None, log=True) -> None:
-        if not filename and not (filename := self.get_input_filename(multiple_files=True)):
-            warning("No input filename recognized")
-            return
-
-        try:
-            transaction: Transaction = self.parser.parse_file(filename)
-
-        except (DataValidationError, ValidationError, ValueError) as validation_error:
-            error(f"File parsing error: {validation_error}")
-            return
-
-        except Exception as parsing_error:
-            error(f"File parsing error: {parsing_error}")
-            return
-
-        try:
-            self.parse_transaction(transaction)
-        except Exception as fields_setting_error:
-            error(fields_setting_error)
-            return
-
-        if not log:
-            return
-
-        info(f"File parsed: {filename}")
+            _parse_file(filename, _log=log)
 
     @set_json_view_focus
     def parse_transaction(self, transaction: Transaction, generate_trans_id=True) -> None:
