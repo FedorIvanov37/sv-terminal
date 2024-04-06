@@ -59,6 +59,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
 
         self.save_license_file(license_data)
         self.print_acceptance_info()
+        self.close()
 
     def reject_license(self):
         license_data: LicenseInfo = self.license_info.model_copy(deep=True)

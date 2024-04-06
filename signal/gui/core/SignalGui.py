@@ -79,17 +79,17 @@ class SignalGui(Terminal):
         super(SignalGui, self).__init__(config, self.connector)
         self.window: MainWindow = MainWindow(self.config)
         self.setup()
-        self.on_startup()
 
     @set_json_view_focus
     def setup(self) -> None:
-        self.log_printer.print_startup_info()
-        self._wireless_handler = self.logger.create_window_logger(self.window.log_browser)
-        self.connect_widgets()
-        self.window.show()
+        # Runs on startup to make all the preparation activity, then shows MainWindow
 
-    @set_json_view_focus
-    def on_startup(self) -> None:
+        self.connect_widgets()
+
+        self.log_printer.print_startup_info()
+
+        self._wireless_handler = self.logger.create_window_logger(self.window.log_browser)
+
         self.print_data(DataFormats.TERM)
 
         if self.config.terminal.process_default_dump:
@@ -120,6 +120,8 @@ class SignalGui(Terminal):
             self.reconnect()
 
         self.window.json_view.enable_json_mode_checkboxes(enable=not self.config.specification.manual_input_mode)
+
+        self.window.show()
 
         self.show_license_dialog()
 

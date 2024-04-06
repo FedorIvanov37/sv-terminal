@@ -21,6 +21,7 @@ class ValidationTypes(StrEnum):
     DUPLICATED_FIELDS_VALIDATION = "DUPLICATED_FIELDS_VALIDATION"
     OTHER_VALIDATION = "OTHER_VALIDATION"
 
+
 class ValidationResult(BaseModel):
     model_config: ConfigDict = ConfigDict(validate_assignment=True, validate_default=True)
 
