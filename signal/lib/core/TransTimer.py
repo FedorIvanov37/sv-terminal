@@ -3,6 +3,7 @@ from logging import info
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from signal.lib.enums import KeepAlive
 
+
 class TransactionTimer(QObject):
     _trans_loop_timer: QTimer = QTimer()
     _send_transaction: pyqtSignal = pyqtSignal()

@@ -127,7 +127,13 @@ class Terminal(QObject):
 
         info(f"Incoming transaction ID [{resp_trans_id}] received")
 
-        if self.config.validation.validation_enabled and self.config.validation.validate_incoming:
+        validation_conditions = (
+            self.config.validation.validation_enabled,
+            self.config.validation.validate_incoming,
+            not response.is_keep_alive
+        )
+
+        if all(validation_conditions):
             try:
                 self.trans_validator.validate_transaction(transaction=response)
 
@@ -146,11 +152,14 @@ class Terminal(QObject):
 
         if response.matched and response.resp_time_seconds:
             if response.is_keep_alive:
-                message: str = f"Keep Alive transaction [{response.match_id}] successfully matched."
-            else:
-                message: str = f"Transaction ID [{response.match_id}] matched."
+                resp = response.data_fields.get(self.spec.FIELD_SET.FIELD_039_AUTHORIZATION_RESPONSE_CODE, 'Unknown')
 
-            message: str = f"{message} Response time seconds: {response.resp_time_seconds}"
+                message: str = (f"Keep Alive transaction [{response.match_id}] successfully matched. "
+                                f'Response code: "{resp}"')
+            else:
+                message: str = f"Transaction ID [{response.match_id}] matched"
+
+            message: str = f"{message}, response time seconds: {response.resp_time_seconds}"
 
             info(message)
 
@@ -179,10 +188,10 @@ class Terminal(QObject):
         transaction.generate_fields = []
         transaction.is_keep_alive = True
 
-        message: str = f"Trans ID: [{transaction.trans_id}], "\
-                  f"STAN: [{transaction.data_fields.get(self.spec.FIELD_SET.FIELD_011_SYSTEM_TRACE_AUDIT_NUMBER)}], "\
-                  f"Network management code: "\
-                  f"[{transaction.data_fields.get(self.spec.FIELD_SET.FIELD_070_NETWORK_MANAGEMENT_CODE)}]"
+        message: str = (f"Trans ID: [{transaction.trans_id}], STAN: "
+                        f"[{transaction.data_fields.get(self.spec.FIELD_SET.FIELD_011_SYSTEM_TRACE_AUDIT_NUMBER)}], "
+                        f"Network management code: "
+                        f"[{transaction.data_fields.get(self.spec.FIELD_SET.FIELD_070_NETWORK_MANAGEMENT_CODE)}]")
 
         info(f"Sending Keep Alive message - {message}")
 

@@ -454,7 +454,13 @@ class SignalGui(Terminal):
             transaction: Transaction = self.generator.set_generated_fields(transaction)
             self.set_generated_fields_to_gui(transaction)
 
-        if self.config.validation.validation_enabled and self.config.validation.validate_outgoing:
+        validation_conditions = (
+            self.config.validation.validation_enabled,
+            self.config.validation.validate_outgoing,
+            not transaction.is_keep_alive,
+        )
+
+        if all(validation_conditions):
             try:
                 self.trans_validator.validate_transaction(transaction)
 
