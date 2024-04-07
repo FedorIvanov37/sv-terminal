@@ -189,8 +189,9 @@
 
 
 • Bugs
-    + CTRL+T with tab adding works incorrectly
     • Last tab bug - cannot process tab limits correctly
+    + CTRL+T with tab adding works incorrectly
+
 
 • Licensing preparation
     • Change the framework to pyside
