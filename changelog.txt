@@ -152,7 +152,6 @@
 + Trans ID can be set in MainWindow
 + Move output_file_format from SaveButton to FileDialog
 + Change to Python 3.12.2
-#
 + Fix double validation
 + Remove: "File parsed: signal/data/default/default_message.json"
 + Check all custom validations
@@ -163,13 +162,36 @@
 + Trans_id can be generated in MainWindow
 + Add reversal trans_id generation with suffix _R
 
+# v0.18
++ Stop cascade process when try to parse a file with unknown extension and file not found
++ After parsing of default file focus restored in the middle of JSON
++ Multi-license window bug
++ Reduce validation
++ datetime.utcnow is deprecated
++ Tick - ignore spec violations (Fields data manual entry mode)
++ Allow force-validation mode
++ license window acceptance bug
++ Disappearing field value when add new field
++ Expand column after field editing finished
++ Set complex fields full expanding when switch JSON mode
++ Add tabs by QTabWidget
++ Revise hotkeys in hint-window
 
 
+• Pin main tab and make the other movable
+• Add fields trim property to spec
+• Drag and drop files to JsonView
 • Respect JSON-mode when set field value from complex fields constructor
 • Error on console when run AboutWindow - Could not find codec parameters for stream
 • Change name to SIGNAL in Document
 • Reflect in the document - Main settings, the specification+, files format+, custom validations
-• Set complex fields full expanding when switch JSON mode
+
+
+
+• Bugs
+    • Last tab bug - cannot process tab limits correctly
+    + CTRL+T with tab adding works incorrectly
+
 
 • Licensing preparation
     • Change the framework to pyside
@@ -189,4 +211,3 @@
 • Console mode
 • API console mode
 • Undo / Redo
-• Add tabs by QTabWidget
