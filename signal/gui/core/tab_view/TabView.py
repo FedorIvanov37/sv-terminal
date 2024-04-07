@@ -1,13 +1,11 @@
-from logging import error
+from logging import error, info
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QTabWidget, QWidget, QGridLayout
+from PyQt6.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QHBoxLayout
 from PyQt6.QtGui import QFont, QIcon
-from signal.gui.core.tab_view.TabBar import TabBar
+from signal.gui.core.tab_view.Widgets import TabBar, ComboBox, LineEdit, PushButton
 from signal.lib.data_models.Config import Config
 from signal.gui.decorators.void_qt_signals import void_qt_signals
 from signal.gui.core.json_views.JsonView import JsonView
-from signal.gui.core.tab_view.ComboBox import ComboBox
-from signal.gui.core.tab_view.LineEdit import LineEdit
 from signal.lib.data_models.Transaction import Transaction
 from signal.gui.enums.GuiFilesPath import GuiFilesPath
 from signal.gui.enums.TabViewParams import TabViewParams
@@ -22,6 +20,11 @@ class TabView(QTabWidget):
     _trans_id_set: pyqtSignal = pyqtSignal()
     _tab_changed: pyqtSignal = pyqtSignal()
     _new_tab_opened: pyqtSignal = pyqtSignal()
+    _copy_bitmap: pyqtSignal = pyqtSignal()
+
+    @property
+    def copy_bitmap(self):
+        return self._copy_bitmap
 
     @property
     def new_tab_opened(self):
@@ -99,6 +102,7 @@ class TabView(QTabWidget):
         self.currentChanged.connect(self.process_tab_change)
         self.tabCloseRequested.connect(self.remove_tab)
 
+    def connect_json_view(self):
         json_view_connection_map = {
             self.json_view.itemChanged: self.field_changed,
             self.json_view.field_changed: self.field_changed,
@@ -224,15 +228,34 @@ class TabView(QTabWidget):
 
         self.close_tab(self.count() - 1)
 
-        widget = QWidget()
-        widget.setLayout(QGridLayout())
-        widget.layout().addWidget(ComboBox(parent=widget))
-        widget.layout().addWidget(LineEdit(parent=widget))
-        widget.layout().addWidget(JsonView(self.config, parent=widget))
+        widget = self.generate_tab_widget()
 
         self.addTab(widget, tab_name if tab_name else self.get_tab_name())
         self.add_plus_tab()
         self.set_tab_non_closeable()
+        self.connect_json_view()
+
+    def generate_tab_widget(self):
+        widget = QWidget()
+        button = PushButton(parent=widget)
+
+        bitmap_layout = QHBoxLayout()
+        bitmap_layout.addWidget(LineEdit())
+        bitmap_layout.addWidget(button)
+
+        widget.setLayout(QVBoxLayout())
+
+        widget.layout().addWidget(ComboBox(parent=widget))
+        widget.layout().insertLayout(1, bitmap_layout)
+        widget.layout().addWidget(JsonView(self.config, parent=widget))
+
+        button.clicked.connect(self.copy_bitmap)
+
+        return widget
+
+    def copy_bitmap_pressed(self):
+        self.copy_bitmap.emit()
+        info("Bitmap copied")
 
     def add_plus_tab(self):
         self.addTab(QWidget(), '')  # Add the technical "plus" tab

@@ -174,8 +174,11 @@
 + Disappearing field value when add new field
 + Expand column after field editing finished
 + Set complex fields full expanding when switch JSON mode
++ Add tabs by QTabWidget
 
 
+• Revise hotkeys in hint-window
+• Pin main tab and make the other movable
 • Add fields trim property to spec
 • Drag and drop files to JsonView
 • Respect JSON-mode when set field value from complex fields constructor
@@ -183,24 +186,6 @@
 • Change name to SIGNAL in Document
 • Reflect in the document - Main settings, the specification+, files format+, custom validations
 
-
-• Add tabs by QTabWidget
-    • Restore "Copy bitmap" button
-    • Pin main tab and make the other movable
-    + Hotkeys - new tab+, close tab+, next+, previous+
-    + Static tab "Main"
-    + Multi file parsing
-    + New tab opens when press on the tab icon
-    + Dynamic tab name
-    + Button "add tab"
-    + Search line does not work for tabs
-    + Tabs limit
-    + Fix search in different tabs
-    + Add fill method
-    + Open / close new tab
-    + Go to new tab after opening
-    + Active tab highlighting
-    + Parse default message when open new tab (no logging)
 
 
 • Bugs
@@ -225,4 +210,3 @@
 • Console mode
 • API console mode
 • Undo / Redo
-

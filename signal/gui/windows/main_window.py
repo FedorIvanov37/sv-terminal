@@ -8,7 +8,6 @@ from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QKeySequence, QShortcut, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton
 from signal.gui.forms.mainwindow import Ui_MainWindow
-from signal.lib.enums.DataFormats import DataFormats
 from signal.gui.decorators.window_settings import set_window_icon
 from signal.lib.data_models.Types import FieldPath
 from signal.lib.data_models.Config import Config
@@ -54,7 +53,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _echo_test: pyqtSignal = pyqtSignal()
     _clear: pyqtSignal = pyqtSignal()
     _copy_log: pyqtSignal = pyqtSignal()
-    # _copy_bitmap: pyqtSignal = pyqtSignal()
+    _copy_bitmap: pyqtSignal = pyqtSignal()
     _reconnect: pyqtSignal = pyqtSignal()
     _parse_file: pyqtSignal = pyqtSignal()
     _hotkeys: pyqtSignal = pyqtSignal()
@@ -138,9 +137,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def copy_log(self):
         return self._copy_log
 
-    # @property
-    # def copy_bitmap(self):
-    #     return self._copy_bitmap
+    @property
+    def copy_bitmap(self):
+        return self._copy_bitmap
 
     @property
     def save(self):
@@ -251,13 +250,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self._tab_view.disable_next_level_button: self.disable_next_level_button,
             self._tab_view.enable_next_level_button: self.enable_next_level_button,
             self._tab_view.new_tab_opened: lambda: self.reset.emit(False),
+            self._tab_view.copy_bitmap: self.copy_bitmap,
+            self._tab_view.trans_id_set: self.set_reversal_trans_id,
+            self._tab_view.tab_changed: self.process_tab_change,
         }
 
         main_window_connection_map = {
             self.SearchLine.textChanged: self.search,
             self.SearchLine.editingFinished: self._tab_view.set_json_focus,
-            self._tab_view.trans_id_set: self.set_reversal_trans_id,
-            self._tab_view.tab_changed: self.process_tab_change,
         }
 
         keys_connection_map = {
@@ -279,7 +279,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
             # Custom Key Sequences
             # The string argument (modifier) is a hint about a requested data format
-            # KeySequences.CTRL_T: lambda: self.print.emit(DataFormats.TERM),
             KeySequences.CTRL_T: self.add_tab,
             KeySequences.CTRL_SHIFT_ENTER: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.LAST),
             KeySequences.CTRL_ENTER: self.send,
