@@ -204,7 +204,7 @@
      </item>
      <item row="0" column="1">
       <property name="text">
-       <string>About SV Terminal</string>
+       <string>About SIGNAL</string>
       </property>
      </item>
      <item row="1" column="0">
@@ -314,7 +314,7 @@
      </item>
      <item row="11" column="1">
       <property name="text">
-       <string>Reconnect SV</string>
+       <string>Reconnect to host</string>
       </property>
      </item>
      <item row="12" column="0">
@@ -334,7 +334,7 @@
      </item>
      <item row="13" column="1">
       <property name="text">
-       <string>Open transaction file</string>
+       <string>Open transaction file(s)</string>
       </property>
      </item>
      <item row="14" column="0">
@@ -354,7 +354,7 @@
      </item>
      <item row="15" column="1">
       <property name="text">
-       <string>Print transaction</string>
+       <string>Print transaction data</string>
       </property>
      </item>
      <item row="16" column="0">
@@ -364,7 +364,7 @@
      </item>
      <item row="16" column="1">
       <property name="text">
-       <string>Print SV Terminal logo</string>
+       <string>New tab</string>
       </property>
      </item>
      <item row="17" column="0">
@@ -374,7 +374,7 @@
      </item>
      <item row="17" column="1">
       <property name="text">
-       <string>Quit SV Terminal</string>
+       <string>Quit SIGNAL</string>
       </property>
      </item>
     </widget>
