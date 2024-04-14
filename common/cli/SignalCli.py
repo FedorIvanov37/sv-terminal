@@ -37,7 +37,7 @@ class SignalCli(Terminal):
 
         cli_args_parser: ArgumentParser = ArgumentParser(description=TextConstants.CLI_DESCRIPTION)
 
-        cli_args_parser.add_argument("-c", "--console-mode", action="store_true", required=True, help="Run SIGNAL in Command Line Interface mode")
+        cli_args_parser.add_argument("-c", "--console", action="store_true", required=True, help="Run SIGNAL in Command Line Interface mode")
         cli_args_parser.add_argument("-f", "--file", type=str, default=None, help="File or file-mask to parse")
         cli_args_parser.add_argument("-d", "--dir", type=str, default=None, help="Directory with files to parse. SIGNAL will try all of the files from the directory")
         cli_args_parser.add_argument("-a", "--address", default=self.config.host.host, action="store", help="Host TCP/IP address")
@@ -82,12 +82,6 @@ class SignalCli(Terminal):
     def connect_all(self):
         self.run_timer.timeout.connect(self.main)
         self._finished.connect(self.application.quit)
-
-    def print_transaction(self, transaction):
-        try:
-            self.log_printer.print_transaction(transaction)
-        except Exception as print_error:
-            error(print_error)
 
     def run_application(self):
         self.run_timer.setSingleShot(True)

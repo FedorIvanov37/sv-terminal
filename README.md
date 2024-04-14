@@ -20,7 +20,6 @@
   * [Important notes](#important-notes)
   * [Release info](#release-info)
 
-
  
 * [Graphic User Interface](#graphic-user-interface)
   * [GUI overview](#gui-overview)
@@ -32,22 +31,74 @@
   * [CLI examples](#cli-examples)
 
 
-* [Settings](#settings) 
-  * [Specification settings](#specification-settings)
-    * [Specification Overview](#specification-overview) 
-    * [Settings description](#settings-description)
-    * [Remote specification](#remote-specification)
-    * [Remote specification endpoint setting](#remote-specification-endpoint-setting)
-    * [Remote spec endpoint code example](#remote-spec-endpoint-code-example)
-  * [Transaction data files format](#transaction-data-files-format)
-    * [Overview](#overview)
-    * [The data formats description](#the-data-formats-description)
-    * [Loading to the SIGNAL](#loading-to-the-signal)
-    * [Save transaction to file](#save-transaction-to-file)
+* [Library re-usage]
+  * [Requirements]
+  * [Library installation]
+  * [Modules purpose]
+  * [Modules usage example]
+  * [Recommendations]
+  
+
+ * [Specification settings](#specification-settings)
+   * [Specification Overview](#specification-overview) 
+   * [Settings description](#settings-description)
+   * [MTI setting]
+   * [Fields extended parameters]
+   * [Remote specification](#remote-specification)
+   * [Remote specification endpoint setting](#remote-specification-endpoint-setting)
+  
+
+* [Fields validation]
+  * [Main validation]
+  * [Extended validation]
+  * [Violation mode]
+  * [Directions]
+  * [Complex fields flat / JSON representation]
+  * [Manual entry mode]
+  
+
+* [Tools]
+  * [Complex fields parser]
+  * [Reversal]
+  * [Transactions auto-repeat]
+  * [Search line]
+  * [Print data]
+  * [Fields generators]
+
+
+* [Configuration]
+  * [Config overview]
+  * [Config file]
+  * [Settings] 
+    * [Remote host]
+    * [Specification]
+    * [On startup]
+    * [Log]
+    * [Validation]
+    * [Fields]
+   
+ 
+ * [Transaction data files](#transaction-data-files)
+   * [Overview](#overview)
+   * [The data formats description](#the-data-formats-description)
+   * [Loading to the SIGNAL](#loading-to-the-signal)
+   * [Save transaction to file](#save-transaction-to-file)
+
+ 
+* [Logging]
+  * [Log levels]
+  * [Storage and rotation]
+  * [Hide secrets]
+   
+
+* [Bugs]
+  * [List of known bugs]
 
 
 * [About](#about)
+  * [The SIGNAL story] 
   * [License](#license)
+  * [Resources]
   * [Author](#author)
 
 # Description
@@ -71,7 +122,7 @@ SIGNAL is not an emulator of PSP or SmartVista. It doesn't try to be similar to 
 positioned as a simplified version card payment terminal, developed with respect for the everyday needs of the Card 
 Processing Support Team
 
-Written on Python 3.11 with the use of PyQt6 and Pydantic packages
+Written on Python 3.12 with the use of PyQt6 and Pydantic packages
 
 
 In case of any questions about SIGNAL [contact author](#author). Your feedback and suggestions are general drivers 
@@ -157,9 +208,9 @@ The list of key sequences and corresponding actions
 
 
 # Command Line Interface
-By usage of a specific flag `-c` or `--console-mode` the SIGNAL can be run in Command Line Interface mode (CLI). In CLI mode GUI will not be run, all the output will be placed in the command line instead. CLI mode is useful when some external tool or script needs to send a transaction without the usage of GUI 
+By usage of a specific flag `-c` or `--console` the SIGNAL can be run in Command Line Interface mode (CLI). In CLI mode GUI will not be run, all the output will be placed in the command line instead. CLI mode is useful when some external tool or script needs to send a transaction without the usage of GUI 
 
-The console-mode flag `-c` or `--console-mode` is required to run CLI mode (see [examples](#cli-examples)). In case of absence console-mode flags GUI mode will be run by default
+The console-mode flag `-c` or `--console` is required to run CLI mode (see [examples](#cli-examples)). In case of absence console-mode flags GUI mode will be run by default
 
 Flag `-h` or `--help` does not require console-mode flags
 
@@ -168,13 +219,13 @@ Flag `-h` or `--help` does not require console-mode flags
 To see usage hint call `signal.exe --help`
 
 ```text
-usage: _signal.py [-h] -c [-f FILE] [-d DIR] [-a ADDRESS] [-p PORT] [-r] [-l LOG_LEVEL] [-i INTERVAL] [--parallel] [-t TIMEOUT] [--about] [-e] [--default] [-v]
+usage: signal.exe [-h] -c [-f FILE] [-d DIR] [-a ADDRESS] [-p PORT] [-r] [-l LOG_LEVEL] [-i INTERVAL] [--parallel] [-t TIMEOUT] [--about] [-e] [--default] [-v]
 
 SIGNAL v0.18
 
 options:
   -h, --help            show this help message and exit
-  -c, --console-mode    Run SIGNAL in Command Line Interface mode
+  -c, --console         Run SIGNAL in Command Line Interface mode
   -f FILE, --file FILE  File or file-mask to parse
   -d DIR, --dir DIR     Directory with files to parse. SIGNAL will try all of the files from the directory
   -a ADDRESS, --address ADDRESS
@@ -195,14 +246,14 @@ options:
 ```
 
 ## CLI examples
-| Command                                                           | Action                                                                                    | 
-|-------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
-| `signal.exe --console-mode --default`                             | Send default transaction to the host                                                      |
-| `signal.exe --console-mode --echo-test`                           | Send echo-test to the host                                                                |
-| `signal.exe --console-mode --about`                               | Show info about the SIGNAL                                                                |
-| `signal.exe --console-mode --file /transactions/transaction.json` | Parse specific file `/transactions/transaction.json` and send the transaction to the host |
-| `signal.exe --console-mode --default --repeat --interval 2`       | Begin transaction loop, sending new transaction every 2 sec                               |
-| `signal.exe --console-mode --dir /transactions --parallel`        | Immediate send all the transactions from the directory /transactions                      |
+| Command                                                      | Action                                                                                    | 
+|--------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| `signal.exe --console --default`                             | Send default transaction to the host                                                      |
+| `signal.exe --console --echo-test`                           | Send echo-test to the host                                                                |
+| `signal.exe --console --about`                               | Show info about the SIGNAL                                                                |
+| `signal.exe --console --file /transactions/transaction.json` | Parse specific file `/transactions/transaction.json` and send the transaction to the host |
+| `signal.exe --console --default --repeat --interval 2`       | Begin transaction loop, sending new transaction every 2 sec                               |
+| `signal.exe --console --dir /transactions --parallel`        | Immediate send all the transactions from the directory /transactions                      |
 
 ```text
 PS C:\signal> signal.exe --about
@@ -230,7 +281,7 @@ PS C:\signal> signal.exe --about
 ```
 
 ```text
-PS C:\signal> signal.exe --console-mode --echo-test 
+PS C:\signal> signal.exe --console --echo-test 
 03:05:12 [INFO] ## Running SIGNAL in Console mode ##
 03:05:12 [INFO] Press CTRL+C to exit
 03:05:12 [INFO] 
@@ -260,11 +311,9 @@ PS C:\signal> signal.exe --console-mode --echo-test
 03:05:13 [INFO] Transaction ID [20240414_030512_8695314843] matched, response time seconds: 1.082
 ```
 
-# Settings
+# Specification settings
 
-## Specification settings
-
-### Specification Overview 
+## Specification Overview 
 
 This chapter describes the specification settings and maintenance. Refer to SVFE E-pay specification for more info.
 
@@ -276,7 +325,7 @@ The specification can be set using the button "Specification" of MainWindow. Set
 by the author. 
 
 
-### Settings description
+## Settings description
 
 ![image](https://i.imgur.com/Wvg8EuX.png)
 
@@ -302,7 +351,12 @@ The table below describes the settings window columns from left to right
 
 ² Due to security reasons, it is impossible to set Primary Account Number (Field 2) as non-secret. The field has a non-removable "secret" mark  
 
-### Remote specification
+
+## MTI setting
+
+
+
+## Remote specification
 The local specification `JSON` file always is at the path `common/data/settings/specification.json`, however, SIGNAL can get general specification `JSON` remotely on the startup stage and by the user's request in SpecWindow. The specification URL should be set in the settings. In case when the remote specification is set by settings but the SIGNAL is unable to get remote specification data the local spec data will be taken instead from the "settings" directory
 
 SIGNAL can get general specification JSON remotely on the startup stage and by the user's request in SpecWindow. The specification URL should be set in the settings.
@@ -320,6 +374,7 @@ The conditions for the remote spec endpoint:
 
 
 ### Remote specification endpoint setting
+
 The following [code](#remote-spec-endpoint-code-example) illustrates the endpoint example. In this example, endpoint http://127.0.0.1:4242/specification returns specification file data `/opt/spec/specification.json`
 
   
@@ -385,24 +440,24 @@ server.server_close()
 ```
 
 
-## Transaction data files format
+# Transaction data files
 
 
-### Overview
+## Overview
 
 The SIGNAL supports multiple representations of transaction data files. The data can be put to the SIGNAL using 
 one of three formats - `JSON`, `INI`, and `DUMP`. The data is stored in text files, which can be read or written 
 by SIGNAL. This chapter describes each format's features and purpose
 
-### The data formats description 
+## The data formats description 
 
 | Format | File extension | Incoming  | Outgoing | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 |--------|----------------|-----------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | JSON   | `.json`        | Yes       | Yes      | Equally well suited for operator reading and machine analysis. The main goal is to make complex fields not so complicated, through structure-readable decomposition. Fields and subfield lengths are left out because they will be calculated later according to the Specification. All the transactions, incoming and outgoing stored in memory in JSON representation. Strictly requires Specification settings for each subfield                                                            | 
 | INI    | `.ini`         | Yes       | Yes      | Flat format, where each field is written in one string. Fields fill in Tag-Length-Value (TLV) style with no separators. All the lengths have to be calculated and set by the operator. The format skips the data validation process. Recommended when you definitely understand what you do. Requires specification for top-level fields only, subfields specification is not required                                                                                                         | 
-| DUMP   | `.txt`         | Yes       | Yes      | Raw SV-dump format. Used for loading and generating SVFE-compatible dump messages for parsing incoming and generating outgoing SV messages. Low-level data exchange with SVFE makes using this format. The DUMP is the fully ready-read message for the SVFE epayint module. For the sv-dump building recommended setting field data through the transaction constructor using JSON or INI style, then generate the dump by SIGNAL interface. Manual analysis or generation is not recommended | 
+| DUMP   | `.dmp`         | Yes       | Yes      | Raw SV-dump format. Used for loading and generating SVFE-compatible dump messages for parsing incoming and generating outgoing SV messages. Low-level data exchange with SVFE makes using this format. The DUMP is the fully ready-read message for the SVFE epayint module. For the sv-dump building recommended setting field data through the transaction constructor using JSON or INI style, then generate the dump by SIGNAL interface. Manual analysis or generation is not recommended | 
 
-### Loading to the SIGNAL
+## Loading to the SIGNAL
 
 To read the incoming data file in the open SIGNAL window press `CTRL + O`, or hit the button "Parse file" on the 
 MainWindow bottom, then choose the file using the file-navigation window. SIGNAL recognizes the incoming file format 
@@ -410,7 +465,7 @@ by file extension. When the extension is absent or unknown the SIGNAL will try t
 pattern one by one. Better to set the correct extension for each format. Refer to the
 [data formats description](#the-data-formats-description) to define the correct extension for each file format
 
-### Save transaction to file
+## Save transaction to file
 
 ... 
 

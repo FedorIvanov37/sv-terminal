@@ -16,9 +16,9 @@ if __name__ != "__main__":  # Runs only by import command
     try:
         from sys import exit, argv
         from common.cli.SignalCli import SignalCli
+        from common.cli.enums.CliDefinition import CliDefinition
         from common.lib.enums.TermFilesPath import TermFilesPath
         from common.lib.data_models.Config import Config
-        from common.cli.enums.CliDefinition import CliDefinition
 
         with open(TermFilesPath.CONFIG) as json_file:
             config: Config = Config.model_validate_json(json_file.read())
@@ -27,7 +27,12 @@ if __name__ != "__main__":  # Runs only by import command
         print(run_preparation_error)
         exit(100)
 
-    cli_mode_triggers = (CliDefinition.CONSOLE_MODE, CliDefinition.CONSOLE_MODE_LONG, '-h', '--help')
+    cli_mode_triggers = (
+        CliDefinition.CONSOLE_MODE,
+        CliDefinition.CONSOLE_MODE_LONG,
+        CliDefinition.HELP,
+        CliDefinition.HELP_LONG,
+    )
 
     if any([True for arg in cli_mode_triggers if arg in argv]):  # Run in Command Line Interface (CLI) mode
         cli: SignalCli = SignalCli(config)
