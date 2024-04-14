@@ -24,15 +24,26 @@
 * [Graphic User Interface](#graphic-user-interface)
   * [GUI overview](#gui-overview)
   * [Main Window]
-  * [Windows hotkeys](#windows-hotkeys)
-  * [GUI Tools]
+    * [Main Window overview]  
     * [Complex fields parser]
     * [Reversal]
     * [Transactions auto-repeat]
     * [Search line]
     * [Print data]
     * [Fields generators]
-    * [Secret features]  
+    * [Secret features]
+  * [Specification Window]
+    * [Specification Window overview]
+    * [Field parameters]
+    * [Extended field parameters]
+    * [MTI settings]
+    * [Set specification]
+    * [Save specification]
+  * [Settings Window]
+    * [Settings Window overview]
+    * [Triggers]
+    * [Validations]
+  * [Windows hotkeys](#windows-hotkeys)
 
 
 * [Command Line Interface](#command-line-interface)
@@ -44,6 +55,7 @@
   * [Requirements]
   * [Library installation]
   * [Modules purpose]
+  * [Logging]
   * [Modules usage example]
   * [Compilation of executable binary]
   * [Recommendations]
@@ -52,8 +64,6 @@
  * [Specification settings](#specification-settings)
    * [Specification Overview](#specification-overview) 
    * [Settings description](#settings-description)
-   * [MTI setting]
-   * [Fields extended parameters]
    * [Remote specification](#remote-specification)
    * [Remote specification endpoint setting](#remote-specification-endpoint-setting)
   
@@ -90,7 +100,7 @@
   * [Log levels]
   * [Storage and rotation]
   * [Hide secrets]
-   
+
 
 * [Bugs]
   * [List of known bugs]
