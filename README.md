@@ -1,4 +1,4 @@
-# Simplified ISO generation algorithm
+    # Simplified ISO generation algorithm
 
 ```
   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::
@@ -23,26 +23,26 @@
  
 * [Graphic User Interface](#graphic-user-interface)
   * [GUI overview](#gui-overview)
-  * [Main Window]
-    * [Main Window overview]  
-    * [Complex fields parser]
-    * [Reversal]
-    * [Transactions auto-repeat]
-    * [Search line]
-    * [Print data]
-    * [Fields generators]
-    * [Secret features]
-  * [Specification Window]
-    * [Specification Window overview]
-    * [Field parameters]
-    * [Extended field parameters]
-    * [MTI settings]
-    * [Set specification]
-    * [Save specification]
-  * [Settings Window]
-    * [Settings Window overview]
-    * [Triggers]
-    * [Validations]
+  * [Main Window](#main-window)
+    * [Main Window overview](#main-window-overview)  
+    * [Complex fields parser](#complex-fields-parser)
+    * [Reversal](#reversal)
+    * [Transactions auto-repeat](#transactions-auto-repeat)
+    * [Search line](#search-line)
+    * [Print data](#print-data)
+    * [Fields generators](#fields-generators)
+    * [Secret features](#secret-features)
+  * [Specification Window](#specification-window)
+    * [Specification Window overview](#specification-window-overview)
+    * [Field parameters](#field-parameters)
+    * [Extended field parameters](#extended-field-parameters)
+    * [MTI settings](#mti-settings)
+    * [Set specification](#set-specification)
+    * [Save specification](#save-specification)
+  * [Settings Window](#settings-window)
+    * [Settings Window overview](#settings-window-overview)
+    * [Triggers](#triggers)
+    * [Validations](#validations)
   * [Windows hotkeys](#windows-hotkeys)
 
 
@@ -51,14 +51,14 @@
   * [CLI examples](#cli-examples)
 
 
-* [Library re-usage]
-  * [Requirements]
-  * [Library installation]
-  * [Modules purpose]
-  * [Logging]
-  * [Modules usage example]
-  * [Compilation of executable binary]
-  * [Recommendations]
+* [Library re-usage](#library-re-usage)
+  * [Requirements](#requirements)
+  * [Library installation](#library-installation)
+  * [Modules purpose](#modules-purpose)
+  * [Logging](#logging)
+  * [Modules usage example](#modules-usage-example)
+  * [Compilation of executable binary](#compilation-of-executable-binary)
+  * [Recommendations](#recommendations)
   
 
  * [Specification settings](#specification-settings)
@@ -66,50 +66,51 @@
    * [Settings description](#settings-description)
    * [Remote specification](#remote-specification)
    * [Remote specification endpoint setting](#remote-specification-endpoint-setting)
-  
+   * [Remote spec endpoint code example](#remote-spec-endpoint-code-example)
+   
 
-* [Fields validation]
-  * [Main validation]
-  * [Extended validation]
-  * [Violation mode]
-  * [Directions]
-  * [Complex fields flat / JSON representation]
-  * [Manual entry mode]
+* [Fields validation](#fields-validation)
+  * [Main validation](#main-validation)
+  * [Extended validation](#extended-validation)
+  * [Violation mode](#violation-mode)
+  * [Directions](#directions)
+  * [Complex fields representation](#complex-fields-representation)
+  * [Manual entry mode](#manual-entry-mode)
 
 
-* [Configuration]
-  * [Config overview]
-  * [Config file]
-  * [Settings] 
-    * [Remote host]
-    * [Specification]
-    * [On startup]
-    * [Log]
-    * [Validation]
-    * [Fields]
+* [Configuration](#configuration)
+  * [Config overview](#config-overview)
+  * [Config file](#config-file)
+  * [Settings](#settings)
+    * [Remote host](#remote-host)
+    * [Specification](#specification)
+    * [On startup](#on-startup)
+    * [Log](#log)
+    * [Validation](#validation)
+    * [Fields](#fields)
    
  
  * [Transaction data files](#transaction-data-files)
-   * [Overview](#overview)
+   * [Data files overview](#data-files-overview)
    * [The data formats description](#the-data-formats-description)
    * [Loading to the SIGNAL](#loading-to-the-signal)
    * [Save transaction to file](#save-transaction-to-file)
-
+  
  
-* [Logging]
-  * [Log levels]
-  * [Storage and rotation]
-  * [Hide secrets]
+* [Logging](#logging)
+  * [Log levels](#log-levels)
+  * [Storage and rotation](#storage-and-rotation)
+  * [Hide secrets](#hide-secrets)
 
 
-* [Bugs]
-  * [List of known bugs]
+* [Bugs](#bugs)
+  * [List of known bugs](#list-of-known-bugs)
 
 
 * [About](#about)
-  * [Concept and design] 
+  * [Concept and design](#concept-and-design) 
   * [License](#license)
-  * [Resources]
+  * [Resources](#resources)
   * [Author](#author)
   
 # SIGNAL
@@ -189,6 +190,46 @@ settings are needed to run SIGNAL GUI on a Windows machine. Run the `signal.exe`
 Check the parameters, opened by the "Configuration" button to make your settings  
 
 ![image](https://i.imgur.com/Pj49PG1.png)
+
+## Main Window
+
+### Main Window overview
+
+### Complex fields parser
+
+### Reversal
+
+### Transactions auto-repeat
+
+### Search line
+
+### Print data
+
+### Fields generators
+
+### Secret features
+
+## Specification Window
+
+### Specification Window overview
+
+### Field parameters
+
+### Extended field parameters
+
+### MTI settings
+
+### Set specification
+
+### Save specification
+
+## Settings Window
+
+### Settings Window overview
+
+### Triggers
+
+### Validations
 
 ## Windows hotkeys
 
@@ -323,6 +364,18 @@ PS C:\signal> signal.exe --console --echo-test
 03:05:13 [INFO] Transaction ID [20240414_030512_8695314843] matched, response time seconds: 1.082
 ```
 
+# Library re-usage
+
+## Requirements
+## Library installation
+## Modules purpose
+## Logging
+## Modules usage example
+## Compilation of executable binary
+## Recommendations
+
+
+
 # Specification settings
 
 ## Specification Overview
@@ -364,10 +417,6 @@ The table below describes the settings window columns from left to right
 ² Due to security reasons, it is impossible to set Primary Account Number (Field 2) as non-secret. The field has a non-removable "secret" mark  
 
 
-## MTI setting
-
-
-
 ## Remote specification
 The local specification `JSON` file always is at the path `common/data/settings/specification.json`, however, SIGNAL can get general specification `JSON` remotely on the startup stage and by the user's request in SpecWindow. The specification URL should be set in the settings. In case when the remote specification is set by settings but the SIGNAL is unable to get remote specification data the local spec data will be taken instead from the "settings" directory
 
@@ -385,7 +434,7 @@ The conditions for the remote spec endpoint:
 * Return valid specification data in response-body
 
 
-### Remote specification endpoint setting
+## Remote specification endpoint setting
 
 The following [code](#remote-spec-endpoint-code-example) illustrates the endpoint example. In this example, endpoint http://127.0.0.1:4242/specification returns specification file data `/opt/spec/specification.json`
 
@@ -405,7 +454,7 @@ The following [code](#remote-spec-endpoint-code-example) illustrates the endpoin
 ![image](https://i.imgur.com/mhjheFj.png)
 
 
-### Remote spec endpoint code example
+## Remote spec endpoint code example
 
 ```python
 from http import HTTPStatus
@@ -450,18 +499,37 @@ except KeyboardInterrupt:
 
 server.server_close()
 ```
+# Fields validation
+## Main validation
+## Extended validation
+## Violation mode
+## Directions
+## Complex fields representation
+## Manual entry mode
+
+
+# Configuration
+## Config overview
+## Config file
+## Settings
+## Remote host
+## Specification
+## On startup
+## Log
+## Validation
+## Fields
 
 
 # Transaction data files
 
 
-## Overview
+## Data files overview
 
 The SIGNAL supports multiple representations of transaction data files. The data can be put to the SIGNAL using 
 one of three formats - `JSON`, `INI`, and `DUMP`. The data is stored in text files, which can be read or written 
 by SIGNAL. This chapter describes each format's features and purpose
 
-## The data formats description 
+## The data formats description
 
 | Format | File extension | Incoming  | Outgoing | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 |--------|----------------|-----------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -481,12 +549,32 @@ pattern one by one. Better to set the correct extension for each format. Refer t
 
 ... 
 
-# About
 
+# Logging
+## Log levels
+## Storage and rotation
+## Hide secrets
+
+# Bugs
+## List of known bugs
+
+| Bug                                                          | Status | Workaround                                                                          | Comment                                                            |  
+|--------------------------------------------------------------|--------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| Console window appears when I run GUI                        | Active | Set Terminal app to default to "Windows Console Host" instead of "Windows Terminal" | [Solution](https://github.com/pyinstaller/pyinstaller/issues/8022) |
+| No data in Connector when no such field in the specification | Active | -                                                                                   | -                                                                  | 
+
+# About
+## Concept and design
 ## License
 
 SIGNAL is distributed under the GNU/GPL license as free software. See more on [GNU page](https://www.gnu.org/licenses/)
 
+
+## Resources
+
+* [ISO 8583 Wiki page](https://en.wikipedia.org/wiki/ISO_8583)
+* [Qt documentation](https://doc.qt.io/)
+* [Payment service provider Wiki page](https://en.wikipedia.org/wiki/Payment_service_provider)
 
 ## Author
 
