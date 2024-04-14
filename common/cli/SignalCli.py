@@ -30,9 +30,9 @@ class SignalCli(Terminal):
         self.setup()
 
     def setup(self):
-        self.logger.create_logger()
-
         signal(SIGINT, SIG_DFL)
+
+        self.logger.create_logger()
 
         cli_args_parser: ArgumentParser = ArgumentParser(description=TextConstants.CLI_DESCRIPTION)
 
@@ -51,6 +51,7 @@ class SignalCli(Terminal):
         cli_args_parser.add_argument("--default", action="store_true", help="Send default transaction message")
         cli_args_parser.add_argument("-v", "--version", action="store_true", help="Print current version of SIGNAL")
         cli_args_parser.add_argument("--config", action="store_true", help="Print configuration parameters")
+
         cli_arguments = cli_args_parser.parse_args()
 
         try:
