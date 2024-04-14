@@ -45,8 +45,9 @@
   * [Library installation]
   * [Modules purpose]
   * [Modules usage example]
+  * [Compilation of executable binary]
   * [Recommendations]
-
+  
 
  * [Specification settings](#specification-settings)
    * [Specification Overview](#specification-overview) 
