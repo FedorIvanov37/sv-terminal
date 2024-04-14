@@ -17,3 +17,4 @@ class CliConfig(BaseModel):
     about: bool = False
     default: bool = False
     version: bool = False
+    config: bool = False

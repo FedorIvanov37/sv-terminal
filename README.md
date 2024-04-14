@@ -220,7 +220,7 @@ Flag `-h` or `--help` does not require console-mode flags
 To see usage hint call `signal.exe --help`
 
 ```text
-usage: signal.exe [-h] -c [-f FILE] [-d DIR] [-a ADDRESS] [-p PORT] [-r] [-l LOG_LEVEL] [-i INTERVAL] [--parallel] [-t TIMEOUT] [--about] [-e] [--default] [-v]
+usage: signal.exe [-h] -c [-f FILE] [-d DIR] [-a ADDRESS] [-p PORT] [-r] [-l LOG_LEVEL] [-i INTERVAL] [--parallel] [-t TIMEOUT] [--about] [-e] [--default] [-v] [--config]
 
 SIGNAL v0.18
 
@@ -244,6 +244,7 @@ options:
   -e, --echo-test       Send echo-test
   --default             Send default transaction message
   -v, --version         Print current version of SIGNAL
+  --config              Print configuration parameters
 ```
 
 ## CLI examples

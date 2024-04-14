@@ -1,4 +1,4 @@
-from logging import debug, info, warning
+from logging import debug, info, warning, error
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Parser import Parser
@@ -30,7 +30,13 @@ class LogPrinter(QObject):
 
     def print_startup_info(self, level=default_level):
         LogPrinter.print_multi_row(TextConstants.HELLO_MESSAGE)
-        config_data = self.config.model_dump_json(indent=4)
+        self.print_config(self.config, level=level)
+
+    def print_config(self, config: Config | None = None, level=default_level):
+        if config is None:
+            config = self.config
+
+        config_data = config.model_dump_json(indent=4)
         config_data = f"## Configuration parameters ##\n{config_data}\n## End of configuration parameters ##"
         self.print_multi_row(config_data, level=level)
 
@@ -80,6 +86,13 @@ class LogPrinter(QObject):
 
             hide_secrets: bool = self.config.fields.hide_secrets
 
+            if self.spec.is_field_complex([field]) and isinstance(field_data, dict):
+                try:
+                    field_data = Parser.join_complex_field(field, field_data)
+                except Exception as parsing_error:
+                    error(f"Cannot print field {field}: {parsing_error}")
+                    continue
+
             if all((hide_secrets, self.spec.is_field_complex([field]), isinstance(field_data, str))):
                 try:
                     split_field_data: dict = Parser.split_complex_field(field, field_data)
@@ -107,3 +120,7 @@ class LogPrinter(QObject):
             level(message)
 
         level("")
+
+    @staticmethod
+    def print_version(level=default_level):
+        level(f"SIGNAL {ReleaseDefinition.VERSION} | {ReleaseDefinition.RELEASE}")

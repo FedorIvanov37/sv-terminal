@@ -1,17 +1,16 @@
+from glob import glob
+from time import sleep
 from os import listdir
 from os.path import normpath, basename, isfile
-from glob import glob
-from pydantic import ValidationError
 from logging import info, error
 from datetime import datetime
-from time import sleep
 from argparse import ArgumentParser
+from pydantic import ValidationError
 from signal import signal, SIG_DFL, SIGINT
 from PyQt6.QtCore import QCoreApplication, QTimer, pyqtSignal
 from common.lib.data_models.Transaction import Transaction
 from common.lib.data_models.Config import Config
 from common.lib.enums.TextConstants import TextConstants
-from common.lib.enums.ReleaseDefinition import ReleaseDefinition
 from common.lib.constants.LogDefinition import DebugLevels
 from common.cli.data_models.CliConfig import CliConfig
 from common.lib.core.Terminal import Terminal
@@ -51,28 +50,39 @@ class SignalCli(Terminal):
         cli_args_parser.add_argument("-e", "--echo-test", action="store_true", help="Send echo-test")
         cli_args_parser.add_argument("--default", action="store_true", help="Send default transaction message")
         cli_args_parser.add_argument("-v", "--version", action="store_true", help="Print current version of SIGNAL")
-
+        cli_args_parser.add_argument("--config", action="store_true", help="Print configuration parameters")
         cli_arguments = cli_args_parser.parse_args()
 
         try:
             self._cli_config = CliConfig.model_validate(cli_arguments.__dict__)
         except (ValidationError, ValueError) as arg_parsing_error:
             error(arg_parsing_error)
-            return
+            exit(100)
 
         try:
             self.parse_cli_config(self._cli_config)
-        except ValueError:
-            error("Error run in Console Mode")
-            self._finished.emit()
+        except ValueError as config_parsing_error:
+            error(f"Error run in Console Mode: {config_parsing_error}")
+            exit(100)
 
         self.logger.set_debug_level()
 
-        if self._cli_config.version:
-            self.version()
+        print_data_map = (
+            (self._cli_config.version, self.log_printer.print_version),
+            (self._cli_config.about, self.log_printer.print_about),
+            (self._cli_config.config, lambda: self.log_printer.print_config(self.config)),
+        )
 
-        if self._cli_config.about:
-            self.log_printer.print_about()
+        for data_map in print_data_map:
+            need_run, function = data_map
+
+            if not need_run:
+                continue
+
+            try:
+                function()
+            except Exception as print_error:
+                error(print_error)
 
         if not any([self._cli_config.version, self._cli_config.about]):
             info("## Running SIGNAL in Console mode ##")
@@ -80,7 +90,7 @@ class SignalCli(Terminal):
             info(str())
 
     def connect_all(self):
-        self.run_timer.timeout.connect(self.main)
+        self.run_timer.timeout.connect(self.begin)
         self._finished.connect(self.application.quit)
 
     def run_application(self):
@@ -88,7 +98,7 @@ class SignalCli(Terminal):
         self.run_timer.start(0)
         self.application.exec()
 
-    def main(self):
+    def begin(self):
         if not (filenames := self.get_files_to_process()):
             if not any([self._cli_config.about, self._cli_config.version]):
                 error("Cannot found specified files")
@@ -121,12 +131,6 @@ class SignalCli(Terminal):
     def get_files_to_process(self) -> list[str]:
         filenames: list[str] = list()
 
-        if self._cli_config.echo_test:
-            filenames.append(TermFilesPath.ECHO_TEST)
-
-        if self._cli_config.default:
-            filenames.append(TermFilesPath.DEFAULT_FILE)
-
         if self._cli_config.dir:
             dir_files = listdir(self._cli_config.dir)
             dir_files = ["/".join([str(self._cli_config.dir), file]) for file in dir_files]
@@ -139,6 +143,12 @@ class SignalCli(Terminal):
         filenames = map(normpath, filenames)
         filenames = [filename for filename in filenames if isfile(filename)]
         filenames = list(set(filenames))
+
+        if self._cli_config.default:
+            filenames.insert(int(), TermFilesPath.DEFAULT_FILE)
+
+        if self._cli_config.echo_test:
+            filenames.insert(int(), TermFilesPath.ECHO_TEST)
 
         return filenames
 
@@ -157,7 +167,3 @@ class SignalCli(Terminal):
     def wait(self, sec):
         sleep(sec)
         self.application.processEvents()
-
-    @staticmethod
-    def version():
-        info(f"SIGNAL {ReleaseDefinition.VERSION} | {ReleaseDefinition.RELEASE}")

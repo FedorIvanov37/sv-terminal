@@ -25986,8 +25986,8 @@
             "field_path": [
                 "70"
             ],
-            "min_length": 1,
-            "max_length": 2,
+            "min_length": 3,
+            "max_length": 3,
             "var_length": 0,
             "tag_length": 0,
             "generate": false,
