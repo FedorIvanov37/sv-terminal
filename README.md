@@ -15,14 +15,16 @@
 
 # Contents 
 
-* [Description](#description)
-  * [SIGNAL overview](#signal-overview)
+* [SIGNAL](#signal)
+  * [SIGNAL general overview](#signal-general-overview)
   * [Important notes](#important-notes)
   * [Release info](#release-info)
-
+  
  
 * [Graphic User Interface](#graphic-user-interface)
   * [GUI overview](#gui-overview)
+  * [Main Window]
+  * [Other Windows]
   * [Windows hotkeys](#windows-hotkeys)
 
 
@@ -64,7 +66,7 @@
   * [Search line]
   * [Print data]
   * [Fields generators]
-
+  * [Secret features]
 
 * [Configuration]
   * [Config overview]
@@ -96,17 +98,17 @@
 
 
 * [About](#about)
-  * [The SIGNAL story] 
+  * [Concept and design] 
   * [License](#license)
   * [Resources]
   * [Author](#author)
+  
+# SIGNAL
 
-# Description
-
-## SIGNAL Overview
+## SIGNAL general overview
 
 SIGNAL simplifies the sending of banking card e-commerce transactions to banking card processing systems using a useful 
-visual interface making simple things simple to achieve
+visual and program interface making simple things simple to achieve
 
 The SIGNAL uses ISO-8583 E-pay protocol for transactions sending, instead of PSP. It can be used during the Payment 
 Systems certification test, for checking and setting up the system on the test environment, during the application 
@@ -125,10 +127,10 @@ Processing Support Team
 Written on Python 3.12 with the use of PyQt6 and Pydantic packages
 
 
-In case of any questions about SIGNAL [contact author](#author). Your feedback and suggestions are general drivers 
+In case of any questions about SIGNAL [contact the author](#author). Your feedback and suggestions are general drivers 
 of SIGNAL evolution.
 
-## Important notes  
+## Important notes
 
 * Allowed usage on test environment only. SIGNAL only implements basic security checks
 * At the moment SIGNAL doesn't support byte-fields
@@ -313,7 +315,7 @@ PS C:\signal> signal.exe --console --echo-test
 
 # Specification settings
 
-## Specification Overview 
+## Specification Overview
 
 This chapter describes the specification settings and maintenance. Refer to SVFE E-pay specification for more info.
 
@@ -481,4 +483,4 @@ SIGNAL is distributed under the GNU/GPL license as free software. See more on [G
 Designed and developed by Fedor Ivanov   
 
 
-In case of any question feel free to [contract author](mailto:fedornivanov@gmail.com?subject=SIGNAL%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SIGNAL%20version%20is%20v0.17%20%7C%20Released%20in%20Oct%202023%0A) directly
+In case of any question feel free to [contract author](mailto:fedornivanov@gmail.com?subject=SIGNAL%27s%20user%20request&body=Dear%20Fedor%2C%0A%0A%0A%3E%20Put%20your%20request%20here%20%3C%20%0A%0A%0A%0AMy%20SIGNAL%20version%20is%20v0.18%20%7C%20Released%20in%20Apr%202024%0A) directly
