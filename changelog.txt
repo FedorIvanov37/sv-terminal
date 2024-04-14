@@ -177,6 +177,9 @@
 + Add tabs by QTabWidget
 + Revise hotkeys in hint-window
 
+• Console mode
+    • Run keys: -v --version, --about, --author,
+
 
 • Pin main tab and make the other movable
 • Add fields trim property to spec
@@ -208,6 +211,7 @@
 • Publish on confluence
 • Spec explanation
 
-• Console mode
 • API console mode
 • Undo / Redo
+
+

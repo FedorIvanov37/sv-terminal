@@ -9,7 +9,7 @@
  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
   ########  ###########  ########   ###    ####  ###     ###  ########## 
                                                                                                                       
- Simplified ISO generation algorithm | v0.17 Dec 2023
+ Simplified ISO generation algorithm | v0.18 Apr 2024
 ```
 
 
@@ -25,6 +25,11 @@
 * [Graphic User Interface](#graphic-user-interface)
   * [GUI overview](#gui-overview)
   * [Windows hotkeys](#windows-hotkeys)
+
+
+* [Command Line Interface](#command-line-interface)
+  * [Usage](#usage)
+  * [Examples](#examples)
 
 
 * [Settings](#settings) 
@@ -148,6 +153,113 @@ The list of key sequences and corresponding actions
 | Ctrl + T             | Print SIGNAL logo         | Print SIGNAL logo              |
 | Ctrl + Alt + Q       | Quit SIGNAL               | -                              |
 
+
+# Command Line Interface
+By usage of a specific flag `-c` or `--console-mode` the SIGNAL can be run in Command Line Interface mode (CLI). In CLI mode GUI will not be run, all the output will be placed in the command line instead. CLI mode is useful when some external tool or script needs to send a transaction without the usage of GUI 
+
+## Usage 
+
+To see usage hint call `signal.exe --help`
+
+The flag `-c` or `--console` is required to run CLI mode (see [examples](#examples)), except the following flags, which will run CLI mode without the requirement of flags `-c` or `--console`:
+
+ * `--help` or `-h`
+ * `--version` or `-v`
+ * `--about`
+
+
+```text
+usage: signal.exe [-h] [-c] [-f FILE] [-d DIR] [-a ADDRESS] [-p PORT] [-r] [-l LOG_LEVEL] [-i INTERVAL] [--parallel] [-t TIMEOUT] [--about] [-e] [--default] [-v]
+
+SIGNAL v0.18
+
+options:
+  -h, --help            show this help message and exit
+  -c, --console-mode    Run SIGNAL in Command Line Interface mode
+  -f FILE, --file FILE  File or file-mask to parse
+  -d DIR, --dir DIR     Directory with files to parse. SIGNAL will try all of the files from the directory
+  -a ADDRESS, --address ADDRESS
+                        Host TCP/IP address
+  -p PORT, --port PORT  TCP/IP port to connect
+  -r, --repeat          Repeat transactions after sending
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        Debug level DEBUG, INFO, etc
+  -i INTERVAL, --interval INTERVAL
+                        Wait (seconds) before send next transaction
+  --parallel            Send new transaction with no waiting of answer for previous one
+  -t TIMEOUT, --timeout TIMEOUT
+                        Timeout of waiting resp
+  --about               Show info about the SIGNAL
+  -e, --echo-test       Send echo-test
+  --default             Send default transaction message
+  -v, --version         Print current version of SIGNAL
+```
+
+## Examples
+| Command                                                      | Action                                                               | 
+|--------------------------------------------------------------|----------------------------------------------------------------------|
+| `signal.exe --console-mode --default`                        | Send default transaction to the host                                 |
+| `signal.exe --console-mode --echo-test`                      | Send echo-test to the host                                           |
+| `signal.exe --console-mode --about`                          | Show info about the SIGNAL                                           |
+| `signal.exe --console-mode --file transaction.json`          | Parse specific file and send the transaction to the host             |
+| `signal.exe --console-mode --default --repeat --interval 2`  | Begin transaction loop, sending new transaction every 2 sec          |
+| `signal.exe --console-mode --dir /transactions --parallel`   | Immediate send all the transactions from the directory /transactions |
+
+```text
+PS C:\signal> signal.exe --about
+02:57:15 [INFO] 
+02:57:15 [INFO]   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+02:57:15 [INFO]  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+02:57:15 [INFO]  +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+02:57:15 [INFO]  +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+02:57:15 [INFO]         +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+02:57:15 [INFO]  #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+02:57:15 [INFO]   ########  ###########  ########   ###    ####  ###     ###  ########## 
+02:57:15 [INFO] 
+02:57:15 [INFO]   Simplified ISO generation algorithm v0.18
+02:57:15 [INFO] 
+02:57:15 [INFO]   Use only on test environment
+02:57:15 [INFO] 
+02:57:15 [INFO]   Version v0.18
+02:57:15 [INFO] 
+02:57:15 [INFO]   Released in Apr 2024
+02:57:15 [INFO] 
+02:57:15 [INFO]   Developed by Fedor Ivanov
+02:57:15 [INFO] 
+02:57:15 [INFO]   Contact fedornivanov@gmail.com
+02:57:15 [INFO]
+```
+
+```text
+PS C:\signal> signal.exe --console-mode --echo-test 
+03:05:12 [INFO] ## Running SIGNAL in Console mode ##
+03:05:12 [INFO] Press CTRL+C to exit
+03:05:12 [INFO] 
+03:05:12 [INFO] 
+03:05:12 [INFO] Processing file echo-test.json
+03:05:12 [WARNING] Host disconnected. Trying to establish the connection
+03:05:12 [INFO] Connection ESTABLISHED
+03:05:12 [INFO] 
+03:05:12 [INFO] [TRANS_ID][20240414_030512_8695314843]
+03:05:12 [INFO] [MSG_TYPE][0800]
+03:05:12 [INFO] [BITMAP  ][7, 11, 70]
+03:05:12 [INFO] [007][010][0414030512]
+03:05:12 [INFO] [011][006][615012]
+03:05:12 [INFO] [070][003][301]
+03:05:12 [INFO] 
+03:05:12 [INFO] Outgoing transaction ID [20240414_030512_8695314843] sent
+03:05:13 [INFO] Incoming transaction ID [20240414_030512_8695314843] received
+03:05:13 [INFO]
+03:05:13 [INFO] [TRANS_ID][20240414_030512_8695314843]
+03:05:13 [INFO] [MSG_TYPE][0810]
+03:05:13 [INFO] [BITMAP  ][7, 11, 39, 70]
+03:05:13 [INFO] [007][010][0414030512]
+03:05:13 [INFO] [011][006][615012]
+03:05:13 [INFO] [039][002][00]
+03:05:13 [INFO] [070][002][30]
+03:05:13 [INFO]
+03:05:13 [INFO] Transaction ID [20240414_030512_8695314843] matched, response time seconds: 1.082
+```
 
 # Settings
 
