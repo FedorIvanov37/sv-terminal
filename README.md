@@ -24,8 +24,15 @@
 * [Graphic User Interface](#graphic-user-interface)
   * [GUI overview](#gui-overview)
   * [Main Window]
-  * [Other Windows]
   * [Windows hotkeys](#windows-hotkeys)
+  * [GUI Tools]
+    * [Complex fields parser]
+    * [Reversal]
+    * [Transactions auto-repeat]
+    * [Search line]
+    * [Print data]
+    * [Fields generators]
+    * [Secret features]  
 
 
 * [Command Line Interface](#command-line-interface)
@@ -39,7 +46,7 @@
   * [Modules purpose]
   * [Modules usage example]
   * [Recommendations]
-  
+
 
  * [Specification settings](#specification-settings)
    * [Specification Overview](#specification-overview) 
@@ -57,16 +64,7 @@
   * [Directions]
   * [Complex fields flat / JSON representation]
   * [Manual entry mode]
-  
 
-* [Tools]
-  * [Complex fields parser]
-  * [Reversal]
-  * [Transactions auto-repeat]
-  * [Search line]
-  * [Print data]
-  * [Fields generators]
-  * [Secret features]
 
 * [Configuration]
   * [Config overview]
