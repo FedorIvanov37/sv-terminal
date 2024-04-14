@@ -1,5 +1,3 @@
-    # Simplified ISO generation algorithm
-
 ```
   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::
  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
@@ -64,6 +62,7 @@
  * [Specification settings](#specification-settings)
    * [Specification Overview](#specification-overview) 
    * [Settings description](#settings-description)
+   * [Specification backup](#specification-backup)
    * [Remote specification](#remote-specification)
    * [Remote specification endpoint setting](#remote-specification-endpoint-setting)
    * [Remote spec endpoint code example](#remote-spec-endpoint-code-example)
@@ -95,8 +94,16 @@
    * [The data formats description](#the-data-formats-description)
    * [Loading to the SIGNAL](#loading-to-the-signal)
    * [Save transaction to file](#save-transaction-to-file)
-  
- 
+
+
+* [Data storage](#data-storage)
+  * [Default messages](#default-messages)
+  * [Dictionaries](#dictionaries)
+  * [License info](#license-info)
+  * [Settings storage](#settings-storage)
+  * [Specification backup](#specification-backup)
+
+
 * [Logging](#logging)
   * [Log levels](#log-levels)
   * [Storage and rotation](#storage-and-rotation)
@@ -107,10 +114,10 @@
   * [List of known bugs](#list-of-known-bugs)
 
 
-* [About](#about)
-  * [Concept and design](#concept-and-design) 
+* [About SIGNAL](#about-signal)
   * [License](#license)
   * [Resources](#resources)
+  * [Support](#support)
   * [Author](#author)
   
 # SIGNAL
@@ -416,6 +423,7 @@ The table below describes the settings window columns from left to right
 
 ² Due to security reasons, it is impossible to set Primary Account Number (Field 2) as non-secret. The field has a non-removable "secret" mark  
 
+## Specification backup
 
 ## Remote specification
 The local specification `JSON` file always is at the path `common/data/settings/specification.json`, however, SIGNAL can get general specification `JSON` remotely on the startup stage and by the user's request in SpecWindow. The specification URL should be set in the settings. In case when the remote specification is set by settings but the SIGNAL is unable to get remote specification data the local spec data will be taken instead from the "settings" directory
@@ -549,6 +557,12 @@ pattern one by one. Better to set the correct extension for each format. Refer t
 
 ... 
 
+# Data storage
+## Default messages
+## Dictionaries
+## License info
+## Settings storage
+## Specification backup
 
 # Logging
 ## Log levels
@@ -563,8 +577,14 @@ pattern one by one. Better to set the correct extension for each format. Refer t
 | Console window appears when I run GUI                        | Active | Set Terminal app to default to "Windows Console Host" instead of "Windows Terminal" | [Solution](https://github.com/pyinstaller/pyinstaller/issues/8022) |
 | No data in Connector when no such field in the specification | Active | -                                                                                   | -                                                                  | 
 
-# About
-## Concept and design
+# About SIGNAL
+
+SIGNAL - Simplified ISO generation algorithm
+
+Version v0.18
+
+Released in Apr 2024
+
 ## License
 
 SIGNAL is distributed under the GNU/GPL license as free software. See more on [GNU page](https://www.gnu.org/licenses/)
@@ -575,6 +595,30 @@ SIGNAL is distributed under the GNU/GPL license as free software. See more on [G
 * [ISO 8583 Wiki page](https://en.wikipedia.org/wiki/ISO_8583)
 * [Qt documentation](https://doc.qt.io/)
 * [Payment service provider Wiki page](https://en.wikipedia.org/wiki/Payment_service_provider)
+* [GNU page](https://www.gnu.org/licenses/)
+
+
+## Support
+
+The project was designed and developed concerning the everyday needs of banking systems support engineers. 
+It helped to save thousands of working hours and meet hundreds of deadlines. The basic monetization concept is that 
+SIGNAL is free, always, and for everyone, not depending on usage. All the licensing and copyright targeting firstly 
+to protect usage for free 
+
+However, the project needs your support. If you want to support the project you can spend your time, working on it or 
+make a voluntary donation directly to the author
+
+The project needs help
+
+* Code review
+* Documentation development
+* Documentation translate
+* Feedback, ideas
+* Testing, especially auto-test, unit-tests
+* Financial support - BTC wallet 
+
+⚠️ Any donation can be voluntary only
+
 
 ## Author
 
