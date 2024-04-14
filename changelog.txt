@@ -175,10 +175,8 @@
 + Expand column after field editing finished
 + Set complex fields full expanding when switch JSON mode
 + Add tabs by QTabWidget
-+ Revise hotkeys in hint-window
-
-• Console mode
-    • Run keys: -v --version, --about, --author,
++ Revise hotkeys in hint-window and doc
++ Console mode
 
 
 • Pin main tab and make the other movable

@@ -28,8 +28,8 @@
 
 
 * [Command Line Interface](#command-line-interface)
-  * [Usage](#usage)
-  * [Examples](#examples)
+  * [CLI usage](#cli-usage)
+  * [CLI examples](#cli-examples)
 
 
 * [Settings](#settings) 
@@ -132,44 +132,43 @@ Check the parameters, opened by the "Configuration" button to make your settings
 
 The list of key sequences and corresponding actions 
 
-| Key sequence         | MainWindow                | SpecWindow                     |
-|----------------------|---------------------------|--------------------------------|
-| F1                   | About SIGNAL              | -                              |
-| Ctrl + Enter         | Send transaction          | -                              |
-| Ctrl + Shift + Enter | Reverse last transaction  | -                              |
-| Ctrl + Alt + Enter   | Send Echo-Test            | -                              |
-| Ctrl + N             | Add new field             | Add new field                  |
-| Ctrl + Shift + N     | Add new subfield          | Add new subfield               |
-| Ctrl + Shift + V     | Validate current message  | -                              |
-| Ctrl + F             | Search                    | Search                         |
-| Delete               | Remove field              | Remove field                   |
-| Ctrl + E             | Edit current field data   | Edit current field description |
-| Ctrl + W             | Edit current field number | Edit current field number      |
-| Ctrl + R             | Reconnect to host         | -                              |
-| Ctrl + L             | Clear log                 | Clear log                      |
-| Ctrl + O             | Open transaction file     | Open specification file        |
-| Ctrl + S             | Save transaction to file  | Backup current specification   |
-| Ctrl + P             | Print transaction         | -                              |
-| Ctrl + T             | Print SIGNAL logo         | Print SIGNAL logo              |
-| Ctrl + Alt + Q       | Quit SIGNAL               | -                              |
+| Key sequence         | MainWindow                | SpecWindow                       |
+|----------------------|---------------------------|----------------------------------|
+| F1                   | About SIGNAL              | -                                |
+| Ctrl + Enter         | Send transaction          | -                                |
+| Ctrl + Shift + Enter | Reverse last transaction  | -                                |
+| Ctrl + Alt + Enter   | Send Echo-Test            | -                                |
+| Ctrl + N             | Add new field             | Add new field                    |
+| Ctrl + Shift + N     | Add new subfield          | Add new subfield                 |
+| Ctrl + Shift + V     | Validate current message  | -                                |
+| Ctrl + F             | Search                    | Search                           |
+| Delete               | Remove field              | Remove field                     |
+| Ctrl + E             | Edit current field data   | Edit current field description   |
+| Ctrl + W             | Edit current field number | Edit current field number        |
+| Ctrl + R             | Reconnect to host         | -                                |
+| Ctrl + L             | Clear log                 | Clear log                        |
+| Ctrl + O             | Open transaction file     | Open specification file          |
+| Ctrl + S             | Save transaction to file  | Backup current specification     |
+| Ctrl + P             | Print transaction         | -                                |
+| Ctrl + T             | Open new tab              | -                                |
+| Ctrl + F4            | Close current tab         | -                                |
+| Ctrl + PgUp / PgDown | Tabs navigation           | -                                |
+| Ctrl + Alt + Q       | Quit SIGNAL               | -                                |
 
 
 # Command Line Interface
 By usage of a specific flag `-c` or `--console-mode` the SIGNAL can be run in Command Line Interface mode (CLI). In CLI mode GUI will not be run, all the output will be placed in the command line instead. CLI mode is useful when some external tool or script needs to send a transaction without the usage of GUI 
 
-## Usage 
+The console-mode flag `-c` or `--console-mode` is required to run CLI mode (see [examples](#cli-examples)). In case of absence console-mode flags GUI mode will be run by default
+
+Flag `-h` or `--help` does not require console-mode flags
+
+## CLI Usage
 
 To see usage hint call `signal.exe --help`
 
-The flag `-c` or `--console` is required to run CLI mode (see [examples](#examples)), except the following flags, which will run CLI mode without the requirement of flags `-c` or `--console`:
-
- * `--help` or `-h`
- * `--version` or `-v`
- * `--about`
-
-
 ```text
-usage: signal.exe [-h] [-c] [-f FILE] [-d DIR] [-a ADDRESS] [-p PORT] [-r] [-l LOG_LEVEL] [-i INTERVAL] [--parallel] [-t TIMEOUT] [--about] [-e] [--default] [-v]
+usage: _signal.py [-h] -c [-f FILE] [-d DIR] [-a ADDRESS] [-p PORT] [-r] [-l LOG_LEVEL] [-i INTERVAL] [--parallel] [-t TIMEOUT] [--about] [-e] [--default] [-v]
 
 SIGNAL v0.18
 
@@ -195,15 +194,15 @@ options:
   -v, --version         Print current version of SIGNAL
 ```
 
-## Examples
-| Command                                                      | Action                                                               | 
-|--------------------------------------------------------------|----------------------------------------------------------------------|
-| `signal.exe --console-mode --default`                        | Send default transaction to the host                                 |
-| `signal.exe --console-mode --echo-test`                      | Send echo-test to the host                                           |
-| `signal.exe --console-mode --about`                          | Show info about the SIGNAL                                           |
-| `signal.exe --console-mode --file transaction.json`          | Parse specific file and send the transaction to the host             |
-| `signal.exe --console-mode --default --repeat --interval 2`  | Begin transaction loop, sending new transaction every 2 sec          |
-| `signal.exe --console-mode --dir /transactions --parallel`   | Immediate send all the transactions from the directory /transactions |
+## CLI examples
+| Command                                                           | Action                                                                                    | 
+|-------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| `signal.exe --console-mode --default`                             | Send default transaction to the host                                                      |
+| `signal.exe --console-mode --echo-test`                           | Send echo-test to the host                                                                |
+| `signal.exe --console-mode --about`                               | Show info about the SIGNAL                                                                |
+| `signal.exe --console-mode --file /transactions/transaction.json` | Parse specific file `/transactions/transaction.json` and send the transaction to the host |
+| `signal.exe --console-mode --default --repeat --interval 2`       | Begin transaction loop, sending new transaction every 2 sec                               |
+| `signal.exe --console-mode --dir /transactions --parallel`        | Immediate send all the transactions from the directory /transactions                      |
 
 ```text
 PS C:\signal> signal.exe --about

@@ -153,7 +153,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             KeySequences.CTRL_SHIFT_N: self.SpecView.next_level,
             KeySequences.CTRL_W: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.FIELD),
             KeySequences.CTRL_E: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.DESCRIPTION),
-            KeySequences.CTRL_T: self.set_hello_message,
             KeySequences.CTRL_L: self.clear_log,
         }
 
