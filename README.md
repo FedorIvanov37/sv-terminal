@@ -9,7 +9,7 @@
                                                                                                                       
  Simplified ISO generation algorithm | v0.18 Apr 2024
 ```
-
+️❤[️Project support](#support)
 
 # Contents 
 
@@ -593,9 +593,10 @@ SIGNAL is distributed under the GNU/GPL license as free software. See more on [G
 ## Resources
 
 * [ISO 8583 Wiki page](https://en.wikipedia.org/wiki/ISO_8583)
-* [Qt documentation](https://doc.qt.io/)
 * [Payment service provider Wiki page](https://en.wikipedia.org/wiki/Payment_service_provider)
 * [GNU page](https://www.gnu.org/licenses/)
+* [Qt documentation](https://doc.qt.io/)
+* [Pydantic documentation](https://docs.pydantic.dev/latest/)
 
 
 ## Support
@@ -606,18 +607,20 @@ SIGNAL is free, always, and for everyone, not depending on usage. All the licens
 to protect usage for free 
 
 However, the project needs your support. If you want to support the project you can spend your time, working on it or 
-make a voluntary donation directly to the author
+make a voluntary donation directly to the author. ⚠️ Any donation can be voluntary only
 
 The project needs help
 
-* Code review
-* Documentation development
-* Documentation translate
+* Code review, architecture development
+* Documentation development and translate
 * Feedback, ideas
-* Testing, especially auto-test, unit-tests
-* Financial support - BTC wallet 
+* Testing, especially auto-tests, unit-tests
+* Financial support - BTC wallet `bc1qs2jaqpnse9qgzz9y9wyns50km0f5x4wxe8cggs` 
 
-⚠️ Any donation can be voluntary only
+
+<p align="left">
+  <img src="common/data/style/wallet.png" alt="BTC wallet" width="200"/>  
+</p>
 
 
 ## Author
