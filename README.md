@@ -305,6 +305,11 @@ options:
 ```
 
 ## CLI examples
+
+Below are a few examples of CLI commands. It is not a complete list of possible combinations. See [CLI Usage](#cli-Usage) to get all the commands
+
+### Command examples
+
 | Command                                                      | Action                                                                                    | 
 |--------------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | `signal.exe --console --default`                             | Send default transaction to the host                                                      |
@@ -314,6 +319,12 @@ options:
 | `signal.exe --console --default --repeat --interval 2`       | Begin transaction loop, sending new transaction every 2 sec                               |
 | `signal.exe --console --dir /transactions --parallel`        | Immediate send all the transactions from the directory /transactions                      |
 
+### Output examples
+
+<details>
+ <summary>signal.exe --about</summary>
+ <p align="left">
+   
 ```text
 PS C:\signal> signal.exe --about
 02:57:15 [INFO] 
@@ -339,6 +350,13 @@ PS C:\signal> signal.exe --about
 02:57:15 [INFO]
 ```
 
+</p>
+</details>
+
+<details>
+ <summary>signal.exe --console --echo-test</summary>
+ <p align="left">
+   
 ```text
 PS C:\signal> signal.exe --console --echo-test 
 03:05:12 [INFO] ## Running SIGNAL in Console mode ##
@@ -369,6 +387,12 @@ PS C:\signal> signal.exe --console --echo-test
 03:05:13 [INFO]
 03:05:13 [INFO] Transaction ID [20240414_030512_8695314843] matched, response time seconds: 1.082
 ```
+
+</p>
+</details>
+
+
+
 
 # Library re-usage
 
