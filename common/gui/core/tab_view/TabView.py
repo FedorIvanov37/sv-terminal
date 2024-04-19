@@ -177,6 +177,9 @@ class TabView(QTabWidget):
         if self.count() < 3:
             return
 
+        if self.currentIndex() == int():
+            return
+
         self.close_tab(self.currentIndex())
         self.mark_active_tab()
 

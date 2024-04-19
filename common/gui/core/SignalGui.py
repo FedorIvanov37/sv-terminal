@@ -728,7 +728,7 @@ class SignalGui(Terminal):
             if not (self.window.json_view.field_has_data(bit) or bit in self.window.get_fields_to_generate()):
                 continue
 
-            if int(bit) >= MessageLength.FIRST_BITMAP_CAPACITY:
+            if int(bit) > MessageLength.FIRST_BITMAP_CAPACITY:
                 bitmap.add(self.spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY)
 
             bitmap.add(bit)
