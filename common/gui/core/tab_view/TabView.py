@@ -342,3 +342,6 @@ class TabView(QTabWidget):
             return
 
         return json_view.get_trans_id()
+
+    def get_current_tab_name(self):
+        return self.tabText(self.currentIndex())

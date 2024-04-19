@@ -178,7 +178,6 @@
 + Revise hotkeys in hint-window and doc
 + Console mode
 
-
 + Fix DE62 parsing error
 + Save file(s)
 + --config-file --print-config

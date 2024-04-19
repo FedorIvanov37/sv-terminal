@@ -423,7 +423,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def get_tab_names(self, all_tabs: bool = False) -> list[str]:
         if not all_tabs:
-            return [TabViewParams.MAIN_TAB_NAME]
+            return [self._tab_view.get_current_tab_name()]
 
         tab_names: list[str] = self._tab_view.get_tab_names()
 
