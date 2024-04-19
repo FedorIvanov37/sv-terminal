@@ -50,7 +50,8 @@ class SignalCli(Terminal):
         cli_args_parser.add_argument("-e", "--echo-test", action="store_true", help="Send echo-test")
         cli_args_parser.add_argument("--default", action="store_true", help="Send default transaction message")
         cli_args_parser.add_argument("-v", "--version", action="store_true", help="Print current version of SIGNAL")
-        cli_args_parser.add_argument("--config", action="store_true", help="Print configuration parameters")
+        cli_args_parser.add_argument("--print-config", action="store_true", help="Print configuration parameters")
+        cli_args_parser.add_argument("--config-file", action="store", default=TermFilesPath.CONFIG, help="Set configuration file path")
 
         cli_arguments = cli_args_parser.parse_args()
 
@@ -71,7 +72,8 @@ class SignalCli(Terminal):
         print_data_map = (
             (self._cli_config.version, self.log_printer.print_version),
             (self._cli_config.about, self.log_printer.print_about),
-            (self._cli_config.config, lambda: self.log_printer.print_config(self.config)),
+            (self._cli_config.print_config, lambda: self.log_printer.print_config(
+                self.config, path=self._cli_config.config_file)),
         )
 
         for data_map in print_data_map:
@@ -154,6 +156,10 @@ class SignalCli(Terminal):
         return filenames
 
     def parse_cli_config(self, cli_config: CliConfig):
+        if cli_config.config_file != TermFilesPath.CONFIG:
+            with open(cli_config.config_file) as json_config:
+                self.config = Config.model_validate_json(json_config.read())
+
         self.config.host.host = str(cli_config.address) if cli_config.address else self.config.host.host
         self.config.host.port = int(cli_config.port) if cli_config.port else self.config.host.port
         self.config.debug.level = cli_config.log_level if cli_config.log_level else self.config.debug.level

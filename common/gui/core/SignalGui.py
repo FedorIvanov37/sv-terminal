@@ -382,45 +382,63 @@ class SignalGui(Terminal):
             case _:
                 error("Cannot reverse transaction")
 
-    def parse_main_window(self, flat_fields: bool = True, clean: bool = False) -> Transaction:
-        data_fields: TypeFields = self.window.json_view.generate_fields(flat=flat_fields)
-        trans_id: str = self.window.json_view.get_trans_id()
+    def parse_main_window(self, flat_fields: bool = True, clean: bool = False,
+                          all_tabs: bool = False) -> dict[str, Transaction] | Transaction:
 
-        if not data_fields:
-            raise ValueError("No transaction data found")
+        tab_names: list[str] = self.window.get_tab_names(all_tabs=all_tabs)
 
-        if not (message_type := self.window.get_mti(MessageLength.MESSAGE_TYPE_LENGTH)):
-            raise ValueError("Invalid MTI")
+        transactions: dict[str, Transaction] = dict()
 
-        try:
-            transaction: Transaction = Transaction(
-                trans_id=trans_id,
-                generate_fields=self.window.get_fields_to_generate(),
-                data_fields=data_fields,
-                message_type=message_type,
-                max_amount=self.config.fields.max_amount,
-                is_reversal=self.spec.is_reversal(message_type)
-            )
+        for position, tab_name in enumerate(tab_names):
+            data_fields: TypeFields = self.window.parse_tab(tab_name, flat=flat_fields)
 
-        except (ValidationError, ValueError) as validation_error:
-            [error(err.get("msg")) for err in validation_error.errors()]
-            raise DataValidationError
+            trans_id: str | None = self.window.get_trans_id(tab_name)
 
-        if clean:
-            del (
-                transaction.resp_time_seconds,
-                transaction.match_id,
-                transaction.utrnno,
-                transaction.matched,
-                transaction.success,
-                transaction.is_request,
-                transaction.is_reversal,
-                transaction.is_keep_alive,
-                transaction.json_fields,
-                transaction.sending_time,
-            )
+            if not data_fields:
+                error(f"No transaction data found on tab {tab_name}")
+                continue
 
-        return transaction
+            if not (message_type := self.window.get_mti(MessageLength.MESSAGE_TYPE_LENGTH)):
+                raise ValueError("Invalid MTI")
+
+            try:
+                transaction: Transaction = Transaction(
+                    trans_id=trans_id,
+                    generate_fields=self.window.get_fields_to_generate(),
+                    data_fields=data_fields,
+                    message_type=message_type,
+                    max_amount=self.config.fields.max_amount,
+                    is_reversal=self.spec.is_reversal(message_type)
+                )
+
+            except (ValidationError, ValueError) as validation_error:
+                [error(err.get("msg")) for err in validation_error.errors()]
+                continue
+
+            if clean:
+                del (
+                    transaction.resp_time_seconds,
+                    transaction.match_id,
+                    transaction.utrnno,
+                    transaction.matched,
+                    transaction.success,
+                    transaction.is_request,
+                    transaction.is_reversal,
+                    transaction.is_keep_alive,
+                    transaction.json_fields,
+                    transaction.sending_time,
+                )
+
+            if not all_tabs:
+                return transaction
+
+            while tab_names.count(tab_name) > 1:
+                tab_name: str = f"copy_{tab_name}"
+                tab_names[position] = tab_name
+
+            transactions[tab_name] = transaction
+
+        return transactions
 
     def send(self, transaction: Transaction | None = None) -> None:
         if self.connector.connection_in_progress():
@@ -480,10 +498,16 @@ class SignalGui(Terminal):
             return
 
     @staticmethod
-    def get_output_filename() -> tuple[str, str] | None:
+    def get_output_filename(directory=False) -> tuple[str, str] | None:
+        if directory:
+            return QFileDialog.getExistingDirectory()
+
         file_name_filters = [f"{data_format} (*.{data_format.lower()})" for data_format in OutputFilesFormat]
         file_name_filter = ";;".join(file_name_filters)
-        filename_data: list[str] = list(QFileDialog.getSaveFileName(filter=file_name_filter))
+        filename_data = list(QFileDialog.getSaveFileName(filter=file_name_filter))
+
+        if not filename_data:
+            return
 
         if not (file_format := filename_data.pop()):
             return
@@ -494,6 +518,10 @@ class SignalGui(Terminal):
         output_file_format: OutputFilesFormat | None = None
 
         for data_format in OutputFilesFormat:
+            if directory:
+                output_file_format = OutputFilesFormat.JSON
+                break
+
             if data_format in file_format:
                 output_file_format = data_format
                 break
@@ -524,34 +552,52 @@ class SignalGui(Terminal):
 
         return file_name
 
-    def save_transaction_to_file(self) -> None:
-        if not (file_data := self.get_output_filename()):
-            warning("No output filename recognized")
+    def save_transaction_to_file(self, mode: ButtonActions.SaveMenuActions | None = None,
+                                 file_format: str | None = None) -> None:
+
+        if not file_format:
+            file_format = OutputFilesFormat.JSON
+
+        file_name = None
+        file_format = file_format.lower()
+        all_tabs = mode == ButtonActions.SaveMenuActions.ALL_TABS
+
+        if not (file_data := self.get_output_filename(directory=all_tabs)):
+            warning("No output filename or directory recognized")
             return
 
-        file_name, file_format = file_data
+        if mode == ButtonActions.SaveMenuActions.CURRENT_TAB:
+            file_name, file_format = file_data
 
-        if not file_name or not file_format:
-            warning("No output filename recognized")
-            return
+            if not all([file_name, file_format]):
+                warning("No output filename or directory recognized")
+                return
 
         try:
-            transaction: Transaction = self.parse_main_window(flat_fields=False, clean=True)
+            transactions: dict[str, Transaction] | Transaction = self.parse_main_window(all_tabs=all_tabs, clean=True)
         except Exception as file_saving_error:
             error("File saving error: %s", file_saving_error)
             return
 
-        try:
-            self.trans_validator.validate_transaction(transaction)
+        if not isinstance(transactions, dict):
+            transactions = {transactions.trans_id: transactions}
 
-        except DataValidationWarning as validation_warning:
-            warning(validation_warning)
+        for tab_name, transaction in transactions.items():
+            if all_tabs:
+                file_name = f"{file_data}/{tab_name}"
+                file_name = f"{file_name}.{file_format}" if not file_name.lower().endswith(file_format) else file_name
 
-        except Exception as validation_error:
-            error(validation_error)
-            return
+            try:
+                self.trans_validator.validate_transaction(transaction)
 
-        Terminal.save_transaction(self, transaction, file_format, file_name)
+            except DataValidationWarning as validation_warning:
+                warning(validation_warning)
+
+            except Exception as validation_error:
+                error(validation_error)
+                return
+
+            Terminal.save_transaction(self, transaction, file_format, file_name)
 
     def print_data(self, data_format: PrintDataFormats) -> None:
         data_processing_map: dict[str, Callable] = {

@@ -179,6 +179,14 @@
 + Console mode
 
 
++ Fix DE62 parsing error
++ Save file(s)
++ --config-file --print-config
++ Tabs round by keyboard
++ Add hotkeys info CTRL + F4, CTRL + PG-UP/PG-DOWN, Ctrl + Alt + P
+
+
+
 • Pin main tab and make the other movable
 • Add fields trim property to spec
 • Drag and drop files to JsonView

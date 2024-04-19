@@ -1,5 +1,6 @@
-from enum import IntEnum
+from enum import StrEnum
 
 
-class TabViewParams(IntEnum):
-    TABS_LIMIT = 100
+class TabViewParams(StrEnum):
+    TABS_LIMIT = "100"
+    MAIN_TAB_NAME = "Main"

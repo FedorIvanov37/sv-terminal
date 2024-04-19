@@ -15,6 +15,8 @@ from common.gui.enums import ButtonActions, MainFieldSpec as FieldsSpec
 from common.gui.enums.KeySequences import KeySequences
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.gui.enums.ConnectionStatus import ConnectionStatus, ConnectionIcon
+from common.gui.enums.TabViewParams import TabViewParams
+from common.lib.enums.DataFormats import OutputFilesFormat
 from common.lib.enums import KeepAlive
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
 from common.lib.enums.TextConstants import TextConstants
@@ -41,7 +43,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     _window_close: pyqtSignal = pyqtSignal()
     _print: pyqtSignal = pyqtSignal(str)
-    _save: pyqtSignal = pyqtSignal()
+    _save: pyqtSignal = pyqtSignal(str, str)
     _reverse: pyqtSignal = pyqtSignal(str)
     _about: pyqtSignal = pyqtSignal()
     _field_changed: pyqtSignal = pyqtSignal()
@@ -240,7 +242,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonSettings: self.settings,
             self.ButtonFieldsParser: self.parse_complex_field,
             self.ButtonValidate: lambda: self.validate_message.emit(True),
-            self.ButtonSave: self.save,
         }
 
         tab_view_connection_map = {
@@ -270,7 +271,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             QKeySequence.StandardKey.Delete: self._tab_view.minus,
             QKeySequence.StandardKey.HelpContents: self.about,
             QKeySequence.StandardKey.Print: self.ButtonPrintData.showMenu,
-            QKeySequence.StandardKey.Save: self.save,
+            QKeySequence.StandardKey.Save: self.ButtonSave.showMenu,
             QKeySequence.StandardKey.Open: self.parse_file,
             QKeySequence.StandardKey.Undo: self.json_view.undo,
             QKeySequence.StandardKey.Redo: self.json_view.redo,
@@ -293,6 +294,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             KeySequences.CTRL_ALT_V: lambda: self.validate_message.emit(True),
             KeySequences.CTRL_PAGE_UP: self._tab_view.prev_tab,
             KeySequences.CTRL_PAGE_DOWN: self._tab_view.next_tab,
+            KeySequences.CTRL_ALT_P: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.TERM),
 
         }
 
@@ -336,6 +338,10 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 ButtonActions.PrintButtonDataFormats.TERM: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.TERM),
                 ButtonActions.PrintButtonDataFormats.CONFIG: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.CONFIG),
             },
+
+            self.ButtonSave: {
+                ButtonActions.SaveMenuActions.CURRENT_TAB: lambda: self.save.emit(ButtonActions.SaveMenuActions.CURRENT_TAB, str()),
+            }
         }
 
         # The mapping is defined, let's connect them all
@@ -356,6 +362,17 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             for action, function in actions.items():
                 button.menu().addAction(action, function)
                 button.menu().addSeparator()
+
+        self.ButtonSave.menu().addMenu(ButtonActions.SaveMenuActions.ALL_TABS)
+
+        self.ButtonSave.menu().findChild(QMenu).addAction(OutputFilesFormat.JSON, lambda: self.save.emit(
+            ButtonActions.SaveMenuActions.ALL_TABS, OutputFilesFormat.JSON))
+
+        self.ButtonSave.menu().findChild(QMenu).addAction(OutputFilesFormat.INI, lambda: self.save.emit(
+            ButtonActions.SaveMenuActions.ALL_TABS, OutputFilesFormat.INI))
+
+        self.ButtonSave.menu().findChild(QMenu).addAction(OutputFilesFormat.DUMP, lambda: self.save.emit(
+            ButtonActions.SaveMenuActions.ALL_TABS, OutputFilesFormat.DUMP))
 
     def set_tab_name(self, tab_name):
         self._tab_view.set_tab_name(tab_name)
@@ -404,6 +421,23 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def enable_next_level_button(self, enable: bool = True) -> None:
         self.NextLevelButton.setEnabled(enable)
 
+    def get_tab_names(self, all_tabs: bool = False) -> list[str]:
+        if not all_tabs:
+            return [TabViewParams.MAIN_TAB_NAME]
+
+        tab_names: list[str] = self._tab_view.get_tab_names()
+
+        return tab_names
+
+    def parse_tab(self, tab_name: str = None, flat=False):
+        if tab_name is None:
+            tab_name = TabViewParams.MAIN_TAB_NAME
+
+        return self._tab_view.generate_fields(tab_name, flat=flat)
+
+    def get_trans_id(self, tab_name: str):
+        return self._tab_view.get_trans_id(tab_name)
+
     # Validate whole transaction data, presented on MainWindow
     def validate_fields(self, force=False) -> None:
         self.json_view.check_all_items(force=force)
@@ -414,8 +448,13 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def get_fields_to_generate(self) -> list[str]:
         return self.json_view.get_checkboxes()
 
-    def get_mti(self, length: int = 4) -> str:
-        message_type = self._tab_view.msg_type.currentText()
+    def get_mti(self, length: int = 4, tab_name=TabViewParams.MAIN_TAB_NAME) -> str | None:
+        if not (msg_type_box := self._tab_view.get_msg_type(tab_name)):
+            return
+
+        if not (message_type := msg_type_box.currentText()):
+            return
+
         message_type = message_type[:length]
         return message_type
 

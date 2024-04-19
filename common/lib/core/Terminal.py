@@ -207,7 +207,7 @@ class Terminal(QObject):
             DataFormats.DUMP: lambda _trans: self.parser.create_sv_dump(_trans)[1:]
         }
 
-        if not (data_processing_function := data_processing_map.get(file_format)):
+        if not (data_processing_function := data_processing_map.get(file_format.upper())):
             error("Unknown output file format")
             return
 

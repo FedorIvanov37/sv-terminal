@@ -691,19 +691,28 @@ class JsonView(TreeView):
             specification = self.spec.spec
 
         for field, field_data in input_json.items():
-            field_spec = specification.fields.get(field)
+            try:
+                field_spec = specification.fields.get(field)
 
-            description = field_spec.description if field_spec else None
-
-            if isinstance(field_data, dict):
+            except AttributeError:
+                error(f"Cannot parse field {'.'.join(specification.field_path)}")
                 child = FieldItem([field])
-                child.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, description)
-                self.parse_fields(field_data, parent=child, specification=specification.fields.get(field))
+                child.field_data = str(field_data)
+                parent.addChild(child, fill_len=self.len_fill)
+                continue
 
             else:
-                field_data = self.validator.get_justified_field_data(field_spec, str(field_data))
-                string_data = [field, field_data, None, description]
-                child: FieldItem = FieldItem(string_data)
+                description = field_spec.description if field_spec else None
+
+                if isinstance(field_data, dict):
+                    child = FieldItem([field])
+                    child.setText(FieldsSpec.ColumnsOrder.DESCRIPTION, description)
+                    self.parse_fields(field_data, parent=child, specification=specification.fields.get(field))
+
+                else:
+                    field_data = self.validator.get_justified_field_data(field_spec, str(field_data))
+                    string_data = [field, field_data, None, description]
+                    child: FieldItem = FieldItem(string_data)
 
             parent.addChild(child, fill_len=self.len_fill)
             child.set_spec(field_spec)

@@ -1,5 +1,6 @@
 from pydantic import BaseModel, DirectoryPath, IPvAnyAddress
 from common.lib.constants.LogDefinition import DebugLevels
+from common.lib.enums.TermFilesPath import TermFilesPath
 
 
 class CliConfig(BaseModel):
@@ -17,4 +18,5 @@ class CliConfig(BaseModel):
     about: bool = False
     default: bool = False
     version: bool = False
-    config: bool = False
+    print_config: bool = False
+    config_file: str = TermFilesPath.CONFIG
