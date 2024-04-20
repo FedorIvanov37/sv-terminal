@@ -1,3 +1,4 @@
+![image](common/data/style/triforce_signed.png)
 ```
   ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::
  :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
@@ -379,13 +380,6 @@ PS C:\signal> signal.exe --about
 </details>
 
 <details>
- <summary>️signal.exe --console --echo-test</summary>
- <p align="left">
-
-</p>
-</details>
-
-<details>
  <summary>signal.exe --console --echo-test</summary>
  <p align="left">
    
@@ -476,14 +470,6 @@ PS C:\signal> signal.exe --console --print-config
 ```
 </p>
 </details>
-
-
-
-
-</p>
-</details>
-
-
 
 
 # Library re-usage

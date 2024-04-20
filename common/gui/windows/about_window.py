@@ -29,8 +29,7 @@ class AboutWindow(Ui_AboutWindow, QDialog):
 
     @frameless_window
     def setup(self):
-        self.movie: QMovie = QMovie(GuiFilesPath.GIF_ABOUT)
-        self.logoLabel.setMovie(self.movie)
+        self.logoLabel.setPixmap(QPixmap(GuiFilesPath.SIGNED_LOGO))
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
         self.MusicOnOfButton.clicked.connect(self.switch_music)
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MUSIC_ON)))
@@ -55,8 +54,6 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         self.player.setAudioOutput(self.audio_output)
         self.player.setSource(QUrl.fromLocalFile(GuiFilesPath.VVVVVV))
         self.player.playbackStateChanged.connect(self.record_finished)
-
-        self.movie.start()
 
     @staticmethod
     def open_url(link):
