@@ -82,14 +82,15 @@ class SignalGui(Terminal):
         self.connect_widgets()
         self.setup()
 
-    @set_json_view_focus
-    def setup(self) -> None:  # Runs on startup to make all the preparation activity, then shows MainWindow
+    def setup(self):
+        self._wireless_handler = self.logger.create_window_logger(self.window.log_browser)
         self._run_timer.setSingleShot(True)
         self._run_timer.start(int())
 
-        self.log_printer.print_startup_info()
+    def on_startup(self) -> None:  # Runs on startup to make all the preparation activity, then shows MainWindow
+        self.show_license_dialog()
 
-        self._wireless_handler = self.logger.create_window_logger(self.window.log_browser)
+        self.log_printer.print_startup_info()
 
         self.print_data(DataFormats.TERM)
 
@@ -160,7 +161,7 @@ class SignalGui(Terminal):
             self.trans_timer.send_transaction: window.send,
             self.trans_timer.interval_was_set: window.process_transaction_loop_change,
             self.keep_alive_timer.interval_was_set: window.process_transaction_loop_change,
-            self._run_timer.timeout: self.show_license_dialog
+            self._run_timer.timeout: self.on_startup
         }
 
         for signal, slot in terminal_connections_map.items():
@@ -544,7 +545,12 @@ class SignalGui(Terminal):
 
         return file_name
 
-    def save_transaction_to_file(self, mode: str | None = None, file_format: str | None = None) -> None:
+    def save_transaction_to_file(
+            self,
+            mode: ButtonActions.SaveMenuActions | None = None,
+            file_format: OutputFilesFormat | None = None
+    ) -> None:
+
         if not file_format:
             file_format = OutputFilesFormat.JSON
 
