@@ -1,15 +1,6 @@
-![image](common/data/style/triforce_signed.png)
-```
-  ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::
- :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
- +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
- +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
-        +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
- #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
-  ########  ###########  ########   ###    ####  ###     ###  ########## 
-                                                                                                                      
- Simplified ISO generation algorithm | v0.18 Apr 2024
-```
+<img src="common/data/style/triforce_signed.png" width="500" height="500">
+
+
 # Contents 
 
 * [SIGNAL](#signal)
@@ -115,6 +106,7 @@
 
 
 * [About SIGNAL](#about-signal)
+  * [Concept](#concept) 
   * [License](#license)
   * [Resources](#resources)
   * [Support](#support)
@@ -687,6 +679,9 @@ SIGNAL - Simplified ISO generation algorithm
 Version v0.18
 
 Released in Apr 2024
+
+
+## Concept
  
 
 ## License
