@@ -188,10 +188,9 @@
 + Change name to SIGNAL in Document
 + Bugs fix: incorrect bitmap representation,
 + Add license info to the window "About"
+• License agreement in CLI mode
 
-
-
-
+  
 
 • Error on console when run AboutWindow - Could not update timestamps for skipped samples
 • Pin main tab and make the other movable
