@@ -9,7 +9,6 @@
                                                                                                                       
  Simplified ISO generation algorithm | v0.18 Apr 2024
 ```
-
 # Contents 
 
 * [SIGNAL](#signal)
@@ -327,6 +326,11 @@ options:
 ```
 
 ## CLI examples
+
+Below are a few examples of CLI commands. It is not a complete list of possible combinations. See [CLI Usage](#cli-Usage) to get all the commands
+
+### Command examples
+
 | Command                                                      | Action                                                                                    | 
 |--------------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | `signal.exe --console --default`                             | Send default transaction to the host                                                      |
@@ -378,6 +382,13 @@ PS C:\signal> signal.exe --about
  <summary>️signal.exe --console --echo-test</summary>
  <p align="left">
 
+</p>
+</details>
+
+<details>
+ <summary>signal.exe --console --echo-test</summary>
+ <p align="left">
+   
 ```text
 PS C:\signal> signal.exe --console --echo-test 
 03:05:12 [INFO] ## Running SIGNAL in Console mode ##
@@ -463,6 +474,12 @@ PS C:\signal> signal.exe --console --print-config
 17:01:33 [INFO] Press CTRL+C to exit
 
 ```
+</p>
+</details>
+
+
+
+
 </p>
 </details>
 
@@ -670,10 +687,12 @@ pattern one by one. Better to set the correct extension for each format. Refer t
 # Bugs
 ## List of known bugs
 
-| Bug                                                          | Status | Workaround                                                                          | Comment                                                            |  
-|--------------------------------------------------------------|--------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| Console window appears when I run GUI                        | Active | Set Terminal app to default to "Windows Console Host" instead of "Windows Terminal" | [Solution](https://github.com/pyinstaller/pyinstaller/issues/8022) |
-| No data in Connector when no such field in the specification | Active | -                                                                                   | -                                                                  | 
+| Bug                                                           | Status  | Workaround                                                                          | Comment                                                            |  
+|---------------------------------------------------------------|---------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| Console window appears when I run GUI                         | Active  | Set Terminal app to default to "Windows Console Host" instead of "Windows Terminal" | [Solution](https://github.com/pyinstaller/pyinstaller/issues/8022) |
+| No data in Connector when no such field in the specification  | Active  | -                                                                                   | -                                                                  | 
+ | Sending Field 62 I get Format Error (RC=30) in response       | Active  | Fill the field data manually in flat mode                                           | -                                                                  |
+
 
 # About SIGNAL
 
