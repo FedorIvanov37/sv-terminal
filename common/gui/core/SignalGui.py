@@ -82,7 +82,7 @@ class SignalGui(Terminal):
         self.connect_widgets()
         self.setup()
 
-    def setup(self):
+    def setup(self) -> None:
         self._wireless_handler = self.logger.create_window_logger(self.window.log_browser)
         self._run_timer.setSingleShot(True)
         self._run_timer.start(int())
