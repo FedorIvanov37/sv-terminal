@@ -5,11 +5,13 @@ from pydantic import ValidationError
 from datetime import datetime, UTC
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog
+from PyQt6.QtGui import QPixmap
 from common.gui.forms.license_window import Ui_LicenseWindow
 from common.gui.decorators.window_settings import set_window_icon, frameless_window
 from common.lib.data_models.License import LicenseInfo
 from common.lib.exceptions.exceptions import LicenseDataLoadingError, LicenceAlreadyAccepted
 from common.lib.enums.TermFilesPath import TermFilesPath
+from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.lib.enums.TextConstants import TextConstants
 
 
@@ -22,7 +24,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
     @frameless_window
     @set_window_icon
     def _setup(self):
-        self.LogoContainer.setText(f"{TextConstants.HELLO_MESSAGE} | GNU/GPL license agreement.txt\n")
+        self.LogoLabel.setPixmap(QPixmap(GuiFilesPath.SIGNED_LOGO))
         self.InfoBoard.setText(TextConstants.LICENSE_AGREEMENT)
         self.CheckBoxAgreement.setFocus()
 
@@ -69,7 +71,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
         license_data.last_acceptance_date = None
 
         self.save_license_file(license_data)
-        warning("License agreement.txt rejected, exit")
+        warning("License agreement rejected, exit")
         exit(100)
 
     @staticmethod
