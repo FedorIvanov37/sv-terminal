@@ -831,7 +831,7 @@
             "special": false,
             "reserved_for_future": false,
             "description": "Primary account number expiration date YYMM",
-            "is_secret": false,
+            "is_secret": true,
             "fields": null
         },
         "15": {
@@ -24421,7 +24421,7 @@
                     "special": false,
                     "reserved_for_future": false,
                     "description": "CVV2",
-                    "is_secret": false,
+                    "is_secret": true,
                     "fields": null
                 },
                 "93": {

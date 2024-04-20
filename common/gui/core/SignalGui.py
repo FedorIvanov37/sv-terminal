@@ -156,6 +156,7 @@ class SignalGui(Terminal):
             window.repeat: self.trans_timer.set_trans_loop_interval,
             window.validate_message: lambda: self.validate_main_window(force=True),
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
+            window.copy_field: self.copy_current_field,
             self.connector.stateChanged: self.set_connection_status,
             self.set_remote_spec: self.connector.set_remote_spec,
             self.trans_timer.send_transaction: window.send,
@@ -641,6 +642,12 @@ class SignalGui(Terminal):
             return reversal_window.reversal_id
 
         raise LookupError
+
+    def copy_current_field(self):
+        if not (field_data := self.window.tab_view.get_current_field_data()):
+            field_data = str()
+
+        self.set_clipboard_text(field_data)
 
     @set_json_view_focus
     def set_default_values(self, log=True) -> None:

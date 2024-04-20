@@ -65,7 +65,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _repeat: pyqtSignal = pyqtSignal(str)
     _parse_complex_field: pyqtSignal = pyqtSignal()
     _validate_message: pyqtSignal = pyqtSignal(bool)
+    _copy_field: pyqtSignal = pyqtSignal()
     _spec: EpaySpecification = EpaySpecification()
+
+    @property
+    def copy_field(self):
+        return self._copy_field
 
     @property
     def spec(self):
@@ -277,6 +282,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             QKeySequence.StandardKey.Redo: self.json_view.redo,
             QKeySequence.StandardKey.Find: self.activate_search,
             QKeySequence.StandardKey.Close: self._tab_view.close_current_tab,
+            QKeySequence.StandardKey.Copy: self.copy_field,
 
             # Custom Key Sequences
             # The string argument (modifier) is a hint about a requested data format

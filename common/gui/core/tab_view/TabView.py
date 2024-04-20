@@ -9,6 +9,7 @@ from common.gui.core.json_views.JsonView import JsonView
 from common.lib.data_models.Transaction import Transaction
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.gui.enums.TabViewParams import TabViewParams
+from common.gui.core.json_items import FIeldItem
 
 
 class TabView(QTabWidget):
@@ -348,3 +349,11 @@ class TabView(QTabWidget):
 
     def get_current_tab_name(self):
         return self.tabText(self.currentIndex())
+
+    def get_current_field_data(self) -> str | None:
+        field_item: FIeldItem
+
+        if not (field_item := self.json_view.currentItem()):
+            return
+
+        return field_item.field_data
