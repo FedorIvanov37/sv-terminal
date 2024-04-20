@@ -382,7 +382,7 @@ class SignalGui(Terminal):
 
         transactions: dict[str, Transaction] = dict()
 
-        for position, tab_name in enumerate(tab_names):
+        for tab_name in tab_names:
             data_fields: TypeFields = self.window.parse_tab(tab_name, flat=flat_fields)
 
             trans_id: str | None = self.window.get_trans_id(tab_name)
@@ -424,10 +424,6 @@ class SignalGui(Terminal):
 
             if not all_tabs:
                 return transaction
-
-            while tab_names.count(tab_name) > 1:
-                tab_name: str = f"copy_{tab_name}"
-                tab_names[position] = tab_name
 
             transactions[tab_name] = transaction
 
@@ -578,11 +574,8 @@ class SignalGui(Terminal):
         if not isinstance(transactions, dict):
             transactions = {transactions.trans_id: transactions}
 
-        filenames: list[str] = list()
-
         for tab_name, transaction in transactions.items():
             if all_tabs:
-
                 for extension in OutputFilesFormat:
                     if not tab_name.upper().endswith(f".{extension}"):
                         continue
@@ -590,11 +583,6 @@ class SignalGui(Terminal):
                     extension_len = len(extension) + 1
                     tab_name = tab_name[:-extension_len]
                     break
-
-                while tab_name in filenames:
-                    tab_name = f"copy_{tab_name}"
-
-                filenames.append(tab_name)
 
                 file_name = f"{file_data}/{tab_name}"
                 file_name = f"{file_name}.{file_format}" if not file_name.lower().endswith(file_format) else file_name

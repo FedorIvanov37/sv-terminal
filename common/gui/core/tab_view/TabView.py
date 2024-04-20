@@ -182,6 +182,7 @@ class TabView(QTabWidget):
             return
 
         self.close_tab(self.currentIndex())
+        self.prev_tab()
         self.mark_active_tab()
 
     def prev_tab(self):
@@ -297,7 +298,22 @@ class TabView(QTabWidget):
         self.msg_type.setCurrentIndex(index)
 
     def get_tab_names(self) -> list[str]:
-        return [self.tabText(index) for index in range(self.count()) if self.tabText(index) != ""]
+        tab_names: list[str] = list()
+
+        for index in range(self.count() - 1):
+            tab_name = self.tabText(index)
+
+            if not tab_name.strip():
+                tab_name = f"Tab #{index}"
+
+            while tab_name in tab_names:
+                tab_name = f"{tab_names.count(tab_name)}_{tab_name}"
+
+            self.setTabText(index, tab_name)
+
+            tab_names.append(tab_name)
+
+        return tab_names
 
     def get_tab_by_name(self, tab_name: str) -> QWidget | None:
         if tab_name not in self.get_tab_names():
