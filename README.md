@@ -1,5 +1,4 @@
-<img src="common/data/style/triforce_signed.png" width="500" height="500">
-
+<img src="common/data/style/triforce_signed.png" alt="SIGNAL" width="500" height="500" align="center">
 
 # Contents 
 
