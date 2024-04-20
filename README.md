@@ -1,14 +1,6 @@
-```
-  ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::
- :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
- +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
- +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
-        +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
- #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
-  ########  ###########  ########   ###    ####  ###     ###  ########## 
-                                                                                                                      
- Simplified ISO generation algorithm | v0.18 Apr 2024
-```
+<p align="center"><img src="common/data/style/triforce_signed.png" alt="SIGNAL" width="500" height="500"></p>
+
+
 # Contents 
 
 * [SIGNAL](#signal)
@@ -114,6 +106,7 @@
 
 
 * [About SIGNAL](#about-signal)
+  * [Concept](#concept) 
   * [License](#license)
   * [Resources](#resources)
   * [Support](#support)
@@ -379,13 +372,6 @@ PS C:\signal> signal.exe --about
 </details>
 
 <details>
- <summary>️signal.exe --console --echo-test</summary>
- <p align="left">
-
-</p>
-</details>
-
-<details>
  <summary>signal.exe --console --echo-test</summary>
  <p align="left">
    
@@ -476,14 +462,6 @@ PS C:\signal> signal.exe --console --print-config
 ```
 </p>
 </details>
-
-
-
-
-</p>
-</details>
-
-
 
 
 # Library re-usage
@@ -701,6 +679,9 @@ SIGNAL - Simplified ISO generation algorithm
 Version v0.18
 
 Released in Apr 2024
+
+
+## Concept
  
 
 ## License

@@ -7,7 +7,8 @@ class GuiDirs(StrEnum):
 
 
 class GuiFiles(StrEnum):
-    MAIN_LOGO = "logo_triangle.png"
+    MAIN_LOGO = "triforce_unsigned.png"
+    SIGNED_LOGO = "triforce_signed.png"
     MUSIC_ON = "music_on.png"
     MUSIC_OFF = "music_off.png"
     VVVVVV = "VVVVVV.mp3"
@@ -21,6 +22,7 @@ class GuiFiles(StrEnum):
 
 class GuiFilesPath(StrEnum):
     MAIN_LOGO = f"{GuiDirs.STYLE_DIR}/{GuiFiles.MAIN_LOGO}"
+    SIGNED_LOGO = f"{GuiDirs.STYLE_DIR}/{GuiFiles.SIGNED_LOGO}"
     MUSIC_ON = f"{GuiDirs.STYLE_DIR}/{GuiFiles.MUSIC_ON}"
     MUSIC_OFF = f"{GuiDirs.STYLE_DIR}/{GuiFiles.MUSIC_OFF}"
     VVVVVV = f"{GuiDirs.STYLE_DIR}/{GuiFiles.VVVVVV}"

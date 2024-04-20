@@ -189,8 +189,7 @@
 + Bugs fix: incorrect bitmap representation,
 + Add license info to the window "About"
 + License agreement in CLI mode
-
-
++ Window "About" renovation
 
 
   
