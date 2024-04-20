@@ -9,8 +9,7 @@
                                                                                                                       
  Simplified ISO generation algorithm | v0.18 Apr 2024
 ```
-️❤️️[️Project support](#support)
-️️
+
 # Contents 
 
 * [SIGNAL](#signal)
@@ -1305,10 +1304,10 @@ The project needs help
 * Documentation development and translate
 * Feedback, ideas
 * Testing, especially auto-tests, unit-tests
-* Financial support - send any amount to BTC wallet `bc1qs2jaqpnse9qgzz9y9wyns50km0f5x4wxe8cggs`
+* Financial support to BTC wallet
 
 <details>
- <summary>️❤️Support address</summary>
+ <summary>️❤️Support the project</summary>
  <p align="left">
   <img src="common/data/style/wallet.png" alt="BTC wallet" width="200"/>
 

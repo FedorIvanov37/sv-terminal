@@ -179,24 +179,22 @@
 + Console mode
 
 + Fix DE62 parsing error
-+ Save file(s)
-+ --config-file --print-config
++ Save multiple files
++ Add keys is CLI mode: --config-file --print-config
 + Tabs round by keyboard
-+ Add hotkeys info CTRL + F4, CTRL + PG-UP/PG-DOWN, Ctrl + Alt + P
-+ Ctrl+C and copy of secrets
++ Add hotkeys info: CTRL + F4, CTRL + PG-UP/PG-DOWN, Ctrl + Alt + P
 + Expand reversal window to long utrnno
-+ Licence window and timer
++ Licence window correct exec by timer event
++ Change name to SIGNAL in Document
++ Bugs fix: incorrect bitmap representation,
+• Add license info to the window "About"
 
 
-
+• Error on console when run AboutWindow - Could not update timestamps for skipped samples
 • Pin main tab and make the other movable
-• Add fields trim property to spec
 • Drag and drop files to JsonView
 • Respect JSON-mode when set field value from complex fields constructor
-• Error on console when run AboutWindow - Could not find codec parameters for stream
-• Change name to SIGNAL in Document
 • Reflect in the document - Main settings, the specification+, files format+, custom validations
-
 
 
 • Bugs
