@@ -1,6 +1,8 @@
 from common.gui.forms.about import Ui_AboutWindow
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
+from common.lib.data_models.License import LicenseInfo
+from common.lib.enums.TermFilesPath import TermFilesPath
 from common.gui.decorators.window_settings import frameless_window
 from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PyQt6.QtCore import Qt, QUrl
@@ -34,11 +36,17 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MUSIC_ON)))
         self.ContactLabel.linkActivated.connect(self.open_url)
 
+        try:
+            self.license_info: str = self.get_license_info()
+        except Exception:
+            self.license_info: str = str()
+
         data_bind = {
             self.VersionLabel: ReleaseDefinition.VERSION,
             self.ReleaseLabel: ReleaseDefinition.RELEASE,
             self.ContactLabel: ReleaseDefinition.CONTACT,
-            self.AuthorLabel: ReleaseDefinition.AUTHOR
+            self.AuthorLabel: ReleaseDefinition.AUTHOR,
+            self.LicenseLabel: self.license_info,
         }
 
         for element in data_bind:
@@ -81,3 +89,14 @@ class AboutWindow(Ui_AboutWindow, QDialog):
     def keyPressEvent(self, a0: QKeyEvent) -> None:
         if a0.key() == Qt.Key.Key_Escape:
             self.close()
+
+    @staticmethod
+    def get_license_info() -> str:
+        try:
+            with open(TermFilesPath.LICENSE_INFO) as license_json:
+                license_data: LicenseInfo = LicenseInfo.model_validate_json(license_json.read())
+
+        except Exception:
+            license_data: LicenseInfo = LicenseInfo()
+
+        return license_data.license_id
