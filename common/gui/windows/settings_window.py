@@ -30,7 +30,7 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.ParseSubfields.setHidden(True)  # TODO
         self.buttonBox.accepted.connect(self.ok)
         self.buttonBox.rejected.connect(self.cancel)
-        self.ButtonAbout.pressed.connect(self.about)
+        self.ButtonAbout.pressed.connect(lambda: AboutWindow().exec())
         self.HeaderLength.textChanged.connect(self.validate_header_length)
         self.DebugLevel.currentIndexChanged.connect(self.process_debug_level_change)
         self.KeepAliveMode.stateChanged.connect(lambda state: self.KeepAliveInterval.setEnabled(bool(state)))
@@ -44,10 +44,6 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.process_validation_change()
         self.process_manual_entry_mode_change()
         self.process_config(self.config)
-
-    @staticmethod
-    def about() -> None:
-        AboutWindow()
 
     def process_config(self, config: Config) -> None:
         self.DebugLevel.setCurrentText(config.debug.level)

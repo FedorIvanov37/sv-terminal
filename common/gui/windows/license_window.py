@@ -37,6 +37,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
             raise LicenseDataLoadingError(f"GNU license info file parsing error: {license_parsing_error}")
 
         if self.license_info.accepted and not self.license_info.show_agreement:
+            self.print_acceptance_info()
             raise LicenceAlreadyAccepted
 
         self.CheckBoxAgreement.setChecked(self.license_info.accepted)
@@ -88,6 +89,5 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
     def print_acceptance_info(self):
         date_format = "%d/%m/%Y %T UTC"
 
-        info(f"License agreement accepted {datetime.strftime(self.license_info.last_acceptance_date, date_format)}")
-        info(f"License ID {self.license_info.license_id}")
-        info("Thank you for using SIGNAL")
+        info(f"License ID {self.license_info.license_id} | Accepted {
+            datetime.strftime(self.license_info.last_acceptance_date, date_format)}")

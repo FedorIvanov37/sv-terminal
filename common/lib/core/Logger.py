@@ -1,5 +1,5 @@
 import logging
-from logging import debug, getLevelName, getLogger, Formatter, StreamHandler, info
+from logging import debug, getLevelName, getLogger, Formatter, StreamHandler
 from common.gui.core.WirelessHandler import WirelessHandler
 from logging.handlers import RotatingFileHandler
 from common.lib.constants import LogDefinition

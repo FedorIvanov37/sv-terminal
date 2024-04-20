@@ -14,7 +14,7 @@ class DataFormats(StrEnum):
 data_format_dict = dict[DataFormats, DataFormats]
 
 
-print_data_formats: data_format_dict  = {
+print_data_formats: data_format_dict = {
     data_format.name: data_format.value for data_format in [
         DataFormats.JSON,
         DataFormats.INI,

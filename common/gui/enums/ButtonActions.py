@@ -28,6 +28,11 @@ save_button_data_formats = {
 SaveButtonDataFormats = StrEnum("SaveButtonDataFormats", save_button_data_formats)
 
 
+class SaveMenuActions(StrEnum):
+    CURRENT_TAB = "Current tab"
+    ALL_TABS = "All tabs"
+
+
 class ClearMenuActions(StrEnum):
     ALL = "All"
     STRING = "String"

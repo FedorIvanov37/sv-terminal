@@ -3,7 +3,7 @@
 #
 # This file runs SIGNAL GUI. The GUI runs once the file is imported, no additional actions are required
 #
-# e.g.: "import common"
+# e.g.: "from common import signal"
 #
 
 

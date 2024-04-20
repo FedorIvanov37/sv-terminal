@@ -1,7 +1,8 @@
-from os import getcwd
 from common.gui.forms.about import Ui_AboutWindow
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
+from common.lib.data_models.License import LicenseInfo
+from common.lib.enums.TermFilesPath import TermFilesPath
 from common.gui.decorators.window_settings import frameless_window
 from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PyQt6.QtCore import Qt, QUrl
@@ -17,14 +18,14 @@ from PyQt6.QtGui import (
 
 
 class AboutWindow(Ui_AboutWindow, QDialog):
+    audio_output = QAudioOutput()
     player = QMediaPlayer()
     movie: QMovie
 
     def __init__(self):
-        super().__init__()
+        super(AboutWindow, self).__init__()
         self.setupUi(self)
         self.setup()
-        self.init_music_player()  # self.exec() is here, otherwise music does not play
 
     @frameless_window
     def setup(self):
@@ -35,26 +36,27 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MUSIC_ON)))
         self.ContactLabel.linkActivated.connect(self.open_url)
 
+        try:
+            self.license_info: str = self.get_license_info()
+        except Exception:
+            self.license_info: str = str()
+
         data_bind = {
             self.VersionLabel: ReleaseDefinition.VERSION,
             self.ReleaseLabel: ReleaseDefinition.RELEASE,
             self.ContactLabel: ReleaseDefinition.CONTACT,
-            self.AuthorLabel: ReleaseDefinition.AUTHOR
+            self.AuthorLabel: ReleaseDefinition.AUTHOR,
+            self.LicenseLabel: self.license_info,
         }
 
         for element in data_bind:
             element.setText("%s %s" % (element.text(), data_bind.get(element)))
 
-        self.movie.start()
-
-    def init_music_player(self):
-        music_file_path = f"{getcwd()}/{GuiFilesPath.VVVVVV}"
-        music_file_path = QUrl.fromLocalFile(music_file_path)
-        audio_output = QAudioOutput()
-        self.player.setAudioOutput(audio_output)
-        self.player.setSource(music_file_path)
+        self.player.setAudioOutput(self.audio_output)
+        self.player.setSource(QUrl.fromLocalFile(GuiFilesPath.VVVVVV))
         self.player.playbackStateChanged.connect(self.record_finished)
-        self.exec()
+
+        self.movie.start()
 
     @staticmethod
     def open_url(link):
@@ -67,18 +69,13 @@ class AboutWindow(Ui_AboutWindow, QDialog):
 
     def switch_music(self):
         match self.player.playbackState():
-            case self.player.PlaybackState.PlayingState:
-                icon = GuiFilesPath.MUSIC_ON
-                self.player.stop()
-
             case self.player.PlaybackState.StoppedState:
                 icon = GuiFilesPath.MUSIC_OFF
                 self.player.play()
 
-            case self.player.PlaybackState.PausedState:
-                icon = GuiFilesPath.MUSIC_OFF
+            case self.player.PlaybackState.PlayingState:
+                icon = GuiFilesPath.MUSIC_ON
                 self.player.stop()
-                self.player.play()
 
             case _:
                 return
@@ -92,3 +89,14 @@ class AboutWindow(Ui_AboutWindow, QDialog):
     def keyPressEvent(self, a0: QKeyEvent) -> None:
         if a0.key() == Qt.Key.Key_Escape:
             self.close()
+
+    @staticmethod
+    def get_license_info() -> str:
+        try:
+            with open(TermFilesPath.LICENSE_INFO) as license_json:
+                license_data: LicenseInfo = LicenseInfo.model_validate_json(license_json.read())
+
+        except Exception:
+            license_data: LicenseInfo = LicenseInfo()
+
+        return license_data.license_id

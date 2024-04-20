@@ -9,6 +9,7 @@ from common.gui.core.json_views.JsonView import JsonView
 from common.lib.data_models.Transaction import Transaction
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.gui.enums.TabViewParams import TabViewParams
+from common.gui.core.json_items import FIeldItem
 
 
 class TabView(QTabWidget):
@@ -96,7 +97,6 @@ class TabView(QTabWidget):
         self.mark_active_tab()
 
     def connect_all(self):
-        self.tabBar().tabBarDoubleClicked.connect(self.tabBarDoubleClicked)
         self.json_view.trans_id_set.connect(self.trans_id_set)
         self.tabBarClicked.connect(self.process_tab_click)
         self.currentChanged.connect(self.process_tab_change)
@@ -156,7 +156,7 @@ class TabView(QTabWidget):
             return
 
         if self.currentIndex() == self.count() - 1:
-            self.setCurrentIndex(self.count() - 2)
+            self.setCurrentIndex(int())
             return
 
         self.mark_active_tab()
@@ -178,10 +178,18 @@ class TabView(QTabWidget):
         if self.count() < 3:
             return
 
+        if self.currentIndex() == int():
+            return
+
         self.close_tab(self.currentIndex())
+        self.prev_tab()
         self.mark_active_tab()
 
     def prev_tab(self):
+        if self.currentIndex() == int():
+            self.setCurrentIndex(self.count() - 2)
+            return
+
         self.setCurrentIndex(self.currentIndex() - 1)
 
     def next_tab(self):
@@ -220,7 +228,7 @@ class TabView(QTabWidget):
 
     @void_qt_signals
     def add_tab(self, tab_name=None):
-        if self.count() > TabViewParams.TABS_LIMIT:
+        if self.count() > int(TabViewParams.TABS_LIMIT):
             error(f"Cannot open a new tab, max open tabs limit {TabViewParams.TABS_LIMIT} tabs is reached")
             error("Close some tab to open a new one")
 
@@ -288,3 +296,80 @@ class TabView(QTabWidget):
             raise ValueError(f"Cannot set Message Type Identifier {mti}. Mti not in specification")
 
         self.msg_type.setCurrentIndex(index)
+
+    def get_tab_names(self) -> list[str]:
+        tab_names: list[str] = list()
+
+        for index in range(self.count() - 1):
+            tab_name = self.tabText(index)
+
+            if not tab_name.strip():
+                tab_name = f"Tab #{index}"
+
+            while tab_name in tab_names:
+                tab_name = f"{index}_{tab_name}"
+
+            self.setTabText(index, tab_name)
+
+            tab_names.append(tab_name)
+
+        return tab_names
+
+    def get_tab_by_name(self, tab_name: str) -> QWidget | None:
+        if tab_name not in self.get_tab_names():
+            return
+
+        for index in range(self.count()):
+            if self.tabText(index) != tab_name:
+                continue
+
+            if not (tab := self.widget(index)):
+                return
+
+            return tab
+
+    def get_json_view(self, tab_name) -> JsonView | None:
+        if not (tab := self.get_tab_by_name(tab_name)):
+            return
+
+        if not (json_view := tab.findChild(JsonView)):
+            return
+
+        return json_view
+
+    def generate_fields(self, tab_name: str, flat: bool = False):
+        fields = {}
+
+        if not (json_view := self.get_json_view(tab_name)):
+            return fields
+
+        if fields := json_view.generate_fields(flat=flat):
+            return fields
+
+        return fields
+
+    def get_msg_type(self, tab_name):
+        if not (tab := self.get_tab_by_name(tab_name)):
+            return
+
+        if not (msg_type := tab.findChild(ComboBox)):
+            return
+
+        return msg_type
+
+    def get_trans_id(self, tab_name) -> str | None:
+        if not (json_view := self.get_json_view(tab_name)):
+            return
+
+        return json_view.get_trans_id()
+
+    def get_current_tab_name(self):
+        return self.tabText(self.currentIndex())
+
+    def get_current_field_data(self) -> str | None:
+        field_item: FIeldItem
+
+        if not (field_item := self.json_view.currentItem()):
+            return
+
+        return field_item.field_data

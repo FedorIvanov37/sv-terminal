@@ -370,7 +370,7 @@
          <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
-         <string>Save to file</string>
+         <string>Save to file(s)</string>
         </property>
        </widget>
       </item>

@@ -15,6 +15,3 @@ class HotKeysHintWindow(Ui_HotKeysHint, QDialog):
         header = self.HintTable.horizontalHeader()
         header.setSectionResizeMode(header.ResizeMode.Fixed)
         header.setDefaultAlignment(Qt.AlignmentFlag.AlignLeft)
-
-        for column, width in {0: 200, 1: 400}.items():
-            self.HintTable.setColumnWidth(column, width)

@@ -6,6 +6,7 @@ from common.lib.toolkit.toolkit import mask_pan, mask_secret
 from common.lib.data_models.Config import Config
 from common.lib.enums.TextConstants import TextConstants
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
+from common.lib.enums.TermFilesPath import TermFilesPath
 from PyQt6.QtCore import QObject
 
 
@@ -32,12 +33,15 @@ class LogPrinter(QObject):
         LogPrinter.print_multi_row(TextConstants.HELLO_MESSAGE)
         self.print_config(self.config, level=level)
 
-    def print_config(self, config: Config | None = None, level=default_level):
+    def print_config(self, config: Config | None = None, path=TermFilesPath.CONFIG, level=default_level):
         if config is None:
             config = self.config
 
-        config_data = config.model_dump_json(indent=4)
-        config_data = f"## Configuration parameters ##\n{config_data}\n## End of configuration parameters ##"
+        config_data = f"## Configuration parameters ##\n\n"
+        config_data = f"{config_data}Path: {path}\n\n"
+        config_data = f"{config_data}Data:\n{config.model_dump_json(indent=4)}\n\n"
+        config_data = f"{config_data}## End of configuration parameters ##"
+
         self.print_multi_row(config_data, level=level)
 
     def print_dump(self, transaction: Transaction, level=debug):
