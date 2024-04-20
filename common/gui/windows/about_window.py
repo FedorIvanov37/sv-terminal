@@ -1,4 +1,3 @@
-from os import getcwd
 from common.gui.forms.about import Ui_AboutWindow
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
@@ -17,14 +16,14 @@ from PyQt6.QtGui import (
 
 
 class AboutWindow(Ui_AboutWindow, QDialog):
+    audio_output = QAudioOutput()
     player = QMediaPlayer()
     movie: QMovie
 
     def __init__(self):
-        super().__init__()
+        super(AboutWindow, self).__init__()
         self.setupUi(self)
         self.setup()
-        self.init_music_player()  # self.exec() is here, otherwise music does not play
 
     @frameless_window
     def setup(self):
@@ -45,16 +44,11 @@ class AboutWindow(Ui_AboutWindow, QDialog):
         for element in data_bind:
             element.setText("%s %s" % (element.text(), data_bind.get(element)))
 
-        self.movie.start()
-
-    def init_music_player(self):
-        music_file_path = f"{getcwd()}/{GuiFilesPath.VVVVVV}"
-        music_file_path = QUrl.fromLocalFile(music_file_path)
-        audio_output = QAudioOutput()
-        self.player.setAudioOutput(audio_output)
-        self.player.setSource(music_file_path)
+        self.player.setAudioOutput(self.audio_output)
+        self.player.setSource(QUrl.fromLocalFile(GuiFilesPath.VVVVVV))
         self.player.playbackStateChanged.connect(self.record_finished)
-        self.exec()
+
+        self.movie.start()
 
     @staticmethod
     def open_url(link):
@@ -67,18 +61,13 @@ class AboutWindow(Ui_AboutWindow, QDialog):
 
     def switch_music(self):
         match self.player.playbackState():
-            case self.player.PlaybackState.PlayingState:
-                icon = GuiFilesPath.MUSIC_ON
-                self.player.stop()
-
             case self.player.PlaybackState.StoppedState:
                 icon = GuiFilesPath.MUSIC_OFF
                 self.player.play()
 
-            case self.player.PlaybackState.PausedState:
-                icon = GuiFilesPath.MUSIC_OFF
+            case self.player.PlaybackState.PlayingState:
+                icon = GuiFilesPath.MUSIC_ON
                 self.player.stop()
-                self.player.play()
 
             case _:
                 return

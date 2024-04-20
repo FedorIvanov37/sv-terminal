@@ -1,8 +1,9 @@
 from PyQt6.QtCore import QObject, pyqtSignal
 from logging import StreamHandler, LogRecord
-from logging import error
+from common.lib.decorators.singleton import singleton
 
 
+@singleton
 class WirelessHandler(StreamHandler, QObject):
     _new_record_appeared = pyqtSignal(str)
     _last_message: str = str()
@@ -17,7 +18,8 @@ class WirelessHandler(StreamHandler, QObject):
 
     def emit(self, record: LogRecord):
         try:
-            self.new_record_appeared.emit(self.format(record))
+            record = self.format(record)
+            self.new_record_appeared.emit(record)
 
-        except Exception as exc:
-            error("Log writing error: %s" % str(exc))
+        except Exception:
+            return

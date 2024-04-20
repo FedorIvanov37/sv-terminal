@@ -4,7 +4,7 @@ from logging import error, info, warning
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication, QFileDialog
 from PyQt6.QtNetwork import QTcpSocket
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import pyqtSignal, QTimer
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
@@ -60,6 +60,7 @@ class SignalGui(Terminal):
     trans_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION)
     set_remote_spec: pyqtSignal = pyqtSignal()
     _wireless_handler: WirelessHandler
+    _run_timer = QTimer()
 
     def set_json_view_focus(function: callable):
 
@@ -78,13 +79,13 @@ class SignalGui(Terminal):
         self.connector = ConnectionThread(config)
         super(SignalGui, self).__init__(config, self.connector)
         self.window: MainWindow = MainWindow(self.config)
+        self.connect_widgets()
         self.setup()
 
     @set_json_view_focus
-    def setup(self) -> None:
-        # Runs on startup to make all the preparation activity, then shows MainWindow
-
-        self.connect_widgets()
+    def setup(self) -> None:  # Runs on startup to make all the preparation activity, then shows MainWindow
+        self._run_timer.setSingleShot(True)
+        self._run_timer.start(int())
 
         self.log_printer.print_startup_info()
 
@@ -123,8 +124,6 @@ class SignalGui(Terminal):
 
         self.window.show()
 
-        self.show_license_dialog()
-
     def connect_widgets(self):
         window: MainWindow = self.window
 
@@ -151,17 +150,17 @@ class SignalGui(Terminal):
             window.settings: self.settings,
             window.hotkeys: lambda: HotKeysHintWindow().exec(),
             window.specification: self.run_specification_window,
-            window.about: lambda: AboutWindow(),
+            window.about: lambda: AboutWindow().exec(),
             window.keep_alive: self.set_keep_alive_interval,
             window.repeat: self.trans_timer.set_trans_loop_interval,
             window.validate_message: lambda: self.validate_main_window(force=True),
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
-            window.copy_field: self.copy_current_field,
             self.connector.stateChanged: self.set_connection_status,
             self.set_remote_spec: self.connector.set_remote_spec,
             self.trans_timer.send_transaction: window.send,
             self.trans_timer.interval_was_set: window.process_transaction_loop_change,
             self.keep_alive_timer.interval_was_set: window.process_transaction_loop_change,
+            self._run_timer.timeout: self.show_license_dialog
         }
 
         for signal, slot in terminal_connections_map.items():
@@ -169,8 +168,6 @@ class SignalGui(Terminal):
 
     @staticmethod
     def show_license_dialog() -> None:
-        license_window: LicenseWindow | None = None
-
         try:
             license_window: LicenseWindow = LicenseWindow()
             license_window.exec()
@@ -181,12 +178,6 @@ class SignalGui(Terminal):
 
         except LicenceAlreadyAccepted:
             return
-
-        finally:
-            if license_window is None:
-                return
-
-            license_window.destroy()
 
     @set_json_view_focus
     def run_specification_window(self) -> None:

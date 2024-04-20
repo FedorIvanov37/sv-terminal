@@ -183,8 +183,9 @@
 + --config-file --print-config
 + Tabs round by keyboard
 + Add hotkeys info CTRL + F4, CTRL + PG-UP/PG-DOWN, Ctrl + Alt + P
-+ Ctrl+C secrets
++ Ctrl+C and copy of secrets
 + Expand reversal window to long utrnno
++ Licence window and timer
 
 
 
