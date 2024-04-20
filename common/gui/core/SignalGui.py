@@ -544,9 +544,7 @@ class SignalGui(Terminal):
 
         return file_name
 
-    def save_transaction_to_file(self, mode: ButtonActions.SaveMenuActions | None = None,
-                                 file_format: str | None = None) -> None:
-
+    def save_transaction_to_file(self, mode: str | None = None, file_format: str | None = None) -> None:
         if not file_format:
             file_format = OutputFilesFormat.JSON
 
@@ -574,8 +572,24 @@ class SignalGui(Terminal):
         if not isinstance(transactions, dict):
             transactions = {transactions.trans_id: transactions}
 
+        filenames: list[str] = list()
+
         for tab_name, transaction in transactions.items():
             if all_tabs:
+
+                for extension in OutputFilesFormat:
+                    if not tab_name.upper().endswith(f".{extension}"):
+                        continue
+
+                    extension_len = len(extension) + 1
+                    tab_name = tab_name[:-extension_len]
+                    break
+
+                while tab_name in filenames:
+                    tab_name = f"copy_{tab_name}"
+
+                filenames.append(tab_name)
+
                 file_name = f"{file_data}/{tab_name}"
                 file_name = f"{file_name}.{file_format}" if not file_name.lower().endswith(file_format) else file_name
 
