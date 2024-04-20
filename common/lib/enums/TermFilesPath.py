@@ -19,6 +19,7 @@ class TermFiles(StrEnum):
     KEEP_ALIVE = "keep-alive.json"
     DEFAULT_FILE = "default_message.json"
     LICENSE_INFO = "license_info.json"
+    LICENSE_AGREEMENT = "agreement.txt"
     LOG_FILE_NAME = "signal.log"
     CURRENCY_DICT = "currencies.json"
     COUNTRY_DICT = "countries.json"
@@ -37,3 +38,4 @@ class TermFilesPath(StrEnum):
     CURRENCY_DICT = f"{TermDirs.DICTIONARY_DIR}/{TermFiles.COUNTRY_DICT}"
     COUNTRY_DICT = f"{TermDirs.DICTIONARY_DIR}/{TermFiles.COUNTRY_DICT}"
     MCC_DICT = f"{TermDirs.DICTIONARY_DIR}/{TermFiles.MCC_DICT}"
+    LICENSE_AGREEMENT = f"{TermDirs.LICENSE_DIR}/{TermFiles.LICENSE_AGREEMENT}"

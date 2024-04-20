@@ -135,9 +135,9 @@ class Ui_LicenseWindow(object):
     def retranslateUi(self, LicenseWindow):
         _translate = QtCore.QCoreApplication.translate
         LicenseWindow.setWindowTitle(_translate("LicenseWindow", "SIGNAL terms and conditions"))
-        self.InfoBoard.setDocumentTitle(_translate("LicenseWindow", "GNU/GPL license agreement"))
+        self.InfoBoard.setDocumentTitle(_translate("LicenseWindow", "GNU/GPL license agreement.txt"))
         self.InfoBoard.setHtml(_translate("LicenseWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><title>GNU/GPL license agreement</title><style type=\"text/css\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><title>GNU/GPL license agreement.txt</title><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))

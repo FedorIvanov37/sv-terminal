@@ -1,9 +1,10 @@
 from glob import glob
 from time import sleep
-from os import listdir
+
+from os import listdir, path, system, getcwd
 from os.path import normpath, basename, isfile
 from logging import info, error
-from datetime import datetime
+from datetime import datetime, UTC
 from argparse import ArgumentParser
 from pydantic import ValidationError
 from signal import signal, SIG_DFL, SIGINT
@@ -15,6 +16,8 @@ from common.lib.constants.LogDefinition import DebugLevels
 from common.cli.data_models.CliConfig import CliConfig
 from common.lib.core.Terminal import Terminal
 from common.lib.enums.TermFilesPath import TermFilesPath
+from common.lib.data_models.License import LicenseInfo
+from common.lib.exceptions.exceptions import LicenseRejected
 
 
 class SignalCli(Terminal):
@@ -33,6 +36,11 @@ class SignalCli(Terminal):
         signal(SIGINT, SIG_DFL)
 
         self.logger.create_logger()
+
+        try:
+            self.show_license_dialog()
+        except LicenseRejected:
+            exit(100)
 
         cli_args_parser: ArgumentParser = ArgumentParser(description=TextConstants.CLI_DESCRIPTION)
 
@@ -69,6 +77,16 @@ class SignalCli(Terminal):
 
         self.logger.set_debug_level()
 
+    def connect_all(self):
+        self.run_timer.timeout.connect(self.main)
+        self._finished.connect(self.application.quit)
+
+    def run_application(self):
+        self.run_timer.setSingleShot(True)
+        self.run_timer.start(0)
+        self.application.exec()
+
+    def main(self):
         print_data_map = (
             (self._cli_config.version, self.log_printer.print_version),
             (self._cli_config.about, self.log_printer.print_about),
@@ -92,16 +110,6 @@ class SignalCli(Terminal):
             info("Press CTRL+C to exit")
             info(str())
 
-    def connect_all(self):
-        self.run_timer.timeout.connect(self.begin)
-        self._finished.connect(self.application.quit)
-
-    def run_application(self):
-        self.run_timer.setSingleShot(True)
-        self.run_timer.start(0)
-        self.application.exec()
-
-    def begin(self):
         if not (filenames := self.get_files_to_process()):
             if not any([self._cli_config.about, self._cli_config.version]):
                 error("Cannot found specified files")
@@ -130,6 +138,75 @@ class SignalCli(Terminal):
 
             if not self._cli_config.repeat:
                 break
+
+    def show_license_dialog(self) -> None:
+        license_info: LicenseInfo = self.get_license_info()
+
+        if license_info.accepted:
+            info("")
+            info(f"License ID {license_info.license_id} accepted {license_info.last_acceptance_date:%d/%m/%Y %T} UTC")
+            return
+
+        print(TextConstants.HELLO_MESSAGE)
+        print("")
+        print("  Welcome to SIGNAL Command Line Mode!")
+        print("")
+        print("  SIGNAL distributes under GNU/GPL license as a free software. "
+              "To proceed work you have to read and accept license agreement")
+        print("")
+        print("")
+
+        show_license = None
+
+        while not str(show_license).lower().strip() in ("yes", "y"):
+            try:
+                show_license = input(
+                    '  Type "yes" or "y" to see the license agreement or press "Ctrl + C" to reject the license: ')
+
+            except KeyboardInterrupt:
+                error("License agreement rejected, exiting")
+                raise LicenseRejected
+
+        agreement_path = f"{getcwd()}/{TermFilesPath.LICENSE_AGREEMENT}"
+        agreement_path = path.normpath(agreement_path)
+
+        if not isfile(agreement_path):
+            raise ValueError("Lost license agreement text file")
+
+        system(f"more {agreement_path}")
+        print("")
+        print("")
+        print("  To proceed you have to accept the license agreement")
+        print("")
+
+        accepted = None
+
+        while not str(accepted).lower().strip() in ("yes", "y"):
+            try:
+
+                accepted = input(
+                    '  Type "yes" or "y" to accept the license agreement or press "Ctrl + C" to reject the license: ')
+
+            except KeyboardInterrupt:
+                error("License agreement rejected, exiting")
+                raise LicenseRejected
+
+        info(f"The license accepted! License ID {license_info.license_id}")
+
+        license_info.accepted = True
+        license_info.show_agreement = False
+        license_info.last_acceptance_date = datetime.now(UTC)
+
+        self.save_license_file(license_info)
+
+    @staticmethod
+    def save_license_file(license_info: LicenseInfo) -> None:
+        try:
+            with open(TermFilesPath.LICENSE_INFO, 'w') as license_info_file:
+                license_info_file.write(license_info.model_dump_json())
+
+        except Exception as file_saving_error:
+            error(file_saving_error)
 
     def get_files_to_process(self) -> list[str]:
         filenames: list[str] = list()
@@ -174,3 +251,21 @@ class SignalCli(Terminal):
     def wait(self, sec):
         sleep(sec)
         self.application.processEvents()
+
+    @staticmethod
+    def get_license_info():
+        if not path.isfile(TermFilesPath.LICENSE_INFO):
+            license_info = LicenseInfo()
+
+            SignalCli.save_license_file(license_info)
+
+            return license_info
+
+        try:
+            with open(TermFilesPath.LICENSE_INFO) as license_json:
+                license_info = LicenseInfo.model_validate_json(license_json.read())
+
+        except Exception:
+            return license_info
+
+        return license_info

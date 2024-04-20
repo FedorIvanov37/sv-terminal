@@ -177,7 +177,7 @@
 + Add tabs by QTabWidget
 + Revise hotkeys in hint-window and doc
 + Console mode
-
+#
 + Fix DE62 parsing error
 + Save multiple files
 + Add keys is CLI mode: --config-file --print-config
@@ -188,7 +188,10 @@
 + Change name to SIGNAL in Document
 + Bugs fix: incorrect bitmap representation,
 + Add license info to the window "About"
-• License agreement in CLI mode
++ License agreement in CLI mode
+
+
+
 
   
 

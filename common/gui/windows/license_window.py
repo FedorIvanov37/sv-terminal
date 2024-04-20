@@ -22,7 +22,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
     @frameless_window
     @set_window_icon
     def _setup(self):
-        self.LogoContainer.setText(f"{TextConstants.HELLO_MESSAGE} | GNU/GPL license agreement\n")
+        self.LogoContainer.setText(f"{TextConstants.HELLO_MESSAGE} | GNU/GPL license agreement.txt\n")
         self.InfoBoard.setText(TextConstants.LICENSE_AGREEMENT)
         self.CheckBoxAgreement.setFocus()
 
@@ -69,7 +69,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
         license_data.last_acceptance_date = None
 
         self.save_license_file(license_data)
-        warning("License agreement rejected, exit")
+        warning("License agreement.txt rejected, exit")
         exit(100)
 
     @staticmethod
