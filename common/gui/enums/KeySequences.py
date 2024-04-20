@@ -17,3 +17,5 @@ class KeySequences(StrEnum):
     CTRL_PAGE_UP = "Ctrl+PgUp"
     CTRL_PAGE_DOWN = "Ctrl+PgDown"
     CTRL_ALT_P = "Ctrl+Alt+P"
+    CTRL_TAB = "Ctrl+Tab"
+    CTRL_SHIFT_TAB = "Ctrl+Shift+Tab"

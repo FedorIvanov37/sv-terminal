@@ -307,7 +307,7 @@ class TabView(QTabWidget):
                 tab_name = f"Tab #{index}"
 
             while tab_name in tab_names:
-                tab_name = f"{tab_names.count(tab_name)}_{tab_name}"
+                tab_name = f"{index}_{tab_name}"
 
             self.setTabText(index, tab_name)
 

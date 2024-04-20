@@ -294,6 +294,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             KeySequences.CTRL_ALT_V: lambda: self.validate_message.emit(True),
             KeySequences.CTRL_PAGE_UP: self._tab_view.prev_tab,
             KeySequences.CTRL_PAGE_DOWN: self._tab_view.next_tab,
+            KeySequences.CTRL_TAB: self._tab_view.next_tab,
+            KeySequences.CTRL_SHIFT_TAB: self._tab_view.prev_tab,
             KeySequences.CTRL_ALT_P: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.TERM),
 
         }

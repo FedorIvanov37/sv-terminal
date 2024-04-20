@@ -182,12 +182,15 @@
 + Save multiple files
 + Add keys is CLI mode: --config-file --print-config
 + Tabs round by keyboard
-+ Add hotkeys info: CTRL + F4, CTRL + PG-UP/PG-DOWN, Ctrl + Alt + P
++ Add hotkeys info: CTRL + F4, CTRL + PG-UP/PG-DOWN, Ctrl + Alt + P, Ctrl + Tab,  Ctrl + Shift + Tab
 + Expand reversal window to long utrnno
 + Licence window correct exec by timer event
 + Change name to SIGNAL in Document
 + Bugs fix: incorrect bitmap representation,
-• Add license info to the window "About"
++ Add license info to the window "About"
+
+
+
 
 
 • Error on console when run AboutWindow - Could not update timestamps for skipped samples
