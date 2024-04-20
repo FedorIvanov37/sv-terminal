@@ -501,9 +501,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         if interval_name == ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_ONCE:
             return
 
-        if interval_name == "1 seconds":
-            interval_name = interval_name.removesuffix("s")
-
         button_type_map: dict[str, QPushButton] = {
             KeepAlive.TransTypes.TRANS_TYPE_KEEP_ALIVE: self.ButtonKeepAlive,
             KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION: self.ButtonRepeat,
@@ -524,9 +521,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         if trans_type == KeepAlive.TransTypes.TRANS_TYPE_KEEP_ALIVE and self.config.host.keep_alive_mode:
             custom_interval_name: str = KeepAlive.IntervalNames.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
-
-            if self.config.host.keep_alive_interval == 1:
-                custom_interval_name: str = custom_interval_name.removesuffix("s")
 
             button_action_menu[custom_interval_name]: Callable = lambda: self.keep_alive.emit(custom_interval_name)
 
