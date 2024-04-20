@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>397</width>
+    <width>370</width>
     <height>479</height>
    </rect>
   </property>
@@ -315,22 +315,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="LicenseLabel">
-         <property name="font">
-          <font>
-           <family>Calibri</family>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>License ID</string>
-         </property>
-         <property name="textInteractionFlags">
-          <set>Qt::NoTextInteraction</set>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QLabel" name="AuthorLabel">
          <property name="palette">
           <palette>
@@ -504,6 +488,12 @@
          <width>350</width>
          <height>350</height>
         </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
        </property>
        <property name="text">
         <string/>
