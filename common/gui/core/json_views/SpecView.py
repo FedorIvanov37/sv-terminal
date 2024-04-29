@@ -1,7 +1,7 @@
 from typing import Callable
 from logging import info, error, warning
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QCheckBox
+from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Validators
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
@@ -338,7 +338,11 @@ class SpecView(TreeView):
             row: SpecItem
 
             for row in spec_item.get_children():
-                self.validator.validate_spec_row(row)
+                try:
+                    self.validator.validate_spec_row(row)
+                except ValueError as validation_error:
+                    error(validation_error)
+                    continue
 
                 field = IsoField(
                     field_number=row.field_number,
