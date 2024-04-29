@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_LicenseWindow(object):
     def setupUi(self, LicenseWindow):
         LicenseWindow.setObjectName("LicenseWindow")
-        LicenseWindow.setWindowModality(QtCore.Qt.WindowModality.ApplicationModal)
+        LicenseWindow.setWindowModality(QtCore.Qt.WindowModality.NonModal)
         LicenseWindow.resize(800, 900)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -61,7 +61,7 @@ class Ui_LicenseWindow(object):
         self.InfoBoard.setLineWrapMode(QtWidgets.QTextEdit.LineWrapMode.NoWrap)
         self.InfoBoard.setReadOnly(True)
         self.InfoBoard.setAcceptRichText(False)
-        self.InfoBoard.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.TextSelectableByKeyboard|QtCore.Qt.TextInteractionFlag.TextSelectableByMouse)
+        self.InfoBoard.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.LinksAccessibleByKeyboard|QtCore.Qt.TextInteractionFlag.LinksAccessibleByMouse|QtCore.Qt.TextInteractionFlag.TextBrowserInteraction|QtCore.Qt.TextInteractionFlag.TextSelectableByKeyboard|QtCore.Qt.TextInteractionFlag.TextSelectableByMouse)
         self.InfoBoard.setObjectName("InfoBoard")
         self.gridLayout_2.addWidget(self.InfoBoard, 1, 0, 1, 1)
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -149,7 +149,7 @@ class Ui_LicenseWindow(object):
 
     def retranslateUi(self, LicenseWindow):
         _translate = QtCore.QCoreApplication.translate
-        LicenseWindow.setWindowTitle(_translate("LicenseWindow", "SIGNAL terms and conditions"))
+        LicenseWindow.setWindowTitle(_translate("LicenseWindow", "SIGNAL | GNU General Public License"))
         self.ButtonAccept.setText(_translate("LicenseWindow", "Accept"))
         self.ButtonReject.setText(_translate("LicenseWindow", "Reject"))
         self.InfoBoard.setDocumentTitle(_translate("LicenseWindow", "GNU/GPL license agreement"))

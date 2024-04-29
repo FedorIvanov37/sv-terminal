@@ -32,7 +32,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Message Type Indicator</string>
+   <string>SIGNAL | Message Type Indicator</string>
   </property>
   <property name="modal">
    <bool>false</bool>

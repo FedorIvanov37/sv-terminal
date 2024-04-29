@@ -310,7 +310,7 @@ class Ui_SettingsWindow(object):
 
     def retranslateUi(self, SettingsWindow):
         _translate = QtCore.QCoreApplication.translate
-        SettingsWindow.setWindowTitle(_translate("SettingsWindow", "Configuration"))
+        SettingsWindow.setWindowTitle(_translate("SettingsWindow", "SIGNAL | Configuration"))
         self.ConnectionBox.setTitle(_translate("SettingsWindow", "Remote host"))
         self.KeepAliveMode.setText(_translate("SettingsWindow", "Keep Alive message interval "))
         self.KeepAliveInterval.setSuffix(_translate("SettingsWindow", " sec"))

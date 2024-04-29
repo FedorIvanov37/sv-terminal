@@ -38,7 +38,10 @@ class Logger:
         self.config: Config = config
         self.setup(display_log=display_log)
 
-    def setup(self, display_log=False):
+    def setup(self, display_log=False, logfile: str | None = None):
+        if logfile is None:
+            logfile = TermFilesPath.LOG_FILE_NAME
+
         logger = getLogger()
         logger.handlers.clear()
         logger.setLevel(getLevelName(self.config.debug.level))
@@ -46,7 +49,7 @@ class Logger:
         formatter = Formatter(LogDefinition.FORMAT, LogDefinition.LOGFILE_DATE_FORMAT, LogDefinition.MARK_STYLE)
 
         file_handler = RotatingFileHandler(
-            filename=TermFilesPath.LOG_FILE_NAME,
+            filename=logfile,
             maxBytes=LogDefinition.LOG_MAX_SIZE_MEGABYTES * 1024000,
             backupCount=self.config.debug.backup_storage_depth,
             encoding='utf8'

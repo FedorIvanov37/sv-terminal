@@ -38,11 +38,10 @@ class AboutWindow(Ui_AboutWindow, QDialog):
             self.ReleaseLabel: ReleaseDefinition.RELEASE,
             self.ContactLabel: ReleaseDefinition.CONTACT,
             self.AuthorLabel: ReleaseDefinition.AUTHOR,
-            # self.LicenseLabel: self.license_info,
         }
 
-        for element in data_bind:
-            element.setText("%s %s" % (element.text(), data_bind.get(element)))
+        for label, text in data_bind.items():
+            label.setText(f"{label.text()} {text}")
 
         self.player.setAudioOutput(self.audio_output)
         self.player.setSource(QUrl.fromLocalFile(GuiFilesPath.VVVVVV))

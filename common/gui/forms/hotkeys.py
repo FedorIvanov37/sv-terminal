@@ -193,7 +193,7 @@ class Ui_HotKeysHint(object):
 
     def retranslateUi(self, HotKeysHint):
         _translate = QtCore.QCoreApplication.translate
-        HotKeysHint.setWindowTitle(_translate("HotKeysHint", "Hotkeys"))
+        HotKeysHint.setWindowTitle(_translate("HotKeysHint", "SIGNAL | Hotkeys"))
         item = self.HintTable.verticalHeaderItem(0)
         item.setText(_translate("HotKeysHint", "F1"))
         item = self.HintTable.verticalHeaderItem(1)

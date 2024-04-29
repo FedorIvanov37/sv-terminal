@@ -3,7 +3,7 @@
  <class>LicenseWindow</class>
  <widget class="QDialog" name="LicenseWindow">
   <property name="windowModality">
-   <enum>Qt::ApplicationModal</enum>
+   <enum>Qt::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -32,7 +32,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>SIGNAL terms and conditions</string>
+   <string>SIGNAL | GNU General Public License</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -155,7 +155,7 @@ p, li { white-space: pre-wrap; }
       <bool>false</bool>
      </property>
      <property name="textInteractionFlags">
-      <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+      <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
      </property>
     </widget>
    </item>

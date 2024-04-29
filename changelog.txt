@@ -189,11 +189,12 @@
 + Bugs fix: incorrect bitmap representation,
 + Add license info to the window "About"
 + License agreement in CLI mode
-+ Window "About" renovation
++ "About" window renovation
 + License window renovation
++ --logfile in CLI mode
 
-  
 
+• Setting "Show license agreement"
 • Error on console when run AboutWindow - Could not update timestamps for skipped samples
 • Pin main tab and make the other movable
 • Drag and drop files to JsonView

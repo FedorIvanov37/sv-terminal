@@ -1,6 +1,5 @@
 from glob import glob
 from time import sleep
-
 from os import listdir, path, system, getcwd
 from os.path import normpath, basename, isfile
 from logging import info, error
@@ -12,7 +11,7 @@ from PyQt6.QtCore import QCoreApplication, QTimer, pyqtSignal
 from common.lib.data_models.Transaction import Transaction
 from common.lib.data_models.Config import Config
 from common.lib.enums.TextConstants import TextConstants
-from common.lib.constants.LogDefinition import DebugLevels
+from common.lib.constants.LogDefinition import LOG_LEVEL, DebugLevels
 from common.cli.data_models.CliConfig import CliConfig
 from common.lib.core.Terminal import Terminal
 from common.lib.enums.TermFilesPath import TermFilesPath
@@ -50,7 +49,8 @@ class SignalCli(Terminal):
         cli_args_parser.add_argument("-a", "--address", default=self.config.host.host, action="store", help="Host TCP/IP address")
         cli_args_parser.add_argument("-p", "--port", type=int, default=self.config.host.port, action="store", help="TCP/IP port to connect")
         cli_args_parser.add_argument("-r", "--repeat", action="store_true", help="Repeat transactions after sending")
-        cli_args_parser.add_argument("-l", "--log-level", type=str, default=DebugLevels.INFO, action="store", help=f"Debug level {DebugLevels.DEBUG}, {DebugLevels.INFO}, etc")
+        cli_args_parser.add_argument("--logfile", type=str, default=TermFilesPath.LOG_FILE_NAME, action="store", help=f"Set log file path. Default {TermFilesPath.LOG_FILE_NAME}")
+        cli_args_parser.add_argument("-l", "--log-level", type=str, default=DebugLevels.INFO, action="store", help=f"Debug level: {', '.join(LOG_LEVEL)}")
         cli_args_parser.add_argument("-i", "--interval", type=int, default=0, action="store", help="Wait (seconds) before send next transaction")
         cli_args_parser.add_argument("--parallel", action="store_true", help="Send new transaction with no waiting of answer for previous one")
         cli_args_parser.add_argument("-t", "--timeout", type=int, default=60, help="Timeout of waiting resp")
@@ -74,6 +74,10 @@ class SignalCli(Terminal):
         except ValueError as config_parsing_error:
             error(f"Error run in Console Mode: {config_parsing_error}")
             exit(100)
+
+        if self._cli_config.logfile != TermFilesPath.LOG_FILE_NAME:
+            self.logger.setup(logfile=self._cli_config.logfile)
+            self.logger.create_logger()
 
         self.logger.set_debug_level()
 
