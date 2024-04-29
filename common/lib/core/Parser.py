@@ -229,7 +229,9 @@ class Parser:
                 transaction: Transaction = Parser.parse_dump(message_data, flat=flat)
 
             except ValueError:
-                raise ValueError("Cannot parse incoming message due to format error")
+                message = "Cannot parse incoming message due to format error."
+                message = f"{message} Change log level to DEBUG to see raw message"
+                raise ValueError(message)
 
             messages.append(transaction)
 

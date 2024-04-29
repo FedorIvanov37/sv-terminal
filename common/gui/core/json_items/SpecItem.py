@@ -1,4 +1,5 @@
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QCheckBox, QWidget
 from common.lib.data_models.EpaySpecificationModel import IsoField
 from common.gui.core.json_items.Item import Item
 from common.gui.enums import SpecFieldDef
@@ -85,16 +86,11 @@ class SpecItem(Item):
     def is_secret(self):
         return self.is_checked(SpecFieldDef.ColumnsOrder.SECRET)
 
-    def __init__(self, field_data: list[str] | None = None, checkboxes: dict[int, bool] = None):
+    def __init__(self, field_data: list[str] | None = None):
         if field_data is None:
             field_data: list[str] = list()
 
         super(SpecItem, self).__init__(field_data)
-        self.setup(checkboxes=checkboxes)
-
-    def setup(self, checkboxes=None):
-        self.set_checkboxes(checkboxes)
-        # self.setTextAlignment(SpecFieldDef.ColumnsOrder.ALPHA, Qt.AlignmentFlag.AlignCenter)
 
     def set_checkboxes(self, checkboxes: dict[int, bool]):
         if self.text(SpecFieldDef.ColumnsOrder.FIELD) == RootItemNames.SPECIFICATION_ROOT_NAME:
@@ -110,16 +106,80 @@ class SpecItem(Item):
                 checkboxes[box] = False
 
         for column, state in checkboxes.items():
-            if column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
-                self.setCheckState(int(column), Qt.CheckState.PartiallyChecked if state else Qt.CheckState.Unchecked)
+            self.set_checkbox(column, Qt.CheckState.Checked if state else Qt.CheckState.Unchecked)
+
+    def is_secret_pan(self, column: int) -> bool:
+        secret_pan_conditions = (
+            self.field_number == self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER,
+            column == SpecFieldDef.ColumnsOrder.SECRET,
+        )
+
+        return all(secret_pan_conditions)
+
+    def set_checkbox(self, column: int, state: Qt.CheckState):
+        checkbox = QCheckBox()
+        checkbox.setCheckState(state)
+
+        if self.is_secret_pan(column):
+            checkbox.setCheckState(Qt.CheckState.PartiallyChecked)
+            self.set_widget_read_only(checkbox)
+
+        if column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED and state == Qt.CheckState.Checked:
+            checkbox.setCheckState(Qt.CheckState.PartiallyChecked)
+            self.set_widget_read_only(checkbox)
+
+        field_path = self.get_field_path()
+        trans_id_path = self.epay_spec.get_trans_id_path()
+
+        if field_path == trans_id_path and column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
+            checkbox.setCheckState(Qt.CheckState.PartiallyChecked)
+            self.set_widget_read_only(checkbox)
+
+        if not (tree := self.treeWidget()):
+            return
+
+        checkbox.stateChanged.connect(lambda: tree.itemChanged.emit(self, column))
+        tree.removeItemWidget(self, column)
+        tree.setItemWidget(self, column, checkbox)
+
+    @staticmethod
+    def set_widget_read_only(widget: QWidget, readonly: bool = True) -> None:
+        if widget is None:
+            return
+
+        widget.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, readonly)
+        widget.setFocusPolicy(Qt.FocusPolicy.NoFocus if readonly else Qt.FocusPolicy.StrongFocus)
+
+    def set_readonly(self, readonly: bool = True):
+        if not (tree := self.treeWidget()):
+            return
+
+        for column in SpecFieldDef.ColumnsOrder:
+            if not (widget := tree.itemWidget(self, column)):
                 continue
 
-            self.setCheckState(int(column), Qt.CheckState.Checked if state else Qt.CheckState.Unchecked)
+            read_only = readonly
 
-    def is_checked(self, column):
-        state = self.checkState(column)
-        state = state.value
-        state = bool(state)
+            if self.is_secret_pan(column):
+                read_only = True
+
+            if column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
+                read_only = True
+
+            self.set_widget_read_only(widget, read_only)
+
+    def is_checked(self, column) -> bool:
+        if not (tree := self.treeWidget()):
+            return False
+
+        if not (checkbox := tree.itemWidget(self, column)):
+            return False
+
+        if not isinstance(checkbox, QCheckBox):
+            return False
+
+        state = checkbox.isChecked()
+
         return state
 
     def parse_field_spec(self, field_spec: IsoField):

@@ -1,9 +1,7 @@
 from PyQt6.QtCore import QObject, pyqtSignal
 from logging import StreamHandler, LogRecord
-from common.lib.decorators.singleton import singleton
 
 
-@singleton
 class WirelessHandler(StreamHandler, QObject):
     _new_record_appeared = pyqtSignal(str)
     _last_message: str = str()

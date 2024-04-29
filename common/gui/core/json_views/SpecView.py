@@ -1,7 +1,7 @@
 from typing import Callable
 from logging import info, error, warning
-from PyQt6.QtCore import pyqtSignal, Qt
-from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QCheckBox
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Validators
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
@@ -19,7 +19,8 @@ class SpecView(TreeView):
     _spec: EpaySpecification = EpaySpecification()
     search_finished = pyqtSignal()
 
-    def reject_in_read_only_mode(fuction: Callable, *args, **kwargs):  # Reject function execution when read only mode is active
+    # Reject function execution when read only mode is active
+    def reject_in_read_only_mode(fuction: Callable, *args, **kwargs):
         def wrapper(self, *args, **kwargs):
             if not self.window.read_only:
                 return fuction(self)
@@ -47,7 +48,7 @@ class SpecView(TreeView):
         self.setHeaderLabels(SpecFieldDef.Columns)
         self.addTopLevelItem(self.root)
         self.itemDoubleClicked.connect(self.editItem)
-        self.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
+        self.itemClicked.connect(self.process_item_click)
         self.itemChanged.connect(self.process_item_change)
         self.currentItemChanged.connect(self.print_path)
         self.parse_spec()
@@ -74,56 +75,41 @@ class SpecView(TreeView):
 
         info(f"{path} - {description}")
 
+    def set_read_only(self, readonly: bool = True, parent: SpecItem | None = None) -> None:
+        if parent is None:
+            parent = self.root
+
+        spec_item: SpecItem
+
+        for spec_item in parent.get_children():
+            spec_item.set_readonly(readonly)
+
+            if not spec_item.get_children():
+                continue
+
+            self.set_read_only(readonly=readonly, parent=spec_item)
+
     @void_qt_signals
-    def process_item_change(self, item, column):
-        if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            self.set_pan_as_secret(item)
+    def process_item_click(self, item: SpecItem, column: int) -> None:
+        self.validate_item(item, column, validate_all=True)
 
-            if column == SpecFieldDef.ColumnsOrder.SECRET:
-                warning("The Card Number is a secret constantly")
-                return
-
-        if column in list(SpecFieldDef.Checkboxes) and self.window.read_only:
-            warning("Read only mode. Switch mode by checkbox on top of the window")
-            current_state = item.checkState(column)
-
-            new_state = Qt.CheckState.Unchecked
-
-            if current_state == Qt.CheckState.Unchecked:
-                new_state = Qt.CheckState.Checked
-
-            if current_state == Qt.CheckState.Checked:
-                new_state = Qt.CheckState.Unchecked
-
-            if item.field_number in self.spec.get_generated_fields_dict().values():
-                new_state = Qt.CheckState.PartiallyChecked
-
-            if item.get_field_path() == self.spec.get_trans_id_path():
-                new_state = Qt.CheckState.PartiallyChecked
-
-            item.setCheckState(column, new_state)
-
+        if item.is_secret_pan(column):
+            warning("The Card Number is a secret constantly")
             return
+
+        if column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
+            warning('Checkbox "Generate" is pre-defined, not possible to change the state')
+            return
+
+    @void_qt_signals
+    def process_item_change(self, item: SpecItem, column: int):
+        self.validate_item(item, column, validate_all=True)
 
         if column == SpecFieldDef.ColumnsOrder.SECRET:
             self.cascade_checkboxes(item)
 
         if column == SpecFieldDef.ColumnsOrder.TAG_LENGTH:
             self.cascade_tag_length(item)
-
-        if column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
-            warning('Checkboxes "generate fields" are pre-defined, not possible to change the state')
-
-            if item.field_number in self.spec.get_generated_fields_dict().values():
-                item.setCheckState(SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED, Qt.CheckState.PartiallyChecked)
-
-            if item.field_number not in self.spec.get_generated_fields_dict().values():
-                item.setCheckState(SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED, Qt.CheckState.Unchecked)
-
-            if item.get_field_path() == self.spec.get_trans_id_path():
-                item.setCheckState(SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED, Qt.CheckState.PartiallyChecked)
-
-        self.validate_item(item, column, validate_all=True)
 
     def search(self, text: str, parent: SpecItem | None = None) -> None:
         TreeView.search(self, text, parent)
@@ -145,12 +131,6 @@ class SpecView(TreeView):
 
             if item.childCount():
                 self.cascade_checkboxes(item)
-
-    def set_pan_as_secret(self, item: SpecItem):
-        if item.field_number != self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            return
-
-        item.setCheckState(SpecFieldDef.ColumnsOrder.SECRET, Qt.CheckState.PartiallyChecked)
 
     def editItem(self, item, column):
         if item is self.root and column not in (SpecFieldDef.ColumnsOrder.DESCRIPTION, SpecFieldDef.ColumnsOrder.FIELD):
@@ -334,12 +314,11 @@ class SpecView(TreeView):
                 SpecFieldDef.ColumnsOrder.SECRET: field_data.is_secret
             }
 
-            item: SpecItem = SpecItem(field_data_for_item, checkboxes=checkboxes)
-
-            if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-                self.set_pan_as_secret(item)
+            item: SpecItem = SpecItem(field_data_for_item)
 
             parent.addChild(item)
+
+            item.set_checkboxes(checkboxes)
 
             if field_data.fields:
                 self.parse_spec_fields(input_json=field_data.fields, parent=item)

@@ -98,7 +98,7 @@ class SpecValidator:
             raise ValueError(f"Non-zero Tag Len, but field {field_path} doesn't contain subfields")
 
     @staticmethod
-    def validate_datatype_checkboxes(item):
+    def validate_datatype_checkboxes(item: SpecItem):
         field_path = item.get_field_path(string=True)
 
         if any((item.alpha, item.numeric, item.special)):

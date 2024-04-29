@@ -34,11 +34,11 @@ class Logger:
     def stream(self, stream):
         self._stream = stream
 
-    def __init__(self, config: Config, display_log=False):
+    def __init__(self, config: Config):
         self.config: Config = config
-        self.setup(display_log=display_log)
+        self.setup()
 
-    def setup(self, display_log=False, logfile: str | None = None):
+    def setup(self, logfile: str | None = None):
         if logfile is None:
             logfile = TermFilesPath.LOG_FILE_NAME
 
@@ -56,12 +56,8 @@ class Logger:
         )
 
         file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
 
-        if display_log:
-            stream_handler = StreamHandler()
-            stream_handler.setFormatter(formatter)
-            logger.addHandler(stream_handler)
+        logger.addHandler(file_handler)
 
         logging.raiseExceptions = LogDefinition.RAISE_EXCEPTIONS
 

@@ -254,17 +254,21 @@ class EpaySpecification(EpaySpecificationData):
 
         return bool(field_spec.fields)
 
-    def get_field_length_var(self, field):
+    def get_field_length_var(self, field) -> int:
         field_spec = self.get_field_spec([field])
 
         if field_spec is not None:
             return field_spec.var_length
 
-    def get_field_length(self, field):
+        return int()
+
+    def get_field_length(self, field) -> int:
         field_spec: IsoField = self.get_field_spec([field])
 
-        if field is not None:
+        if field_spec is not None:
             return field_spec.max_length
+
+        return int()
 
     def get_field_date_format(self, field):
         for field_name, field_number in asdict(self.FIELD_SET).items():

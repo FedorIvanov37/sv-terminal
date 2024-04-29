@@ -32,7 +32,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     _reset_spec: pyqtSignal = pyqtSignal(str)
     _load_remote_spec: pyqtSignal = pyqtSignal(bool)
     _clean_spec: EpaySpecModel = None
-    wireless_handler: WirelessHandler
+    _wireless_handler: WirelessHandler = None
 
     @property
     def load_remote_spec(self):
@@ -110,7 +110,8 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         for box in (self.CheckBoxHideReverved, self.CheckBoxReadOnly):
             box.setChecked(bool(Qt.CheckState.Checked))
 
-        self.wireless_handler: WirelessHandler = Logger(self.config).create_window_logger(self.LogArea)
+        logger = Logger(self.config)
+        self._wireless_handler: WirelessHandler = logger.create_window_logger(self.LogArea)
         self.connect_all()
         self.set_read_only(self.CheckBoxReadOnly.isChecked())
         self.set_hello_message()
@@ -180,11 +181,13 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def copy_log(self):
         self.set_clipboard_text(self.LogArea.toPlainText())
 
-    def set_read_only(self, checked: bool):
-        self.read_only = checked
+    def set_read_only(self, readonly: bool):
+        self.read_only = readonly
 
         for button in (self.PlusButton, self.MinusButton, self.NextLevelButton):
-            button.setDisabled(checked)
+            button.setDisabled(readonly)
+
+        self.SpecView.set_read_only(readonly)
 
     def clean(self):
         self.SpecView.clean()
@@ -306,12 +309,12 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             if isinstance(spec_error, ValidationError):
                 error(spec_error)
 
-            getLogger().removeHandler(self.wireless_handler)
+            getLogger().removeHandler(self._wireless_handler)
             close_event.accept()
             return
 
         if current_spec == self._clean_spec:
-            getLogger().removeHandler(self.wireless_handler)
+            getLogger().removeHandler(self._wireless_handler)
             close_event.accept()
             return
 
