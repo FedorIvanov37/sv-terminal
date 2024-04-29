@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1552</width>
+    <width>1565</width>
     <height>951</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <enum>Qt::ClickFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>SIGNAL</string>
+   <string>Signal</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">

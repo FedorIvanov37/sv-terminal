@@ -380,7 +380,7 @@ class Ui_FieldDataSet(object):
 
     def retranslateUi(self, FieldDataSet):
         _translate = QtCore.QCoreApplication.translate
-        FieldDataSet.setWindowTitle(_translate("FieldDataSet", "SIGNAL | Field Settings"))
+        FieldDataSet.setWindowTitle(_translate("FieldDataSet", "Signal | Field Settings"))
         self.groupBox.setTitle(_translate("FieldDataSet", "Field Charset"))
         self.CheckBoxAlpha.setText(_translate("FieldDataSet", "Alphabetic"))
         self.CheckBoxSpecial.setText(_translate("FieldDataSet", "Special"))

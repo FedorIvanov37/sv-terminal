@@ -134,7 +134,7 @@ class Ui_ComplexFieldsParser(object):
 
     def retranslateUi(self, ComplexFieldsParser):
         _translate = QtCore.QCoreApplication.translate
-        ComplexFieldsParser.setWindowTitle(_translate("ComplexFieldsParser", "SIGNAL | Fields Constructor"))
+        ComplexFieldsParser.setWindowTitle(_translate("ComplexFieldsParser", "Signal | Fields Constructor"))
         self.SearchLine.setPlaceholderText(_translate("ComplexFieldsParser", "Search: field number | field value | field description"))
         self.ButtonMainWindow.setText(_translate("ComplexFieldsParser", "Field Data"))
         self.ButtonCopy.setText(_translate("ComplexFieldsParser", "Copy"))

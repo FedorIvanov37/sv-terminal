@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>SIGNAL | Field Settings</string>
+   <string>Signal | Field Settings</string>
   </property>
   <property name="modal">
    <bool>false</bool>

@@ -180,7 +180,7 @@ class Ui_SpecificationWindow(object):
 
     def retranslateUi(self, SpecificationWindow):
         _translate = QtCore.QCoreApplication.translate
-        SpecificationWindow.setWindowTitle(_translate("SpecificationWindow", "SIGNAL | Specification"))
+        SpecificationWindow.setWindowTitle(_translate("SpecificationWindow", "Signal | Specification"))
         self.CheckBoxReadOnly.setText(_translate("SpecificationWindow", "Read only mode"))
         self.CheckBoxHideReverved.setText(_translate("SpecificationWindow", "Hide reserved for future"))
         self.SearchLine.setPlaceholderText(_translate("SpecificationWindow", "Search: field number | field description"))

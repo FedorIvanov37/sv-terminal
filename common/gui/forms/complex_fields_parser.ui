@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>SIGNAL | Fields Constructor</string>
+   <string>Signal | Fields Constructor</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">

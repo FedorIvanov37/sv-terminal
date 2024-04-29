@@ -78,7 +78,7 @@ class Ui_MtiSpecWindow(object):
 
     def retranslateUi(self, MtiSpecWindow):
         _translate = QtCore.QCoreApplication.translate
-        MtiSpecWindow.setWindowTitle(_translate("MtiSpecWindow", "SIGNAL | Message Type Indicator"))
+        MtiSpecWindow.setWindowTitle(_translate("MtiSpecWindow", "Signal | Message Type Indicator"))
         item = self.MtiTable.horizontalHeaderItem(0)
         item.setText(_translate("MtiSpecWindow", "Description"))
         item = self.MtiTable.horizontalHeaderItem(1)

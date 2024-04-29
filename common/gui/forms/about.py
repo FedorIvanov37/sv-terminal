@@ -95,9 +95,8 @@ class Ui_AboutWindow(object):
         self.logoLabel.setMaximumSize(QtCore.QSize(3000, 5000))
         self.logoLabel.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         self.logoLabel.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
-        self.logoLabel.setText("")
-        self.logoLabel.setPixmap(QtGui.QPixmap(".\\../../data/style/triforce_transparent.png"))
         self.logoLabel.setScaledContents(True)
+        self.logoLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.logoLabel.setObjectName("logoLabel")
         self.verticalLayout_3.addWidget(self.logoLabel)
         self.line = QtWidgets.QFrame(parent=self.frame)
@@ -106,6 +105,7 @@ class Ui_AboutWindow(object):
         self.line.setObjectName("line")
         self.verticalLayout_3.addWidget(self.line)
         self.spacerLabel = QtWidgets.QLabel(parent=self.frame)
+        self.spacerLabel.setText("")
         self.spacerLabel.setObjectName("spacerLabel")
         self.verticalLayout_3.addWidget(self.spacerLabel)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -209,8 +209,8 @@ class Ui_AboutWindow(object):
 
     def retranslateUi(self, AboutWindow):
         _translate = QtCore.QCoreApplication.translate
-        AboutWindow.setWindowTitle(_translate("AboutWindow", "SIGNAL | About"))
-        self.spacerLabel.setText(_translate("AboutWindow", "      "))
+        AboutWindow.setWindowTitle(_translate("AboutWindow", "Signal | About"))
+        self.logoLabel.setText(_translate("AboutWindow", "logo"))
         self.VersionLabel.setText(_translate("AboutWindow", "Version"))
         self.ReleaseLabel.setText(_translate("AboutWindow", "Released in"))
         self.AuthorLabel.setText(_translate("AboutWindow", "Developed by"))

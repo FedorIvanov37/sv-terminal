@@ -91,7 +91,7 @@ class Ui_SpecUnsaved(object):
 
     def retranslateUi(self, SpecUnsaved):
         _translate = QtCore.QCoreApplication.translate
-        SpecUnsaved.setWindowTitle(_translate("SpecUnsaved", "SIGNAL | Specification unsaved changes"))
+        SpecUnsaved.setWindowTitle(_translate("SpecUnsaved", "Signal | Specification unsaved changes"))
         self.label_2.setText(_translate("SpecUnsaved", "Specification has unsaved changes"))
         self.ButtonSave.setText(_translate("SpecUnsaved", "Save"))
         self.ButtonClose.setText(_translate("SpecUnsaved", "Don\'t Save"))

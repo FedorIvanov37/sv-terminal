@@ -52,7 +52,7 @@ class Ui_ReversalWindow(object):
 
     def retranslateUi(self, ReversalWindow):
         _translate = QtCore.QCoreApplication.translate
-        ReversalWindow.setWindowTitle(_translate("ReversalWindow", "SIGNAL | Reversal"))
+        ReversalWindow.setWindowTitle(_translate("ReversalWindow", "Signal | Reversal"))
         self.TransactionIdField.setPlaceholderText(_translate("ReversalWindow", "ID of original transaction"))
 
 

@@ -191,32 +191,35 @@
 + License agreement in CLI mode
 + "About" window renovation
 + License window renovation
-+ --logfile in CLI mode
++ --log-file in CLI mode
++ Setting "Show license agreement"
 
 
-• Setting "Show license agreement"
 • Error on console when run AboutWindow - Could not update timestamps for skipped samples
 • Pin main tab and make the other movable
 • Drag and drop files to JsonView
 • Respect JSON-mode when set field value from complex fields constructor
 • Reflect in the document - Main settings, the specification+, files format+, custom validations
+• Change name from SIGNAL to Signal
 
 
 • Bugs
+    • Log does not work on SpecWindow
     • Last tab bug - cannot process tab limits correctly
     + CTRL+T with tab adding works incorrectly
 
 
 • Licensing preparation
     • Change the framework to pyside
-    • Buy the logo
-    • Gif copyright
     • Buy music
-    + Change the name
     • Prepare code
     • Get Unlimit's disclaimer
+    + Buy the logo
+    + Gif copyright
+    + Change the name
 
-• No data in socket if delete field in spec
+
+• BUG: No data in socket if delete field in spec
 • Exceptions policy
 • Correct and publish the Specification
 • Publish on confluence
@@ -224,5 +227,3 @@
 
 • API console mode
 • Undo / Redo
-
-

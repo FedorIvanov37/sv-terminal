@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>SIGNAL | Reversal</string>
+   <string>Signal | Reversal</string>
   </property>
   <property name="modal">
    <bool>true</bool>

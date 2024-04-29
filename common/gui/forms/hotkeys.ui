@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>SIGNAL | Hotkeys</string>
+   <string>Signal | Hotkeys</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
