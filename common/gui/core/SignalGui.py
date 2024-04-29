@@ -27,6 +27,7 @@ from common.lib.core.SpecFilesRotator import SpecFilesRotator
 from common.lib.core.Logger import getLogger
 from common.lib.core.Terminal import Terminal
 from common.lib.data_models.Config import Config
+from common.lib.data_models.License import LicenseInfo
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.exceptions.exceptions import (
     LicenceAlreadyAccepted,
@@ -167,11 +168,11 @@ class SignalGui(Terminal):
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
 
-    @staticmethod
-    def show_license_dialog() -> None:
+    def show_license_dialog(self) -> None:
         try:
-            license_window: LicenseWindow = LicenseWindow()
+            license_window: LicenseWindow = LicenseWindow(self.config)
             license_window.exec()
+            self.config.terminal.show_license_dialog = license_window.license_info.show_agreement
 
         except LicenseDataLoadingError as license_data_loading_error:
             error(license_data_loading_error)
@@ -308,6 +309,24 @@ class SignalGui(Terminal):
                 interval_name: str = KeepAlive.IntervalNames.KEEP_ALIVE_DEFAULT % self.config.host.keep_alive_interval
 
             self.set_keep_alive_interval(interval_name)
+
+        try:
+            with open(TermFilesPath.LICENSE_INFO, "r") as license_json:
+                license_info = LicenseInfo.model_validate_json(license_json.read())
+                license_info.show_agreement = self.config.terminal.show_license_dialog
+
+            if not license_info.accepted:
+                raise ValueError("License is not accepted")
+
+            with open(TermFilesPath.LICENSE_INFO, "w") as license_json:
+                license_json.write(license_info.model_dump_json(indent=4))
+
+        except ValueError as not_accepted:
+            error(not_accepted)
+            exit(100)
+
+        except Exception as license_error:
+            error(f"Cannot save license params: {license_error}")
 
     def read_config(self) -> None:
         try:

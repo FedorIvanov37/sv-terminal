@@ -4,15 +4,14 @@ from os import listdir, path, system, getcwd
 from os.path import normpath, basename, isfile
 from logging import info, error
 from datetime import datetime, UTC
-from argparse import ArgumentParser
 from pydantic import ValidationError
 from signal import signal, SIG_DFL, SIGINT
 from PyQt6.QtCore import QCoreApplication, QTimer, pyqtSignal
 from common.lib.data_models.Transaction import Transaction
 from common.lib.data_models.Config import Config
 from common.lib.enums.TextConstants import TextConstants
-from common.lib.constants.LogDefinition import LOG_LEVEL, DebugLevels
 from common.cli.data_models.CliConfig import CliConfig
+from common.cli.CliArgsParser import CliArgsParser
 from common.lib.core.Terminal import Terminal
 from common.lib.enums.TermFilesPath import TermFilesPath
 from common.lib.data_models.License import LicenseInfo
@@ -41,30 +40,10 @@ class SignalCli(Terminal):
         except LicenseRejected:
             exit(100)
 
-        cli_args_parser: ArgumentParser = ArgumentParser(description=TextConstants.CLI_DESCRIPTION)
-
-        cli_args_parser.add_argument("-c", "--console", action="store_true", required=True, help="Run SIGNAL in Command Line Interface mode")
-        cli_args_parser.add_argument("-f", "--file", type=str, default=None, help="File or file-mask to parse")
-        cli_args_parser.add_argument("-d", "--dir", type=str, default=None, help="Directory with files to parse. SIGNAL will try all of the files from the directory")
-        cli_args_parser.add_argument("-a", "--address", default=self.config.host.host, action="store", help="Host TCP/IP address")
-        cli_args_parser.add_argument("-p", "--port", type=int, default=self.config.host.port, action="store", help="TCP/IP port to connect")
-        cli_args_parser.add_argument("-r", "--repeat", action="store_true", help="Repeat transactions after sending")
-        cli_args_parser.add_argument("--logfile", type=str, default=TermFilesPath.LOG_FILE_NAME, action="store", help=f"Set log file path. Default {TermFilesPath.LOG_FILE_NAME}")
-        cli_args_parser.add_argument("-l", "--log-level", type=str, default=DebugLevels.INFO, action="store", help=f"Debug level: {', '.join(LOG_LEVEL)}")
-        cli_args_parser.add_argument("-i", "--interval", type=int, default=0, action="store", help="Wait (seconds) before send next transaction")
-        cli_args_parser.add_argument("--parallel", action="store_true", help="Send new transaction with no waiting of answer for previous one")
-        cli_args_parser.add_argument("-t", "--timeout", type=int, default=60, help="Timeout of waiting resp")
-        cli_args_parser.add_argument("--about", action="store_true", help="Show info about the SIGNAL")
-        cli_args_parser.add_argument("-e", "--echo-test", action="store_true", help="Send echo-test")
-        cli_args_parser.add_argument("--default", action="store_true", help="Send default transaction message")
-        cli_args_parser.add_argument("-v", "--version", action="store_true", help="Print current version of SIGNAL")
-        cli_args_parser.add_argument("--print-config", action="store_true", help="Print configuration parameters")
-        cli_args_parser.add_argument("--config-file", action="store", default=TermFilesPath.CONFIG, help="Set configuration file path")
-
-        cli_arguments = cli_args_parser.parse_args()
+        cli_args_parser: CliArgsParser = CliArgsParser(self.config, description=TextConstants.CLI_DESCRIPTION)
 
         try:
-            self._cli_config = CliConfig.model_validate(cli_arguments.__dict__)
+            self._cli_config = cli_args_parser.parse_arguments()
         except (ValidationError, ValueError) as arg_parsing_error:
             error(arg_parsing_error)
             exit(100)
@@ -75,8 +54,8 @@ class SignalCli(Terminal):
             error(f"Error run in Console Mode: {config_parsing_error}")
             exit(100)
 
-        if self._cli_config.logfile != TermFilesPath.LOG_FILE_NAME:
-            self.logger.setup(logfile=self._cli_config.logfile)
+        if self._cli_config.log_file != TermFilesPath.LOG_FILE_NAME:
+            self.logger.setup(logfile=self._cli_config.log_file)
             self.logger.create_logger()
 
         self.logger.set_debug_level()
@@ -94,8 +73,8 @@ class SignalCli(Terminal):
         print_data_map = (
             (self._cli_config.version, self.log_printer.print_version),
             (self._cli_config.about, self.log_printer.print_about),
-            (self._cli_config.print_config, lambda: self.log_printer.print_config(
-                self.config, path=self._cli_config.config_file)),
+            (self._cli_config.print_config,
+             lambda: self.log_printer.print_config(self.config, path=self._cli_config.config_file)),
         )
 
         for data_map in print_data_map:

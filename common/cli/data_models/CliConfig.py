@@ -20,4 +20,4 @@ class CliConfig(BaseModel):
     version: bool = False
     print_config: bool = False
     config_file: str = TermFilesPath.CONFIG
-    logfile: str = TermFilesPath.LOG_FILE_NAME
+    log_file: str = TermFilesPath.LOG_FILE_NAME

@@ -15,6 +15,7 @@ class Terminal(BaseModel):
     process_default_dump: bool = True
     connect_on_startup: bool = True
     load_remote_spec: bool = False
+    show_license_dialog: bool = True
 
 
 class Debug(BaseModel):

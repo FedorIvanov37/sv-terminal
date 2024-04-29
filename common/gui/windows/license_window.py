@@ -13,11 +13,19 @@ from common.lib.exceptions.exceptions import LicenseDataLoadingError, LicenceAlr
 from common.lib.enums.TermFilesPath import TermFilesPath
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.lib.enums.TextConstants import TextConstants
+from common.lib.data_models.Config import Config
 
 
 class LicenseWindow(Ui_LicenseWindow, QDialog):
-    def __init__(self):
+    _license_info: LicenseInfo
+
+    @property
+    def license_info(self):
+        return self._license_info
+
+    def __init__(self, config: Config):
         super().__init__()
+        self.config = config
         self.setupUi(self)
         self._setup()
 
@@ -30,45 +38,50 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
 
         try:
             with open(TermFilesPath.LICENSE_INFO) as json_file:
-                self.license_info: LicenseInfo = LicenseInfo.model_validate_json(json_file.read())
+                self._license_info: LicenseInfo = LicenseInfo.model_validate_json(json_file.read())
 
         except (ValueError, ValidationError, JSONDecodeError, FileNotFoundError):
-            self.license_info: LicenseInfo = LicenseInfo()
+            self._license_info: LicenseInfo = LicenseInfo()
 
         except Exception as license_parsing_error:
             raise LicenseDataLoadingError(f"GNU license info file parsing error: {license_parsing_error}")
 
-        if self.license_info.accepted and not self.license_info.show_agreement:
+        if self._license_info.accepted and not self._license_info.show_agreement:
+            self.config.terminal.show_license_dialog = self._license_info.show_agreement
             self.print_acceptance_info()
             raise LicenceAlreadyAccepted
 
-        self.CheckBoxAgreement.setChecked(self.license_info.accepted)
+        self.CheckBoxAgreement.setChecked(self._license_info.accepted)
         self.CheckBoxAgreement.stateChanged.connect(self.block_acceptance)
         self.rejected.connect(self.reject_license)
         self.accepted.connect(self.accept_license)
         self.block_acceptance()
 
     def accept_license(self):
-        self.license_info.accepted = bool(self.CheckBoxAgreement.checkState().value)
+        self._license_info.accepted = bool(self.CheckBoxAgreement.checkState().value)
 
-        if not self.license_info.accepted:
+        if not self._license_info.accepted:
             return
 
-        self.license_info.last_acceptance_date = datetime.now(UTC)
-        self.license_info.show_agreement = not bool(self.CheckBoxDontShowAgain.checkState().value)
+        self._license_info.last_acceptance_date = datetime.now(UTC)
+        self._license_info.show_agreement = not bool(self.CheckBoxDontShowAgain.checkState().value)
 
-        license_data: LicenseInfo = self.license_info.model_copy(deep=True)
+        license_data: LicenseInfo = self._license_info.model_copy(deep=True)
         license_data.last_acceptance_date = license_data.last_acceptance_date.isoformat()
+
+        self.config.terminal.show_license_dialog = license_data.show_agreement
 
         self.save_license_file(license_data)
         self.print_acceptance_info()
         self.close()
 
     def reject_license(self):
-        license_data: LicenseInfo = self.license_info.model_copy(deep=True)
+        license_data: LicenseInfo = self._license_info.model_copy(deep=True)
         license_data.accepted = False
         license_data.show_agreement = True
         license_data.last_acceptance_date = None
+
+        self.config.terminal.show_license_dialog = license_data.show_agreement
 
         self.save_license_file(license_data)
         warning("License agreement rejected, exit")
@@ -91,5 +104,5 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
     def print_acceptance_info(self):
         date_format = "%d/%m/%Y %T UTC"
 
-        info(f"License ID {self.license_info.license_id} | Accepted {
-            datetime.strftime(self.license_info.last_acceptance_date, date_format)}")
+        info(f"License ID {self._license_info.license_id} | Accepted {
+            datetime.strftime(self._license_info.last_acceptance_date, date_format)}")
