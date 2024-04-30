@@ -1,6 +1,6 @@
 from typing import Callable
 from logging import info, error, warning
-from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Validators
@@ -19,7 +19,8 @@ class SpecView(TreeView):
     _spec: EpaySpecification = EpaySpecification()
     search_finished = pyqtSignal()
 
-    def reject_in_read_only_mode(fuction: Callable, *args, **kwargs):  # Reject function execution when read only mode is active
+    # Reject function execution when read only mode is active
+    def reject_in_read_only_mode(fuction: Callable, *args, **kwargs):
         def wrapper(self, *args, **kwargs):
             if not self.window.read_only:
                 return fuction(self)
@@ -47,7 +48,7 @@ class SpecView(TreeView):
         self.setHeaderLabels(SpecFieldDef.Columns)
         self.addTopLevelItem(self.root)
         self.itemDoubleClicked.connect(self.editItem)
-        self.itemPressed.connect(lambda item, column: self.validate_item(item, column, validate_all=True))
+        self.itemClicked.connect(self.process_item_click)
         self.itemChanged.connect(self.process_item_change)
         self.currentItemChanged.connect(self.print_path)
         self.parse_spec()
@@ -56,74 +57,68 @@ class SpecView(TreeView):
         self.root.setExpanded(True)
         self.resizeColumnToContents(SpecFieldDef.ColumnsOrder.DESCRIPTION)
 
-    def print_path(self):
+    def print_path(self, current_item: SpecItem, previous_item: SpecItem):
+        if current_item is previous_item:
+            return
+
         item: SpecItem
         path: FieldPath
 
-        if not (item := self.currentItem()):
+        if not (path := current_item.get_field_path()):
             return
 
-        if not (path := item.get_field_path()):
-            return
-
-        if not any((item.field_number, item.description)):
+        if not any((current_item.field_number, current_item.description)):
             return
 
         description: str = self.spec.get_field_description(path, string=True)
-        path: str = item.get_field_path(string=True)
+        path: str = current_item.get_field_path(string=True)
 
         info(f"{path} - {description}")
 
+    def set_read_only(self, readonly: bool = True, parent: SpecItem | None = None) -> None:
+        if parent is None:
+            parent = self.root
+
+        spec_item: SpecItem
+
+        for spec_item in parent.get_children():
+            spec_item.set_read_only(readonly)
+
+            if not spec_item.get_children():
+                continue
+
+            self.set_read_only(readonly=readonly, parent=spec_item)
+
     @void_qt_signals
-    def process_item_change(self, item, column):
-        if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            self.set_pan_as_secret(item)
-
-            if column == SpecFieldDef.ColumnsOrder.SECRET:
-                warning("The Card Number is a secret constantly")
-                return
-
-        if column in list(SpecFieldDef.Checkboxes) and self.window.read_only:
-            warning("Read only mode. Switch mode by checkbox on top of the window")
-            current_state = item.checkState(column)
-
-            new_state = Qt.CheckState.Unchecked
-
-            if current_state == Qt.CheckState.Unchecked:
-                new_state = Qt.CheckState.Checked
-
-            if current_state == Qt.CheckState.Checked:
-                new_state = Qt.CheckState.Unchecked
-
-            if item.field_number in self.spec.get_generated_fields_dict().values():
-                new_state = Qt.CheckState.PartiallyChecked
-
-            if item.get_field_path() == self.spec.get_trans_id_path():
-                new_state = Qt.CheckState.PartiallyChecked
-
-            item.setCheckState(column, new_state)
-
+    def process_item_click(self, item: SpecItem, column: int) -> None:
+        if item.is_secret_pan(column):
+            warning("The Card Number is a secret constantly")
             return
 
-        if column == SpecFieldDef.ColumnsOrder.SECRET:
-            self.cascade_checkboxes(item)
-
-        if column == SpecFieldDef.ColumnsOrder.TAG_LENGTH:
-            self.cascade_tag_length(item)
-
         if column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
-            warning('Checkboxes "generate fields" are pre-defined, not possible to change the state')
+            warning('Checkbox "Generate" is pre-defined, not possible to change the state')
+            return
 
-            if item.field_number in self.spec.get_generated_fields_dict().values():
-                item.setCheckState(SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED, Qt.CheckState.PartiallyChecked)
+        if column > SpecFieldDef.ColumnsOrder.TAG_LENGTH and self.window.read_only:
+            warning("Read only mode. Uncheck the checkbox on top of the window")
+            return
 
-            if item.field_number not in self.spec.get_generated_fields_dict().values():
-                item.setCheckState(SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED, Qt.CheckState.Unchecked)
+    @void_qt_signals
+    def process_item_change(self, item: SpecItem, column: int):
+        if item.is_secret_pan(column):
+            item.set_checkbox(column)
 
-            if item.get_field_path() == self.spec.get_trans_id_path():
-                item.setCheckState(SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED, Qt.CheckState.PartiallyChecked)
+        match column:
+            case SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
+                item.set_checkbox(column, item.field_number in self.spec.get_fields_to_generate())
 
-        self.validate_item(item, column, validate_all=True)
+            case SpecFieldDef.ColumnsOrder.SECRET:
+                self.cascade_checkboxes(item)
+
+            case SpecFieldDef.ColumnsOrder.TAG_LENGTH:
+                self.cascade_tag_length(item)
+
+        self.validate_item(item, column)
 
     def search(self, text: str, parent: SpecItem | None = None) -> None:
         TreeView.search(self, text, parent)
@@ -137,20 +132,15 @@ class SpecView(TreeView):
             child_item.var_length = parent.tag_length
 
     @void_qt_signals
-    def cascade_checkboxes(self, parent: SpecItem):
-        check_state = parent.checkState(SpecFieldDef.ColumnsOrder.SECRET)
+    def cascade_checkboxes(self, parent: SpecItem) -> None:
+        child_item: SpecItem
+        is_checked: bool = parent.is_checked(SpecFieldDef.ColumnsOrder.SECRET)
 
-        for item in parent.get_children():
-            item.setCheckState(SpecFieldDef.ColumnsOrder.SECRET, check_state)
+        for child_item in parent.get_children():
+            child_item.set_checkbox(SpecFieldDef.ColumnsOrder.SECRET, is_checked)
 
-            if item.childCount():
-                self.cascade_checkboxes(item)
-
-    def set_pan_as_secret(self, item: SpecItem):
-        if item.field_number != self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            return
-
-        item.setCheckState(SpecFieldDef.ColumnsOrder.SECRET, Qt.CheckState.PartiallyChecked)
+            if child_item.childCount():
+                self.cascade_checkboxes(child_item)
 
     def editItem(self, item, column):
         if item is self.root and column not in (SpecFieldDef.ColumnsOrder.DESCRIPTION, SpecFieldDef.ColumnsOrder.FIELD):
@@ -168,16 +158,31 @@ class SpecView(TreeView):
 
         TreeView.editItem(self, item, column)
 
-    def validate_item(self, item: SpecItem, column: int, validate_all=False):
+    def validate_all(self, parent: SpecItem | None = None) -> None:
+        if parent is None:
+            parent = self.root
+
+        child_item: SpecItem
+
+        for child_item in parent.get_children():
+
+            for column in SpecFieldDef.ColumnsOrder:
+                self.validate_item(child_item, column)
+
+            if not child_item.childCount():
+                continue
+
+            self.validate_all(parent=child_item)
+
+    def validate_item(self, item: SpecItem, column: int) -> None:
         if item is self.root:
             return
 
-        try:
-            if validate_all:
-                self.validator.validate_spec_row(item)
+        if item.reserved_for_future:
+            return
 
-            else:
-                self.validator.validate_column(item, column)
+        try:
+            self.validator.validate_column(item, column)
 
         except ValueError as validation_error:
             error(validation_error)
@@ -255,7 +260,7 @@ class SpecView(TreeView):
 
     @void_qt_signals
     def parse_field_spec(self, field_spec: IsoField):
-        if not(item := self.get_item_by_path(field_spec.field_path)):
+        if not (item := self.get_item_by_path(field_spec.field_path)):
             return
 
         item.parse_field_spec(field_spec)
@@ -276,6 +281,7 @@ class SpecView(TreeView):
         self.collapseAll()
         self.expandItem(self.root)
         self.set_current_item_by_path(current_path)
+        self.validate_all()
 
     def get_item_by_path(self, field_path: FieldPath, parent: SpecItem | None = None) -> SpecItem:
         if parent is None:
@@ -303,7 +309,7 @@ class SpecView(TreeView):
                 self.set_current_item_by_path(field_path=field_path, parent=item)
 
     def parse_spec_fields(self, input_json, parent: QTreeWidgetItem = None):
-        if parent is None or parent == self.root:
+        if parent is None:
             parent = self.root
 
         for field in sorted(input_json, key=int):
@@ -334,12 +340,11 @@ class SpecView(TreeView):
                 SpecFieldDef.ColumnsOrder.SECRET: field_data.is_secret
             }
 
-            item: SpecItem = SpecItem(field_data_for_item, checkboxes=checkboxes)
-
-            if item.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-                self.set_pan_as_secret(item)
+            item: SpecItem = SpecItem(field_data_for_item)
 
             parent.addChild(item)
+
+            item.set_checkboxes(checkboxes)
 
             if field_data.fields:
                 self.parse_spec_fields(input_json=field_data.fields, parent=item)
@@ -359,8 +364,6 @@ class SpecView(TreeView):
             row: SpecItem
 
             for row in spec_item.get_children():
-                self.validator.validate_spec_row(row)
-
                 field = IsoField(
                     field_number=row.field_number,
                     field_path=row.get_field_path(),
@@ -399,8 +402,4 @@ class SpecView(TreeView):
 
         fields_set: FieldSet = generate_fields()
 
-        return EpaySpecModel(
-            name=name,
-            fields=fields_set,
-            mti=self.spec.mti
-        )
+        return EpaySpecModel(name=name, fields=fields_set, mti=self.spec.mti)

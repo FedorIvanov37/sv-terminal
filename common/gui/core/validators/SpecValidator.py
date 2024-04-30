@@ -7,22 +7,8 @@ class SpecValidator:
     spec: EpaySpecification = EpaySpecification()
 
     def validate_spec_row(self, row: SpecItem):
-        for validator in self.validate_field_number, self.validate_field_length, self.validate_datatype_checkboxes:
-            validator(row)
-
-            if row.reserved_for_future:  # When the field is reserved for future validate field number only
-                return
-
-        num_validation_map = {
-            SpecFieldDef.ColumnsOrder.VARIABLE_LENGTH: row.var_length,
-            SpecFieldDef.ColumnsOrder.TAG_LENGTH: row.tag_length
-        }
-
-        for name, number in num_validation_map.items():
-            try:
-                self.validate_number(number, allow_zero=True)
-            except ValueError as value_error:
-                raise ValueError(f"{name} validation error: {value_error}")
+        for column in SpecFieldDef.ColumnsOrder:
+            self.validate_column(row, column)
 
     def validate_column(self, item: SpecItem, column):
         validation_map = {
@@ -98,10 +84,10 @@ class SpecValidator:
             raise ValueError(f"Non-zero Tag Len, but field {field_path} doesn't contain subfields")
 
     @staticmethod
-    def validate_datatype_checkboxes(item):
-        field_path = item.get_field_path(string=True)
-
-        if any((item.alpha, item.numeric, item.special)):
+    def validate_datatype_checkboxes(item: SpecItem):
+        if any([item.alpha, item.numeric, item.special]):
             return
+
+        field_path = item.get_field_path(string=True)
 
         raise ValueError(f"Field {field_path} - Lost field data type, no datatype checkboxes active")

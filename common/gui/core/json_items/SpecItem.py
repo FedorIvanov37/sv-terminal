@@ -85,16 +85,31 @@ class SpecItem(Item):
     def is_secret(self):
         return self.is_checked(SpecFieldDef.ColumnsOrder.SECRET)
 
-    def __init__(self, field_data: list[str] | None = None, checkboxes: dict[int, bool] = None):
+    def __init__(self, field_data: list[str] | None = None):
         if field_data is None:
             field_data: list[str] = list()
 
         super(SpecItem, self).__init__(field_data)
-        self.setup(checkboxes=checkboxes)
 
-    def setup(self, checkboxes=None):
-        self.set_checkboxes(checkboxes)
-        # self.setTextAlignment(SpecFieldDef.ColumnsOrder.ALPHA, Qt.AlignmentFlag.AlignCenter)
+    def is_secret_pan(self, column: int) -> bool:
+        secret_pan_conditions = (
+            self.field_number == self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER,
+            column == SpecFieldDef.ColumnsOrder.SECRET,
+        )
+
+        return all(secret_pan_conditions)
+
+    def set_read_only(self, readonly: bool = True):
+        if readonly:
+            self.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable)
+            return
+
+        self.setFlags(
+            Qt.ItemFlag.ItemIsSelectable |
+            Qt.ItemFlag.ItemIsUserCheckable |
+            Qt.ItemFlag.ItemIsEnabled |
+            Qt.ItemFlag.ItemIsEditable
+        )
 
     def set_checkboxes(self, checkboxes: dict[int, bool]):
         if self.text(SpecFieldDef.ColumnsOrder.FIELD) == RootItemNames.SPECIFICATION_ROOT_NAME:
@@ -110,17 +125,36 @@ class SpecItem(Item):
                 checkboxes[box] = False
 
         for column, state in checkboxes.items():
-            if column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
-                self.setCheckState(int(column), Qt.CheckState.PartiallyChecked if state else Qt.CheckState.Unchecked)
-                continue
+            self.set_checkbox(column, state)
 
-            self.setCheckState(int(column), Qt.CheckState.Checked if state else Qt.CheckState.Unchecked)
+    def set_checkbox(self, column: int, state: bool = True) -> None:
+        state = Qt.CheckState.Checked if state else Qt.CheckState.Unchecked
 
-    def is_checked(self, column):
-        state = self.checkState(column)
-        state = state.value
-        state = bool(state)
-        return state
+        if self.is_secret_pan(column):
+            state = Qt.CheckState.PartiallyChecked
+
+        if column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED and state == Qt.CheckState.Checked:
+            state = Qt.CheckState.PartiallyChecked
+
+        field_path = self.get_field_path()
+        trans_id_path = self.epay_spec.get_trans_id_path()
+
+        if field_path == trans_id_path and column == SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
+            state = Qt.CheckState.PartiallyChecked
+
+        if not (tree := self.treeWidget()):
+            self.setCheckState(column, state)
+            return
+
+        tree.blockSignals(True)
+        self.setCheckState(column, state)
+        tree.blockSignals(False)
+
+    def is_checked(self, column: int) -> bool:
+        if self.checkState(column) == Qt.CheckState.Unchecked:
+            return False
+
+        return True
 
     def parse_field_spec(self, field_spec: IsoField):
         column_values_map = {

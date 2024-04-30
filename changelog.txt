@@ -193,6 +193,7 @@
 + License window renovation
 + --log-file in CLI mode
 + Setting "Show license agreement"
++ Change name from SIGNAL to Signal
 
 
 • Error on console when run AboutWindow - Could not update timestamps for skipped samples
@@ -200,12 +201,14 @@
 • Drag and drop files to JsonView
 • Respect JSON-mode when set field value from complex fields constructor
 • Reflect in the document - Main settings, the specification+, files format+, custom validations
-• Change name from SIGNAL to Signal
 
 
 • Bugs
-    • Log does not work on SpecWindow
     • Last tab bug - cannot process tab limits correctly
+    + Specification -> set MTI -> Uncheck one -> ESC -> Don't save -> Specification -> DE2
+    + Spec checkboxes in readonly mode change state
+    + SpecUnsaved window does not display when spec validation error displayed
+    + Log does not work on SpecWindow
     + CTRL+T with tab adding works incorrectly
 
 

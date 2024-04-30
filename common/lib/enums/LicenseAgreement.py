@@ -658,7 +658,8 @@ class LicenseAgreement(StrEnum):
     notice like this when it starts in an interactive mode:
 
         <program>  Copyright (C) <year>  <name of author>
-        This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+        This program comes with ABSOLUTELY NO WARRANTY; 
+        for details type `show w'.
         This is free software, and you are welcome to redistribute it
         under certain conditions; type `show c' for details.
 
@@ -676,4 +677,5 @@ class LicenseAgreement(StrEnum):
     may consider it more useful to permit linking proprietary applications with
     the library.  If this is what you want to do, use the GNU Lesser General
     Public License instead of this License.  But first, please read
-    <https://www.gnu.org/licenses/why-not-lgpl.html>."""
+    <https://www.gnu.org/licenses/why-not-lgpl.html>.
+    """

@@ -43,7 +43,7 @@ class CheckableComboBox(QComboBox):
 
     def set_active_index(self):
         for index in range(self.count()):
-            if not index in self._active_checks:
+            if index not in self._active_checks:
                 continue
 
             self.setCurrentIndex(index)

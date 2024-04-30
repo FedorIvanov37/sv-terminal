@@ -186,11 +186,9 @@ class SignalGui(Terminal):
         old_spec = self.spec.spec.json()
 
         logger = getLogger()
-
-        spec_window: SpecWindow = SpecWindow(self.connector, self.config)
-
         logger.removeHandler(self._wireless_handler)
 
+        spec_window = SpecWindow(self.connector, self.config)
         spec_window.exec()
 
         logger.addHandler(self._wireless_handler)
