@@ -135,14 +135,14 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.ButtonClearLog: self.clear_log,
             self.ButtonCopyLog: self.copy_log,
             self.PlusButton: self.SpecView.plus,
-            self.MinusButton: self.minus,
+            self.MinusButton: self.SpecView.minus,
             self.NextLevelButton: self.SpecView.next_level,
             self.ButtonClose: self.close,
             self.ButtonReset: self.reload,
             self.ButtonClean: self.clean,
             self.ButtonSetMti: self.set_mti,
             self.ButtonBackup: self.backup,
-            self.ButtonSetValidators: self.set_field_params,
+            self.ButtonSetValidators: self.set_field_custom_validations,
         }
 
         keys_connection_map = {
@@ -201,9 +201,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
 
         self.SpecView.hide_reserved(bool(self.CheckBoxHideReverved.checkState().value))
 
-    def minus(self):
-        self.SpecView.minus()
-
     def reload_spec(self, spec_type: str):
         if spec_type == ButtonActions.SetSpecMenuActions.LOCAL_SPEC:
             self.parse_file(TermFilesPath.SPECIFICATION)
@@ -222,7 +219,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         mti_window.need_to_set_mti.connect(self.set_mti_list)
         mti_window.exec()
 
-    def set_field_params(self):
+    def set_field_custom_validations(self):
         if not self.SpecView.hasFocus():
             self.SpecView.setFocus()
 

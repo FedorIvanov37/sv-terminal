@@ -1,7 +1,7 @@
 from typing import Callable
 from logging import info, error, warning
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QCheckBox
+from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Validators
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
@@ -132,17 +132,12 @@ class SpecView(TreeView):
             child_item.var_length = parent.tag_length
 
     @void_qt_signals
-    def cascade_checkboxes(self, parent: SpecItem):
-        if not (checkbox := self.get_checkbox(parent, SpecFieldDef.ColumnsOrder.SECRET)):
-            return
+    def cascade_checkboxes(self, parent: SpecItem) -> None:
+        child_item: SpecItem
+        is_checked: bool = parent.is_checked(SpecFieldDef.ColumnsOrder.SECRET)
 
         for child_item in parent.get_children():
-            child_checkbox: QCheckBox
-
-            if not (child_checkbox := self.get_checkbox(child_item, SpecFieldDef.ColumnsOrder.SECRET)):
-                continue
-
-            child_checkbox.setChecked(checkbox.isChecked())
+            child_item.set_checkbox(SpecFieldDef.ColumnsOrder.SECRET, is_checked)
 
             if child_item.childCount():
                 self.cascade_checkboxes(child_item)
@@ -203,15 +198,6 @@ class SpecView(TreeView):
 
             if item.reserved_for_future:
                 item.setHidden(hide)
-
-    def get_checkbox(self, item: SpecItem, column: int) -> QCheckBox | None:
-        if not (checkbox := self.itemWidget(item, column)):
-            return
-
-        if not isinstance(checkbox, QCheckBox):
-            return
-
-        return checkbox
 
     def reload_spec(self, commit):
         spec: EpaySpecModel = self.generate_spec()
