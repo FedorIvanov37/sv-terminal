@@ -205,6 +205,7 @@
 
 
 • Bugs
+    • Specification -> set MTI -> Uncheck one -> ESC -> Don't save -> Specification -> DE2
     • Last tab bug - cannot process tab limits correctly
     + Spec checkboxes in readonly mode change state
     + SpecUnsaved window does not display when spec validation error displayed

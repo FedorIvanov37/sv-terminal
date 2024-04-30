@@ -1,7 +1,7 @@
 from typing import Callable
 from logging import info, error, warning
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate
+from PyQt6.QtWidgets import QTreeWidgetItem, QItemDelegate, QCheckBox
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel, Validators
 from common.lib.data_models.EpaySpecificationModel import IsoField, FieldSet
@@ -57,21 +57,21 @@ class SpecView(TreeView):
         self.root.setExpanded(True)
         self.resizeColumnToContents(SpecFieldDef.ColumnsOrder.DESCRIPTION)
 
-    def print_path(self):
+    def print_path(self, current_item: SpecItem, previous_item: SpecItem):
+        if current_item is previous_item:
+            return
+
         item: SpecItem
         path: FieldPath
 
-        if not (item := self.currentItem()):
+        if not (path := current_item.get_field_path()):
             return
 
-        if not (path := item.get_field_path()):
-            return
-
-        if not any((item.field_number, item.description)):
+        if not any((current_item.field_number, current_item.description)):
             return
 
         description: str = self.spec.get_field_description(path, string=True)
-        path: str = item.get_field_path(string=True)
+        path: str = current_item.get_field_path(string=True)
 
         info(f"{path} - {description}")
 
@@ -101,6 +101,10 @@ class SpecView(TreeView):
             warning('Checkbox "Generate" is pre-defined, not possible to change the state')
             return
 
+        if column > SpecFieldDef.ColumnsOrder.TAG_LENGTH and self.window.read_only:
+            warning("Read only mode. Uncheck the checkbox on top of the window")
+            return
+
     @void_qt_signals
     def process_item_change(self, item: SpecItem, column: int):
         self.validate_item(item, column, validate_all=True)
@@ -124,13 +128,19 @@ class SpecView(TreeView):
 
     @void_qt_signals
     def cascade_checkboxes(self, parent: SpecItem):
-        check_state = parent.checkState(SpecFieldDef.ColumnsOrder.SECRET)
+        if not (checkbox := self.get_checkbox(parent, SpecFieldDef.ColumnsOrder.SECRET)):
+            return
 
-        for item in parent.get_children():
-            item.setCheckState(SpecFieldDef.ColumnsOrder.SECRET, check_state)
+        for child_item in parent.get_children():
+            child_checkbox: QCheckBox
 
-            if item.childCount():
-                self.cascade_checkboxes(item)
+            if not (child_checkbox := self.get_checkbox(child_item, SpecFieldDef.ColumnsOrder.SECRET)):
+                continue
+
+            child_checkbox.setChecked(checkbox.isChecked())
+
+            if child_item.childCount():
+                self.cascade_checkboxes(child_item)
 
     def editItem(self, item, column):
         if item is self.root and column not in (SpecFieldDef.ColumnsOrder.DESCRIPTION, SpecFieldDef.ColumnsOrder.FIELD):
@@ -173,6 +183,15 @@ class SpecView(TreeView):
 
             if item.reserved_for_future:
                 item.setHidden(hide)
+
+    def get_checkbox(self, item: SpecItem, column: int) -> QCheckBox | None:
+        if not (checkbox := self.itemWidget(item, column)):
+            return
+
+        if not isinstance(checkbox, QCheckBox):
+            return
+
+        return checkbox
 
     def reload_spec(self, commit):
         spec: EpaySpecModel = self.generate_spec()
@@ -235,7 +254,7 @@ class SpecView(TreeView):
 
     @void_qt_signals
     def parse_field_spec(self, field_spec: IsoField):
-        if not(item := self.get_item_by_path(field_spec.field_path)):
+        if not (item := self.get_item_by_path(field_spec.field_path)):
             return
 
         item.parse_field_spec(field_spec)
@@ -382,8 +401,4 @@ class SpecView(TreeView):
 
         fields_set: FieldSet = generate_fields()
 
-        return EpaySpecModel(
-            name=name,
-            fields=fields_set,
-            mti=self.spec.mti
-        )
+        return EpaySpecModel(name=name, fields=fields_set, mti=self.spec.mti)
