@@ -81,11 +81,20 @@ class Logger:
                 LogDefinition.MARK_STYLE
             )
 
+        logger = getLogger()
+
+        for handler in logger.handlers:
+            if not isinstance(handler, WirelessHandler):
+                continue
+
+            logger.removeHandler(handler)
+
         stream: LogStream = LogStream(log_browser)
+
         wireless_handler = WirelessHandler()
         wireless_handler.new_record_appeared.connect(lambda record: stream.write(data=record))
         wireless_handler.setFormatter(formatter)
-        logger = getLogger()
+
         logger.addHandler(wireless_handler)
 
         return wireless_handler

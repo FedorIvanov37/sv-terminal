@@ -203,10 +203,9 @@
 • Reflect in the document - Main settings, the specification+, files format+, custom validations
 
 
-
 • Bugs
-    • Specification -> set MTI -> Uncheck one -> ESC -> Don't save -> Specification -> DE2
     • Last tab bug - cannot process tab limits correctly
+    + Specification -> set MTI -> Uncheck one -> ESC -> Don't save -> Specification -> DE2
     + Spec checkboxes in readonly mode change state
     + SpecUnsaved window does not display when spec validation error displayed
     + Log does not work on SpecWindow
