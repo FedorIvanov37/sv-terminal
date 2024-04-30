@@ -82,7 +82,7 @@ class SpecView(TreeView):
         spec_item: SpecItem
 
         for spec_item in parent.get_children():
-            spec_item.set_readonly(readonly)
+            spec_item.set_read_only(readonly)
 
             if not spec_item.get_children():
                 continue
@@ -91,8 +91,6 @@ class SpecView(TreeView):
 
     @void_qt_signals
     def process_item_click(self, item: SpecItem, column: int) -> None:
-        self.validate_item(item, column, validate_all=True)
-
         if item.is_secret_pan(column):
             warning("The Card Number is a secret constantly")
             return
@@ -107,13 +105,20 @@ class SpecView(TreeView):
 
     @void_qt_signals
     def process_item_change(self, item: SpecItem, column: int):
-        self.validate_item(item, column, validate_all=True)
+        if item.is_secret_pan(column):
+            item.set_checkbox(column)
 
-        if column == SpecFieldDef.ColumnsOrder.SECRET:
-            self.cascade_checkboxes(item)
+        match column:
+            case SpecFieldDef.ColumnsOrder.CAN_BE_GENERATED:
+                item.set_checkbox(column, item.field_number in self.spec.get_fields_to_generate())
 
-        if column == SpecFieldDef.ColumnsOrder.TAG_LENGTH:
-            self.cascade_tag_length(item)
+            case SpecFieldDef.ColumnsOrder.SECRET:
+                self.cascade_checkboxes(item)
+
+            case SpecFieldDef.ColumnsOrder.TAG_LENGTH:
+                self.cascade_tag_length(item)
+
+        self.validate_item(item, column)
 
     def search(self, text: str, parent: SpecItem | None = None) -> None:
         TreeView.search(self, text, parent)
@@ -158,16 +163,31 @@ class SpecView(TreeView):
 
         TreeView.editItem(self, item, column)
 
-    def validate_item(self, item: SpecItem, column: int, validate_all=False):
+    def validate_all(self, parent: SpecItem | None = None) -> None:
+        if parent is None:
+            parent = self.root
+
+        child_item: SpecItem
+
+        for child_item in parent.get_children():
+
+            for column in SpecFieldDef.ColumnsOrder:
+                self.validate_item(child_item, column)
+
+            if not child_item.childCount():
+                continue
+
+            self.validate_all(parent=child_item)
+
+    def validate_item(self, item: SpecItem, column: int) -> None:
         if item is self.root:
             return
 
-        try:
-            if validate_all:
-                self.validator.validate_spec_row(item)
+        if item.reserved_for_future:
+            return
 
-            else:
-                self.validator.validate_column(item, column)
+        try:
+            self.validator.validate_column(item, column)
 
         except ValueError as validation_error:
             error(validation_error)
@@ -275,6 +295,7 @@ class SpecView(TreeView):
         self.collapseAll()
         self.expandItem(self.root)
         self.set_current_item_by_path(current_path)
+        self.validate_all()
 
     def get_item_by_path(self, field_path: FieldPath, parent: SpecItem | None = None) -> SpecItem:
         if parent is None:
@@ -302,7 +323,7 @@ class SpecView(TreeView):
                 self.set_current_item_by_path(field_path=field_path, parent=item)
 
     def parse_spec_fields(self, input_json, parent: QTreeWidgetItem = None):
-        if parent is None or parent == self.root:
+        if parent is None:
             parent = self.root
 
         for field in sorted(input_json, key=int):
@@ -357,12 +378,6 @@ class SpecView(TreeView):
             row: SpecItem
 
             for row in spec_item.get_children():
-                try:
-                    self.validator.validate_spec_row(row)
-                except ValueError as validation_error:
-                    error(validation_error)
-                    continue
-
                 field = IsoField(
                     field_number=row.field_number,
                     field_path=row.get_field_path(),
