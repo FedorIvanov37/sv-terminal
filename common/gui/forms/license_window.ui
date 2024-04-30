@@ -145,6 +145,11 @@
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QPushButton" name="ButtonAccept">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Accept</string>
           </property>
@@ -152,6 +157,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="ButtonReject">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Reject</string>
           </property>
@@ -177,7 +187,7 @@
         <item>
          <widget class="QLabel" name="SpacerLabel_1">
           <property name="text">
-           <string>    </string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -210,7 +220,7 @@
         <item>
          <widget class="QLabel" name="SpacerLabel">
           <property name="text">
-           <string>    </string>
+           <string/>
           </property>
          </widget>
         </item>
