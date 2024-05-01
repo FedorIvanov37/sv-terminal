@@ -9,10 +9,6 @@ from PyQt6.QtCore import pyqtSignal
 from common.lib.data_models.Config import Config
 from common.lib.interfaces.MetaClasses import QObjectAbcMeta
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
-from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
-from common.lib.core.EpaySpecification import EpaySpecification
-from common.lib.enums.TermFilesPath import TermDirs
-from common.lib.core.SpecFilesRotator import SpecFilesRotator
 from common.lib.core.validators.DataValidator import DataValidator
 from common.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 
@@ -20,7 +16,7 @@ from common.lib.exceptions.exceptions import DataValidationError, DataValidation
 class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
     incoming_transaction_data: pyqtSignal = pyqtSignal(bytes)
     transaction_sent: pyqtSignal = pyqtSignal(str)
-    got_remote_spec: pyqtSignal = pyqtSignal()
+    got_remote_spec: pyqtSignal = pyqtSignal(str)
 
     def __init__(self, config: Config):
         QTcpSocket.__init__(self)
@@ -117,10 +113,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
     def is_connected(self):
         return self.state() == self.SocketState.ConnectedState
 
-    def set_remote_spec(self, commit=None):
-        if commit is None:
-            commit = self.config.specification.rewrite_local_spec
-
+    def get_remote_spec(self):
         validator = DataValidator(self.config)
 
         try:
@@ -138,36 +131,23 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
         use_local_spec_text = "Local specification will be used instead"
 
         try:
-            try:
-                resp: HTTPResponse | str = urlopen(self.config.specification.remote_spec_url)
-            except Exception as spec_loading_error:
-                error(f"Cannot get remote specification: {spec_loading_error}")
-                warning(use_local_spec_text)
-                return
+            resp: HTTPResponse | str = urlopen(self.config.specification.remote_spec_url)
 
+        except Exception as spec_loading_error:
+            error(f"Cannot get remote specification: {spec_loading_error}")
+            warning(use_local_spec_text)
+            return
+
+        try:
             if resp.getcode() != HTTPStatus.OK:
                 error(f"Cannot get remote specification: Non-success http-code {resp.status}")
                 warning(use_local_spec_text)
                 return
 
-            spec: EpaySpecification = EpaySpecification()
+            spec_data: str = resp.read().decode()
 
-            if commit and self.config.specification.backup_storage:
-                rotator: SpecFilesRotator = SpecFilesRotator()
-                backup_filename: str = rotator.backup_spec()
-                debug(f"Backup local specification file name: {TermDirs.SPEC_BACKUP_DIR}/{backup_filename}")
-
-            try:
-                spec_data: EpaySpecModel = EpaySpecModel.model_validate_json(resp.read())
-                spec.reload_spec(spec=spec_data, commit=commit)
-
-                info(f"Remote specification loaded: {spec.spec.name}")
-
-                self.got_remote_spec.emit()
-
-            except Exception as loading_error:
-                error(f"Cannot load remote specification: {loading_error}")
-                warning(use_local_spec_text)
+            self.got_remote_spec.emit(spec_data)
 
         except Exception as spec_error:
             error(f"Cannot load remote specification: {spec_error}")
+            warning(use_local_spec_text)

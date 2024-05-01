@@ -81,8 +81,8 @@ class ConnectionThread(ConnectionInterface, QObject, metaclass=QObjectAbcMeta):
         return self.connector.stateChanged
 
     @property
-    def set_remote_spec(self):
-        return self.connector.set_remote_spec
+    def get_remote_spec(self):
+        return self.connector.get_remote_spec
 
     @property
     def connection_in_progress(self):
