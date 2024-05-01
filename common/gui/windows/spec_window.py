@@ -1,4 +1,4 @@
-from logging import error, info
+from logging import error, info, debug, warning
 from copy import deepcopy
 from typing import Optional
 from pydantic import ValidationError
@@ -128,7 +128,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             self.SearchLine.editingFinished: self.SpecView.setFocus,
             self.reset_spec: self.reload_spec,
             self.connector.got_remote_spec: self.process_remote_spec,
-            self.load_remote_spec: self.connector.set_remote_spec,
+            self.load_remote_spec: self.connector.get_remote_spec,
         }
 
         buttons_connection_map = {
@@ -175,7 +175,24 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
     def set_hello_message(self):
         self.LogArea.setText(f"{TextConstants.HELLO_MESSAGE}\n")
 
-    def process_remote_spec(self):
+    def process_remote_spec(self, spec_data: str):
+        spec: EpaySpecification = EpaySpecification()
+
+        if self.config.specification.backup_storage:
+            rotator: SpecFilesRotator = SpecFilesRotator()
+            backup_filename: str = rotator.backup_spec()
+            debug(f"Backup local specification file name: {backup_filename}")
+
+        try:
+            spec_model_data: EpaySpecModel = EpaySpecModel.model_validate_json(spec_data)
+            spec.reload_spec(spec=spec_model_data, commit=False)
+
+            info(f"Remote specification loaded: {spec.spec.name}")
+
+        except Exception as loading_error:
+            error(f"Cannot load remote specification: {loading_error}")
+            warning("Local specification will be used instead")
+
         self.SpecView.parse_spec(self.spec.spec)
 
     def copy_log(self):

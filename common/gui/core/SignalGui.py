@@ -29,6 +29,7 @@ from common.lib.core.Terminal import Terminal
 from common.lib.data_models.Config import Config
 from common.lib.data_models.License import LicenseInfo
 from common.lib.data_models.Transaction import Transaction, TypeFields
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.exceptions.exceptions import (
     LicenceAlreadyAccepted,
     LicenseDataLoadingError,
@@ -103,17 +104,7 @@ class SignalGui(Terminal):
             self.set_keep_alive_interval(interval_name=KeepAlive.IntervalNames.KEEP_ALIVE_DEFAULT % interval)
 
         if self.config.terminal.load_remote_spec:
-            try:
-                self.data_validator.validate_url(self.config.specification.remote_spec_url)
-
-            except DataValidationWarning as url_validation_warning:
-                warning(f"Remote spec URL validation warning: {url_validation_warning}")
-
-            except Exception as url_validation_error:
-                error(f"Remote spec URL validation error: {url_validation_error}")
-
-            else:
-                self.set_remote_spec.emit()
+            self.set_remote_spec.emit()
 
         if self.config.specification.backup_storage:
             rotator: SpecFilesRotator = SpecFilesRotator()
@@ -158,7 +149,8 @@ class SignalGui(Terminal):
             window.validate_message: lambda: self.validate_main_window(force=True),
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
             self.connector.stateChanged: self.set_connection_status,
-            self.set_remote_spec: self.connector.set_remote_spec,
+            self.set_remote_spec: self.connector.get_remote_spec,
+            self.connector.got_remote_spec: self.load_remote_spec,
             self.trans_timer.send_transaction: window.send,
             self.trans_timer.interval_was_set: window.process_transaction_loop_change,
             self.keep_alive_timer.interval_was_set: window.process_transaction_loop_change,
@@ -209,6 +201,23 @@ class SignalGui(Terminal):
 
     def modify_fields_data(self):  # Set extended data modifications, set in field params
         self.window.json_view.modify_all_fields_data()
+
+    def load_remote_spec(self, spec_data: str):
+        try:
+            epay_spec = EpaySpecModel.model_validate_json(spec_data)
+        except (ValidationError, ValueError) as spec_parsing_error:
+            error(f"Remote spec processing error: {spec_parsing_error}")
+            warning("Local specification will be used instead")
+            return
+
+        try:
+            self.spec.reload_spec(spec=epay_spec, commit=self.config.specification.rewrite_local_spec)
+        except Exception as spec_reload_error:
+            error(spec_reload_error)
+            warning("Local specification will be used instead")
+            return
+
+        info(f"Remote specification loaded: {epay_spec.name}")
 
     def validate_main_window(self, force=False):
         self.window.validate_fields(force=force)
