@@ -91,6 +91,11 @@ class SpecItem(Item):
 
         super(SpecItem, self).__init__(field_data)
 
+        self.setup()
+
+    def setup(self):
+        self.set_checkboxes()
+
     def is_secret_pan(self, column: int) -> bool:
         secret_pan_conditions = (
             self.field_number == self.epay_spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER,
@@ -111,7 +116,10 @@ class SpecItem(Item):
             Qt.ItemFlag.ItemIsEditable
         )
 
-    def set_checkboxes(self, checkboxes: dict[int, bool]):
+    def set_checkboxes(self, checkboxes: dict[int, bool] | None = None):
+        if checkboxes is None:
+            checkboxes = {column: False for column in SpecFieldDef.Checkboxes}
+
         if self.text(SpecFieldDef.ColumnsOrder.FIELD) == RootItemNames.SPECIFICATION_ROOT_NAME:
             return
 

@@ -342,9 +342,9 @@ class SpecView(TreeView):
 
             item: SpecItem = SpecItem(field_data_for_item)
 
-            parent.addChild(item)
-
             item.set_checkboxes(checkboxes)
+
+            parent.addChild(item)
 
             if field_data.fields:
                 self.parse_spec_fields(input_json=field_data.fields, parent=item)
