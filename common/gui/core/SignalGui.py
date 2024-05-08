@@ -462,7 +462,9 @@ class SignalGui(Terminal):
 
         if not transaction:
             try:
-                transaction: Transaction = self.parse_main_window()
+                if not (transaction := self.parse_main_window()):
+                    raise ValueError
+
             except Exception as building_error:
                 [error(err) for err in str(building_error).splitlines()]
                 return

@@ -424,12 +424,13 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.NextLevelButton.setEnabled(enable)
 
     def get_tab_names(self, all_tabs: bool = False) -> list[str]:
-        if not all_tabs:
-            return [self._tab_view.get_current_tab_name()]
+        if all_tabs:
+            return self._tab_view.get_tab_names()
 
-        tab_names: list[str] = self._tab_view.get_tab_names()
+        if not self._tab_view.get_current_tab_name():
+            self._tab_view.set_tab_name()
 
-        return tab_names
+        return [self._tab_view.get_current_tab_name()]
 
     def parse_tab(self, tab_name: str = None, flat=False):
         if tab_name is None:
@@ -450,14 +451,22 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def get_fields_to_generate(self) -> list[str]:
         return self.json_view.get_checkboxes()
 
-    def get_mti(self, length: int = 4, tab_name=TabViewParams.MAIN_TAB_NAME) -> str | None:
+    def get_mti(self, length: int = 4, tab_name: str | None = None) -> str | None:
+        if tab_name is None and not (tab_name := self._tab_view.get_current_tab_name()):
+            self._tab_view.set_tab_name()
+
+        if not self._tab_view.get_current_tab_name():
+            raise ValueError("Lost tab name")
+
         if not (msg_type_box := self._tab_view.get_msg_type(tab_name)):
             return
 
         if not (message_type := msg_type_box.currentText()):
             return
 
-        message_type = message_type[:length]
+        if not (message_type := message_type[:length]):
+            return
+
         return message_type
 
     def set_log_data(self, data: str = str()) -> None:

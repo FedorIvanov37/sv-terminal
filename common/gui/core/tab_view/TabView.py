@@ -115,9 +115,12 @@ class TabView(QTabWidget):
         for signal, slot in json_view_connection_map.items():
             signal.connect(slot)
 
-    def set_tab_name(self, tab_name, index=None):
+    def set_tab_name(self, tab_name: str | None = None, index: int | None = None):
         if index is None:
             index = self.currentIndex()
+
+        if tab_name is None:
+            tab_name = self.get_tab_name()
 
         self.setTabText(index, tab_name)
 
@@ -363,7 +366,7 @@ class TabView(QTabWidget):
 
         return json_view.get_trans_id()
 
-    def get_current_tab_name(self):
+    def get_current_tab_name(self) -> str:
         return self.tabText(self.currentIndex())
 
     def get_current_field_data(self) -> str | None:

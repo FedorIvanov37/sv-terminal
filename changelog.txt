@@ -177,7 +177,6 @@
 + Add tabs by QTabWidget
 + Revise hotkeys in hint-window and doc
 + Console mode
-#
 + Fix DE62 parsing error
 + Save multiple files
 + Add keys is CLI mode: --config-file --print-config
@@ -194,6 +193,33 @@
 + --log-file in CLI mode
 + Setting "Show license agreement"
 + Change name from SIGNAL to Signal
+
+• Bugs
+  + Fall down when send empty transaction
+  • Sends wrong data when set non-unique tab name
+  + Takes MTI from Main tab only
+  + Cannot send when tabName is empty
+  • " Main"
+
+
+# 0.19
+
+• Tab order on JsoViews
+• Setting don't print keep alive
+• Undo / Redo by keyboard
+• API mode -
+    • API activate / stop
+    • API settings
+    • Swagger documentation
+    • README.md
+    • POSTMAN collection
+    • Run API using CLI --api-mode
+    • Setting wait for response / parallel
+    • Move "Hotkeys" hint to settings
+• Setting not print log in CLI mode; --print-log=True
+• Settings tabs - GUI, CLI, API, About
+•
+
 
 
 • Error on console when run AboutWindow - Could not update timestamps for skipped samples
