@@ -1,5 +1,5 @@
 from os import chdir
 
-WORKDIR = "../build"
+WORKDIR = "build"
 
 chdir(WORKDIR)
