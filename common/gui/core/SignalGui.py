@@ -425,19 +425,21 @@ class SignalGui(Terminal):
             is_reversal=self.spec.is_reversal(message_type)
         )
 
-        if clean:
-            del (
-                transaction.resp_time_seconds,
-                transaction.match_id,
-                transaction.utrnno,
-                transaction.matched,
-                transaction.success,
-                transaction.is_request,
-                transaction.is_reversal,
-                transaction.is_keep_alive,
-                transaction.json_fields,
-                transaction.sending_time,
-            )
+        if not clean:
+            return transaction
+
+        del (
+            transaction.resp_time_seconds,
+            transaction.match_id,
+            transaction.utrnno,
+            transaction.matched,
+            transaction.success,
+            transaction.is_request,
+            transaction.is_reversal,
+            transaction.is_keep_alive,
+            transaction.json_fields,
+            transaction.sending_time,
+        )
 
         return transaction
 
