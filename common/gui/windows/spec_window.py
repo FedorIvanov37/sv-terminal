@@ -187,8 +187,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             spec_model_data: EpaySpecModel = EpaySpecModel.model_validate_json(spec_data)
             spec.reload_spec(spec=spec_model_data, commit=False)
 
-            info(f"Remote specification loaded: {spec.spec.name}")
-
         except Exception as loading_error:
             error(f"Cannot load remote specification: {loading_error}")
             warning("Local specification will be used instead")
