@@ -588,10 +588,9 @@ class SignalGui(Terminal):
 
         file_name: str | None = None
         file_format: OutputFilesFormat = file_format.lower()
-        all_tabs: bool = mode == ButtonActions.SaveMenuActions.ALL_TABS
         transactions: dict[str, Transaction] = dict()
 
-        if not (file_data := self.get_output_filename(directory=all_tabs)):
+        if not (file_data := self.get_output_filename(mode == ButtonActions.SaveMenuActions.ALL_TABS)):
             warning("No output filename or directory recognized")
             return
 
@@ -603,12 +602,13 @@ class SignalGui(Terminal):
                 return
 
         try:
-            if all_tabs:
-                transactions = self.parse_main_window(clean=True, flat_fields=False)
+            match mode:
+                case ButtonActions.SaveMenuActions.ALL_TABS:
+                    transactions = self.parse_main_window(clean=True, flat_fields=False)
 
-            if not all_tabs:
-                tab_name = self.window.get_tab_name()
-                transactions = {tab_name: self.parse_main_window_tab(clean=True, flat_fields=False)}
+                case ButtonActions.SaveMenuActions.CURRENT_TAB:
+                    tab_name = self.window.get_tab_name()
+                    transactions = {tab_name: self.parse_main_window_tab(clean=True, flat_fields=False)}
 
         except Exception as file_saving_error:
             error("File saving error: %s", file_saving_error)
@@ -616,7 +616,7 @@ class SignalGui(Terminal):
 
         for tab_name, transaction in transactions.items():
             for extension in OutputFilesFormat:
-                if not all_tabs:
+                if mode == ButtonActions.SaveMenuActions.CURRENT_TAB:
                     break
 
                 if not tab_name.upper().endswith(f".{extension}"):
@@ -627,7 +627,7 @@ class SignalGui(Terminal):
 
                 break
 
-            if all_tabs:
+            if mode == ButtonActions.SaveMenuActions.ALL_TABS:
                 file_name = f"{file_data}/{tab_name}"
                 file_name = f"{file_name}.{file_format}" if not file_name.lower().endswith(file_format) else file_name
 
