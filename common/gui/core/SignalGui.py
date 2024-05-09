@@ -401,50 +401,64 @@ class SignalGui(Terminal):
             case _:
                 error("Cannot reverse transaction")
 
-    def parse_main_window(self, flat_fields: bool = True, clean: bool = False, all_tabs: bool = False) -> \
-            dict[str, Transaction]:
+    def parse_main_window_tab(self, tab_name: str | None = None, flat_fields: bool = True, clean: bool = False) -> \
+            Transaction:
 
-        transactions: dict[str, Transaction] = dict.fromkeys(self.window.get_tab_names(all_tabs=all_tabs))
+        if tab_name is None:
+            tab_name = self.window.get_tab_name()
+
+        trans_id: str | None = self.window.get_trans_id(tab_name)
+        data_fields: TypeFields = self.window.parse_tab(tab_name, flat=flat_fields)
+
+        if not data_fields:
+            raise ValueError(f"No transaction data found on tab {tab_name}")
+
+        if not (message_type := self.window.get_mti(tab_name=tab_name)):
+            raise ValueError("Invalid MTI")
+
+        transaction: Transaction = Transaction(
+            trans_id=trans_id,
+            generate_fields=self.window.get_fields_to_generate(),
+            data_fields=data_fields,
+            message_type=message_type,
+            max_amount=self.config.fields.max_amount,
+            is_reversal=self.spec.is_reversal(message_type)
+        )
+
+        if clean:
+            del (
+                transaction.resp_time_seconds,
+                transaction.match_id,
+                transaction.utrnno,
+                transaction.matched,
+                transaction.success,
+                transaction.is_request,
+                transaction.is_reversal,
+                transaction.is_keep_alive,
+                transaction.json_fields,
+                transaction.sending_time,
+            )
+
+        return transaction
+
+    def parse_main_window(self, flat_fields: bool = True, clean: bool = False) -> dict[str, Transaction]:
+
+        transactions: dict[str, Transaction] = dict.fromkeys(self.window.tab_view.get_tab_names())
 
         for tab_name in transactions:
-            data_fields: TypeFields = self.window.parse_tab(tab_name, flat=flat_fields)
-
-            trans_id: str | None = self.window.get_trans_id(tab_name)
-
-            if not data_fields:
-                error(f"No transaction data found on tab {tab_name}")
-                continue
-
-            if not (message_type := self.window.get_mti()):
-                raise ValueError("Invalid MTI")
-
             try:
-                transaction: Transaction = Transaction(
-                    trans_id=trans_id,
-                    generate_fields=self.window.get_fields_to_generate(),
-                    data_fields=data_fields,
-                    message_type=message_type,
-                    max_amount=self.config.fields.max_amount,
-                    is_reversal=self.spec.is_reversal(message_type)
-                )
+                transaction = self.parse_main_window_tab(tab_name=tab_name, flat_fields=flat_fields, clean=clean)
 
-            except (ValidationError, ValueError) as validation_error:
+            except ValidationError as validation_error:
                 [error(err.get("msg")) for err in validation_error.errors()]
                 continue
 
-            if clean:
-                del (
-                    transaction.resp_time_seconds,
-                    transaction.match_id,
-                    transaction.utrnno,
-                    transaction.matched,
-                    transaction.success,
-                    transaction.is_request,
-                    transaction.is_reversal,
-                    transaction.is_keep_alive,
-                    transaction.json_fields,
-                    transaction.sending_time,
-                )
+            except Exception as parsing_error:
+                error(parsing_error)
+                continue
+
+            if not transaction:
+                continue
 
             transactions[tab_name] = transaction
 
@@ -455,22 +469,16 @@ class SignalGui(Terminal):
             error("Cannot send the transaction while the host connection is in progress")
             return
 
-        if not transaction:
+        if transaction is None:
             try:
-                if not (transactions := self.parse_main_window(all_tabs=False)):
-                    raise ValueError
+                transaction: Transaction = self.parse_main_window_tab()
 
-                if len(transactions) > 1:
-                    raise TypeError("Main window parsing error")
-
-                if not transactions.get(self.window.get_tab_name()):
+                if not transaction:
                     raise ValueError
 
             except Exception as building_error:
                 [error(err) for err in str(building_error).splitlines()]
                 return
-
-            tab_name, transaction = transactions.popitem()
 
         if self.config.debug.clear_log and not transaction.is_keep_alive:
             self.window.clean_window_log()
@@ -581,7 +589,7 @@ class SignalGui(Terminal):
         file_name: str | None = None
         file_format: OutputFilesFormat = file_format.lower()
         all_tabs: bool = mode == ButtonActions.SaveMenuActions.ALL_TABS
-        transactions: dict[str, Transaction]
+        transactions: dict[str, Transaction] = dict()
 
         if not (file_data := self.get_output_filename(directory=all_tabs)):
             warning("No output filename or directory recognized")
@@ -595,7 +603,13 @@ class SignalGui(Terminal):
                 return
 
         try:
-            transactions = self.parse_main_window(all_tabs=all_tabs, clean=True, flat_fields=False)
+            if all_tabs:
+                transactions = self.parse_main_window(clean=True, flat_fields=False)
+
+            if not all_tabs:
+                tab_name = self.window.get_tab_name()
+                transactions = {tab_name: self.parse_main_window_tab(clean=True, flat_fields=False)}
+
         except Exception as file_saving_error:
             error("File saving error: %s", file_saving_error)
             return
@@ -630,12 +644,10 @@ class SignalGui(Terminal):
             Terminal.save_transaction(self, transaction, file_format, file_name)
 
     def print_data(self, data_format: PrintDataFormats) -> None:
-        current_tab_name = self.window.get_tab_name()
-
         data_processing_map: dict[str, Callable] = {
-            DataFormats.JSON: lambda: self.parse_main_window(flat_fields=False, clean=True).pop(current_tab_name).model_dump_json(indent=4),
-            DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window().pop(current_tab_name)),
-            DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window().pop(current_tab_name)),
+            DataFormats.JSON: lambda: self.parse_main_window_tab(None, False, True).model_dump_json(indent=4),
+            DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window_tab()),
+            DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window_tab()),
             DataFormats.TERM: lambda: TextConstants.HELLO_MESSAGE + "\n",
             DataFormats.SPEC: lambda: self.spec.spec.model_dump_json(indent=4),
             DataFormats.CONFIG: lambda: self.config.model_dump_json(indent=4),

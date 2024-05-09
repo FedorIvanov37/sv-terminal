@@ -175,8 +175,7 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
             error("Lost field data")
             return
 
-        transactions: dict[str, Transaction] = self.terminal.parse_main_window()
-        tab_name, transaction = transactions.popitem()
+        transaction: Transaction = self.terminal.parse_main_window_tab()
         transaction.data_fields[field_number] = field_data
 
         self.terminal.parse_transaction(transaction)
@@ -231,14 +230,11 @@ class ComplexFieldsParser(Ui_ComplexFieldsParser, QDialog):
             return
 
         try:
-            transactions: dict[str, Transaction] = self.terminal.parse_main_window()
-            tab_name, transaction = transactions.popitem()
+            if not (transaction := self.terminal.parse_main_window_tab()):
+                raise LookupError("Lost transaction data")
 
         except Exception as window_parsing_error:
             error(window_parsing_error)
-            return
-
-        if not transaction:
             return
 
         if not (field_data := transaction.data_fields.get(field_number)):

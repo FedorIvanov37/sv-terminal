@@ -426,14 +426,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def get_tabs_count(self):
         return self._tab_view.count()
 
-    def get_tab_names(self, all_tabs: bool = False) -> list[str]:
-        if all_tabs:
-            return self._tab_view.get_tab_names()
-
-        if not self._tab_view.get_current_tab_name():
-            self._tab_view.setTabText()
-
-        return [self._tab_view.get_current_tab_name()]
+    def get_tab_names(self) -> list[str]:
+        return self._tab_view.get_tab_names()
 
     def parse_tab(self, tab_name: str | None = None, flat=False):
         return self._tab_view.generate_fields(tab_name=tab_name, flat=flat)
