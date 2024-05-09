@@ -155,6 +155,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             KeySequences.CTRL_W: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.FIELD),
             KeySequences.CTRL_E: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.DESCRIPTION),
             KeySequences.CTRL_L: self.clear_log,
+            KeySequences.CTRL_ALT_P: self.set_hello_message,
         }
 
         for signal, slot in connection_map.items():
