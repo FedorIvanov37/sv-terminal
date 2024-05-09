@@ -1,1 +1,1 @@
-print("Run cleanup script")
+print(">Run cleanup script<")
