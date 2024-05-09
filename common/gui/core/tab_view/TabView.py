@@ -1,4 +1,5 @@
 from logging import error, info
+from re import sub as regexp_substitute, match as regexp_match
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QHBoxLayout
 from PyQt6.QtGui import QFont, QIcon
@@ -90,13 +91,14 @@ class TabView(QTabWidget):
         self.setFont(QFont("Calibri", 12))
 
         try:
-            self.add_tab(tab_name="Main")
+            self.add_tab(tab_name=TabViewParams.MAIN_TAB_NAME)
         except IndexError:
             return
 
         self.mark_active_tab()
 
     def connect_all(self):
+        self.tabBar().text_edited.connect(self.setTabText)
         self.json_view.trans_id_set.connect(self.trans_id_set)
         self.tabBarClicked.connect(self.process_tab_click)
         self.currentChanged.connect(self.process_tab_change)
@@ -115,24 +117,43 @@ class TabView(QTabWidget):
         for signal, slot in json_view_connection_map.items():
             signal.connect(slot)
 
-    def set_tab_name(self, tab_name: str | None = None, index: int | None = None):
+    def setTabText(self, index: int | None = None, label: str | None = None):
         if index is None:
             index = self.currentIndex()
 
-        if tab_name is None:
-            tab_name = self.get_tab_name()
+        if not label.strip():
+            label = self.get_tab_name()
 
-        self.setTabText(index, tab_name)
+        tab_name_prefix = int()
+
+        while label in self.get_tab_names():
+            if index == int():
+                break
+
+            tab_name_prefix += 1
+
+            if regexp_match(r"^\d+_", label):
+                label = regexp_substitute(r"^\d+_", f"{tab_name_prefix}_", label)
+                continue
+
+            label = f"{tab_name_prefix}_{label}"
+
+        QTabWidget.setTabText(self, index, label)
 
     def remove_tab(self, index):
         if self.count() < 3:
             return
 
         self.removeTab(index)
-        self.setTabsClosable(not self.count() < 3)
+
+        if not self.count() < 3:
+            self.set_tab_non_closeable()
+
         self.mark_active_tab()
 
     def process_tab_click(self, index):
+        tabs_count = self.count()
+
         if index != self.count() - 1:
             self.mark_active_tab()
             return
@@ -140,16 +161,23 @@ class TabView(QTabWidget):
         try:
             self.add_tab()
         except IndexError:
-            return
+            self.close_tab(self.count() - 1)
+            self.add_plus_tab()
 
-        self.set_tab_non_closeable()
-        self.new_tab_opened.emit()
+        if self.count() > tabs_count:
+            self.set_tab_non_closeable()
+            self.new_tab_opened.emit()
 
     def set_tab_non_closeable(self, index=0):
         try:
             self.tabBar().tabButton(index, TabBar.ButtonPosition.RightSide).resize(int(), int())
         except AttributeError:
             return
+
+        if index != int():
+            return
+
+        self.setTabText(int(), TabViewParams.MAIN_TAB_NAME)
 
     def process_tab_change(self):
         self.tab_changed.emit()
@@ -159,8 +187,7 @@ class TabView(QTabWidget):
             return
 
         if self.currentIndex() == self.count() - 1:
-            self.setCurrentIndex(int())
-            return
+            self.setCurrentIndex(self.currentIndex() - 1)
 
         self.mark_active_tab()
 
@@ -234,13 +261,11 @@ class TabView(QTabWidget):
         if self.count() > int(TabViewParams.TABS_LIMIT):
             error(f"Cannot open a new tab, max open tabs limit {TabViewParams.TABS_LIMIT} tabs is reached")
             error("Close some tab to open a new one")
-
             raise IndexError
 
         self.close_tab(self.count() - 1)
 
         widget = self.generate_tab_widget()
-
         self.addTab(widget, tab_name if tab_name else self.get_tab_name())
         self.add_plus_tab()
         self.set_tab_non_closeable()
@@ -268,8 +293,8 @@ class TabView(QTabWidget):
         self.copy_bitmap.emit()
         info("Bitmap copied")
 
-    def add_plus_tab(self):
-        self.addTab(QWidget(), '')  # Add the technical "plus" tab
+    def add_plus_tab(self):  # Add the technical "plus" tab
+        self.addTab(QWidget(), '')
         self.setTabIcon(self.count() - 1, QIcon(GuiFilesPath.NEW_TAB))
         self.setTabsClosable(self.count() > 2)
         self.setCurrentIndex(self.count() - 2)
@@ -303,18 +328,11 @@ class TabView(QTabWidget):
     def get_tab_names(self) -> list[str]:
         tab_names: list[str] = list()
 
-        for index in range(self.count() - 1):
-            tab_name = self.tabText(index)
+        for index in range(self.count()):
+            tab_names.append(self.tabText(index))
 
-            if not tab_name.strip():
-                tab_name = f"Tab #{index}"
-
-            while tab_name in tab_names:
-                tab_name = f"{index}_{tab_name}"
-
-            self.setTabText(index, tab_name)
-
-            tab_names.append(tab_name)
+        if not tab_names[-1]:
+            tab_names.pop()
 
         return tab_names
 
@@ -331,8 +349,8 @@ class TabView(QTabWidget):
 
             return tab
 
-    def get_json_view(self, tab_name) -> JsonView | None:
-        if not (tab := self.get_tab_by_name(tab_name)):
+    def get_json_view(self, tab_index: int) -> JsonView | None:
+        if not (tab := self.widget(tab_index)):
             return
 
         if not (json_view := tab.findChild(JsonView)):
@@ -340,10 +358,19 @@ class TabView(QTabWidget):
 
         return json_view
 
-    def generate_fields(self, tab_name: str, flat: bool = False):
+    def generate_fields(self, tab_name: str | None = None, flat: bool = False):
         fields = {}
 
-        if not (json_view := self.get_json_view(tab_name)):
+        if not tab_name:
+            tab_name = self.get_tab_name()
+
+        if not (tab := self.get_tab_by_name(tab_name)):
+            return fields
+
+        if (tab_index := self.indexOf(tab)) is None:
+            return fields
+
+        if not (json_view := self.get_json_view(tab_index)):
             return fields
 
         if fields := json_view.generate_fields(flat=flat):
@@ -360,8 +387,14 @@ class TabView(QTabWidget):
 
         return msg_type
 
-    def get_trans_id(self, tab_name) -> str | None:
-        if not (json_view := self.get_json_view(tab_name)):
+    def get_trans_id(self, tab_name: str) -> str | None:
+        if not (tab := self.get_tab_by_name(tab_name)):
+            return
+
+        if (tab_index := self.indexOf(tab)) is None:
+            return
+
+        if not (json_view := self.get_json_view(tab_index)):
             return
 
         return json_view.get_trans_id()

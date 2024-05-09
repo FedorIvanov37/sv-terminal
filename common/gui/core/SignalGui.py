@@ -401,14 +401,12 @@ class SignalGui(Terminal):
             case _:
                 error("Cannot reverse transaction")
 
-    def parse_main_window(self, flat_fields: bool = True, clean: bool = False,
-                          all_tabs: bool = False) -> dict[str, Transaction] | Transaction:
+    def parse_main_window(self, flat_fields: bool = True, clean: bool = False, all_tabs: bool = False) -> \
+            dict[str, Transaction]:
 
-        tab_names: list[str] = self.window.get_tab_names(all_tabs=all_tabs)
+        transactions: dict[str, Transaction] = dict.fromkeys(self.window.get_tab_names(all_tabs=all_tabs))
 
-        transactions: dict[str, Transaction] = dict()
-
-        for tab_name in tab_names:
+        for tab_name in transactions:
             data_fields: TypeFields = self.window.parse_tab(tab_name, flat=flat_fields)
 
             trans_id: str | None = self.window.get_trans_id(tab_name)
@@ -448,9 +446,6 @@ class SignalGui(Terminal):
                     transaction.sending_time,
                 )
 
-            if not all_tabs:
-                return transaction
-
             transactions[tab_name] = transaction
 
         return transactions
@@ -462,12 +457,24 @@ class SignalGui(Terminal):
 
         if not transaction:
             try:
-                if not (transaction := self.parse_main_window()):
+                if not (transactions := self.parse_main_window(all_tabs=False)):
                     raise ValueError
+
+                if len(transactions) > 1:
+                    raise TypeError
+
+                if not transactions.get(self.window.get_tab_name()):
+                    raise ValueError
+
+            except TypeError:
+                error("Main window parsing error")
+                return
 
             except Exception as building_error:
                 [error(err) for err in str(building_error).splitlines()]
                 return
+
+            tab_name, transaction = transactions.popitem()
 
         if self.config.debug.clear_log and not transaction.is_keep_alive:
             self.window.clean_window_log()
@@ -569,11 +576,8 @@ class SignalGui(Terminal):
 
         return file_name
 
-    def save_transaction_to_file(
-            self,
-            mode: ButtonActions.SaveMenuActions | None = None,
-            file_format: OutputFilesFormat | None = None
-    ) -> None:
+    def save_transaction_to_file(self, mode: ButtonActions.SaveMenuActions | None = None,
+                                 file_format: OutputFilesFormat | None = None) -> None:
 
         if not file_format:
             file_format = OutputFilesFormat.JSON
@@ -594,13 +598,10 @@ class SignalGui(Terminal):
                 return
 
         try:
-            transactions: dict[str, Transaction] | Transaction = self.parse_main_window(all_tabs=all_tabs, clean=True)
+            transactions: dict[str, Transaction] = self.parse_main_window(all_tabs=all_tabs, clean=True)
         except Exception as file_saving_error:
             error("File saving error: %s", file_saving_error)
             return
-
-        if not isinstance(transactions, dict):
-            transactions = {transactions.trans_id: transactions}
 
         for tab_name, transaction in transactions.items():
             if all_tabs:
@@ -628,10 +629,12 @@ class SignalGui(Terminal):
             Terminal.save_transaction(self, transaction, file_format, file_name)
 
     def print_data(self, data_format: PrintDataFormats) -> None:
+        current_tab_name = self.window.get_tab_name()
+
         data_processing_map: dict[str, Callable] = {
-            DataFormats.JSON: lambda: self.parse_main_window(flat_fields=False, clean=True).model_dump_json(indent=4),
-            DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window()),
-            DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window()),
+            DataFormats.JSON: lambda: self.parse_main_window(flat_fields=False, clean=True).pop(current_tab_name).model_dump_json(indent=4),
+            DataFormats.DUMP: lambda: self.parser.create_sv_dump(self.parse_main_window().pop(current_tab_name)),
+            DataFormats.INI: lambda: self.parser.transaction_to_ini_string(self.parse_main_window().pop(current_tab_name)),
             DataFormats.TERM: lambda: TextConstants.HELLO_MESSAGE + "\n",
             DataFormats.SPEC: lambda: self.spec.spec.model_dump_json(indent=4),
             DataFormats.CONFIG: lambda: self.config.model_dump_json(indent=4),

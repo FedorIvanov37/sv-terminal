@@ -195,11 +195,13 @@
 + Change name from SIGNAL to Signal
 
 • Bugs
+  + Fix save and parse multiple files
   + Fall down when send empty transaction
-  • Sends wrong data when set non-unique tab name
+  + Sends wrong data when set non-unique tab name
   + Takes MTI from Main tab only
   + Cannot send when tabName is empty
-  • " Main"
+  + " Main"
+
 
 
 # 0.19

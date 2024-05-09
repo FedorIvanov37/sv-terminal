@@ -1,4 +1,5 @@
 from PyQt6.QtGui import QFont
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QTabBar, QComboBox, QWidget, QLineEdit, QPushButton
 from common.lib.core.EpaySpecification import EpaySpecification
 
@@ -41,6 +42,12 @@ class LineEdit(QLineEdit):
 
 
 class TabBar(QTabBar):
+    _text_edited: pyqtSignal = pyqtSignal(int, str)  # Tab index, new text
+
+    @property
+    def text_edited(self):
+        return self._text_edited
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setMovable(False)
@@ -69,5 +76,5 @@ class TabBar(QTabBar):
         self.__edit.editingFinished.connect(self.finish_rename)
 
     def finish_rename(self):
-        self.setTabText(self.__edited_tab, self.__edit.text())
+        self.text_edited.emit(self.__edited_tab, self.__edit.text())
         self.__edit.deleteLater()

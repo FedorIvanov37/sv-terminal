@@ -377,7 +377,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             ButtonActions.SaveMenuActions.ALL_TABS, OutputFilesFormat.DUMP))
 
     def set_tab_name(self, tab_name):
-        self._tab_view.set_tab_name(tab_name)
+        self._tab_view.setTabText(label=tab_name)
 
     def add_tab(self):
         try:
@@ -423,23 +423,29 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def enable_next_level_button(self, enable: bool = True) -> None:
         self.NextLevelButton.setEnabled(enable)
 
+    def get_tabs_count(self):
+        return self._tab_view.count()
+
     def get_tab_names(self, all_tabs: bool = False) -> list[str]:
         if all_tabs:
             return self._tab_view.get_tab_names()
 
         if not self._tab_view.get_current_tab_name():
-            self._tab_view.set_tab_name()
+            self._tab_view.setTabText()
 
         return [self._tab_view.get_current_tab_name()]
 
-    def parse_tab(self, tab_name: str = None, flat=False):
-        if tab_name is None:
-            tab_name = TabViewParams.MAIN_TAB_NAME
-
-        return self._tab_view.generate_fields(tab_name, flat=flat)
+    def parse_tab(self, tab_name: str | None = None, flat=False):
+        return self._tab_view.generate_fields(tab_name=tab_name, flat=flat)
 
     def get_trans_id(self, tab_name: str):
         return self._tab_view.get_trans_id(tab_name)
+
+    def get_tab_name(self, tab_index: int | None = None):
+        if tab_index is None:
+            tab_index = self._tab_view.currentIndex()
+
+        return self._tab_view.tabText(tab_index)
 
     # Validate whole transaction data, presented on MainWindow
     def validate_fields(self, force=False) -> None:
@@ -453,7 +459,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def get_mti(self, length: int = 4, tab_name: str | None = None) -> str | None:
         if tab_name is None and not (tab_name := self._tab_view.get_current_tab_name()):
-            self._tab_view.set_tab_name()
+            self._tab_view.setTabText()
 
         if not self._tab_view.get_current_tab_name():
             raise ValueError("Lost tab name")
