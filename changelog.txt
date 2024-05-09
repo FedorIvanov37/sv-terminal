@@ -177,7 +177,6 @@
 + Add tabs by QTabWidget
 + Revise hotkeys in hint-window and doc
 + Console mode
-#
 + Fix DE62 parsing error
 + Save multiple files
 + Add keys is CLI mode: --config-file --print-config
@@ -194,23 +193,42 @@
 + --log-file in CLI mode
 + Setting "Show license agreement"
 + Change name from SIGNAL to Signal
++ Print Signal logo on SpecWindow
 
+# 0.19 planning
 
-• Error on console when run AboutWindow - Could not update timestamps for skipped samples
-• Pin main tab and make the other movable
-• Drag and drop files to JsonView
-• Respect JSON-mode when set field value from complex fields constructor
-• Reflect in the document - Main settings, the specification+, files format+, custom validations
+• Tab order on JsoViews
+• Setting don't print keep alive
+• Undo / Redo by keyboard
+• API mode
+    • API activate / stop
+    • API settings
+    • Swagger documentation
+    • README.md
+    • POSTMAN collection
+    • Run API using CLI --api-mode
+    • Setting wait for response / parallel
+    • Move "Hotkeys" hint to settings
+• Setting not print log in CLI mode; --print-log=True
+• Settings tabs - GUI, CLI, API, About
+
+#
+
+• TODO
+    • Error on console when run AboutWindow - Could not update timestamps for skipped samples
+    • Pin main tab and make the other movable
+    • Drag and drop files to JsonView
+    • Respect JSON-mode when set field value from complex fields constructor
+    • Reflect in the document - Main settings, the specification+, files format+, custom validations
+    • Exceptions policy
+    • Correct and publish the Specification
+    • Publish on confluence
+    • Spec explanation
 
 
 • Bugs
     • Last tab bug - cannot process tab limits correctly
-    + Specification -> set MTI -> Uncheck one -> ESC -> Don't save -> Specification -> DE2
-    + Spec checkboxes in readonly mode change state
-    + SpecUnsaved window does not display when spec validation error displayed
-    + Log does not work on SpecWindow
-    + CTRL+T with tab adding works incorrectly
-
+    • No data in socket if delete field in spec
 
 • Licensing preparation
     • Change the framework to pyside
@@ -220,13 +238,3 @@
     + Buy the logo
     + Gif copyright
     + Change the name
-
-
-• BUG: No data in socket if delete field in spec
-• Exceptions policy
-• Correct and publish the Specification
-• Publish on confluence
-• Spec explanation
-
-• API console mode
-• Undo / Redo

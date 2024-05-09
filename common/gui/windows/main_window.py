@@ -15,7 +15,7 @@ from common.gui.enums import ButtonActions, MainFieldSpec as FieldsSpec
 from common.gui.enums.KeySequences import KeySequences
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.gui.enums.ConnectionStatus import ConnectionStatus, ConnectionIcon
-from common.gui.enums.TabViewParams import TabViewParams
+from common.lib.enums.MessageLength import MessageLength
 from common.lib.enums.DataFormats import OutputFilesFormat
 from common.lib.enums import KeepAlive
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
@@ -377,7 +377,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             ButtonActions.SaveMenuActions.ALL_TABS, OutputFilesFormat.DUMP))
 
     def set_tab_name(self, tab_name):
-        self._tab_view.set_tab_name(tab_name)
+        self._tab_view.setTabText(label=tab_name)
 
     def add_tab(self):
         try:
@@ -423,22 +423,23 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def enable_next_level_button(self, enable: bool = True) -> None:
         self.NextLevelButton.setEnabled(enable)
 
-    def get_tab_names(self, all_tabs: bool = False) -> list[str]:
-        if not all_tabs:
-            return [self._tab_view.get_current_tab_name()]
+    def get_tabs_count(self):
+        return self._tab_view.count()
 
-        tab_names: list[str] = self._tab_view.get_tab_names()
+    def get_tab_names(self) -> list[str]:
+        return self._tab_view.get_tab_names()
 
-        return tab_names
-
-    def parse_tab(self, tab_name: str = None, flat=False):
-        if tab_name is None:
-            tab_name = TabViewParams.MAIN_TAB_NAME
-
-        return self._tab_view.generate_fields(tab_name, flat=flat)
+    def parse_tab(self, tab_name: str | None = None, flat=False):
+        return self._tab_view.generate_fields(tab_name=tab_name, flat=flat)
 
     def get_trans_id(self, tab_name: str):
         return self._tab_view.get_trans_id(tab_name)
+
+    def get_tab_name(self, tab_index: int | None = None):
+        if tab_index is None:
+            tab_index = self._tab_view.currentIndex()
+
+        return self._tab_view.tabText(tab_index)
 
     # Validate whole transaction data, presented on MainWindow
     def validate_fields(self, force=False) -> None:
@@ -450,14 +451,22 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def get_fields_to_generate(self) -> list[str]:
         return self.json_view.get_checkboxes()
 
-    def get_mti(self, length: int = 4, tab_name=TabViewParams.MAIN_TAB_NAME) -> str | None:
+    def get_mti(self, length: int = MessageLength.MESSAGE_TYPE_LENGTH, tab_name: str | None = None) -> str | None:
+        if tab_name is None and not (tab_name := self._tab_view.get_current_tab_name()):
+            self._tab_view.setTabText()
+
+        if not self._tab_view.get_current_tab_name():
+            raise ValueError("Lost tab name")
+
         if not (msg_type_box := self._tab_view.get_msg_type(tab_name)):
             return
 
         if not (message_type := msg_type_box.currentText()):
             return
 
-        message_type = message_type[:length]
+        if not (message_type := message_type[:length]):
+            return
+
         return message_type
 
     def set_log_data(self, data: str = str()) -> None:

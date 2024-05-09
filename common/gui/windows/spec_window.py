@@ -155,6 +155,7 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
             KeySequences.CTRL_W: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.FIELD),
             KeySequences.CTRL_E: lambda: self.SpecView.edit_column(SpecFieldDef.ColumnsOrder.DESCRIPTION),
             KeySequences.CTRL_L: self.clear_log,
+            KeySequences.CTRL_ALT_P: self.set_hello_message,
         }
 
         for signal, slot in connection_map.items():
@@ -186,8 +187,6 @@ class SpecWindow(Ui_SpecificationWindow, QDialog):
         try:
             spec_model_data: EpaySpecModel = EpaySpecModel.model_validate_json(spec_data)
             spec.reload_spec(spec=spec_model_data, commit=False)
-
-            info(f"Remote specification loaded: {spec.spec.name}")
 
         except Exception as loading_error:
             error(f"Cannot load remote specification: {loading_error}")

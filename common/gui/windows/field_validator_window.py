@@ -56,6 +56,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         self.ValuesList.setPalette(palette)
         self.CheckTypeLayout.addWidget(self.CheckTypeBox)
         self.FieldTypeBoxLayout.addWidget(self.FieldType)
+        self.CheckBoxGeneratible.setDisabled(True)
         self.process_fill_size_change()
         self.create_field_type_checkboxes()
         self.parse_field_spec()
@@ -82,6 +83,7 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
             self.FillUpTo.currentIndexChanged: self.process_fill_size_change,
             self.FillUpTo.currentTextChanged: self.process_fill_size_text_change,
             self.OkButton.clicked: self.ok,
+            self.CheckBoxGeneratible.stateChanged: self.set_generate,
         }
 
         for signal, slot in connection_map.items():
@@ -307,6 +309,14 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
 
         return field_spec
 
+    def set_generate(self):
+        try:
+            self.CheckBoxGeneratible.setCheckState(
+                Qt.CheckState.Checked if self.field_spec.generate else Qt.CheckState.Unchecked
+            )
+        except AttributeError:
+            return
+
     def set_justification_simbols(self):
         self.field_spec.validators.justification_element = self.FillSymbol.text()
 
@@ -433,6 +443,9 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
         for checkbox, field_property in checkbox_property_map.items():
             checkbox.setChecked(field_property)
 
+        if checkbox_property_map.get(self.CheckBoxGeneratible):
+            self.CheckBoxGeneratible.setChecked(True)
+
         for check_type, values in self._literal_validations_map.items():
             self.CheckTypeBox.addItem(check_type)
 
@@ -469,8 +482,9 @@ class FieldDataSet(Ui_FieldDataSet, QDialog):
                 continue
 
         if self.field_spec.field_number == self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
-            self.CheckBoxSecret.setCheckState(Qt.CheckState.PartiallyChecked)
-            self.CheckBoxSecret.stateChanged.connect(lambda: self.CheckBoxSecret.setCheckState(Qt.CheckState.PartiallyChecked))
+            self.CheckBoxSecret.setCheckState(Qt.CheckState.Checked)
+            self.CheckBoxSecret.setDisabled(True)
+            self.CheckBoxSecret.stateChanged.connect(lambda: self.CheckBoxSecret.setCheckState(Qt.CheckState.Checked))
             self.CheckBoxSecret.setText(f"Hide value (required for PAN)")
 
         self.set_validation_items(self.CheckTypeBox.currentText())
