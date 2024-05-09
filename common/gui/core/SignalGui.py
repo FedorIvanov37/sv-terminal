@@ -415,7 +415,7 @@ class SignalGui(Terminal):
                 error(f"No transaction data found on tab {tab_name}")
                 continue
 
-            if not (message_type := self.window.get_mti(MessageLength.MESSAGE_TYPE_LENGTH)):
+            if not (message_type := self.window.get_mti()):
                 raise ValueError("Invalid MTI")
 
             try:
@@ -461,14 +461,10 @@ class SignalGui(Terminal):
                     raise ValueError
 
                 if len(transactions) > 1:
-                    raise TypeError
+                    raise TypeError("Main window parsing error")
 
                 if not transactions.get(self.window.get_tab_name()):
                     raise ValueError
-
-            except TypeError:
-                error("Main window parsing error")
-                return
 
             except Exception as building_error:
                 [error(err) for err in str(building_error).splitlines()]
@@ -582,9 +578,10 @@ class SignalGui(Terminal):
         if not file_format:
             file_format = OutputFilesFormat.JSON
 
-        file_name = None
-        file_format = file_format.lower()
-        all_tabs = mode == ButtonActions.SaveMenuActions.ALL_TABS
+        file_name: str | None = None
+        file_format: OutputFilesFormat = file_format.lower()
+        all_tabs: bool = mode == ButtonActions.SaveMenuActions.ALL_TABS
+        transactions: dict[str, Transaction]
 
         if not (file_data := self.get_output_filename(directory=all_tabs)):
             warning("No output filename or directory recognized")
@@ -598,21 +595,25 @@ class SignalGui(Terminal):
                 return
 
         try:
-            transactions: dict[str, Transaction] = self.parse_main_window(all_tabs=all_tabs, clean=True)
+            transactions = self.parse_main_window(all_tabs=all_tabs, clean=True, flat_fields=False)
         except Exception as file_saving_error:
             error("File saving error: %s", file_saving_error)
             return
 
         for tab_name, transaction in transactions.items():
-            if all_tabs:
-                for extension in OutputFilesFormat:
-                    if not tab_name.upper().endswith(f".{extension}"):
-                        continue
-
-                    extension_len = len(extension) + 1
-                    tab_name = tab_name[:-extension_len]
+            for extension in OutputFilesFormat:
+                if not all_tabs:
                     break
 
+                if not tab_name.upper().endswith(f".{extension}"):
+                    continue
+
+                extension_len = len(extension) + 1
+                tab_name = tab_name[:-extension_len]
+
+                break
+
+            if all_tabs:
                 file_name = f"{file_data}/{tab_name}"
                 file_name = f"{file_name}.{file_format}" if not file_name.lower().endswith(file_format) else file_name
 

@@ -15,7 +15,7 @@ from common.gui.enums import ButtonActions, MainFieldSpec as FieldsSpec
 from common.gui.enums.KeySequences import KeySequences
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.gui.enums.ConnectionStatus import ConnectionStatus, ConnectionIcon
-from common.gui.enums.TabViewParams import TabViewParams
+from common.lib.enums.MessageLength import MessageLength
 from common.lib.enums.DataFormats import OutputFilesFormat
 from common.lib.enums import KeepAlive
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
@@ -457,7 +457,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def get_fields_to_generate(self) -> list[str]:
         return self.json_view.get_checkboxes()
 
-    def get_mti(self, length: int = 4, tab_name: str | None = None) -> str | None:
+    def get_mti(self, length: int = MessageLength.MESSAGE_TYPE_LENGTH, tab_name: str | None = None) -> str | None:
         if tab_name is None and not (tab_name := self._tab_view.get_current_tab_name()):
             self._tab_view.setTabText()
 

@@ -79,6 +79,10 @@ class TabView(QTabWidget):
     def tab_widget(self):
         return self.currentWidget()
 
+    @property
+    def plus_tab_index(self):
+        return self.count() - 1
+
     def __init__(self, config: Config):
         super(QTabWidget, self).__init__()
         self.setTabBar(TabBar())
@@ -130,6 +134,9 @@ class TabView(QTabWidget):
             if index == int():
                 break
 
+            if self.get_tab_names().count(label) == 1 and self.get_current_tab_name() == label:
+                break
+
             tab_name_prefix += 1
 
             if regexp_match(r"^\d+_", label):
@@ -154,14 +161,14 @@ class TabView(QTabWidget):
     def process_tab_click(self, index):
         tabs_count = self.count()
 
-        if index != self.count() - 1:
+        if index != self.plus_tab_index:
             self.mark_active_tab()
             return
 
         try:
             self.add_tab()
         except IndexError:
-            self.close_tab(self.count() - 1)
+            self.close_tab(self.plus_tab_index)
             self.add_plus_tab()
 
         if self.count() > tabs_count:
@@ -186,7 +193,7 @@ class TabView(QTabWidget):
             self.setCurrentIndex(int())
             return
 
-        if self.currentIndex() == self.count() - 1:
+        if self.currentIndex() == self.plus_tab_index:
             self.setCurrentIndex(self.currentIndex() - 1)
 
         self.mark_active_tab()
@@ -199,7 +206,7 @@ class TabView(QTabWidget):
             self.setTabIcon(int(), green_icon)
             return
 
-        for tab_index in range(self.count() - 1):
+        for tab_index in range(self.plus_tab_index):
             self.setTabIcon(tab_index, grey_icon)
 
         self.setTabIcon(self.currentIndex(), green_icon)
@@ -263,7 +270,7 @@ class TabView(QTabWidget):
             error("Close some tab to open a new one")
             raise IndexError
 
-        self.close_tab(self.count() - 1)
+        self.close_tab(self.plus_tab_index)
 
         widget = self.generate_tab_widget()
         self.addTab(widget, tab_name if tab_name else self.get_tab_name())
@@ -295,12 +302,12 @@ class TabView(QTabWidget):
 
     def add_plus_tab(self):  # Add the technical "plus" tab
         self.addTab(QWidget(), '')
-        self.setTabIcon(self.count() - 1, QIcon(GuiFilesPath.NEW_TAB))
+        self.setTabIcon(self.plus_tab_index, QIcon(GuiFilesPath.NEW_TAB))
         self.setTabsClosable(self.count() > 2)
         self.setCurrentIndex(self.count() - 2)
 
         try:
-            self.tabBar().tabButton(self.count() - 1, TabBar.ButtonPosition.RightSide).resize(int(), int())
+            self.tabBar().tabButton(self.plus_tab_index, TabBar.ButtonPosition.RightSide).resize(int(), int())
         except AttributeError:
             return
 
