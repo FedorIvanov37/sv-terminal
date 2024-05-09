@@ -1,1 +1,5 @@
-print(">Run cleanup script<")
+from os import chdir
+
+WORKDIR = "../build"
+
+chdir(WORKDIR)
