@@ -3,7 +3,7 @@ from shutil import rmtree
 
 
 WORKDIR = "build"
-CLEANUP_DIRS = ["common/log", "common/data/spec_backup"]
+CLEANUP_DIRS = ["common/log", "common/data/spec_backup", "release"]
 CLEANUP_FILES = ["common/data/license/license_info.json"]
 
 
