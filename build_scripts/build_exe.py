@@ -11,6 +11,6 @@ PyInstaller.__main__.run(
         "--hide-console=hide-early",
         "--icon=common/data/style/logo_triangle.ico",
         f"--distpath={getcwd()}",
-        "--log-level=DEBUG",
+        "--log-level=INFO",
     ]
 )
