@@ -1,10 +1,13 @@
-from os import listdir, path, remove
+from os import listdir, path, remove, chdir
 from shutil import rmtree
 
 
 WORKDIR = "build"
 CLEANUP_DIRS = ["common/log", "common/data/spec_backup"]
 CLEANUP_FILES = ["common/data/license/license_info.json"]
+
+
+chdir(WORKDIR)
 
 
 for directory in CLEANUP_DIRS:
