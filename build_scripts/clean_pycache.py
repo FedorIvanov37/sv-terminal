@@ -1,9 +1,9 @@
-from os import listdir, path, getcwd
+from os import listdir, path, chdir
 from shutil import rmtree
 
 
 REMOVE_DIR = "__pycache__"
-WORKDIR = getcwd()
+WORKDIR = "bild/release/common/src"
 
 
 def clean(parent_dir):
@@ -21,4 +21,5 @@ def clean(parent_dir):
         rmtree(file_path)
 
 
+chdir(WORKDIR)
 clean(WORKDIR)
