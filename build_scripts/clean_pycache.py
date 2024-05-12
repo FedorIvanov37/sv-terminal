@@ -3,7 +3,7 @@ from shutil import rmtree
 
 
 REMOVE_DIR = "__pycache__"
-WORKDIR = "bild/release/common/src"
+WORKDIR = "build/release/common/src"
 
 
 def clean(parent_dir):
