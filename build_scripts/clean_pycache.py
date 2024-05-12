@@ -21,5 +21,4 @@ def clean(parent_dir):
         rmtree(file_path)
 
 
-chdir(WORKDIR)
 clean(WORKDIR)
