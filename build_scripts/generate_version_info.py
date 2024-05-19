@@ -1,11 +1,5 @@
-from os import chdir
-
-
-WORKDIR = "build"
-
-chdir(WORKDIR)
-
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
+
 
 OUTPUT_FILE = "version_info.rc"
 VERSION_INFO = f"""
