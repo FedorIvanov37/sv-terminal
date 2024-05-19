@@ -9,7 +9,7 @@ PyInstaller.__main__.run(
         "--clean",
         "--onefile",
         "--hide-console=hide-early",
-        "--icon=NONE", # common/data/style/logo_triangle.ico",
+        "--icon=common/data/style/logo_triangle.ico",
         f"--distpath={getcwd()}",
         "--log-level=INFO",
     ]
