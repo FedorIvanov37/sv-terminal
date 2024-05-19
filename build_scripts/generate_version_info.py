@@ -1,7 +1,7 @@
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
 
 
-OUTPUT_FILE = "version_info.rc"
+OUTPUT_FILE = "build/version_info.rc"
 VERSION_INFO = f"""
 1 VERSIONINFO
 FILEVERSION 0,0,0,{ReleaseDefinition.VERSION_NUMBER}
