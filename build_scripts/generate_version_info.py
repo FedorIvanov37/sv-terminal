@@ -1,5 +1,5 @@
 from os import chdir
-from common.lib.enums.ReleaseDefinition import ReleaseDefinition
+from .common.lib.enums.ReleaseDefinition import ReleaseDefinition
 
 
 WORKDIR = "build"
