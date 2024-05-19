@@ -1,15 +1,9 @@
-from os import listdir
-
-print(listdir())
-
-from common.lib.enums.ReleaseDefinition import ReleaseDefinition
-
-
 OUTPUT_FILE = "build/version_info.rc"
-VERSION_INFO = f"""
+
+VERSION_INFO = r"""
 1 VERSIONINFO
-FILEVERSION 0,0,0,{ReleaseDefinition.VERSION_NUMBER}
-PRODUCTVERSION 0,0,0,{ReleaseDefinition.VERSION_NUMBER}
+FILEVERSION 0,0,0,18
+PRODUCTVERSION 0,0,0,18
 FILEOS 0x40004
 FILETYPE 0x1
 {{
@@ -18,13 +12,13 @@ BLOCK "StringFileInfo"
 	BLOCK "040904B0"
 	{{
 		VALUE "FileDescription", "Signal executable file"
-		VALUE "InternalName", "{ReleaseDefinition.NAME}.exe"
-		VALUE "OriginalFilename", "{ReleaseDefinition.NAME}.exe"
+		VALUE "InternalName", "signal.exe"
+		VALUE "OriginalFilename", "signal.exe"
 		VALUE "CompanyName", ""
-		VALUE "LegalCopyright", "{r'\xA9'} Developed by Fedor Ivanov"
-		VALUE "ProductName", "{ReleaseDefinition.NAME.upper()}"
-		VALUE "FileVersion", "{ReleaseDefinition.VERSION}"
-		VALUE "ProductVersion", "{ReleaseDefinition.VERSION}"
+		VALUE "LegalCopyright", "\xA9 Developed by Fedor Ivanov"
+		VALUE "ProductName", "SIGNAL"
+		VALUE "FileVersion", "v1.0"
+		VALUE "ProductVersion", "v0.18"
 	}}
 }}
 
@@ -34,8 +28,6 @@ BLOCK "VarFileInfo"
 }}
 }}   
 """
-
-
 
 with open(OUTPUT_FILE, 'w') as output_file:
     output_file.write(VERSION_INFO)
