@@ -1,10 +1,11 @@
-# from os import chdir
+from os import chdir, getcwd
+
+print(getcwd())
+
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
 
-
 WORKDIR = "build"
-OUTPUT_FILE_NAME = "version_info.rc"
-OUTPUT_FILE = f"{WORKDIR}/{OUTPUT_FILE_NAME}"
+OUTPUT_FILE = "version_info.rc"
 VERSION_INFO = f"""
 1 VERSIONINFO
 FILEVERSION 0,0,0,{ReleaseDefinition.VERSION_NUMBER}
@@ -34,7 +35,7 @@ BLOCK "VarFileInfo"
 }}   
 """
 
-# chdir(WORKDIR)
+chdir(WORKDIR)
 
 with open(OUTPUT_FILE, 'w') as output_file:
     output_file.write(VERSION_INFO)
