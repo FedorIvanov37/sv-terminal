@@ -2,7 +2,7 @@ from copy import deepcopy
 from PyQt6.QtGui import QPalette, QColor
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QDialog, QListWidgetItem, QCheckBox, QLineEdit, QSpinBox
-from common.gui.core.CheckableComboBox import CheckableComboBox
+from common.gui.core.widgets.CheckableComboBox import CheckableComboBox
 from common.gui.forms.field_validator_window import Ui_FieldDataSet
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
 from common.lib.data_models.EpaySpecificationModel import IsoField, Justification, LogicalValidators

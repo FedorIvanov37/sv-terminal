@@ -12,7 +12,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1552, 951)
+        MainWindow.resize(1610, 950)
+        MainWindow.setMinimumSize(QtCore.QSize(1610, 645))
+        MainWindow.setMaximumSize(QtCore.QSize(4096, 4096))
         MainWindow.setMouseTracking(False)
         MainWindow.setFocusPolicy(QtCore.Qt.FocusPolicy.ClickFocus)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
@@ -317,7 +319,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "SIGNAL"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Signal"))
         self.ConnectionStatusLabel.setText(_translate("MainWindow", ">>>"))
         self.SearchLine.setPlaceholderText(_translate("MainWindow", "Search: field number | field value | field description"))
         self.ButtonSend.setText(_translate("MainWindow", "Send"))
