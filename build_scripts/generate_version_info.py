@@ -1,3 +1,7 @@
+from os import listdir
+
+print(listdir())
+
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
 
 
