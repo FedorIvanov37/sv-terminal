@@ -83,6 +83,26 @@ class TabView(QTabWidget):
     def plus_tab_index(self):
         return self.count() - 1
 
+    @property
+    def last_tab_index(self):
+        return self.plus_tab_index - 1
+
+    @property
+    def main_tab_index(self):
+        return int()
+
+    @property
+    def next_tab_index(self):
+        return self.currentIndex() + 1
+
+    @property
+    def previous_tab_index(self):
+        return self.currentIndex() - 1
+
+    @property
+    def non_system_tab_exists(self):
+        return self.count() > 2
+
     def __init__(self, config: Config):
         super(QTabWidget, self).__init__()
         self.setTabBar(TabBar())
@@ -148,13 +168,13 @@ class TabView(QTabWidget):
         QTabWidget.setTabText(self, index, label)
 
     def remove_tab(self, index):
-        if self.count() < 3:
+        if not self.non_system_tab_exists:
             return
 
-        self.removeTab(index)
+        if index == self.currentIndex():
+            self.setCurrentIndex(self.previous_tab_index)
 
-        if not self.count() < 3:
-            self.set_tab_non_closeable()
+        self.removeTab(index)
 
         self.mark_active_tab()
 
@@ -181,20 +201,20 @@ class TabView(QTabWidget):
         except AttributeError:
             return
 
-        if index != int():
+        if index != self.main_tab_index:
             return
 
-        self.setTabText(int(), TabViewParams.MAIN_TAB_NAME)
+        self.setTabText(self.main_tab_index, TabViewParams.MAIN_TAB_NAME)
 
     def process_tab_change(self):
         self.tab_changed.emit()
 
-        if self.count() < 3:
-            self.setCurrentIndex(int())
+        if not self.non_system_tab_exists:
+            self.setCurrentIndex(self.main_tab_index)
             return
 
         if self.currentIndex() == self.plus_tab_index:
-            self.setCurrentIndex(self.currentIndex() - 1)
+            self.setCurrentIndex(self.previous_tab_index)
 
         self.mark_active_tab()
 
@@ -202,20 +222,16 @@ class TabView(QTabWidget):
         grey_icon = QIcon(GuiFilesPath.GREY_CIRCLE)
         green_icon = QIcon(GuiFilesPath.GREEN_CIRCLE)
 
-        if self.count() <= 2:
-            self.setTabIcon(int(), green_icon)
-            return
-
         for tab_index in range(self.plus_tab_index):
             self.setTabIcon(tab_index, grey_icon)
 
         self.setTabIcon(self.currentIndex(), green_icon)
 
     def close_current_tab(self):
-        if self.count() < 3:
+        if not self.non_system_tab_exists:
             return
 
-        if self.currentIndex() == int():
+        if self.currentIndex() == self.main_tab_index:
             return
 
         self.close_tab(self.currentIndex())
@@ -223,14 +239,18 @@ class TabView(QTabWidget):
         self.mark_active_tab()
 
     def prev_tab(self):
-        if self.currentIndex() == int():
-            self.setCurrentIndex(self.count() - 2)
+        if self.currentIndex() == self.main_tab_index:
+            self.setCurrentIndex(self.last_tab_index)
             return
 
-        self.setCurrentIndex(self.currentIndex() - 1)
+        self.setCurrentIndex(self.previous_tab_index)
 
     def next_tab(self):
-        self.setCurrentIndex(self.currentIndex() + 1)
+        if self.currentIndex() == self.last_tab_index:
+            self.setCurrentIndex(self.main_tab_index)
+            return
+
+        self.setCurrentIndex(self.next_tab_index)
 
     def plus(self):
         self.json_view.plus()
@@ -304,7 +324,7 @@ class TabView(QTabWidget):
         self.addTab(QWidget(), '')
         self.setTabIcon(self.plus_tab_index, QIcon(GuiFilesPath.NEW_TAB))
         self.setTabsClosable(self.count() > 2)
-        self.setCurrentIndex(self.count() - 2)
+        self.setCurrentIndex(self.last_tab_index)
 
         try:
             self.tabBar().tabButton(self.plus_tab_index, TabBar.ButtonPosition.RightSide).resize(int(), int())
