@@ -1,4 +1,4 @@
-from os import listdir, path, chdir
+from os import listdir, path
 from shutil import rmtree
 
 

@@ -1,8 +1,8 @@
-from os import chdir, getcwd
-
-print(getcwd())
-
+from os import chdir, getcwd, listdir
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
+
+print(listdir())
+
 
 WORKDIR = "build"
 OUTPUT_FILE = "version_info.rc"
