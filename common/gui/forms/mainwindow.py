@@ -14,7 +14,7 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1610, 950)
         MainWindow.setMinimumSize(QtCore.QSize(1610, 650))
-        MainWindow.setMaximumSize(QtCore.QSize(4096, 4096))
+        MainWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
         MainWindow.setMouseTracking(False)
         MainWindow.setFocusPolicy(QtCore.Qt.FocusPolicy.ClickFocus)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
