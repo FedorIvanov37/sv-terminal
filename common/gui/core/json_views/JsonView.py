@@ -33,27 +33,6 @@ class JsonView(TreeView):
             editor.textEdited.connect(lambda text: self.text_edited.emit(text, index.column()))
             QItemDelegate.setEditorData(self, editor, index)
 
-    def check_validation_config(function: callable):
-        """
-        This decorator check the configuration before validate FieldItem. If the validation is not activated
-        the function will return None
-
-        Keyword argument "force" has a priority. When force=True validation will be performed not depending on config
-        """
-
-        def wrapper(self, *args, **kwargs):
-            validation_conditions = (
-                kwargs.get("force"),
-                self.config.validation.validation_enabled and self.config.validation.validate_window,
-            )
-
-            if not any(validation_conditions):
-                return
-
-            return function(self, *args, **kwargs)
-
-        return wrapper
-
     root: FieldItem
     need_disable_next_level: pyqtSignal = pyqtSignal()
     need_enable_next_level: pyqtSignal = pyqtSignal()
@@ -93,6 +72,27 @@ class JsonView(TreeView):
         self.header().setMaximumSectionSize(700)
         self.header().resizeSection(FieldsSpec.ColumnsOrder.DESCRIPTION, 470)
         self.make_order()
+
+    def check_validation_config(function: callable):
+        """
+        This decorator check the configuration before validate FieldItem. If the validation is not activated
+        the function will return None
+
+        Keyword argument "force" has a priority. When force=True validation will be performed not depending on config
+        """
+
+        def wrapper(self, *args, **kwargs):
+            validation_conditions = (
+                kwargs.get("force"),
+                self.config.validation.validation_enabled and self.config.validation.validate_window,
+            )
+
+            if not any(validation_conditions):
+                return
+
+            return function(self, *args, **kwargs)
+
+        return wrapper
 
     def search(self, text: str, parent: FieldItem | None = None) -> None:
         TreeView.search(self, text, parent)
