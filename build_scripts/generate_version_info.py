@@ -11,7 +11,7 @@ BLOCK "StringFileInfo"
 {
 	BLOCK "040904B0"
 	{
-		VALUE "FileDescription", "Simplified ISO generation algorithm"
+		VALUE "FileDescription", "Simplified ISO generation GUI"
 		VALUE "InternalName", "signal.exe"
 		VALUE "OriginalFilename", "signal.exe"
 		VALUE "CompanyName", ""
