@@ -1,6 +1,4 @@
-<p align="center"><img src="https://i.imgur.com/KrBqDy3.png" alt="SIGNAL" width="500" height="500"></p>
-
-
+<p align="center"><img src="https://i.imgur.com/KrBqDy3.png" alt="Signal" width="500" height="500"></p>
 
 # Contents 
 
@@ -129,10 +127,6 @@ reuse or extend the SIGNAL's functionality making emulators, loaders, parsers, c
 and many other things based on SIGNAL modules
 
 [UBC SV API](http://feapi.unlimint.io:7171/documentation) is a good example of using SIGNAL modules without any GUI 
-  
-SIGNAL is not an emulator of PSP or SmartVista. It doesn't try to be similar to these systems. It is more 
-positioned as a simplified version card payment terminal, developed with respect for the everyday needs of the Card 
-Processing Support Team
 
 Written on Python 3.12 with the use of PyQt6 and Pydantic packages
 
@@ -145,35 +139,30 @@ of SIGNAL evolution.
 * Allowed usage on test environment only. SIGNAL only implements basic security checks
 * At the moment SIGNAL doesn't support byte-fields
 * GUI tests were made on Windows 10/11 x64 only
-
-[//]: # (* Logfile rotation included in the build. SIGNAL stores 10 logfiles by 10M each)
+* The application and the document are currently under construction
 
 
 ## Release info
 
+What's new is the Signal v0.18 
+
 * New features
-  * Remote Specification in Settings and SpecWindow. See [Remote specification](#remote-specification)
-  * Log screen on SpecWindow 
-  * Complex fields conductor
-  * Fields validation button and key sequence
-  * Extended validation settings window
-  * Validation violation processing modes
-  
+  * Command line mode
+  * Main Window tabs
+  * New hotkeys to manage tabs
+    * Multiple files opening
+    * Multiple files saving
 
 * Updates
-  * JSON constructors color scheme optimization 
-  * Added key sequences on SpecWindow
-  * SpecWindow checkboxes are protected in read-only mode
-  * Spec backup storage depth
-  * Added config.json to the "Print" menu
-  * SettingsWindow form optimization
-  * Manual setting of logfiles backup storage depth
-  * Transaction ID "Generate" checkbox
-
+  * Reduced validation and other redundant feedback
+  * Expand reversal window to long utrnno
+  * License and About windows renovation
+  * Added setting: Show license agreement on startup
 
 * Fixed
-  * Small code optimization
-  * JSON mode by default
+  * License window opens multiple times
+  * Incorrect bitmap representation
+  * Small bugs inherited from v0.17
   
 
 # Graphic User Interface
@@ -189,7 +178,7 @@ settings are needed to run SIGNAL GUI on a Windows machine. Run the `signal.exe`
 
 Check the parameters, opened by the "Configuration" button to make your settings  
 
-![image](https://i.imgur.com/Pj49PG1.png)
+![image](https://i.imgur.com/guPzcTT.png)
 
 ## Main Window
 
@@ -553,7 +542,7 @@ The following [code](#remote-spec-endpoint-code-example) illustrates the endpoin
 
 **Test of remote specification endpoint**
 
-![image](https://i.imgur.com/mhjheFj.png)
+![image](https://i.imgur.com/ahgkMdS.png)
 
 
 ## Remote spec endpoint code example
@@ -675,15 +664,29 @@ pattern one by one. Better to set the correct extension for each format. Refer t
 
 # About SIGNAL
 
-SIGNAL - Simplified ISO generation algorithm
+The text version of Signal's logo
 
-Version v0.18
+```text
+  ::::::::  :::::::::::  ::::::::   ::::    :::      :::      :::        
+ :+:    :+:     :+:     :+:    :+:  :+:+:   :+:    :+: :+:    :+:        
+ +:+            +:+     +:+         :+:+:+  +:+   +:+   +:+   +:+        
+ +#++:++#++     +#+     :#:         +#+ +:+ +#+  +#++:++#++:  +#+        
+        +#+     +#+     +#+   +#+#  +#+  +#+#+#  +#+     +#+  +#+        
+ #+#    #+#     #+#     #+#    #+#  #+#   #+#+#  #+#     #+#  #+#        
+  ########  ###########  ########   ###    ####  ###     ###  ########## 
 
-Released in May 2024
-
+  Simplified ISO generation algorithm v0.18 | Released in May 2024
+```
 
 ## Concept
- 
+
+The main idea behind Signal is to make simple things easy to do. It targets to simplification of complicated everyday 
+tasks when a part of your job is ISO 8583 OLTP service
+
+SIGNAL is not an emulator of PSP or SmartVista. It doesn't try to be similar to these systems. It is more positioned as 
+a simplified version card payment terminal, developed with respect for the everyday needs of the Card Processing Support 
+Team
+
 
 ## License
 
@@ -1409,7 +1412,7 @@ The project needs help
 <details>
  <summary>️❤️Support the project</summary>
  <p align="left">
-  <img src="common/data/style/wallet.png" alt="BTC wallet" width="200"/>
+  <img src="https://i.imgur.com/Ms5iKQl.png" alt="BTC wallet" width="200"/>
 
 ```
 bc1qs2jaqpnse9qgzz9y9wyns50km0f5x4wxe8cggs

@@ -216,6 +216,13 @@
 #
 
 • To do
+    • Checkable buttons
+    • Buttons auto-repeat
+    • Set the building up properly
+    • Generate grip html-documentation in process of building
+    • Prepare the release page for slack https://unlimit.slack.com/archives/G018EV1EY85/p1716830943695369
+    • Add ctrl + alt + p to the doc
+    • Add button "Get data from tab"
     • Pin main tab and make the other movable
     • Drag and drop files to JsonView
     • Respect JSON-mode when set field value from complex fields constructor
