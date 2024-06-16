@@ -231,7 +231,8 @@
     • Correct and publish the Specification
     • Publish on confluence
     • Spec explanation
-
+    • Radio buttons
+    • Toolbar
 
 • Bugs
     • Error on console when run AboutWindow - Could not update timestamps for skipped samples
