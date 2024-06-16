@@ -6,56 +6,59 @@
   * [SIGNAL general overview](#signal-general-overview)
   * [Important notes](#important-notes)
   * [Release info](#release-info)
-  
+   
+  * [Graphic User Interface](#graphic-user-interface)
+    * [GUI overview](#gui-overview)
+    * [Main Window](#main-window)
+      * [Main Window overview](#main-window-overview)  
+      * [Complex fields parser](#complex-fields-parser)
+      * [Reversal](#reversal)
+      * [Transactions auto-repeat](#transactions-auto-repeat)
+      * [Search line](#search-line)
+      * [Print data](#print-data)
+      * [Fields generators](#fields-generators)
+      * [Secret features](#secret-features)
+    * [Specification Window](#specification-window)
+      * [Specification Window overview](#specification-window-overview)
+      * [Field parameters](#field-parameters)
+      * [Extended field parameters](#extended-field-parameters)
+      * [MTI settings](#mti-settings)
+      * [Set specification](#set-specification)
+      * [Save specification](#save-specification)
+    * [Settings Window](#settings-window)
+      * [Settings Window overview](#settings-window-overview)
+      * [Triggers](#triggers)
+      * [Validations](#validations)
+    * [Windows hotkeys](#windows-hotkeys)
  
-* [Graphic User Interface](#graphic-user-interface)
-  * [GUI overview](#gui-overview)
-  * [Main Window](#main-window)
-    * [Main Window overview](#main-window-overview)  
-    * [Complex fields parser](#complex-fields-parser)
-    * [Reversal](#reversal)
-    * [Transactions auto-repeat](#transactions-auto-repeat)
-    * [Search line](#search-line)
-    * [Print data](#print-data)
-    * [Fields generators](#fields-generators)
-    * [Secret features](#secret-features)
-  * [Specification Window](#specification-window)
-    * [Specification Window overview](#specification-window-overview)
-    * [Field parameters](#field-parameters)
-    * [Extended field parameters](#extended-field-parameters)
-    * [MTI settings](#mti-settings)
-    * [Set specification](#set-specification)
-    * [Save specification](#save-specification)
-  * [Settings Window](#settings-window)
-    * [Settings Window overview](#settings-window-overview)
-    * [Triggers](#triggers)
-    * [Validations](#validations)
-  * [Windows hotkeys](#windows-hotkeys)
-
-
+ 
 * [Command Line Interface](#command-line-interface)
   * [CLI usage](#cli-usage)
   * [CLI examples](#cli-examples)
   * [CLI output](#cli-output)
-
-
+ 
+ 
 * [Library re-usage](#library-re-usage)
   * [Requirements](#requirements)
   * [Library installation](#library-installation)
   * [Modules purpose](#modules-purpose)
   * [Logging](#logging)
   * [Modules usage example](#modules-usage-example)
+    * [Preparation](#preparation)
+    * [Code examples](#code-examples)
   * [Compilation of executable binary](#compilation-of-executable-binary)
   * [Recommendations](#recommendations)
-  
-
- * [Specification settings](#specification-settings)
-   * [Specification Overview](#specification-overview) 
-   * [Settings description](#settings-description)
-   * [Specification backup](#specification-backup)
-   * [Remote specification](#remote-specification)
-   * [Remote specification endpoint setting](#remote-specification-endpoint-setting)
-   * [Remote spec endpoint code example](#remote-spec-endpoint-code-example)
+  * [Data models](#data-models)
+    * [Transaction](#transaction)
+    * [Config](#config)
+    * [Specification](specification)
+  * [Specification settings](#specification-settings)
+    * [Specification Overview](#specification-overview) 
+    * [Settings description](#settings-description)
+    * [Specification backup](#specification-backup)
+    * [Remote specification](#remote-specification)
+    * [Remote specification endpoint setting](#remote-specification-endpoint-setting)
+    * [Remote spec endpoint code example](#remote-spec-endpoint-code-example)
    
 
 * [Fields validation](#fields-validation)
@@ -115,31 +118,30 @@
 
 ## SIGNAL general overview
 
-SIGNAL simplifies the sending of banking card e-commerce transactions to banking card processing systems using a useful 
-visual and program interface making simple things simple to achieve
+The Signal simplifies the sending of banking card e-commerce transactions to banking card processing systems using a 
+useful visual and program interface
 
 The SIGNAL uses ISO-8583 E-pay protocol for transactions sending, instead of PSP. It can be used during the Payment 
 Systems certification test, for checking and setting up the system on the test environment, during the application 
 development process, and so on
 
-Also, the SIGNAL builds like a kit of weakly connected modules like a Parser, Connector, Queue, etc. It allows to 
-reuse or extend the SIGNAL's functionality making emulators, loaders, parsers, converters, application interfaces, 
-and many other things based on SIGNAL modules
+Also, the Signal builds like a kit of weakly connected modules like a Parser, Connector, Queue, etc. It allows to 
+reuse or extend the Signal's functionality making emulators, loaders, parsers, converters, application interfaces, 
+and many other things based on [Signal modules](#library-re-usage)
 
 [UBC SV API](http://feapi.unlimint.io:7171/documentation) is a good example of using SIGNAL modules without any GUI 
 
-Written on Python 3.12 with the use of PyQt6 and Pydantic packages
-
+See more in the chapter [About the Signal](#about-signal)
 
 In case of any questions about SIGNAL [contact the author](#author). Your feedback and suggestions are general drivers 
-of SIGNAL evolution.
+of the Signal evolution
 
 ## Important notes
 
 * Allowed usage on test environment only. SIGNAL only implements basic security checks
-* At the moment SIGNAL doesn't support byte-fields
-* GUI tests were made on Windows 10/11 x64 only
-* The application and the document are currently under construction
+  * At the moment SIGNAL doesn't support byte-fields
+  * GUI tests were made on Windows 10/11 x64 only
+  * The application and the document are currently under construction
 
 
 ## Release info
@@ -153,16 +155,16 @@ What's new is the Signal v0.18
     * Multiple files opening
     * Multiple files saving
 
-* Updates
-  * Reduced validation and other redundant feedback
-  * Expand reversal window to long utrnno
-  * License and About windows renovation
-  * Added setting: Show license agreement on startup
+  * Updates
+    * Reduced validation and other redundant feedback
+    * Expand reversal window to long utrnno
+    * License and About windows renovation
+    * Added setting: Show license agreement on startup
 
-* Fixed
-  * License window opens multiple times
-  * Incorrect bitmap representation
-  * Small bugs inherited from v0.17
+  * Fixed
+    * License window opens multiple times
+    * Incorrect bitmap representation
+    * Small bugs inherited from v0.17
   
 
 # Graphic User Interface
@@ -276,7 +278,8 @@ It is recommended to use long keys like `--console` instead of `-c`, `--repeat` 
 keys do the same, but such commands are not easy to read and the scenario is not always transparent 
 
 
-To see usage hint call `signal.exe --help`
+To see usage hint call 
+> signal.exe --help
 
 ```text
 usage: signal.exe [-h] -c [-f FILE] [-d DIR] [-a ADDRESS] [-p PORT] [-r] [-l LOG_LEVEL] [-i INTERVAL] [--parallel] [-t TIMEOUT] [--about] [-e] [--default] [-v] [--print-config] [--config-file CONFIG_FILE]
@@ -456,14 +459,211 @@ PS C:\signal> signal.exe --console --print-config
 
 # Library re-usage
 
+The Signal is built as a library of weakly connected modules. The modules can be used separately, allowing to develop or 
+improve other solutions by the Signal package
+
+The Signal uses the PyQt6 as a core even if the application does not have any GUI. Before usage, the modules refer to 
+the [Resources](#resources) chapter and make an acquaintance with basic PyQt6 and Pydantic concepts. Otherwise, if you 
+are already familiar with those packages, just go forth
+
 ## Requirements
+
+Unlike GUI the Signal library requires you to install dependencies, defined in the "requirements.txt" file from the 
+Signal's root directory. See the actual dependencies in the file, here are listed requirements, which are actually 
+for Signal v0.18
+
+The following dependencies are required to install to run the library
+
+| Dependency                                 | Version | Higher version allowed | 
+|--------------------------------------------|---------|------------------------| 
+| [Python](https://www.python.org/)          | 3.12    | Yes                    |
+| [PyQt6](https://wiki.python.org/moin/PyQt) | 6.6.1   | Yes                    |
+| [Pydantic](https://pydantic.dev/)          | 2.6.3   | Yes                    |
+
+
+Refer to chapter [Library installation](#library-installation) to figure the dependencies installation process out
+
 ## Library installation
+
+To install all the dependencies by one command change the directory to the Signal's root, make sure that the 
+"requirements.txt" file exists in the directory, then run the following command. 
+
+>pip install -r requirements.txt
+
+It is also possible to read the file and install the modules manually
+
 ## Modules purpose
 ## Logging
+
 ## Modules usage example
+This chapter describes the minimal working code example. It is highly recommended to use
+[Python virtual environment](https://docs.python.org/3/library/venv.html) to run the application
+
+
+### Preparation
+To prepare for library usage first you have to create and activate the Python virtual environment then install all 
+the dependencies
+
+Create and activate Python virtual environment
+
+
+>C:\signal> python -m venv C:\signal\signal_virtual_env    # Create a new virtual environment
+> 
+>C:\signal> C:\signal\signal_virtual_env\Scripts\activate  # Activate the virtual environment
+
+
+Install the dependencies from requirements.txt into the virtual environment
+
+
+> (signal_virtual_env) C:\signal> pip install -r requirements.txt
+
+
+The preparation is finished, now is possible to run the [Code examples](#code-examples) 
+
+### Code examples
+The library can be used for its intended purpose, sending the ISO 8583 transactions
+
+<details>
+ <summary>️Minimal code example - send the single transaction from the default file</summary>
+
+```python
+from common.lib.data_models.Config import Config
+from common.lib.enums.TermFilesPath import TermFilesPath
+from common.lib.core.Terminal import Terminal
+from common.lib.data_models.Transaction import Transaction
+from common.lib.core.FieldsGenerator import FieldsGenerator
+
+"""
+The Signal library minimal code example - sends the single transaction from the default file
+
+This script does not run QApplication and QEventLoop. Due to that, the script cannot wait for the answer, also the 
+signal-slot model cannot be used
+
+The code examples is ready to begin without any changes
+"""
+
+# Create Config object. The Config is a crucial data object, contains basic settings for all the application
+config: Config = Config.parse_file(TermFilesPath.CONFIG)
+# After the config is created you can set the parameters as you prefer
+# e.g.: config.host.port = 16677 and so on
+
+# The Terminal - core of the application, which will be used for sending the transaction
+terminal: Terminal = Terminal(config)
+
+# This object will update transaction fields to avoid transaction duplicates
+data_generator = FieldsGenerator()
+
+# Parse default transaction file
+transaction: Transaction = Transaction.parse_file(TermFilesPath.DEFAULT_FILE)
+
+# Update fields dynamic values such as ID, date and so on
+transaction: Transaction = data_generator.set_generated_fields(transaction)
+
+# Send the previously-made transaction to the host
+terminal.send(transaction)
+
+# exit
+```
+
+</details>
+
+<details>
+ <summary>More complex example, with usage PyQt6 features, logging, and so on</summary>
+
+```python
+from PyQt6.QtCore import QCoreApplication, QTimer
+from common.lib.data_models.Config import Config
+from common.lib.enums.TermFilesPath import TermFilesPath
+from common.lib.core.Terminal import Terminal
+from common.lib.data_models.Transaction import Transaction
+from common.lib.core.FieldsGenerator import FieldsGenerator
+from common.lib.core.Logger import Logger
+
+"""
+A bit more complex example, with usage PyQt6 features, logging, and so on
+
+This script not runs QApplication and QEventLoop. Due to that, the script will wait for the answer, also the 
+signal-slot model can be used
+ 
+This example illustrates the creation of the PyQt application, which is run and ready for interaction in PyQt style
+
+The code examples is ready to begin without any changes
+"""
+
+# The objects preparation
+
+# In case when your solution does not use GUI it is required to create QCoreApplication and set in on the Terminal
+application = QCoreApplication([])  # Create the Signal PyQt application
+
+# Create Config object. The Config is a crucial data object, contains basic settings for all the application
+config: Config = Config.parse_file(TermFilesPath.CONFIG)
+# After the config is created you can set the parameters as you prefer
+# e.g.: config.host.port = 16677 and so on
+
+# The Terminal - core of the application, which will be used for sending the transaction
+terminal: Terminal = Terminal(config=config, application=application)  # Send previously-made QCoreApplication
+
+# Set the default screen logger up
+Logger().create_logger()
+
+# This object will update transaction fields to avoid transaction duplicates
+data_generator = FieldsGenerator()
+
+# Parse default transaction file
+transaction: Transaction = Transaction.parse_file(TermFilesPath.DEFAULT_FILE)
+
+# Update fields dynamic values such as ID, date and so on
+transaction: Transaction = data_generator.set_generated_fields(transaction)
+
+
+# Create a delayed start timer. This workaround will help to begin the task after the application is started
+timer = QTimer()  # This timer will be processed in QEventloop right after the application is executed
+timer.setSingleShot(True)  # It signals once the application start
+timer.timeout.connect(lambda: terminal.send(transaction))  # Transaction will be one of the first events
+timer.start(0)  # Signals timeout immediately
+
+
+# Finally run the application, which begin the QEventloop and send the transaction
+# Due to the part below the application proceed to work, processing PyQt events and signals
+terminal.run()  # Run the QCoreApplication
+```
+</details>
+
+Also, the modules can be valuable in ISO 8583 transaction data processing, without sending the transaction
+
+<details>
+ <summary>Generate transaction data-dumps</summary>
+</details>
+
+<details>
+ <summary>Convert complicated data-dump files to useful JSON representation</summary>
+</details>
+
+<details>
+ <summary>Validate transaction data files</summary>
+</details>
+
+
+In this chapter, only the basic possibilities of the Signal library were illustrated. There are a huge amount of other 
+options to use the Signal's library as a transactional generator or transactions data processing tool
+
+
 ## Compilation of executable binary
+
 ## Recommendations
 
+
+# Data models
+
+The signal uses [Pydantic](https://docs.pydantic.dev/latest/) data models to manipulate the data. The signal uses 
+Pydantic data models to manipulate the data. This chapter described the main data models, their requirements, 
+and validations
+
+## Transaction
+
+## Config
+
+## Specification
 
 
 # Specification settings
@@ -519,10 +719,10 @@ The conditions for the remote spec endpoint:
 
 
 * Be available when SIGNAL starts
-* Support GET requests with no additional actions
-* Respond by HTTP-status 200
-* Send header "Content-type": "application/json" in the response
-* Return valid specification data in response-body
+  * Support GET requests with no additional actions
+  * Respond by HTTP-status 200
+  * Send header "Content-type": "application/json" in the response
+  * Return valid specification data in response-body
 
 
 ## Remote specification endpoint setting
@@ -533,11 +733,11 @@ The following [code](#remote-spec-endpoint-code-example) illustrates the endpoin
 **To begin remote specification endpoint**
 
 1. Prepare specification.json file. You can get it from the directory `common/data/settings` or save a copy using SpecWindow which executes by button `Specification` on the MainWindow 
-2. Prepare file `signal_spec.py`, containing [endpoint script](#remote-spec-endpoint-code-example)
-3. Set `SERVER_ADDRESS`, `PORT`, `FILE` parameters in the file `signal_spec.py`
-4. Put both files `specification.json` and `signal_spec.py` to remote server
-5. Run the code using command `nohup python signal_spec.py &`
-6. For checking open specified URL in browser, it should show the specification `JSON`. In example below the URL is http://127.0.0.1:4242/specification
+   2. Prepare file `signal_spec.py`, containing [endpoint script](#remote-spec-endpoint-code-example)
+   3. Set `SERVER_ADDRESS`, `PORT`, `FILE` parameters in the file `signal_spec.py`
+   4. Put both files `specification.json` and `signal_spec.py` to remote server
+   5. Run the code using command `nohup python signal_spec.py &`
+   6. For checking open specified URL in browser, it should show the specification `JSON`. In example below the URL is http://127.0.0.1:4242/specification
 
 
 **Test of remote specification endpoint**
@@ -659,7 +859,7 @@ pattern one by one. Better to set the correct extension for each format. Refer t
 |---------------------------------------------------------------|---------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------|
 | Console window appears when I run GUI                         | Active  | Set Terminal app to default to "Windows Console Host" instead of "Windows Terminal" | [Solution](https://github.com/pyinstaller/pyinstaller/issues/8022) |
 | No data in Connector when no such field in the specification  | Active  | -                                                                                   | -                                                                  | 
- | Sending Field 62 I get Format Error (RC=30) in response       | Active  | Fill the field data manually in flat mode                                           | -                                                                  |
+| Sending Field 62 I get Format Error (RC=30) in response       | Active  | Fill the field data manually in flat mode                                           | -                                                                  |
 
 
 # About SIGNAL
@@ -687,6 +887,8 @@ SIGNAL is not an emulator of PSP or SmartVista. It doesn't try to be similar to 
 a simplified version card payment terminal, developed with respect for the everyday needs of the Card Processing Support 
 Team
 
+Written on Python 3.12 with the use of [PyQt6](https://doc.qt.io/) and [Pydantic](https://docs.pydantic.dev/latest/) 
+packages
 
 ## License
 
@@ -1384,11 +1586,11 @@ Contact the [author](#author) in case of any copyright questions
 ## Resources
 
 * [ISO 8583 Wiki page](https://en.wikipedia.org/wiki/ISO_8583)
-* [Payment service provider Wiki page](https://en.wikipedia.org/wiki/Payment_service_provider)
-* [GNU licence page](https://www.gnu.org/licenses/)
-* [Free software Wiki page](https://en.wikipedia.org/wiki/Free_software)
-* [Qt documentation](https://doc.qt.io/)
-* [Pydantic documentation](https://docs.pydantic.dev/latest/)
+  * [Payment service provider Wiki page](https://en.wikipedia.org/wiki/Payment_service_provider)
+  * [GNU licence page](https://www.gnu.org/licenses/)
+  * [Free software Wiki page](https://en.wikipedia.org/wiki/Free_software)
+  * [Qt documentation](https://doc.qt.io/)
+  * [Pydantic documentation](https://docs.pydantic.dev/latest/)
 
 
 ## Support
@@ -1404,10 +1606,10 @@ make a voluntary donation directly to the author. ⚠️ Any donation can be vol
 The project needs help
 
 * Code review, architecture development, advice
-* Documentation development and translate
-* Feedback, ideas
-* Testing, especially auto-tests, unit-tests
-* Financial support to BTC wallet
+  * Documentation development and translate
+  * Feedback, ideas
+  * Testing, especially auto-tests, unit-tests
+  * Financial support to BTC wallet
 
 <details>
  <summary>️❤️Support the project</summary>

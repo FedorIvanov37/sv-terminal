@@ -1,4 +1,11 @@
-from grp.grip import Grip, export
+from grp import grip
 
 
-export(path="../", theme="dark", title=" ", out_filename="../Signal_v0.18.html", render_wide=True, render_inline=True)
+grip.export(
+    path="../",
+    # theme="dark",
+    title=" ",
+    out_filename="../common/doc/Signal_v0.18.html",
+    render_wide=True,
+    render_inline=True
+)

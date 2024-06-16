@@ -79,7 +79,7 @@ class SignalGui(Terminal):
 
     def __init__(self, config: Config):
         self.connector = ConnectionThread(config)
-        super(SignalGui, self).__init__(config, self.connector)
+        super(SignalGui, self).__init__(config=config, connector=self.connector)
         self.window: MainWindow = MainWindow(self.config)
         self.connect_widgets()
         self.setup()

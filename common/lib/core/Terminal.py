@@ -1,7 +1,7 @@
 from typing import Callable
 from logging import error, info, warning, debug
-from PyQt6 import QtWidgets
-from PyQt6.QtCore import pyqtSignal, QObject
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import pyqtSignal, QObject, QCoreApplication
 from PyQt6.QtNetwork import QTcpSocket
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.core.Parser import Parser
@@ -24,7 +24,6 @@ from common.lib.enums.TermFilesPath import TermFilesPath
 
 
 class Terminal(QObject):
-    pyqt_application: QtWidgets.QApplication = QtWidgets.QApplication([])
     spec: EpaySpecification = EpaySpecification(TermFilesPath.SPECIFICATION)
     keep_alive_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_KEEP_ALIVE)
     currencies_dictionary: Currencies
@@ -36,15 +35,17 @@ class Terminal(QObject):
     trans_validator: TransValidator
     need_reconnect: pyqtSignal = pyqtSignal()
 
-    def __init__(self, config: Config, connector: ConnectionInterface | None = None):
+    def __init__(self, config: Config, connector: ConnectionInterface | None = None, application=QApplication([])):
         super(Terminal, self).__init__()
+
+        self.pyqt_application = application
         self.config: Config = config
-        self.trans_validator = TransValidator(self.config)
-        self.data_validator = DataValidator(self.config)
 
         if connector is None:
             connector: Connector = Connector(self.config)
 
+        self.trans_validator = TransValidator(self.config)
+        self.data_validator = DataValidator(self.config)
         self.log_printer: LogPrinter = LogPrinter(self.config)
         self.connector: Connector = connector
         self.parser: Parser = Parser(self.config)
