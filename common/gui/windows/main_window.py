@@ -190,7 +190,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.setupUi(self)
         self._add_json_control_buttons()
         self._connect_all()
-        self.setWindowTitle(f"{TextConstants.SYSTEM_NAME.capitalize()} {ReleaseDefinition.VERSION}")
+        self.setWindowTitle(f"{TextConstants.SYSTEM_NAME.capitalize()} {ReleaseDefinition.VERSION} | Terminal GUI")
         windll.shell32.SetCurrentProcessExplicitAppUserModelID("MainWindow")
         self.ButtonSend.setFocus()
         self.set_connection_status(QTcpSocket.SocketState.UnconnectedState)

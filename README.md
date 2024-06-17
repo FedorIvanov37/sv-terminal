@@ -1,5 +1,9 @@
 <p align="center"><img src="https://i.imgur.com/KrBqDy3.png" alt="Signal" width="500" height="500"></p>
 
+<h1 align="center">Signal user reference guide</h1>
+<p align="center">This guide describes the Signal basic concept, usage, settings, and library re-usage <br><br>
+The document is currently under construction</p> 
+
 # Contents 
 
 * [SIGNAL](#signal)
@@ -7,29 +11,30 @@
   * [Important notes](#important-notes)
   * [Release info](#release-info)
    
-  * [Graphic User Interface](#graphic-user-interface)
-    * [GUI overview](#gui-overview)
-    * [Main Window](#main-window)
-      * [Main Window overview](#main-window-overview)  
-      * [Complex fields parser](#complex-fields-parser)
-      * [Reversal](#reversal)
-      * [Transactions auto-repeat](#transactions-auto-repeat)
-      * [Search line](#search-line)
-      * [Print data](#print-data)
-      * [Fields generators](#fields-generators)
-      * [Secret features](#secret-features)
-    * [Specification Window](#specification-window)
-      * [Specification Window overview](#specification-window-overview)
-      * [Field parameters](#field-parameters)
-      * [Extended field parameters](#extended-field-parameters)
-      * [MTI settings](#mti-settings)
-      * [Set specification](#set-specification)
-      * [Save specification](#save-specification)
-    * [Settings Window](#settings-window)
-      * [Settings Window overview](#settings-window-overview)
-      * [Triggers](#triggers)
-      * [Validations](#validations)
-    * [Windows hotkeys](#windows-hotkeys)
+
+* [Graphic User Interface](#graphic-user-interface)
+  * [GUI overview](#gui-overview)
+  * [Main Window](#main-window)
+    * [Main Window overview](#main-window-overview)  
+    * [Complex fields parser](#complex-fields-parser)
+    * [Reversal](#reversal)
+    * [Transactions auto-repeat](#transactions-auto-repeat)
+    * [Search line](#search-line)
+    * [Print data](#print-data)
+    * [Fields generators](#fields-generators)
+    * [Secret features](#secret-features)
+  * [Specification Window](#specification-window)
+    * [Specification Window overview](#specification-window-overview)
+    * [Field parameters](#field-parameters)
+    * [Extended field parameters](#extended-field-parameters)
+    * [MTI settings](#mti-settings)
+    * [Set specification](#set-specification)
+    * [Save specification](#save-specification)
+  * [Settings Window](#settings-window)
+    * [Settings Window overview](#settings-window-overview)
+    * [Triggers](#triggers)
+    * [Validations](#validations)
+  * [Windows hotkeys](#windows-hotkeys)
  
  
 * [Command Line Interface](#command-line-interface)
@@ -139,9 +144,9 @@ of the Signal evolution
 ## Important notes
 
 * Allowed usage on test environment only. SIGNAL only implements basic security checks
-  * At the moment SIGNAL doesn't support byte-fields
-  * GUI tests were made on Windows 10/11 x64 only
-  * The application and the document are currently under construction
+* At the moment SIGNAL doesn't support byte-fields
+* GUI tests were made on Windows 10/11 x64 only
+* The application and the document are currently under construction
 
 
 ## Release info
@@ -155,16 +160,16 @@ What's new is the Signal v0.18
     * Multiple files opening
     * Multiple files saving
 
-  * Updates
-    * Reduced validation and other redundant feedback
-    * Expand reversal window to long utrnno
-    * License and About windows renovation
-    * Added setting: Show license agreement on startup
+* Updates
+  * Reduced validation and other redundant feedback
+  * Expand reversal window to long utrnno
+  * License and About windows renovation
+  * Added setting: Show license agreement on startup
 
-  * Fixed
-    * License window opens multiple times
-    * Incorrect bitmap representation
-    * Small bugs inherited from v0.17
+* Fixed
+  * License window opens multiple times
+  * Incorrect bitmap representation
+  * Small bugs inherited from v0.17
   
 
 # Graphic User Interface

@@ -216,6 +216,9 @@
 #
 
 • To do
+    • Generate doc.html in TeamCity
+    • TeamCity build correct settings
+    • Render doc.html by QWebEngineView
     • Checkable buttons
     • Buttons auto-repeat
     • Set the building up properly
