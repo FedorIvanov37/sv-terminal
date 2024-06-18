@@ -17,6 +17,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
     incoming_transaction_data: pyqtSignal = pyqtSignal(bytes)
     transaction_sent: pyqtSignal = pyqtSignal(str)
     got_remote_spec: pyqtSignal = pyqtSignal(str)
+    sending_error: pyqtSignal = pyqtSignal(str, str)
 
     def __init__(self, config: Config):
         QTcpSocket.__init__(self)
@@ -33,10 +34,11 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
             try:
                 self.reconnect_sv()
             except Exception as connection_error:
-                error(connection_error)
+                self.sending_error.emit(trans_id, str(connection_error))
                 return
 
         if not self.state() == self.SocketState.ConnectedState:
+            self.sending_error.emit(trans_id, "Cannot connect to host")
             return
 
         transaction_header = pack("!H", len(transaction_data))
@@ -44,7 +46,7 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
         bytes_sent = self.write(transaction_data)
 
         if bytes_sent == int():
-            error("Cannot send transaction data")
+            self.sending_error.emit(trans_id, "Cannot send transaction data")
             return
 
         debug("bytes sent %s", bytes_sent)

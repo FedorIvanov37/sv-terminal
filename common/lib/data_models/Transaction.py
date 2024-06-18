@@ -26,6 +26,7 @@ class Transaction(BaseModel):
     utrnno: str = str()
     matched: bool | None = None
     success: bool | None = None
+    error: str | None = None
     resp_time_seconds: float | None = None
     sending_time: datetime | None = None
     is_request: bool | None = None

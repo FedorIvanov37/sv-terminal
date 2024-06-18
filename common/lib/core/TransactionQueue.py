@@ -26,15 +26,29 @@ class TransactionQueue(QObject):
         self.ready_to_send.connect(self.connector.send_transaction_data)
         self.connector.incoming_transaction_data.connect(self.receive_transaction_data)
         self.connector.transaction_sent.connect(self.request_was_sent)
+        self.connector.sending_error.connect(self.set_sending_error)
+
+    def set_sending_error(self, trans_id, error_message):
+        if not (transaction := self.get_transaction(trans_id)):
+            error(error_message)
+            return
+
+        transaction.success = False
+        transaction.error = error_message
+        error(error_message)
 
     def send_transaction_data(self, request: Transaction):
         if not request.is_request:
-            raise TypeError("Wrong MTI")
+            request.success = False
+            request.error = "Wrong MTI"
+            raise TypeError(request.error)
 
         try:
             transaction_dump: bytes = Parser.create_dump(request)
         except (ValueError, TypeError) as parsing_error:
-            error(f"Parsing error: {parsing_error}")
+            request.success = False
+            request.error = f"Parsing error: {parsing_error}"
+            error(request.error)
             return
 
         self.ready_to_send.emit(request.trans_id, transaction_dump)

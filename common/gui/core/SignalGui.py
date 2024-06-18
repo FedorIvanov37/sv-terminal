@@ -4,7 +4,9 @@ from logging import error, info, warning
 from pydantic import ValidationError
 from PyQt6.QtWidgets import QApplication, QFileDialog
 from PyQt6.QtNetwork import QTcpSocket
-from PyQt6.QtCore import pyqtSignal, QTimer
+from PyQt6.QtCore import pyqtSignal, QTimer, QDir, QThreadPool
+from PyQt6.QtGui import QIcon
+from common.api.SignalApiInterface import SignalApiInterface
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
 from common.gui.windows.settings_window import SettingsWindow
@@ -13,12 +15,12 @@ from common.gui.windows.hotkeys_hint_window import HotKeysHintWindow
 from common.gui.windows.about_window import AboutWindow
 from common.gui.windows.complex_fields_window import ComplexFieldsParser
 from common.gui.windows.license_window import LicenseWindow
-from common.gui.core.WirelessHandler import WirelessHandler
 from common.gui.core.ConnectionThread import ConnectionThread
 from common.gui.enums import ButtonActions
 from common.gui.enums.Colors import Colors
 from common.lib.enums import KeepAlive
 from common.lib.enums.TermFilesPath import TermFilesPath
+from common.gui.enums.GuiFilesPath import GuiDirs, GuiFilesPath
 from common.lib.enums.DataFormats import DataFormats, PrintDataFormats, OutputFilesFormat, InputFilesFormat
 from common.lib.enums.MessageLength import MessageLength
 from common.lib.enums.TextConstants import TextConstants
@@ -30,6 +32,7 @@ from common.lib.data_models.Config import Config
 from common.lib.data_models.License import LicenseInfo
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
+from common.gui.core.WirelessHandler import WirelessHandler
 from common.lib.exceptions.exceptions import (
     LicenceAlreadyAccepted,
     LicenseDataLoadingError,
@@ -61,8 +64,10 @@ class SignalGui(Terminal):
     connector: ConnectionThread
     trans_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION)
     set_remote_spec: pyqtSignal = pyqtSignal()
-    _wireless_handler: WirelessHandler
+    _wireless_handler: WirelessHandler = WirelessHandler()
     _run_timer = QTimer()
+    _run_api = pyqtSignal()
+    _stop_api = pyqtSignal()
 
     def set_json_view_focus(function: callable):
 
@@ -81,10 +86,14 @@ class SignalGui(Terminal):
         self.connector = ConnectionThread(config)
         super(SignalGui, self).__init__(config=config, connector=self.connector)
         self.window: MainWindow = MainWindow(self.config)
+        self.thread_pool: QThreadPool = QThreadPool()
+        self.api_interface: SignalApiInterface = SignalApiInterface()
         self.connect_widgets()
         self.setup()
 
     def setup(self) -> None:
+        QDir.addSearchPath(GuiDirs.STYLE_DIR.name, GuiDirs.STYLE_DIR)
+        self.window.setWindowIcon(QIcon(GuiFilesPath.G_CIRCLE))
         self._wireless_handler = self.logger.create_window_logger(self.window.log_browser)
         self._run_timer.setSingleShot(True)
         self._run_timer.start(int())
@@ -127,8 +136,10 @@ class SignalGui(Terminal):
             window.clear_log: window.clean_window_log,
             window.send: self.send,
             window.reset: self.set_default_values,
-            window.echo_test: self.echo_test,
-            window.clear: self.clear_message,
+            # window.echo_test: self.echo_test,
+            window.echo_test: self.run_api,
+            window.clear: self.stop_api,
+            # window.clear: self.clear_message,
             window.copy_log: self.copy_log,
             window.copy_bitmap: self.copy_bitmap,
             window.reconnect: self.reconnect,
@@ -159,6 +170,21 @@ class SignalGui(Terminal):
 
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
+
+        self._run_api.connect(self.api_interface.run_api)
+        # self._stop_api.connect(self.api_interface.stop_thread)
+
+        # self.api_interface.got_message.connect(self.api_got_message)
+        # self.api_interface.got_transaction.connect(lambda transaction: self.send(transaction))
+
+    def api_got_message(self, level, message):
+        error(f"{level} -> {message}")
+
+    def stop_api(self):
+        self._api.stop()
+
+    def run_api(self):
+        self._run_api.emit()
 
     def show_license_dialog(self) -> None:
         try:
@@ -468,7 +494,9 @@ class SignalGui(Terminal):
 
     def send(self, transaction: Transaction | None = None) -> None:
         if self.connector.connection_in_progress():
-            error("Cannot send the transaction while the host connection is in progress")
+            transaction.success = False
+            transaction.error = "Cannot send the transaction while the host connection is in progress"
+            error(transaction.error)
             return
 
         if transaction is None:
@@ -518,13 +546,17 @@ class SignalGui(Terminal):
                 [warning(warn) for warn in str(validation_warning).splitlines()]
 
             except Exception as validation_error:
-                [error(err) for err in str(validation_error).splitlines()]
+                transaction.success = False
+                transaction.error = str(validation_error)
+                [error(err) for err in transaction.error.splitlines()]
                 return
 
         try:
             Terminal.send(self, transaction)  # Terminal always used to real data processing
         except Exception as sending_error:
-            error(f"Transaction sending error: {sending_error}")
+            transaction.success = False
+            transaction.error = f"Transaction sending error: {sending_error}"
+            error(transaction.error)
             return
 
     @staticmethod

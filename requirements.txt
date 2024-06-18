@@ -8,5 +8,6 @@
 #
 
 PyQt6
-
 pydantic
+fastapi
+uvicorn

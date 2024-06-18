@@ -20,6 +20,8 @@ class GuiFiles(StrEnum):
 
 
 class GuiFilesPath(StrEnum):
+    M_LOGO = f"{GuiDirs.STYLE_DIR.name}:{GuiFiles.MAIN_LOGO}"
+    G_CIRCLE = ":".join([GuiDirs.STYLE_DIR.name, GuiFiles.GREEN_CIRCLE])
     MAIN_LOGO = f"{GuiDirs.STYLE_DIR}/{GuiFiles.MAIN_LOGO}"
     SIGNED_LOGO = f"{GuiDirs.STYLE_DIR}/{GuiFiles.SIGNED_LOGO}"
     MUSIC_ON = f"{GuiDirs.STYLE_DIR}/{GuiFiles.MUSIC_ON}"
