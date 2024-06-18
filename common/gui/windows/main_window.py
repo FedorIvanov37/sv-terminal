@@ -66,7 +66,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _parse_complex_field: pyqtSignal = pyqtSignal()
     _validate_message: pyqtSignal = pyqtSignal(bool)
     _spec: EpaySpecification = EpaySpecification()
-    _api_mode_changed: pyqtSignal = pyqtSignal(bool)
+    _api_mode_changed: pyqtSignal = pyqtSignal(str)
 
     @property
     def api_mode_changed(self):
@@ -204,6 +204,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.process_transaction_loop_change(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_STOP, trans_type)
 
         self.TabViewLayout.addWidget(self._tab_view)
+        self.api_mode_changed.emit("Stop API")
 
     def _add_json_control_buttons(self) -> None:
         # Create and place the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
@@ -246,8 +247,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonHotkeys: self.hotkeys,
             self.ButtonSettings: self.settings,
             self.ButtonFieldsParser: self.parse_complex_field,
-            self.ButtonValidate: lambda: self.validate_message.emit(True),
-            self.ButtonApi: lambda: self.api_mode_changed.emit(self.ButtonApi.isChecked())
+            self.ButtonValidate: lambda: self.validate_message.emit(True)
         }
 
         tab_view_connection_map = {
@@ -310,6 +310,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
             # Special menu buttons. Along with the common they send modifiers - string values, aka pragma
             # The modifiers are used to define the requested data format or as a hint on how to process the data
+
+            self.ButtonApi: {
+                "Start API": lambda: self.api_mode_changed.emit("Start API"),
+                "Stop API": lambda: self.api_mode_changed.emit("Stop API"),
+            },
 
             self.ButtonKeepAlive: {
                 ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_1S: lambda: self.keep_alive.emit(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_1S),
@@ -381,6 +386,22 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         self.ButtonSave.menu().findChild(QMenu).addAction(OutputFilesFormat.DUMP, lambda: self.save.emit(
             ButtonActions.SaveMenuActions.ALL_TABS, OutputFilesFormat.DUMP))
+
+        self.api_mode_changed.connect(self.process_api_mode_change)
+
+    def process_api_mode_change(self, state: str):
+        if not (menu_map := self.buttons_menu_structure.get(self.ButtonApi)):
+            return
+
+        self.ButtonApi.menu().clear()
+
+        for action, function in menu_map.items():
+            if action == state:
+                action = f"• {action}"
+
+            self.ButtonApi.menu().addAction(action, function)
+
+        self.ButtonApi.setIcon(QIcon(GuiFilesPath.GREEN_CIRCLE if "Start API" in state else GuiFilesPath.GREY_CIRCLE))
 
     def set_tab_name(self, tab_name):
         self._tab_view.setTabText(label=tab_name)

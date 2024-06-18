@@ -1,6 +1,6 @@
 from datetime import datetime
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from http import HTTPStatus
 from uvicorn import run as run_api
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -64,6 +64,11 @@ class SignalApi(QObject):
         super().__init__()
 
     @staticmethod
+    @app.get("/", response_class=RedirectResponse)
+    def root():
+        return RedirectResponse("/api/documentation")
+
+    @staticmethod
     @app.get("/api/transactions", response_model=list[Transaction])
     def get_transactions():
         return list(SignalApi.connector.trans_queue.queue)
@@ -117,7 +122,7 @@ class SignalApi(QObject):
     @app.get("/api/documentation", response_class=HTMLResponse)
     def render_document():
         with open("Signal_v0.18.html", "r", encoding="utf-8") as html_data:
-            return HTMLResponse(content=html_data.readlines(), status_code=HTTPStatus.OK)
+            return HTMLResponse(content=html_data.read(), status_code=HTTPStatus.OK)
 
     @staticmethod
     @app.post("/api/transactions/create", response_model=Transaction)

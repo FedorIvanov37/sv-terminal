@@ -541,7 +541,7 @@
          </font>
         </property>
         <property name="text">
-         <string>API</string>
+         <string>API mode</string>
         </property>
         <property name="checkable">
          <bool>true</bool>

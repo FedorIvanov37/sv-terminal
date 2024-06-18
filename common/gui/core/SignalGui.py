@@ -170,15 +170,18 @@ class SignalGui(Terminal):
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
 
-    def process_change_api_mode(self, enabled):
-        if not enabled:
-            self._api_interface.stop_thread()
+    def process_change_api_mode(self, state):
+        if state == "Start API":
+            self._api_interface: SignalApiInterface = SignalApiInterface(config=self.config, terminal=self)
+            self._api_interface.incoming_transaction.connect(self.send)
+            self._run_api.connect(self._api_interface.run_api)
+            self._run_api.emit()
             return
 
-        self._api_interface: SignalApiInterface = SignalApiInterface(config=self.config, terminal=self)
-        self._api_interface.incoming_transaction.connect(self.send)
-        self._run_api.connect(self._api_interface.run_api)
-        self._run_api.emit()
+        try:
+            self._api_interface.stop_thread()
+        except AttributeError:
+            warning("API mode is currently not active")
 
     def show_license_dialog(self) -> None:
         try:

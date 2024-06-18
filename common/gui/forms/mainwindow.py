@@ -344,7 +344,7 @@ class Ui_MainWindow(object):
         self.ButtonEchoTest.setText(_translate("MainWindow", "Echo-Test"))
         self.ButtonReconnect.setText(_translate("MainWindow", "[Re]connect"))
         self.ButtonFieldsParser.setText(_translate("MainWindow", "Construct Field"))
-        self.ButtonApi.setText(_translate("MainWindow", "API"))
+        self.ButtonApi.setText(_translate("MainWindow", "API mode"))
         self.ButtonSpecification.setText(_translate("MainWindow", "Specification"))
         self.ButtonHotkeys.setText(_translate("MainWindow", "Hotkeys"))
         self.ButtonSettings.setText(_translate("MainWindow", "Configuration"))
