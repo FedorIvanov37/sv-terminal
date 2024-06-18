@@ -66,6 +66,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _parse_complex_field: pyqtSignal = pyqtSignal()
     _validate_message: pyqtSignal = pyqtSignal(bool)
     _spec: EpaySpecification = EpaySpecification()
+    _api_mode_changed: pyqtSignal = pyqtSignal(bool)
+
+    @property
+    def api_mode_changed(self):
+        return self._api_mode_changed
 
     @property
     def spec(self):
@@ -242,6 +247,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonSettings: self.settings,
             self.ButtonFieldsParser: self.parse_complex_field,
             self.ButtonValidate: lambda: self.validate_message.emit(True),
+            self.ButtonApi: lambda: self.api_mode_changed.emit(self.ButtonApi.isChecked())
         }
 
         tab_view_connection_map = {

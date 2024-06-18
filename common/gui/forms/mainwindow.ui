@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1610</width>
-    <height>950</height>
+    <height>943</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -530,6 +530,21 @@
         </property>
         <property name="text">
          <string>Construct Field</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="ButtonApi">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>API</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

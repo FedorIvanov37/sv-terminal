@@ -64,6 +64,7 @@ class SignalGui(Terminal):
     connector: ConnectionThread
     trans_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION)
     set_remote_spec: pyqtSignal = pyqtSignal()
+    _api_interface: SignalApiInterface
     _wireless_handler: WirelessHandler = WirelessHandler()
     _run_timer = QTimer()
     _run_api = pyqtSignal()
@@ -87,7 +88,6 @@ class SignalGui(Terminal):
         super(SignalGui, self).__init__(config=config, connector=self.connector)
         self.window: MainWindow = MainWindow(self.config)
         self.thread_pool: QThreadPool = QThreadPool()
-        self.api_interface: SignalApiInterface = SignalApiInterface()
         self.connect_widgets()
         self.setup()
 
@@ -136,10 +136,8 @@ class SignalGui(Terminal):
             window.clear_log: window.clean_window_log,
             window.send: self.send,
             window.reset: self.set_default_values,
-            # window.echo_test: self.echo_test,
-            window.echo_test: self.run_api,
-            window.clear: self.stop_api,
-            # window.clear: self.clear_message,
+            window.echo_test: self.echo_test,
+            window.clear: self.clear_message,
             window.copy_log: self.copy_log,
             window.copy_bitmap: self.copy_bitmap,
             window.reconnect: self.reconnect,
@@ -159,6 +157,7 @@ class SignalGui(Terminal):
             window.repeat: self.trans_timer.set_trans_loop_interval,
             window.validate_message: lambda: self.validate_main_window(force=True),
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
+            window.api_mode_changed: self.process_change_api_mode,
             self.connector.stateChanged: self.set_connection_status,
             self.set_remote_spec: self.connector.get_remote_spec,
             self.connector.got_remote_spec: self.load_remote_spec,
@@ -171,19 +170,14 @@ class SignalGui(Terminal):
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
 
-        self._run_api.connect(self.api_interface.run_api)
-        # self._stop_api.connect(self.api_interface.stop_thread)
+    def process_change_api_mode(self, enabled):
+        if not enabled:
+            self._api_interface.stop_thread()
+            return
 
-        # self.api_interface.got_message.connect(self.api_got_message)
-        # self.api_interface.got_transaction.connect(lambda transaction: self.send(transaction))
-
-    def api_got_message(self, level, message):
-        error(f"{level} -> {message}")
-
-    def stop_api(self):
-        self._api.stop()
-
-    def run_api(self):
+        self._api_interface: SignalApiInterface = SignalApiInterface(config=self.config, terminal=self)
+        self._api_interface.incoming_transaction.connect(self.send)
+        self._run_api.connect(self._api_interface.run_api)
         self._run_api.emit()
 
     def show_license_dialog(self) -> None:
