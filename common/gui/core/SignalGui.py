@@ -171,7 +171,7 @@ class SignalGui(Terminal):
             signal.connect(slot)
 
     def process_change_api_mode(self, state):
-        if state == "Start API":
+        if state == "START":
             self._api_interface: SignalApiInterface = SignalApiInterface(config=self.config, terminal=self)
             self._api_interface.incoming_transaction.connect(self.send)
             self._run_api.connect(self._api_interface.run_api)

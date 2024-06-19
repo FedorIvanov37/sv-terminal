@@ -204,7 +204,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.process_transaction_loop_change(ButtonActions.KeepAliveTimeIntervals.KEEP_ALIVE_STOP, trans_type)
 
         self.TabViewLayout.addWidget(self._tab_view)
-        self.api_mode_changed.emit("Stop API")
+        self.api_mode_changed.emit("STOP")
 
     def _add_json_control_buttons(self) -> None:
         # Create and place the JSON-view control buttons as "New Field", "New Subfield", "Remove Field"
@@ -312,8 +312,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             # The modifiers are used to define the requested data format or as a hint on how to process the data
 
             self.ButtonApi: {
-                "Start API": lambda: self.api_mode_changed.emit("Start API"),
-                "Stop API": lambda: self.api_mode_changed.emit("Stop API"),
+                "START": lambda: self.api_mode_changed.emit("START"),
+                "STOP": lambda: self.api_mode_changed.emit("STOP"),
             },
 
             self.ButtonKeepAlive: {
@@ -401,7 +401,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
             self.ButtonApi.menu().addAction(action, function)
 
-        self.ButtonApi.setIcon(QIcon(GuiFilesPath.GREEN_CIRCLE if "Start API" in state else GuiFilesPath.GREY_CIRCLE))
+        self.ButtonApi.setIcon(QIcon(GuiFilesPath.GREEN_CIRCLE if "START" in state else GuiFilesPath.GREY_CIRCLE))
 
     def set_tab_name(self, tab_name):
         self._tab_view.setTabText(label=tab_name)
