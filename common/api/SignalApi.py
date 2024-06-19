@@ -141,7 +141,7 @@ class SignalApi(QObject):
         return transaction
 
     def run(self):
-        run_api(self.app)
+        run_api(self.app, host="0.0.0.0")
 
     def stop_api(self):
         raise KeyboardInterrupt
