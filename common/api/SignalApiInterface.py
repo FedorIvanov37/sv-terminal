@@ -38,6 +38,7 @@ class SignalApiInterface(QObject):
         self.api.moveToThread(self.thread)
         self.api.connector.config = config
         self.api.connector.trans_queue = terminal.trans_queue
+        self.api.connector.terminal = terminal
         self.api.connector.tcp_connector = terminal.connector
         self.api.connector.incoming_transaction.connect(self.incoming_transaction)
         self.run_api.connect(self.api.run)

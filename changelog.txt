@@ -197,11 +197,14 @@
 
 
 # 0.19 planning
++ Settings tabs - GUI, CLI, API, About
++ Tab order on JsoViews ?
 
-• Tab order on JsoViews
 • Setting don't print keep alive
 • Undo / Redo by keyboard
+
 • API mode
+    + Render API mode
     • API activate / stop
     • API settings
     • Swagger documentation
@@ -209,19 +212,73 @@
     • POSTMAN collection
     • Run API using CLI --api-mode
     • Setting wait for response / parallel
-    • Move "Hotkeys" hint to settings
+    + Move "Hotkeys" hint to settings
+
 • Setting not print log in CLI mode; --print-log=True
-• Settings tabs - GUI, CLI, API, About
+
+• Add widgets
+    + Radio Button
+    + ToolBar
+    • DialogButtonBox
+    • QMessageBox
+    • ContextMenuEvent
+    • Resource file?
+
++ Add user guide
++ Add toolbar
++ Remove redundant buttons
++ Add license to toolbar Help
+
+• Keep alive indicator
+• Repeat indicator
+
+To fix
++ Fix repeat interval mark
++ Fix Hotkeys window - CTRL + P
++ Fix html-document name
++ Fix non-force validation
 
 #
+
++ GET /api/config
++ PUT /api/config/update
++ GET /api/connection
++ POST /api/connection/{action}
++ GET /api/transactions
++ GET /api/transactions/{trans_id}
++ POST /api/transactions/create
++ POST /api/transactions/{trans_id}/reverse
++ GET /api/doc
++ POST /tools/transactions/validate
++ GET /api/specification
++ PUT /api/specification/update
++ POST /api/tools/convert/{format}
++ POST /api/tools/parse/{format}
++ GET /api/status
+• GET /api/about
+• POST /api/tools/fields/{action} - split or join
+
+• POST /api/transactions/{trans_type}/create
+• POST /api/transactions/{ips}/{trans_type}/create
+• GET /api/resources/{resource}/download - postman collection, documentation
+• GET /api/transactions/samples/{ips}/{type}
+• GET /api/dictionaries/{type}
+• PUT /api/dictionaries/{type}
+• GET /api/license/read
+• POST /api/license/{action} - accept or reject
+• POST /api/cards/{type}/create
+• POST /api/cards/validate
+• POST /api/cards/encrypt
+• POST /api/cards/decrypt
+• GET /api/datamodels/{type}
+
 
 • To do
     • Generate doc.html in TeamCity
     • TeamCity build correct settings
-    • Render doc.html by QWebEngineView
+    + Render doc.html by QWebEngineView # Added link to HTML instead
     • Checkable buttons
     • Buttons auto-repeat
-    • Set the building up properly
     • Generate grip html-documentation in process of building
     • Prepare the release page for slack https://unlimit.slack.com/archives/G018EV1EY85/p1716830943695369
     • Add ctrl + alt + p to the doc

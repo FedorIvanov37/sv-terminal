@@ -4,6 +4,7 @@ from pydantic import FilePath
 from binascii import hexlify, unhexlify, b2a_hex
 from logging import error, warning, info
 from configparser import ConfigParser, NoSectionError, NoOptionError
+from io import StringIO
 from common.lib.toolkit.generate_trans_id import generate_trans_id
 from common.lib.toolkit.toolkit import mask_secret
 from common.lib.core.EpaySpecification import EpaySpecification
@@ -422,6 +423,12 @@ class Parser:
 
         return transaction
 
+    def parse_ini_string(self, ini_data: str) -> Transaction:
+        ini: ConfigParser = ConfigParser()
+        ini.read_file(StringIO(ini_data))
+
+        return self._parse_ini(ini)
+
     @staticmethod
     def unpack_ini_field(data: str) -> str:
         return data.removeprefix('[').removesuffix(']')
@@ -432,6 +439,10 @@ class Parser:
 
         ini = ConfigParser()
         ini.read(filename)
+
+        return self._parse_ini(ini)
+
+    def _parse_ini(self, ini: ConfigParser) -> Transaction:
         fields: TypeFields = self._parse_ini_fields(ini)
 
         ini_def = IniMessageDefinition

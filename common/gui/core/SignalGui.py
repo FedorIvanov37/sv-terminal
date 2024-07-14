@@ -1,18 +1,19 @@
-from os.path import basename
+from os.path import basename, normpath
+from os import getcwd
 from typing import Callable
 from logging import error, info, warning
 from pydantic import ValidationError
+from webbrowser import open as open_url
 from PyQt6.QtWidgets import QApplication, QFileDialog
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtCore import pyqtSignal, QTimer, QDir, QThreadPool
-from PyQt6.QtGui import QIcon
+from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.api.SignalApiInterface import SignalApiInterface
+from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
-from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.spec_window import SpecWindow
 from common.gui.windows.hotkeys_hint_window import HotKeysHintWindow
-from common.gui.windows.about_window import AboutWindow
 from common.gui.windows.complex_fields_window import ComplexFieldsParser
 from common.gui.windows.license_window import LicenseWindow
 from common.gui.core.ConnectionThread import ConnectionThread
@@ -20,7 +21,7 @@ from common.gui.enums import ButtonActions
 from common.gui.enums.Colors import Colors
 from common.lib.enums import KeepAlive
 from common.lib.enums.TermFilesPath import TermFilesPath
-from common.gui.enums.GuiFilesPath import GuiDirs, GuiFilesPath
+from common.gui.enums.GuiFilesPath import GuiDirs
 from common.lib.enums.DataFormats import DataFormats, PrintDataFormats, OutputFilesFormat, InputFilesFormat
 from common.lib.enums.MessageLength import MessageLength
 from common.lib.enums.TextConstants import TextConstants
@@ -93,10 +94,10 @@ class SignalGui(Terminal):
 
     def setup(self) -> None:
         QDir.addSearchPath(GuiDirs.STYLE_DIR.name, GuiDirs.STYLE_DIR)
-        self.window.setWindowIcon(QIcon(GuiFilesPath.G_CIRCLE))
         self._wireless_handler = self.logger.create_window_logger(self.window.log_browser)
         self._run_timer.setSingleShot(True)
         self._run_timer.start(int())
+        # self.settings()
 
     def on_startup(self) -> None:  # Runs on startup to make all the preparation activity, then shows MainWindow
         self.show_license_dialog()
@@ -152,12 +153,15 @@ class SignalGui(Terminal):
             window.settings: self.settings,
             window.hotkeys: lambda: HotKeysHintWindow().exec(),
             window.specification: self.run_specification_window,
-            window.about: lambda: AboutWindow().exec(),
+            window.about: lambda: self.settings(about=True),
             window.keep_alive: self.set_keep_alive_interval,
             window.repeat: self.trans_timer.set_trans_loop_interval,
-            window.validate_message: lambda: self.validate_main_window(force=True),
+            window.validate_message: lambda force: self.validate_main_window(force=force),
             window.parse_complex_field: lambda: ComplexFieldsParser(self.config, self).exec(),
             window.api_mode_changed: self.process_change_api_mode,
+            window.exit: exit,
+            window.show_document: self.show_document,
+            window.show_license: lambda: self.show_license_dialog(force=True),
             self.connector.stateChanged: self.set_connection_status,
             self.set_remote_spec: self.connector.get_remote_spec,
             self.connector.got_remote_spec: self.load_remote_spec,
@@ -183,9 +187,14 @@ class SignalGui(Terminal):
         except AttributeError:
             warning("API mode is currently not active")
 
-    def show_license_dialog(self) -> None:
+    @staticmethod
+    def show_document():
+        doc_path = normpath(f"{getcwd()}/{GuiFilesPath.DOC}")
+        open_url(doc_path)
+
+    def show_license_dialog(self, force: bool = False) -> None:
         try:
-            license_window: LicenseWindow = LicenseWindow(self.config)
+            license_window: LicenseWindow = LicenseWindow(self.config, force=force)
             license_window.exec()
             self.config.terminal.show_license_dialog = license_window.license_info.show_agreement
 
@@ -259,11 +268,12 @@ class SignalGui(Terminal):
             error(sending_error)
 
     @set_json_view_focus
-    def settings(self) -> None:
+    def settings(self, about=False) -> None:
         try:
             old_config: Config = self.config.model_copy(deep=True)
-            settings_window: SettingsWindow = SettingsWindow(self.config)
+            settings_window: SettingsWindow = SettingsWindow(self.config, about=about)
             settings_window.accepted.connect(lambda: self.process_config_change(old_config))
+            settings_window.open_user_guide.connect(self.show_document)
             settings_window.exec()
 
         except Exception as settings_error:

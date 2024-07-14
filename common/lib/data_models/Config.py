@@ -58,6 +58,11 @@ class Specification(BaseModel):
     manual_input_mode: bool = False
 
 
+class ApiModel(BaseModel):
+    address: str | None = ""
+    port: int = 7777
+
+
 class Config(BaseModel):
     host: Host
     terminal: Terminal
@@ -65,3 +70,4 @@ class Config(BaseModel):
     validation: Validation = None
     fields: Fields | None = None
     specification: Specification = Specification()
+    api: ApiModel = ApiModel()

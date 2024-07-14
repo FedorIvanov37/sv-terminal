@@ -4,10 +4,11 @@
 <p align="center">This guide describes the Signal basic concept, usage, settings, and library re-usage <br><br>
 The document is currently under construction</p> 
 
-# Contents 
 
-* [SIGNAL](#signal)
-  * [SIGNAL general overview](#signal-general-overview)
+<details><summary><h1>Contents</h1></summary>
+       
+* [Signal](#signal)
+  * [Signal general overview](#signal-general-overview)
   * [Important notes](#important-notes)
   * [Release info](#release-info)
    
@@ -15,14 +16,31 @@ The document is currently under construction</p>
 * [Graphic User Interface](#graphic-user-interface)
   * [GUI overview](#gui-overview)
   * [Main Window](#main-window)
-    * [Main Window overview](#main-window-overview)  
-    * [Complex fields parser](#complex-fields-parser)
-    * [Reversal](#reversal)
-    * [Transactions auto-repeat](#transactions-auto-repeat)
-    * [Search line](#search-line)
-    * [Print data](#print-data)
-    * [Fields generators](#fields-generators)
-    * [Secret features](#secret-features)
+    * [Overview](#main-window-overview)
+    * [Features]
+      * [Transactions sending]
+      * [Data exchange]
+      * [Validations]
+      * [Search line](#search-line)
+      * [Hide secrets](#hide-secrets)
+      * [Windows hotkeys](#windows-hotkeys)
+       
+    * Tools
+      * [Connector] 
+      * [Echo-test]
+      * [Keep alive]
+      * [Transactions auto-repeat](#transactions-auto-repeat)
+      * [Reversal](#reversal)
+      * [Complex fields parser](#complex-fields-parser)
+      * [Print data](#print-data)
+      * [Fields generators](#fields-generators)
+      * [Secret features](#secret-features)
+  
+  * [Settings Window](#settings-window)
+    * [Settings Window overview](#settings-window-overview)
+    * [Triggers](#triggers)
+    * [Validations](#validations)      
+
   * [Specification Window](#specification-window)
     * [Specification Window overview](#specification-window-overview)
     * [Field parameters](#field-parameters)
@@ -30,13 +48,14 @@ The document is currently under construction</p>
     * [MTI settings](#mti-settings)
     * [Set specification](#set-specification)
     * [Save specification](#save-specification)
-  * [Settings Window](#settings-window)
-    * [Settings Window overview](#settings-window-overview)
-    * [Triggers](#triggers)
-    * [Validations](#validations)
-  * [Windows hotkeys](#windows-hotkeys)
- 
- 
+
+
+* [HTTP API]
+  * [API reference]
+  * [Data model]
+  * [Postman collection]
+
+
 * [Command Line Interface](#command-line-interface)
   * [CLI usage](#cli-usage)
   * [CLI examples](#cli-examples)
@@ -118,10 +137,12 @@ The document is currently under construction</p>
   * [Resources](#resources)
   * [Support](#support)
   * [Author](#author)
-  
-# SIGNAL
 
-## SIGNAL general overview
+</details>
+
+# Signal
+
+## Signal general overview
 
 The Signal simplifies the sending of banking card e-commerce transactions to banking card processing systems using a 
 useful visual and program interface
@@ -1591,11 +1612,11 @@ Contact the [author](#author) in case of any copyright questions
 ## Resources
 
 * [ISO 8583 Wiki page](https://en.wikipedia.org/wiki/ISO_8583)
-  * [Payment service provider Wiki page](https://en.wikipedia.org/wiki/Payment_service_provider)
-  * [GNU licence page](https://www.gnu.org/licenses/)
-  * [Free software Wiki page](https://en.wikipedia.org/wiki/Free_software)
-  * [Qt documentation](https://doc.qt.io/)
-  * [Pydantic documentation](https://docs.pydantic.dev/latest/)
+* [Payment service provider Wiki page](https://en.wikipedia.org/wiki/Payment_service_provider)
+* [GNU licence page](https://www.gnu.org/licenses/)
+* [Free software Wiki page](https://en.wikipedia.org/wiki/Free_software)
+* [Qt documentation](https://doc.qt.io/)
+* [Pydantic documentation](https://docs.pydantic.dev/latest/)
 
 
 ## Support
@@ -1611,10 +1632,10 @@ make a voluntary donation directly to the author. ⚠️ Any donation can be vol
 The project needs help
 
 * Code review, architecture development, advice
-  * Documentation development and translate
-  * Feedback, ideas
-  * Testing, especially auto-tests, unit-tests
-  * Financial support to BTC wallet
+* Documentation development and translate
+* Feedback, ideas
+* Testing, especially auto-tests, unit-tests
+* Financial support to BTC wallet
 
 <details>
  <summary>️❤️Support the project</summary>

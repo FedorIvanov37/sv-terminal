@@ -1,9 +1,11 @@
+from json import dumps
 from datetime import datetime
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, Response
+from fastapi.requests import Request
 from http import HTTPStatus
 from uvicorn import run as run_api
-from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtCore import QObject, pyqtSignal, QCoreApplication
 from common.lib.data_models.Transaction import Transaction
 from common.lib.decorators.singleton import singleton
 from common.lib.core.TransactionQueue import TransactionQueue
@@ -12,14 +14,32 @@ from common.lib.core.Connector import Connector
 from common.api.data_models.Connection import Connection
 from common.gui.enums.ConnectionStatus import ConnectionStatus
 from common.api.enums.ConnectionActions import ConnectionActions
+from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
+from common.lib.core.EpaySpecification import EpaySpecification
+from common.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
+from common.lib.enums.DataFormats import OutputFilesFormat
 
 
 @singleton
 class SignalApiConnector(QObject):
     _incoming_transaction: pyqtSignal = pyqtSignal(Transaction)
+    _reverse_transaction: pyqtSignal = pyqtSignal(str)
     _trans_queue: TransactionQueue
     _config: Config
     _tcp_connector: Connector
+    _terminal = None
+
+    @property
+    def terminal(self):
+        return self._terminal
+
+    @terminal.setter
+    def terminal(self, terminal):
+        self._terminal = terminal
+
+    @property
+    def reverse_transaction(self):
+        return self._reverse_transaction
 
     @property
     def tcp_connector(self):
@@ -52,6 +72,9 @@ class SignalApiConnector(QObject):
     def __init__(self):
         super().__init__()
 
+    def validate_transaction(self, transaction: Transaction):
+        self.terminal.validate(transaction)
+
     def get_transaction(self, trans_id):
         return self.trans_queue.get_transaction(trans_id)
 
@@ -62,11 +85,6 @@ class SignalApi(QObject):
 
     def __init__(self):
         super().__init__()
-
-    @staticmethod
-    @app.get("/", response_class=RedirectResponse)
-    def root():
-        return RedirectResponse("/api/documentation")
 
     @staticmethod
     @app.get("/api/transactions", response_model=list[Transaction])
@@ -119,10 +137,90 @@ class SignalApi(QObject):
         return SignalApi.connector.config
 
     @staticmethod
+    @app.get("/")
+    @app.get("/doc")
+    @app.get("/docs")
+    @app.get("/help")
+    @app.get("/documentation")
+    @app.get("/api")
+    @app.get("/api/doc")
+    @app.get("/api/docs")
+    @app.get("/api/help")
     @app.get("/api/documentation", response_class=HTMLResponse)
     def render_document():
         with open("Signal_v0.18.html", "r", encoding="utf-8") as html_data:
             return HTMLResponse(content=html_data.read(), status_code=HTTPStatus.OK)
+
+    @staticmethod
+    @app.get("/api/specification", response_model=EpaySpecModel)
+    def get_specification():
+        return EpaySpecification().spec
+
+    @staticmethod
+    @app.post("/api/tools/transactions/validate")
+    def validate_transaction(transaction: Transaction):
+        try:
+            SignalApi.connector.terminal.trans_validator.validate_transaction(transaction)
+
+        except DataValidationWarning as data_validation_warning:
+            data_validation_warning: str = str(data_validation_warning).replace("\n", "; ")
+            return {"Validation warnings": data_validation_warning}
+
+        except DataValidationError as data_validation_error:
+            data_validation_error: str = str(data_validation_error).replace("\n", "; ")
+            raise HTTPException(status_code=HTTPStatus.UNPROCESSABLE_ENTITY, detail=data_validation_error)
+
+        return {"Validation result": "Transaction data validated"}
+
+    @staticmethod
+    @app.post("/api/tools/transactions/convert", response_class=Response)
+    def convert_transaction(transaction: Transaction, to_format: OutputFilesFormat):
+        match to_format:
+            case OutputFilesFormat.INI:
+                return SignalApi.connector.terminal.parser.transaction_to_ini_string(transaction)
+
+            case OutputFilesFormat.JSON:
+                return dumps(transaction.dict(), indent=4)
+
+            case OutputFilesFormat.DUMP:
+                return SignalApi.connector.terminal.parser.create_sv_dump(transaction)
+
+            case _:
+                raise HTTPException(status_code=HTTPStatus.NOT_FOUND)
+
+    @staticmethod
+    @app.post("/api/tools/parse/{data_format}", response_model=Transaction)
+    async def parse_transaction_data(request: Request, data_format: OutputFilesFormat):
+        data = await request.body()
+        data = data.decode()
+
+        match data_format:
+            case OutputFilesFormat.JSON:
+                return Transaction.parse_raw(data)
+
+            case OutputFilesFormat.DUMP:
+                raise HTTPException(status_code=HTTPStatus.NOT_IMPLEMENTED, detail="Dump not supported")
+                # return SignalApi.connector.terminal.parser.parse_dump(data)
+
+            case OutputFilesFormat.INI:
+                return SignalApi.connector.terminal.parser.parse_ini_string(data)
+
+    @staticmethod
+    @app.put("/api/specification/update", response_model=EpaySpecModel)
+    def update_specification(specification: EpaySpecModel):
+        spec: EpaySpecification = EpaySpecification()
+        spec.spec.fields = specification.fields
+
+        return spec.spec
+
+    @staticmethod
+    @app.get("/api/status")
+    def api_status():
+        return {
+            "API status": "UP",
+            "GUI status": "RUN",
+            "Connection": SignalApi.get_connection()
+        }
 
     @staticmethod
     @app.post("/api/transactions/create", response_model=Transaction)
@@ -132,16 +230,42 @@ class SignalApi(QObject):
         begin = datetime.now()
 
         while not transaction.matched:
+            QCoreApplication.processEvents()
+
             if transaction.matched:
                 return SignalApi.connector.get_transaction(transaction.match_id)
 
             if (datetime.now() - begin).seconds > 60 and not transaction.matched:
                 raise HTTPException(status_code=HTTPStatus.GATEWAY_TIMEOUT, detail="Transaction response timeout")
 
-        return transaction
+        return SignalApi.connector.get_transaction(transaction.match_id)
+
+    @staticmethod
+    @app.post("/api/transactions/{trans_id}/reverse", response_model=Transaction)
+    def reverse_transaction(trans_id: str):
+        if not (original := SignalApi.connector.get_transaction(trans_id)):
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Original transaction {trans_id} is not found")
+
+        if not (reversal := SignalApi.connector.terminal.build_reversal(original)):
+            raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Cannot generate reversal")
+
+        SignalApi.connector.incoming_transaction.emit(reversal)
+
+        begin = datetime.now()
+
+        while not reversal.matched:
+            QCoreApplication.processEvents()
+
+            if reversal.matched:
+                return SignalApi.connector.get_transaction(reversal.match_id)
+
+            if (datetime.now() - begin).seconds > 60 and not reversal.matched:
+                raise HTTPException(status_code=HTTPStatus.GATEWAY_TIMEOUT, detail="Transaction response timeout")
+
+        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unhandled error")
 
     def run(self):
-        run_api(self.app, host="0.0.0.0")
+        run_api(self.app, host="0.0.0.0", port=80)
 
     def stop_api(self):
         raise KeyboardInterrupt

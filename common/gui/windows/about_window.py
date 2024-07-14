@@ -1,4 +1,4 @@
-from common.gui.forms.about import Ui_AboutWindow
+from common.gui.forms.unused.about import Ui_AboutWindow
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
 from common.gui.decorators.window_settings import frameless_window

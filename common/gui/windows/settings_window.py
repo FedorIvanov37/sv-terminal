@@ -1,51 +1,77 @@
+from common.gui.forms.settings_window import Ui_SettingsWindow
 from logging import info, error, getLogger, getLevelName
-from PyQt6.QtWidgets import QDialog
-from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QPixmap, QIntValidator
-from PyQt6.QtCore import QRegularExpression
+from PyQt6.QtGui import QRegularExpressionValidator, QIntValidator
+from PyQt6.QtCore import QRegularExpression, pyqtSignal
 from common.lib.constants import LogDefinition
 from common.lib.data_models.Config import Config
-from common.gui.forms.settings import Ui_SettingsWindow
-from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.lib.enums.TermFilesPath import TermFilesPath
-from common.gui.windows.about_window import AboutWindow
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
+from common.gui.forms.unused.about import Ui_AboutWindow
+from common.gui.enums.GuiFilesPath import GuiFilesPath
+from common.lib.enums.ReleaseDefinition import ReleaseDefinition
+from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
+from PyQt6.QtCore import Qt, QUrl
+from PyQt6.QtWidgets import QDialog
+from PyQt6.QtGui import (
+    QPixmap,
+    QIcon,
+    QDesktopServices,
+    QCloseEvent,
+    QKeyEvent,
+    QMovie,
+)
 
 
-class SettingsWindow(Ui_SettingsWindow, QDialog):
-    def __init__(self, config: Config):
-        super(SettingsWindow, self).__init__()
+class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
+    _open_user_guide: pyqtSignal = pyqtSignal()
+    audio_output = QAudioOutput()
+    player = QMediaPlayer()
+    movie: QMovie
+
+    @property
+    def open_user_guide(self):
+        return self._open_user_guide
+
+    def __init__(self, config: Config, about: bool = False):
+        super().__init__()
         self.setupUi(self)
-        self.config: Config = config
-        self.setup()
+        self.config = config
+        self.setup(about=about)
 
     @set_window_icon
     @has_close_button_only
-    def setup(self) -> None:
-        self.ButtonAbout.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
+    def setup(self, about: bool = False):
+        self.MainTabs.tabBar().setDocumentMode(True)
+        self.MainTabs.tabBar().setExpanding(True)
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){1,3}\d+")))
         self.MaxAmount.setEditable(True)
         self.RemoteSpecUrl.editingFinished.connect(lambda: self.RemoteSpecUrl.setCursorPosition(int()))
         self.MaxAmount.setValidator(QIntValidator(1, 2_100_000_000, self.MaxAmount))
         self.DebugLevel.addItems(LogDefinition.LOG_LEVEL)
         self.ParseSubfields.setHidden(True)  # TODO
-        self.buttonBox.accepted.connect(self.ok)
-        self.buttonBox.rejected.connect(self.cancel)
-        self.ButtonAbout.pressed.connect(lambda: AboutWindow().exec())
+
+        for button_box in self.GeneralButtonBox, self.FieldsButtonBox, self.ApiButtonBox, self.SpecificationButtonBox:
+            button_box.accepted.connect(self.ok)
+            button_box.rejected.connect(self.cancel)
+
         self.HeaderLength.textChanged.connect(self.validate_header_length)
         self.DebugLevel.currentIndexChanged.connect(self.process_debug_level_change)
         self.KeepAliveMode.stateChanged.connect(lambda state: self.KeepAliveInterval.setEnabled(bool(state)))
         self.HeaderLengthMode.stateChanged.connect(lambda state: self.HeaderLength.setEnabled(bool(state)))
         self.MaxAmountBox.stateChanged.connect(lambda state: self.MaxAmount.setEnabled(bool(state)))
-        self.ButtonDefault.clicked.connect(self.set_default_settings)
+        # self.ButtonDefault.clicked.connect(self.set_default_settings)
         self.LoadSpec2.stateChanged.connect(lambda: self.LoadSpec.setChecked(self.LoadSpec2.isChecked()))
         self.LoadSpec.stateChanged.connect(lambda: self.LoadSpec2.setChecked(self.LoadSpec.isChecked()))
         self.ValidationEnabled.stateChanged.connect(self.process_validation_change)
         self.ManualInputMode.stateChanged.connect(self.process_manual_entry_mode_change)
+        self.ApiInfoLabel.linkActivated.connect(lambda: self.open_user_guide.emit())
         self.process_validation_change()
         self.process_manual_entry_mode_change()
         self.process_config(self.config)
+        self.set_data_about()
+        self.MainTabs.setCurrentIndex(self.MainTabs.count() - 1 if about else int())
 
-    def process_config(self, config: Config) -> None:
+    def process_config(self, config: Config):
         self.DebugLevel.setCurrentText(config.debug.level)
         self.SvAddress.setText(config.host.host)
         self.SvPort.setValue(int(config.host.port))
@@ -79,6 +105,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         self.LogStorageDepth.setValue(config.debug.backup_storage_depth)
         self.ManualInputMode.setChecked(config.specification.manual_input_mode)
         self.ValidationEnabled.setChecked(config.validation.validation_enabled)
+        self.ApiAddress.setText(self.config.api.address)
+        self.ApiPort.setValue(self.config.api.port)
 
         if not config.fields.max_amount_limited:
             return
@@ -108,6 +136,27 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
 
         for element in validation_elements:
             element.setEnabled(self.ValidationEnabled.isChecked())
+
+    def set_data_about(self):
+        self.logoLabel.setPixmap(QPixmap(GuiFilesPath.SIGNED_LOGO))
+        self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
+        self.MusicOnOfButton.clicked.connect(self.switch_music)
+        self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MUSIC_ON)))
+        self.ContactLabel.linkActivated.connect(self.open_url)
+
+        data_bind = {
+            self.VersionLabel: ReleaseDefinition.VERSION,
+            self.ReleaseLabel: ReleaseDefinition.RELEASE,
+            self.ContactLabel: ReleaseDefinition.CONTACT,
+            self.AuthorLabel: ReleaseDefinition.AUTHOR,
+        }
+
+        for label, text in data_bind.items():
+            label.setText(f"{label.text()} {text}")
+
+        self.player.setAudioOutput(self.audio_output)
+        self.player.setSource(QUrl.fromLocalFile(GuiFilesPath.VVVVVV))
+        self.player.playbackStateChanged.connect(self.record_finished)
 
     def set_default_settings(self) -> None:
         try:
@@ -180,6 +229,8 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
         config.specification.remote_spec_url = self.RemoteSpecUrl.text()
         config.specification.manual_input_mode = self.ManualInputMode.isChecked()
         config.validation.validation_enabled = self.ValidationEnabled.isChecked()
+        config.api.address = self.ApiAddress.text()
+        config.api.port = self.ApiPort.value()
 
         if not config.fields.max_amount_limited:
             config.fields.max_amount = 9_999_999_999
@@ -192,3 +243,41 @@ class SettingsWindow(Ui_SettingsWindow, QDialog):
     def cancel(self) -> None:
         info("Settings applying was canceled")
         self.reject()
+
+    @staticmethod
+    def open_url(link):
+        link = QUrl(link)
+        QDesktopServices.openUrl(link)
+
+    def record_finished(self, state):
+        if state == self.player.PlaybackState.StoppedState:
+            self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MUSIC_ON)))
+
+    def switch_music(self):
+        match self.player.playbackState():
+            case self.player.PlaybackState.StoppedState:
+                icon = GuiFilesPath.MUSIC_OFF
+                self.player.play()
+
+            case self.player.PlaybackState.PlayingState:
+                icon = GuiFilesPath.MUSIC_ON
+                self.player.stop()
+
+            case _:
+                return
+
+        self.MusicOnOfButton.setIcon(QIcon(QPixmap(icon)))
+
+    def closeEvent(self, a0: QCloseEvent) -> None:
+        self.player.stop()
+        a0.accept()
+
+    def keyPressEvent(self, a0: QKeyEvent) -> None:
+        if a0.key() == Qt.Key.Key_Escape:
+            self.close()
+
+        if a0.key() == Qt.Key.Key_Return:
+            if self.MainTabs.currentIndex() == self.MainTabs.count() - 1:
+                return
+
+            self.GeneralButtonBox.accepted.emit()
