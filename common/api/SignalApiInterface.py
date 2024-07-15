@@ -2,8 +2,9 @@ from PyQt6.QtCore import QObject, pyqtSignal, QThread, QCoreApplication
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.api.SignalApi import SignalApi
-from common.lib.core.TransactionQueue import TransactionQueue
 from common.lib.data_models.Config import Config
+from os import getpid
+from common.lib.core.LogStream import LogStream
 
 
 class SignalApiInterface(QObject):
@@ -14,6 +15,10 @@ class SignalApiInterface(QObject):
     _incoming_transaction: pyqtSignal = pyqtSignal(Transaction)
     _spec: EpaySpecification = EpaySpecification()
     _run_api: pyqtSignal = pyqtSignal()
+
+    @property
+    def pid(self):
+        return getpid()
 
     @property
     def incoming_transaction(self):
@@ -33,7 +38,8 @@ class SignalApiInterface(QObject):
 
     def __init__(self, config: Config, terminal):
         super().__init__()
-        self.api = SignalApi()
+        self.log_stream = LogStream(terminal.window.log_browser)
+        self.api = SignalApi(self.log_stream)
         self.thread = QThread()
         self.api.moveToThread(self.thread)
         self.api.connector.config = config
@@ -51,6 +57,11 @@ class SignalApiInterface(QObject):
             QThread.msleep(10)
 
         self.thread.terminate()
+
+        try:
+            self.api.stop_api()
+        except KeyboardInterrupt:
+            return
 
     def stop_thread(self):  # Once the self.stop become True the thread will be terminated
         self.stop = True

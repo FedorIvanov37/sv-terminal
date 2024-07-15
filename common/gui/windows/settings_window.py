@@ -1,6 +1,6 @@
 from common.gui.forms.settings_window import Ui_SettingsWindow
-from logging import info, error, getLogger, getLevelName
-from PyQt6.QtGui import QRegularExpressionValidator, QIntValidator
+from logging import getLogger, getLevelName
+from loguru import logger
 from PyQt6.QtCore import QRegularExpression, pyqtSignal
 from common.lib.constants import LogDefinition
 from common.lib.data_models.Config import Config
@@ -11,8 +11,10 @@ from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
 from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PyQt6.QtCore import Qt, QUrl
-from PyQt6.QtWidgets import QDialog
+from PyQt6.QtWidgets import QDialog, QDialogButtonBox, QMessageBox
 from PyQt6.QtGui import (
+    QRegularExpressionValidator,
+    QIntValidator,
     QPixmap,
     QIcon,
     QDesktopServices,
@@ -53,13 +55,13 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         for button_box in self.GeneralButtonBox, self.FieldsButtonBox, self.ApiButtonBox, self.SpecificationButtonBox:
             button_box.accepted.connect(self.ok)
             button_box.rejected.connect(self.cancel)
+            button_box.clicked.connect(self.process_default_button)
 
         self.HeaderLength.textChanged.connect(self.validate_header_length)
         self.DebugLevel.currentIndexChanged.connect(self.process_debug_level_change)
         self.KeepAliveMode.stateChanged.connect(lambda state: self.KeepAliveInterval.setEnabled(bool(state)))
         self.HeaderLengthMode.stateChanged.connect(lambda state: self.HeaderLength.setEnabled(bool(state)))
         self.MaxAmountBox.stateChanged.connect(lambda state: self.MaxAmount.setEnabled(bool(state)))
-        # self.ButtonDefault.clicked.connect(self.set_default_settings)
         self.LoadSpec2.stateChanged.connect(lambda: self.LoadSpec.setChecked(self.LoadSpec2.isChecked()))
         self.LoadSpec.stateChanged.connect(lambda: self.LoadSpec2.setChecked(self.LoadSpec.isChecked()))
         self.ValidationEnabled.stateChanged.connect(self.process_validation_change)
@@ -107,6 +109,9 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         self.ValidationEnabled.setChecked(config.validation.validation_enabled)
         self.ApiAddress.setText(self.config.api.address)
         self.ApiPort.setValue(self.config.api.port)
+        self.ApiRun.setChecked(self.config.terminal.run_api)
+        self.ReduceKeepAlive.setChecked(self.config.debug.reduce_keep_alive)
+        self.WaitForRemoteHost.setChecked(self.config.api.wait_remote_host_response)
 
         if not config.fields.max_amount_limited:
             return
@@ -118,6 +123,12 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
             self.MaxAmount.insertItem(index, max_amount)
 
         self.MaxAmount.setCurrentIndex(index)
+
+    def process_default_button(self, button):
+        for button_box in self.GeneralButtonBox, self.FieldsButtonBox, self.ApiButtonBox, self.SpecificationButtonBox:
+            if button_box.buttonRole(button) == QDialogButtonBox.ButtonRole.ResetRole:
+                self.set_default_settings()
+                break
 
     def process_manual_entry_mode_change(self):
         if not self.ManualInputMode.isChecked():
@@ -164,13 +175,15 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
                 default_config: Config = Config.model_validate_json(json_file.read())
 
         except Exception as parsing_error:
-            error(parsing_error)
+            logger.error(parsing_error)
             return
 
         default_config.host.host = self.config.host.host
         default_config.host.port = self.config.host.port
         default_config.specification.remote_spec_url = self.config.specification.remote_spec_url
         default_config.specification.rewrite_local_spec = self.config.specification.rewrite_local_spec
+        default_config.api.address = self.config.api.address
+        default_config.api.port = self.config.api.port
 
         self.process_config(default_config)
 
@@ -229,8 +242,11 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         config.specification.remote_spec_url = self.RemoteSpecUrl.text()
         config.specification.manual_input_mode = self.ManualInputMode.isChecked()
         config.validation.validation_enabled = self.ValidationEnabled.isChecked()
+        config.debug.reduce_keep_alive = self.ReduceKeepAlive.isChecked()
         config.api.address = self.ApiAddress.text()
         config.api.port = self.ApiPort.value()
+        config.api.wait_remote_host_response = self.WaitForRemoteHost.isChecked()
+        config.terminal.run_api = self.ApiRun.isChecked()
 
         if not config.fields.max_amount_limited:
             config.fields.max_amount = 9_999_999_999
@@ -241,7 +257,7 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         self.accept()
 
     def cancel(self) -> None:
-        info("Settings applying was canceled")
+        logger.info("Settings applying was canceled")
         self.reject()
 
     @staticmethod

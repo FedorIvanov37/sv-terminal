@@ -18,6 +18,8 @@ from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 from common.lib.enums.DataFormats import OutputFilesFormat
+from common.lib.core.LogStream import LogStream
+import logging
 
 
 @singleton
@@ -28,6 +30,15 @@ class SignalApiConnector(QObject):
     _config: Config
     _tcp_connector: Connector
     _terminal = None
+    _log_handler = None
+
+    @property
+    def log_handler(self):
+        return self._log_handler
+
+    @log_handler.setter
+    def log_handler(self, log_handler):
+        self._log_handler = log_handler
 
     @property
     def terminal(self):
@@ -80,11 +91,12 @@ class SignalApiConnector(QObject):
 
 
 class SignalApi(QObject):
-    app: FastAPI = FastAPI()
+    app: FastAPI = FastAPI(title="Signal API", debug=False)
     connector: SignalApiConnector = SignalApiConnector()
 
-    def __init__(self):
+    def __init__(self, stream):
         super().__init__()
+        self.stream = stream
 
     @staticmethod
     @app.get("/api/transactions", response_model=list[Transaction])
@@ -246,6 +258,9 @@ class SignalApi(QObject):
         if not (original := SignalApi.connector.get_transaction(trans_id)):
             raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Original transaction {trans_id} is not found")
 
+        if not (original := SignalApi.connector.get_transaction(original.match_id)):
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Original transaction {trans_id} is not found")
+
         if not (reversal := SignalApi.connector.terminal.build_reversal(original)):
             raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Cannot generate reversal")
 
@@ -265,7 +280,40 @@ class SignalApi(QObject):
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unhandled error")
 
     def run(self):
-        run_api(self.app, host="0.0.0.0", port=80)
+        log_config_dict = {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "formatters": {
+                "default": {
+                    "()": "uvicorn.logging.DefaultFormatter",
+                    "fmt": "%(levelprefix)s %(message)s",
+                    "use_colors": None,
+                },
+                "access": {
+                    "()": "uvicorn.logging.AccessFormatter",
+                    "fmt": '%(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s',
+                },
+            },
+            "handlers": {
+                "default": {
+                    "formatter": "default",
+                    "class": "logging.StreamHandler",
+                    "stream": "ext://sys.stderr",
+                },
+                "access": {
+                    "formatter": "access",
+                    "class": "logging.StreamHandler",
+                    "stream": "ext://sys.stdout",
+                },
+            },
+            "loggers": {
+                "uvicorn": {"handlers": [], "level": "INFO", "propagate": False},
+                "uvicorn.error": {"level": "CRITICAL"},
+                "uvicorn.access": {"handlers": [], "level": "INFO", "propagate": False},
+            },
+        }
+
+        run_api(self.app, host=SignalApi.connector.config.api.address, port=SignalApi.connector.config.api.port, log_config=log_config_dict) #
 
     def stop_api(self):
         raise KeyboardInterrupt

@@ -2,7 +2,7 @@ from glob import glob
 from time import sleep
 from os import listdir, path, system, getcwd
 from os.path import normpath, basename, isfile
-from logging import info, error
+from loguru import logger
 from datetime import datetime, UTC
 from pydantic import ValidationError
 from signal import signal, SIG_DFL, SIGINT
@@ -45,13 +45,13 @@ class SignalCli(Terminal):
         try:
             self._cli_config = cli_args_parser.parse_arguments()
         except (ValidationError, ValueError) as arg_parsing_error:
-            error(arg_parsing_error)
+            logger.error(arg_parsing_error)
             exit(100)
 
         try:
             self.parse_cli_config(self._cli_config)
         except ValueError as config_parsing_error:
-            error(f"Error run in Console Mode: {config_parsing_error}")
+            logger.error(f"Error run in Console Mode: {config_parsing_error}")
             exit(100)
 
         if self._cli_config.log_file != TermFilesPath.LOG_FILE_NAME:
@@ -86,29 +86,29 @@ class SignalCli(Terminal):
             try:
                 function()
             except Exception as print_error:
-                error(print_error)
+                logger.error(print_error)
 
         if not any([self._cli_config.version, self._cli_config.about]):
-            info("## Running SIGNAL in Console mode ##")
-            info("Press CTRL+C to exit")
-            info(str())
+            logger.info("## Running SIGNAL in Console mode ##")
+            logger.info("Press CTRL+C to exit")
+            logger.info(str())
 
         if not (filenames := self.get_files_to_process()):
             if not any([self._cli_config.about, self._cli_config.version]):
-                error("Cannot found specified files")
+                logger.error("Cannot found specified files")
 
             return
 
         while True:
 
             for file in filenames:
-                info(str())
-                info(f"Processing file {basename(file)}")
+                logger.info(str())
+                logger.info(f"Processing file {basename(file)}")
 
                 try:
                     transaction: Transaction = self.parser.parse_file(file)
                 except Exception as parsing_error:
-                    error(parsing_error)
+                    logger.error(parsing_error)
                     continue
 
                 self.send(transaction)
@@ -126,8 +126,8 @@ class SignalCli(Terminal):
         license_info: LicenseInfo = self.get_license_info()
 
         if license_info.accepted:
-            info("")
-            info(f"License ID {license_info.license_id} accepted {license_info.last_acceptance_date:%d/%m/%Y %T} UTC")
+            logger.info("")
+            logger.info(f"License ID {license_info.license_id} accepted {license_info.last_acceptance_date:%d/%m/%Y %T} UTC")
             return
 
         print(TextConstants.HELLO_MESSAGE)
@@ -147,7 +147,7 @@ class SignalCli(Terminal):
                     '  Type "yes" or "y" to see the license agreement or press "Ctrl + C" to reject the license: ')
 
             except KeyboardInterrupt:
-                error("License agreement rejected, exiting")
+                logger.error("License agreement rejected, exiting")
                 raise LicenseRejected
 
         agreement_path = f"{getcwd()}/{TermFilesPath.LICENSE_AGREEMENT}"
@@ -171,10 +171,10 @@ class SignalCli(Terminal):
                     '  Type "yes" or "y" to accept the license agreement or press "Ctrl + C" to reject the license: ')
 
             except KeyboardInterrupt:
-                error("License agreement rejected, exiting")
+                logger.error("License agreement rejected, exiting")
                 raise LicenseRejected
 
-        info(f"The license accepted! License ID {license_info.license_id}")
+        logger.info(f"The license accepted! License ID {license_info.license_id}")
 
         license_info.accepted = True
         license_info.show_agreement = False
@@ -189,7 +189,7 @@ class SignalCli(Terminal):
                 license_info_file.write(license_info.model_dump_json())
 
         except Exception as file_saving_error:
-            error(file_saving_error)
+            logger.error(file_saving_error)
 
     def get_files_to_process(self) -> list[str]:
         filenames: list[str] = list()

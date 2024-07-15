@@ -11,13 +11,15 @@
         "process_default_dump": true,
         "connect_on_startup": true,
         "load_remote_spec": false,
-        "show_license_dialog": false
+        "show_license_dialog": false,
+        "run_api": true
     },
     "debug": {
         "level": "INFO",
         "clear_log": true,
         "parse_subfields": false,
-        "backup_storage_depth": 10
+        "backup_storage_depth": 10,
+        "reduce_keep_alive": false
     },
     "validation": {
         "validation_enabled": true,
@@ -43,6 +45,7 @@
     },
     "api": {
         "address": "0.0.0.0",
-        "port": 7777
+        "port": 7777,
+        "wait_remote_host_response": true
     }
 }

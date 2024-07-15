@@ -1,7 +1,7 @@
+from loguru import logger
 from typing import Callable
-from logging import error, info, warning, debug
 from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import pyqtSignal, QObject, QCoreApplication
+from PyQt6.QtCore import pyqtSignal, QObject
 from PyQt6.QtNetwork import QTcpSocket
 from common.lib.interfaces.ConnectorInterface import ConnectionInterface
 from common.lib.core.Parser import Parser
@@ -73,31 +73,31 @@ class Terminal(QObject):
 
     @staticmethod
     def sv_connected() -> None:
-        info("Connection ESTABLISHED")
+        logger.info("Connection ESTABLISHED")
 
     @staticmethod
     def sv_disconnected() -> None:
-        info("Connection DISCONNECTED")
+        logger.info("Connection DISCONNECTED")
 
     @staticmethod
     def got_timeout(transaction, timeout_secs) -> None:
-        error(f"Transaction [{transaction.trans_id}] timeout after {int(timeout_secs)} seconds of waiting answer")
+        logger.error(f"Transaction [{transaction.trans_id}] timeout after {int(timeout_secs)} seconds of waiting answer")
 
     def socket_error(self) -> None:
         if self.connector.error() == QTcpSocket.SocketError.UnknownSocketError:  # TODO
             return
 
-        error(f"Received a socket error from host: {self.connector.errorString()}")
+        logger.error(f"Received a socket error from host: {self.connector.errorString()}")
 
     def disconnect(self) -> None:
         self.connector.disconnect_sv()
 
     def reconnect(self) -> None:
         if self.connector.connection_in_progress():
-            warning("Unable to reconnect while connection in progress")
+            logger.warning("Unable to reconnect while connection in progress")
             return
 
-        info("[Re]connecting...")
+        logger.info("[Re]connecting...")
 
         self.need_reconnect.emit()
 
@@ -115,22 +115,23 @@ class Terminal(QObject):
         try:
             self.log_printer.print_dump(request)
         except Exception as parsing_error:
-            error(f"Data parsing error: {parsing_error}")
+            logger.error(f"Data parsing error: {parsing_error}")
             return
 
         try:
             self.log_printer.print_transaction(request)
         except Exception as print_error:
-            error(f"Transaction print error {print_error}")
+            logger.error(f"Transaction print error {print_error}")
 
         if not request.is_keep_alive:
-            info(f"Outgoing transaction ID [{request.trans_id}] sent")
+            logger.info(f"Outgoing transaction ID [{request.trans_id}] sent")
 
     def transaction_received(self, response: Transaction) -> None:
         resp_trans_id = response.match_id if response.matched else response.trans_id
 
-        info(f"Incoming transaction ID [{resp_trans_id}] received")
-
+        if not (response.is_keep_alive and self.config.debug.reduce_keep_alive):
+            logger.info(f"Incoming transaction ID [{resp_trans_id}] received")
+        
         validation_conditions = (
             self.config.validation.validation_enabled,
             self.config.validation.validate_incoming,
@@ -142,36 +143,37 @@ class Terminal(QObject):
                 self.trans_validator.validate_transaction(transaction=response)
 
             except Exception as validation_error:
-                [warning(warn) for warn in str(validation_error).splitlines()]
+                [logger.warning(warn) for warn in str(validation_error).splitlines()]
 
         try:
             self.log_printer.print_dump(response)
         except Exception as parsing_error:
-            debug(f"Cannot print transaction dump, data parsing error: {parsing_error}")
+            logger.debug(f"Cannot print transaction dump, data parsing error: {parsing_error}")
 
         try:
             self.log_printer.print_transaction(response)
         except Exception as parsing_error:
-            error(f"Cannot print transaction, data parsing error: {parsing_error}")
+            logger.error(f"Cannot print transaction, data parsing error: {parsing_error}")
 
         if response.matched and response.resp_time_seconds:
+
             if response.is_keep_alive:
                 resp = response.data_fields.get(self.spec.FIELD_SET.FIELD_039_AUTHORIZATION_RESPONSE_CODE, 'Unknown')
+                message: str = (f'Keep Alive transaction [{response.match_id}] successfully matched. Response code: "{resp}"')
 
-                message: str = (f"Keep Alive transaction [{response.match_id}] successfully matched. "
-                                f'Response code: "{resp}"')
             else:
                 message: str = f"Transaction ID [{response.match_id}] matched"
 
             message: str = f"{message}, response time seconds: {response.resp_time_seconds}"
 
-            info(message)
+            if not (response.is_keep_alive and self.config.debug.reduce_keep_alive):
+                logger.info(message)
 
         if not response.matched:
             match_fields: list[str] = [field for field in self.spec.get_match_fields() if field in response.data_fields]
             match_fields: str = ', '.join(match_fields)
-            warning(f"Non-matched Transaction received. Transaction ID [{response.trans_id}]")
-            warning(f"Fields {match_fields} from the response don't correspond to any requests in the current session "
+            logger.warning(f"Non-matched Transaction received. Transaction ID [{response.trans_id}]")
+            logger.warning(f"Fields {match_fields} from the response don't correspond to any requests in the current session "
                     f"or request was matched before")
 
     def set_keep_alive_interval(self, interval_name: str) -> None:
@@ -186,7 +188,7 @@ class Terminal(QObject):
             transaction: Transaction = self.generator.set_generated_fields(transaction)
 
         except Exception as transaction_building_error:
-            error(f"Keep alive transaction building error: {transaction_building_error}")
+            logger.error(f"Keep alive transaction building error: {transaction_building_error}")
             return
 
         transaction.generate_fields = []
@@ -197,7 +199,8 @@ class Terminal(QObject):
                         f"Network management code: "
                         f"[{transaction.data_fields.get(self.spec.FIELD_SET.FIELD_070_NETWORK_MANAGEMENT_CODE)}]")
 
-        info(f"Sending Keep Alive message - {message}")
+        if not self.config.debug.reduce_keep_alive:
+            logger.info(f"Sending Keep Alive message - {message}")
 
         self.send(transaction)
 
@@ -209,22 +212,22 @@ class Terminal(QObject):
         }
 
         if not (data_processing_function := data_processing_map.get(file_format.upper())):
-            error("Unknown output file format")
+            logger.error("Unknown output file format")
             return
 
         try:
             if not (file_data := data_processing_function(transaction)):
-                error("No data to save")
+                logger.error("No data to save")
                 return
 
         except Exception as data_processing_error:
-            error(f"Cannot save transaction: {data_processing_error}")
+            logger.error(f"Cannot save transaction: {data_processing_error}")
             return
 
         with open(file_name, "w") as file:
             file.write(file_data)
 
-        info(f"The transaction was saved successfully to {file_name}")
+        logger.info(f"The transaction was saved successfully to {file_name}")
 
     def build_reversal(self, original_transaction: Transaction) -> Transaction:
         if not (original_transaction.matched and original_transaction.match_id):

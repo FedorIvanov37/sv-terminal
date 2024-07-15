@@ -52,9 +52,10 @@ The document is currently under construction</p>
 
 * [HTTP API]
   * [API reference]
-  * [Data model]
+  * [Swagger documentation]
+  * [Data models]
   * [Postman collection]
-
+  
 
 * [Command Line Interface](#command-line-interface)
   * [CLI usage](#cli-usage)
@@ -172,25 +173,27 @@ of the Signal evolution
 
 ## Release info
 
-What's new is the Signal v0.18 
+What's new is the Signal v0.19
 
 * New features
-  * Command line mode
-  * Main Window tabs
-  * New hotkeys to manage tabs
-    * Multiple files opening
-    * Multiple files saving
+  * Web API in GUI and CLI mode
+    * The Postman collection
+    * Swagger documentation
+  * Toolbar on main window
+  * User reference guide, available in browser
+  * Indicators of API mode, Keep-Alive, and transaction repeat 
+
 
 * Updates
-  * Reduced validation and other redundant feedback
-  * Expand reversal window to long utrnno
-  * License and About windows renovation
-  * Added setting: Show license agreement on startup
-
+  * The main window buttons set is revised. All the tools moved to the toolbar
+  * Renovation of the settings window 
+  * The "settings" and the "about" windows are merged
+  * Updated user reference guide 
+  
+  
 * Fixed
-  * License window opens multiple times
-  * Incorrect bitmap representation
-  * Small bugs inherited from v0.17
+  * Force fields validation does not work in some cases 
+  * Code optimization
   
 
 # Graphic User Interface

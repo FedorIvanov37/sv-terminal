@@ -25,7 +25,7 @@ class ToolBarElements(StrEnum):
     DOCUMENTATION = "User reference guide"
     HOTKEYS = "Hotkeys"
     ABOUT = "About Signal"
-    API = "Api"
+    API = "API"
     START = "Start"
     STOP = "Stop"
     EXIT = "Exit"

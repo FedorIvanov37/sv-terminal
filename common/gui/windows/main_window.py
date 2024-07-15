@@ -260,6 +260,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.ButtonDefault: self.reset,
             self.ButtonEchoTest: self.echo_test,
             self.ButtonReconnect: self.reconnect,
+            self.ButtonReverse: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.LAST)
         }
 
         tab_view_connection_map = {
@@ -317,17 +318,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             KeySequences.CTRL_ALT_P: lambda: self.print.emit(ButtonActions.PrintButtonDataFormats.TERM),
         }
 
-        self.buttons_menu_structure = {
-            # Special menu buttons. Along with the common they send modifiers - string values, aka pragma
-            # The modifiers are used to define the requested data format or as a hint on how to process the data
-
-            self.ButtonReverse: {
-                ButtonActions.ReversalMenuActions.LAST: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.LAST),
-                ButtonActions.ReversalMenuActions.OTHER: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.OTHER),
-                ButtonActions.ReversalMenuActions.SET_REVERSAL: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.SET_REVERSAL),
-            },
-        }
-
         # The mapping is defined, let's connect them all
 
         for combination, function in keys_connection_map.items():  # Key sequences
@@ -339,13 +329,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for connection_map in tab_view_connection_map, main_window_connection_map:  # Signals, activated by key event
             for signal, slot in connection_map.items():
                 signal.connect(slot)
-
-        for button, actions in self.buttons_menu_structure.items():  # Menu buttons
-            button.setMenu(QMenu())
-
-            for action, function in actions.items():
-                button.menu().addAction(action, function)
-                button.menu().addSeparator()
 
         self.api_mode_changed.connect(self.process_api_mode_change)
 

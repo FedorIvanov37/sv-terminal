@@ -196,47 +196,48 @@
 + Print Signal logo on SpecWindow
 
 
-# 0.19 planning
+# v0.19
+
 + Settings tabs - GUI, CLI, API, About
 + Tab order on JsoViews ?
++ Setting don't print keep alive
 
-• Setting don't print keep alive
 • Undo / Redo by keyboard
+• Keep alive indicator
+• Repeat indicator
 
 • API mode
-    + Render API mode
     • API activate / stop
-    • API settings
     • Swagger documentation
     • README.md
     • POSTMAN collection
     • Run API using CLI --api-mode
-    • Setting wait for response / parallel
+    + Render API mode
+    + API settings
+    + Setting wait for response / parallel
     + Move "Hotkeys" hint to settings
 
-• Setting not print log in CLI mode; --print-log=True
-
-• Add widgets
++ Add widgets
     + Radio Button
     + ToolBar
-    • DialogButtonBox
-    • QMessageBox
-    • ContextMenuEvent
-    • Resource file?
+    + DialogButtonBox
+    + QMessageBox
+    + ContextMenuEvent
+    + Resource file?
 
++ Setting not print log in CLI mode; --print-log=True
 + Add user guide
 + Add toolbar
 + Remove redundant buttons
 + Add license to toolbar Help
-
-• Keep alive indicator
-• Repeat indicator
 
 To fix
 + Fix repeat interval mark
 + Fix Hotkeys window - CTRL + P
 + Fix html-document name
 + Fix non-force validation
++ Default config
+
 
 #
 
@@ -292,7 +293,7 @@ To fix
     • Publish on confluence
     • Spec explanation
     • Radio buttons
-    • Toolbar
+    + Toolbar
 
 • Bugs
     • Error on console when run AboutWindow - Could not update timestamps for skipped samples

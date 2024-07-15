@@ -1,7 +1,7 @@
 from os.path import basename, normpath
-from os import getcwd
+from os import getcwd, kill
 from typing import Callable
-from logging import error, info, warning
+from loguru import logger
 from pydantic import ValidationError
 from webbrowser import open as open_url
 from PyQt6.QtWidgets import QApplication, QFileDialog
@@ -27,7 +27,6 @@ from common.lib.enums.MessageLength import MessageLength
 from common.lib.enums.TextConstants import TextConstants
 from common.lib.core.TransTimer import TransactionTimer
 from common.lib.core.SpecFilesRotator import SpecFilesRotator
-from common.lib.core.Logger import getLogger
 from common.lib.core.Terminal import Terminal
 from common.lib.data_models.Config import Config
 from common.lib.data_models.License import LicenseInfo
@@ -70,6 +69,8 @@ class SignalGui(Terminal):
     _run_timer = QTimer()
     _run_api = pyqtSignal()
     _stop_api = pyqtSignal()
+    _handler_id: int = None
+    _api_pid: int
 
     def set_json_view_focus(function: callable):
 
@@ -94,10 +95,10 @@ class SignalGui(Terminal):
 
     def setup(self) -> None:
         QDir.addSearchPath(GuiDirs.STYLE_DIR.name, GuiDirs.STYLE_DIR)
-        self._wireless_handler = self.logger.create_window_logger(self.window.log_browser)
         self._run_timer.setSingleShot(True)
         self._run_timer.start(int())
-        # self.settings()
+        self._handler_id = self.logger.add_wireless_handler(self.window.log_browser, self._wireless_handler)
+        logger.error("This is the message")
 
     def on_startup(self) -> None:  # Runs on startup to make all the preparation activity, then shows MainWindow
         self.show_license_dialog()
@@ -123,6 +124,9 @@ class SignalGui(Terminal):
         if self.config.terminal.connect_on_startup:
             self.reconnect()
 
+        if self.config.terminal.run_api:
+            self._run_api.emit()
+
         self.window.json_view.enable_json_mode_checkboxes(enable=not self.config.specification.manual_input_mode)
 
         self.window.show()
@@ -140,7 +144,7 @@ class SignalGui(Terminal):
             window.echo_test: self.echo_test,
             window.clear: self.clear_message,
             window.copy_log: self.copy_log,
-            window.copy_bitmap: self.copy_bitmap,
+            window.copy_bitmap: lambda: logger.error("The message"),  #self.copy_bitmap,
             window.reconnect: self.reconnect,
             window.parse_file: self.parse_file,
             window.window_close: self.stop_signal,
@@ -169,7 +173,7 @@ class SignalGui(Terminal):
             self.trans_timer.interval_was_set: window.process_transaction_loop_change,
             self.keep_alive_timer.interval_was_set: window.process_transaction_loop_change,
             self._run_timer.timeout: self.on_startup
-        }
+        }   
 
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
@@ -180,12 +184,10 @@ class SignalGui(Terminal):
             self._api_interface.incoming_transaction.connect(self.send)
             self._run_api.connect(self._api_interface.run_api)
             self._run_api.emit()
-            return
 
-        try:
+        if state == "STOP":
             self._api_interface.stop_thread()
-        except AttributeError:
-            warning("API mode is currently not active")
+            del self._api_interface
 
     @staticmethod
     def show_document():
@@ -199,7 +201,7 @@ class SignalGui(Terminal):
             self.config.terminal.show_license_dialog = license_window.license_info.show_agreement
 
         except LicenseDataLoadingError as license_data_loading_error:
-            error(license_data_loading_error)
+            logger.error(license_data_loading_error)
             exit(100)
 
         except LicenceAlreadyAccepted:
@@ -209,13 +211,11 @@ class SignalGui(Terminal):
     def run_specification_window(self) -> None:
         old_spec = self.spec.spec.json()
 
-        logger = getLogger()
-        logger.removeHandler(self._wireless_handler)
-
+        logger.remove(self._handler_id)
         spec_window = SpecWindow(self.connector, self.config)
         spec_window.exec()
 
-        logger.addHandler(self._wireless_handler)
+        self._handler_id = self.logger.add_wireless_handler(self.window.log_browser)
 
         if self.config.fields.hide_secrets:
             self.window.json_view.hide_secrets()
@@ -224,7 +224,7 @@ class SignalGui(Terminal):
 
         if specification_changed and self.config.validation.validation_enabled:
             if self.config.validation.validate_window:
-                info("Validate message after spec settings")
+                logger.info("Validate message after spec settings")
                 self.validate_main_window()
 
             if self.config.specification.manual_input_mode:
@@ -238,34 +238,34 @@ class SignalGui(Terminal):
         try:
             epay_spec = EpaySpecModel.model_validate_json(spec_data)
         except (ValidationError, ValueError) as spec_parsing_error:
-            error(f"Remote spec processing error: {spec_parsing_error}")
-            warning("Local specification will be used instead")
+            logger.error(f"Remote spec processing error: {spec_parsing_error}")
+            logger.warning("Local specification will be used instead")
             return
 
         try:
             self.spec.reload_spec(spec=epay_spec, commit=self.config.specification.rewrite_local_spec)
         except Exception as spec_reload_error:
-            error(spec_reload_error)
-            warning("Local specification will be used instead")
+            logger.error(spec_reload_error)
+            logger.warning("Local specification will be used instead")
             return
 
-        info(f"Remote specification loaded: {epay_spec.name}")
+        logger.info(f"Remote specification loaded: {epay_spec.name}")
 
     def validate_main_window(self, force=False):
         self.window.validate_fields(force=force)
         self.window.json_view.refresh_fields()
 
-        info("Transaction data validated")
+        logger.info("Transaction data validated")
 
     def echo_test(self) -> None:
         try:
             Terminal.echo_test(self)
 
         except ValidationError as validation_error:
-            error(validation_error.json())
+            logger.error(validation_error.json())
 
         except Exception as sending_error:
-            error(sending_error)
+            logger.error(sending_error)
 
     @set_json_view_focus
     def settings(self, about=False) -> None:
@@ -277,13 +277,13 @@ class SignalGui(Terminal):
             settings_window.exec()
 
         except Exception as settings_error:
-            error(settings_error)
+            logger.error(settings_error)
 
     def process_config_change(self, old_config: Config) -> None:
         self.read_config()
 
         if "" in (self.config.host.host, self.config.host.port):
-            warning("Lost SV address or SV port! Check the parameters")
+            logger.warning("Lost SV address or SV port! Check the parameters")
 
         try:
             if not self.config.host.port:
@@ -293,9 +293,9 @@ class SignalGui(Terminal):
                 raise ValueError
 
         except ValueError:
-            warning(f"Incorrect SV port value: {self.config.host.port}. Must be a number in the range of 0 to 65535")
+            logger.warning(f"Incorrect SV port value: {self.config.host.port}. Must be a number in the range of 0 to 65535")
 
-        info("Settings applied")
+        logger.info("Settings applied")
 
         self.window.json_view.enable_json_mode_checkboxes(enable=self.config.validation.validate_window)
 
@@ -332,7 +332,7 @@ class SignalGui(Terminal):
                 self.data_validator.validate_url(self.config.specification.remote_spec_url)
 
             except (ValidationError, DataValidationError, DataValidationWarning) as url_validation_error:
-                error(f"Remote spec URL validation error: {url_validation_error}")
+                logger.error(f"Remote spec URL validation error: {url_validation_error}")
 
             else:
                 self.set_remote_spec.emit()
@@ -362,11 +362,11 @@ class SignalGui(Terminal):
                 license_json.write(license_info.model_dump_json(indent=4))
 
         except ValueError as not_accepted:
-            error(not_accepted)
+            logger.error(not_accepted)
             exit(100)
 
         except Exception as license_error:
-            error(f"Cannot save license params: {license_error}")
+            logger.error(f"Cannot save license params: {license_error}")
 
     def read_config(self) -> None:
         try:
@@ -374,7 +374,7 @@ class SignalGui(Terminal):
                 config: Config = Config.model_validate_json(json_file.read())
 
         except ValidationError as parsing_error:
-            error(f"Cannot parse configuration file: {parsing_error}")
+            logger.error(f"Cannot parse configuration file: {parsing_error}")
             return
 
         self.config.fields = config.fields
@@ -418,7 +418,7 @@ class SignalGui(Terminal):
                 raise LookupError
 
         except Exception as reversal_building_error:
-            error(f"Cannot reverse transaction, lost transaction ID or non-reversible MTI {reversal_building_error}")
+            logger.error(f"Cannot reverse transaction, lost transaction ID or non-reversible MTI {reversal_building_error}")
             return
 
         match command:
@@ -429,10 +429,10 @@ class SignalGui(Terminal):
                 try:
                     self.send(reversal)
                 except Exception as sending_error:
-                    error(sending_error)
+                    logger.error(sending_error)
 
             case _:
-                error("Cannot reverse transaction")
+                logger.error("Cannot reverse transaction")
 
     def parse_main_window_tab(self, tab_name: str | None = None, flat_fields: bool = True, clean: bool = False) -> \
             Transaction:
@@ -485,11 +485,11 @@ class SignalGui(Terminal):
                 transaction = self.parse_main_window_tab(tab_name=tab_name, flat_fields=flat_fields, clean=clean)
 
             except ValidationError as validation_error:
-                [error(err.get("msg")) for err in validation_error.errors()]
+                [logger.error(err.get("msg")) for err in validation_error.errors()]
                 continue
 
             except Exception as parsing_error:
-                error(parsing_error)
+                logger.error(parsing_error)
                 continue
 
             if not transaction:
@@ -503,7 +503,7 @@ class SignalGui(Terminal):
         if self.connector.connection_in_progress():
             transaction.success = False
             transaction.error = "Cannot send the transaction while the host connection is in progress"
-            error(transaction.error)
+            logger.error(transaction.error)
             return
 
         if transaction is None:
@@ -514,7 +514,7 @@ class SignalGui(Terminal):
                     raise ValueError
 
             except Exception as building_error:
-                [error(err) for err in str(building_error).splitlines()]
+                [logger.error(err) for err in str(building_error).splitlines()]
                 return
 
         if self.config.debug.clear_log and not transaction.is_keep_alive:
@@ -530,7 +530,7 @@ class SignalGui(Terminal):
             transaction.trans_id = f"{transaction.trans_id}_R"
 
         if not transaction.is_keep_alive:
-            info(f"Processing transaction ID [{transaction.trans_id}]")
+            logger.info(f"Processing transaction ID [{transaction.trans_id}]")
 
         if self.config.fields.send_internal_id:
             transaction: Transaction = self.generator.set_trans_id(transaction)
@@ -550,12 +550,12 @@ class SignalGui(Terminal):
                 self.trans_validator.validate_transaction(transaction)
 
             except DataValidationWarning as validation_warning:
-                [warning(warn) for warn in str(validation_warning).splitlines()]
+                [logger.warning(warn) for warn in str(validation_warning).splitlines()]
 
             except Exception as validation_error:
                 transaction.success = False
                 transaction.error = str(validation_error)
-                [error(err) for err in transaction.error.splitlines()]
+                [logger.error(err) for err in transaction.error.splitlines()]
                 return
 
         try:
@@ -563,7 +563,7 @@ class SignalGui(Terminal):
         except Exception as sending_error:
             transaction.success = False
             transaction.error = f"Transaction sending error: {sending_error}"
-            error(transaction.error)
+            logger.error(transaction.error)
             return
 
     @staticmethod
@@ -632,14 +632,14 @@ class SignalGui(Terminal):
         transactions: dict[str, Transaction] = dict()
 
         if not (file_data := self.get_output_filename(mode == ButtonActions.SaveMenuActions.ALL_TABS)):
-            warning("No output filename or directory recognized")
+            logger.warning("No output filename or directory recognized")
             return
 
         if mode == ButtonActions.SaveMenuActions.CURRENT_TAB:
             file_name, file_format = file_data
 
             if not all([file_name, file_format]):
-                warning("No output filename or directory recognized")
+                logger.warning("No output filename or directory recognized")
                 return
 
         try:
@@ -652,7 +652,7 @@ class SignalGui(Terminal):
                     transactions = {tab_name: self.parse_main_window_tab(clean=True, flat_fields=False)}
 
         except Exception as file_saving_error:
-            error("File saving error: %s", file_saving_error)
+            logger.error("File saving error: %s", file_saving_error)
             return
 
         for tab_name, transaction in transactions.items():
@@ -676,10 +676,10 @@ class SignalGui(Terminal):
                 self.trans_validator.validate_transaction(transaction)
 
             except DataValidationWarning as validation_warning:
-                warning(validation_warning)
+                logger.warning(validation_warning)
 
             except Exception as validation_error:
-                error(validation_error)
+                logger.error(validation_error)
                 return
 
             Terminal.save_transaction(self, transaction, file_format, file_name)
@@ -695,17 +695,17 @@ class SignalGui(Terminal):
         }
 
         if not (function := data_processing_map.get(data_format)):
-            error(f"Wrong data format for printing: {data_format}")
+            logger.error(f"Wrong data format for printing: {data_format}")
             return
 
         try:
             self.window.set_log_data(function())
 
         except AttributeError:
-            error("Cannot construct message: lost field specification. Correct spec or turn field validation off")
+            logger.error("Cannot construct message: lost field specification. Correct spec or turn field validation off")
 
         except Exception as validation_error:
-            error(f"Cannot construct message: {validation_error}")
+            logger.error(f"Cannot construct message: {validation_error}")
 
     def copy_log(self) -> None:
         self.set_clipboard_text(self.window.get_log_data())
@@ -739,10 +739,10 @@ class SignalGui(Terminal):
             self.parse_file(str(TermFilesPath.DEFAULT_FILE), log=False)
 
         except Exception as parsing_error:
-            error(f"Default file parsing error! Exception: {parsing_error}")
+            logger.error(f"Default file parsing error! Exception: {parsing_error}")
 
         else:
-            info("Default file parsed") if log else ...
+            logger.info("Default file parsed") if log else ...
 
     @set_json_view_focus
     def parse_file(self, filename: str | None = None, log=True) -> None:
@@ -752,31 +752,31 @@ class SignalGui(Terminal):
                 transaction: Transaction = self.parser.parse_file(_filename)
 
             except (DataValidationError, ValidationError, ValueError) as validation_error:
-                error(f"File parsing error: {validation_error}")
+                logger.error(f"File parsing error: {validation_error}")
                 return
 
             except Exception as parsing_error:
-                error(f"File parsing error: {parsing_error}")
+                logger.error(f"File parsing error: {parsing_error}")
                 return
 
             try:
                 self.parse_transaction(transaction)
 
             except Exception as fields_setting_error:
-                error(fields_setting_error)
+                logger.error(fields_setting_error)
                 return
 
             if not log:
                 return
 
-            info(f"File parsed: {filename}")
+            logger.info(f"File parsed: {filename}")
 
         if filename:
             _parse_file(filename, _log=log)
             return
 
         if not (filenames := self.get_input_filename(multiple_files=True)):
-            warning("No input filename(s) recognized")
+            logger.warning("No input filename(s) recognized")
             return
 
         for filename in filenames:
@@ -797,10 +797,10 @@ class SignalGui(Terminal):
             self.set_bitmap()
 
         except DataValidationWarning as validation_warning:
-            [warning(warn) for warn in str(validation_warning).splitlines()]
+            [logger.warning(warn) for warn in str(validation_warning).splitlines()]
 
         except Exception as transaction_parsing_error:
-            error(f"Cannot set transaction fields: {transaction_parsing_error}")
+            logger.error(f"Cannot set transaction fields: {transaction_parsing_error}")
             return
 
         if self.config.validation.validation_enabled and self.config.validation.validate_window:

@@ -1,6 +1,6 @@
 from sys import exit
 from json.decoder import JSONDecodeError
-from logging import warning, info
+from loguru import logger
 from pydantic import ValidationError
 from datetime import datetime, UTC
 from PyQt6.QtCore import Qt
@@ -85,7 +85,7 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
         self.config.terminal.show_license_dialog = license_data.show_agreement
 
         self.save_license_file(license_data)
-        warning("License agreement rejected, exit")
+        logger.warning("License agreement rejected, exit")
         exit(100)
 
     @staticmethod
@@ -105,5 +105,5 @@ class LicenseWindow(Ui_LicenseWindow, QDialog):
     def print_acceptance_info(self):
         date_format = "%d/%m/%Y %T UTC"
 
-        info(f"License ID {self._license_info.license_id} | Accepted {
+        logger.info(f"License ID {self._license_info.license_id} | Accepted {
             datetime.strftime(self._license_info.last_acceptance_date, date_format)}")

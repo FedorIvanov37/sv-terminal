@@ -1,4 +1,4 @@
-from logging import error, warning
+from loguru import logger
 from collections import deque
 from datetime import datetime, timedelta
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -30,12 +30,12 @@ class TransactionQueue(QObject):
 
     def set_sending_error(self, trans_id, error_message):
         if not (transaction := self.get_transaction(trans_id)):
-            error(error_message)
+            logger.error(error_message)
             return
 
         transaction.success = False
         transaction.error = error_message
-        error(error_message)
+        logger.error(error_message)
 
     def send_transaction_data(self, request: Transaction):
         if not request.is_request:
@@ -48,7 +48,7 @@ class TransactionQueue(QObject):
         except (ValueError, TypeError) as parsing_error:
             request.success = False
             request.error = f"Parsing error: {parsing_error}"
-            error(request.error)
+            logger.error(request.error)
             return
 
         self.ready_to_send.emit(request.trans_id, transaction_dump)
@@ -58,7 +58,7 @@ class TransactionQueue(QObject):
             transactions: list[Transaction] = Parser.parse_raw_data(transaction_data, flat=True)
 
         except Exception as parsing_error:
-            error(f"Incoming transaction parsing error: {parsing_error}")
+            logger.error(f"Incoming transaction parsing error: {parsing_error}")
             return
 
         for transaction in transactions:
@@ -72,10 +72,10 @@ class TransactionQueue(QObject):
                 continue
 
             if transaction.trans_id == old_transaction.trans_id:
-                warning(f"Transaction with ID [{transaction.trans_id}] already exists. The transaction will be rewritten")
+                logger.warning(f"Transaction with ID [{transaction.trans_id}] already exists. The transaction will be rewritten")
 
             if transaction.trans_id == old_transaction.match_id:
-                warning(f"Transaction with match ID [{transaction.trans_id}] already exists. The transaction will be rewritten")
+                logger.warning(f"Transaction with match ID [{transaction.trans_id}] already exists. The transaction will be rewritten")
 
             transactions_to_delete.append(old_transaction)
 

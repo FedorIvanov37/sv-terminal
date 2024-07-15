@@ -2,7 +2,7 @@ from json import loads
 from pathlib import Path
 from pydantic import FilePath
 from binascii import hexlify, unhexlify, b2a_hex
-from logging import error, warning, info
+from loguru import logger
 from configparser import ConfigParser, NoSectionError, NoOptionError
 from io import StringIO
 from common.lib.toolkit.generate_trans_id import generate_trans_id
@@ -43,7 +43,7 @@ class Parser:
 
         for field in sorted(transaction.data_fields.keys(), key=int):
             if not (text := transaction.data_fields.get(field)):
-                warning("No value for field %s. IsoField was ignored" % field)
+                logger.warning("No value for field %s. IsoField was ignored" % field)
                 continue
 
             if isinstance(text, dict):
@@ -72,7 +72,7 @@ class Parser:
         try:
             body: str = Parser.create_dump(transaction, body=True)
         except Exception as parsing_error:
-            error(f"Parsing error {parsing_error}")
+            logger.error(f"Parsing error {parsing_error}")
             return
 
         dump = "\n"
@@ -170,7 +170,7 @@ class Parser:
                             "To work with such message add the field to the Specification or set the Manual entry mode "
                             "in the Configuration window"):
 
-                    error(err)
+                    logger.error(err)
 
                 raise ValueError
 
@@ -218,10 +218,10 @@ class Parser:
 
             except (ValueError, IndexError):
                 if not config.host.header_length_exists:
-                    warning("No message header length set, ordinary header length is 2 or 4. Check the settings")
+                    logger.warning("No message header length set, ordinary header length is 2 or 4. Check the settings")
 
                 if config.host.header_length_exists and config.host.header_length not in (2, 4):
-                    warning(f"Unusual message header length {config.host.header_length}, "
+                    logger.warning(f"Unusual message header length {config.host.header_length}, "
                             f"ordinary it is 2 or 4. Check the settings")
 
                 raise ValueError("Invalid incoming message length")
@@ -318,8 +318,8 @@ class Parser:
                     raise ValueError("Lost variable length")
 
             except(AttributeError, ValueError):
-                error("Lost specification for field %s ", field)
-                error("The field and corresponding sub fields were absent")
+                logger.error("Lost specification for field %s ", field)
+                logger.error("The field and corresponding sub fields were absent")
                 return {}
 
             var_length = spec.tag_length
@@ -358,7 +358,7 @@ class Parser:
             try:
                 field_number = f"F{int(field_number):03}"
             except ValueError:
-                error(f"Wrong field number {field_number}")
+                logger.error(f"Wrong field number {field_number}")
 
             ini_data.append(f"{field_number} = [{field_data}]")
 
@@ -383,13 +383,13 @@ class Parser:
             transaction: Transaction = function(filename)
 
         if not transaction:
-            warning("Unknown file extension, trying to guess the format")
+            logger.warning("Unknown file extension, trying to guess the format")
 
             for extension in data_processing_map:
-                info(f"Trying to parse file as {extension}")
+                logger.info(f"Trying to parse file as {extension}")
 
                 if not (function := data_processing_map.get(extension)):
-                    warning(f"Cannot parse file as {extension}")
+                    logger.warning(f"Cannot parse file as {extension}")
                     continue
 
                 try:
@@ -397,11 +397,11 @@ class Parser:
                         break
 
                 except FileNotFoundError as file_not_found_error:
-                    error(file_not_found_error)
+                    logger.error(file_not_found_error)
                     break
 
                 except Exception as parsing_error:
-                    warning(f"Cannot parse file as {extension}: {parsing_error}")
+                    logger.warning(f"Cannot parse file as {extension}: {parsing_error}")
                     continue
 
         if not transaction:

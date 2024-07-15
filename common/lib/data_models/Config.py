@@ -16,6 +16,7 @@ class Terminal(BaseModel):
     connect_on_startup: bool = True
     load_remote_spec: bool = False
     show_license_dialog: bool = True
+    run_api: bool = False
 
 
 class Debug(BaseModel):
@@ -23,6 +24,7 @@ class Debug(BaseModel):
     clear_log: bool = True
     parse_subfields: bool = False
     backup_storage_depth: int = 30
+    reduce_keep_alive: bool = True
 
 
 class Validation(BaseModel):
@@ -61,6 +63,7 @@ class Specification(BaseModel):
 class ApiModel(BaseModel):
     address: str | None = ""
     port: int = 7777
+    wait_remote_host_response: bool = True
 
 
 class Config(BaseModel):

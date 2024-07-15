@@ -1,4 +1,4 @@
-from logging import debug, info, warning, error
+from loguru import logger
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Parser import Parser
@@ -12,7 +12,7 @@ from PyQt6.QtCore import QObject
 
 class LogPrinter(QObject):
     spec: EpaySpecification = EpaySpecification()
-    default_level = info
+    default_level = logger.info
 
     def __init__(self, config: Config):
         super().__init__()
@@ -44,7 +44,7 @@ class LogPrinter(QObject):
 
         self.print_multi_row(config_data, level=level)
 
-    def print_dump(self, transaction: Transaction, level=debug):
+    def print_dump(self, transaction: Transaction, level=logger.debug):
         if not(dump := Parser.create_sv_dump(transaction)):
             return
 
@@ -94,7 +94,7 @@ class LogPrinter(QObject):
                 try:
                     field_data = Parser.join_complex_field(field, field_data)
                 except Exception as parsing_error:
-                    error(f"Cannot print field {field}: {parsing_error}")
+                    logger.error(f"Cannot print field {field}: {parsing_error}")
                     continue
 
             if all((hide_secrets, self.spec.is_field_complex([field]), isinstance(field_data, str))):
@@ -103,7 +103,7 @@ class LogPrinter(QObject):
                     field_data: str = Parser.join_complex_field(field, split_field_data, hide_secrets=hide_secrets)
 
                 except Exception as field_parsing_error:
-                    warning(field_parsing_error)
+                    logger.warning(field_parsing_error)
 
             match field:
                 case self.spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
