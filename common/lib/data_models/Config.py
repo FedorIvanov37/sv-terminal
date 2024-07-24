@@ -10,6 +10,19 @@ class Host(BaseModel):
     header_length: int = 0
     header_length_exists: bool = True
 
+    @field_validator("port", mode="before")
+    @classmethod
+    def validate_port(cls, val):
+        try:
+            val = int(val)
+        except ValueError:
+            raise ValueError("Port can contain numbers only")
+
+        if val not in range(0, 65536):
+            raise ValueError(f"Incorrect port number {val}. Port number must be in range 0-65535")
+
+        return val
+
 
 class Terminal(BaseModel):
     process_default_dump: bool = True
@@ -25,6 +38,14 @@ class Debug(BaseModel):
     parse_subfields: bool = False
     backup_storage_depth: int = 30
     reduce_keep_alive: bool = True
+
+    @field_validator("level", mode="before")
+    @classmethod
+    def set_default_level(cls, val):
+        if not val:
+            return "INFO"
+
+        return val
 
 
 class Validation(BaseModel):

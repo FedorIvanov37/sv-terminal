@@ -21,6 +21,7 @@ from common.lib.enums.TextConstants import TextConstants
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.gui.core.tab_view.TabView import TabView
 from common.gui.enums.ToolBarElements import ToolBarElements
+from common.gui.enums.ApiMode import ApiModes
 
 
 """
@@ -421,8 +422,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
                 ToolBarElements.CONSTRUCT_FIELD: lambda: self.parse_complex_field.emit(),
                 ToolBarElements.SPECIFICATION: lambda: self.specification.emit(),
                 ToolBarElements.API: {
-                    ToolBarElements.START: lambda: self.api_mode_changed.emit(ToolBarElements.START.upper()),
-                    ToolBarElements.STOP: lambda: self.api_mode_changed.emit(ToolBarElements.STOP.upper()),
+                    ToolBarElements.START: lambda: self.api_mode_changed.emit(ApiModes.START),
+                    ToolBarElements.STOP: lambda: self.api_mode_changed.emit(ApiModes.STOP),
                 },
                 ToolBarElements.REVERSAL: {
                     ToolBarElements.LAST: lambda: self.reverse.emit(ButtonActions.ReversalMenuActions.LAST),

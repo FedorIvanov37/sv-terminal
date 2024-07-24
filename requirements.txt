@@ -12,3 +12,5 @@ pydantic
 fastapi
 uvicorn
 loguru
+flask
+Flask-Pydantic

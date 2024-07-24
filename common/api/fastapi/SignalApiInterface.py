@@ -1,10 +1,9 @@
 from PyQt6.QtCore import QObject, pyqtSignal, QThread, QCoreApplication
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
-from common.api.SignalApi import SignalApi
+from common.api.fastapi.SignalApi import SignalApi
 from common.lib.data_models.Config import Config
 from os import getpid
-from common.lib.core.LogStream import LogStream
 
 
 class SignalApiInterface(QObject):
@@ -36,17 +35,17 @@ class SignalApiInterface(QObject):
     def run_api(self):
         return self._run_api
 
-    def __init__(self, config: Config, terminal):
+    def __init__(self, config: Config, terminal, log_handler):
         super().__init__()
-        self.log_stream = LogStream(terminal.window.log_browser)
-        self.api = SignalApi(self.log_stream)
-        self.thread = QThread()
-        self.api.moveToThread(self.thread)
+        self.api = SignalApi()
+        self.api.connector.log_handler = log_handler
         self.api.connector.config = config
         self.api.connector.trans_queue = terminal.trans_queue
         self.api.connector.terminal = terminal
         self.api.connector.tcp_connector = terminal.connector
         self.api.connector.incoming_transaction.connect(self.incoming_transaction)
+        self.thread = QThread()
+        self.api.moveToThread(self.thread)
         self.run_api.connect(self.api.run)
         self.thread.started.connect(self.run)
         self.thread.start()

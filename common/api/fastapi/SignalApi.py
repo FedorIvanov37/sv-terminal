@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse, Response
 from fastapi.requests import Request
 from http import HTTPStatus
 from uvicorn import run as run_api
+from uvicorn.config import LOGGING_CONFIG
 from PyQt6.QtCore import QObject, pyqtSignal, QCoreApplication
 from common.lib.data_models.Transaction import Transaction
 from common.lib.decorators.singleton import singleton
@@ -18,7 +19,6 @@ from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.exceptions.exceptions import DataValidationError, DataValidationWarning
 from common.lib.enums.DataFormats import OutputFilesFormat
-from common.lib.core.LogStream import LogStream
 import logging
 
 
@@ -94,9 +94,8 @@ class SignalApi(QObject):
     app: FastAPI = FastAPI(title="Signal API", debug=False)
     connector: SignalApiConnector = SignalApiConnector()
 
-    def __init__(self, stream):
+    def __init__(self):
         super().__init__()
-        self.stream = stream
 
     @staticmethod
     @app.get("/api/transactions", response_model=list[Transaction])
@@ -280,40 +279,61 @@ class SignalApi(QObject):
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unhandled error")
 
     def run(self):
-        log_config_dict = {
-            "version": 1,
-            "disable_existing_loggers": False,
-            "formatters": {
-                "default": {
-                    "()": "uvicorn.logging.DefaultFormatter",
-                    "fmt": "%(levelprefix)s %(message)s",
-                    "use_colors": None,
+        s = {
+            'version': 1,
+            'disable_existing_loggers': False,
+            'formatters': {
+                'default': {
+                    '()': 'uvicorn.logging.DefaultFormatter',
+                    'fmt': '%(levelprefix)s %(message)s',
+                    'use_colors': None
                 },
-                "access": {
-                    "()": "uvicorn.logging.AccessFormatter",
-                    "fmt": '%(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s',
-                },
+                'access': {
+                    '()': 'uvicorn.logging.AccessFormatter',
+                    'fmt': '%(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s'
+                }
             },
-            "handlers": {
-                "default": {
-                    "formatter": "default",
-                    "class": "logging.StreamHandler",
-                    "stream": "ext://sys.stderr",
+            'handlers': {
+                'default': {
+                    'formatter': 'default',
+                    'class': 'logging.StreamHandler',
+                    'stream': 'ext://sys.stderr'
                 },
-                "access": {
-                    "formatter": "access",
-                    "class": "logging.StreamHandler",
-                    "stream": "ext://sys.stdout",
+                'access': {
+                    'formatter': 'access',
+                    'class': 'logging.StreamHandler',
+                    'stream': 'ext://sys.stdout'
+                }
+            },
+            'loggers': {
+                'uvicorn': {
+                    'handlers': [
+                        'default'
+                    ],
+                    'level': 'INFO',
+                    'propagate': True
                 },
-            },
-            "loggers": {
-                "uvicorn": {"handlers": [], "level": "INFO", "propagate": False},
-                "uvicorn.error": {"level": "CRITICAL"},
-                "uvicorn.access": {"handlers": [], "level": "INFO", "propagate": False},
-            },
+                'uvicorn.error': {
+                    'level': 'INFO'
+                },
+                'uvicorn.access': {
+                    'handlers': [
+                        'access'
+                    ],
+                    'level': 'INFO',
+                    'propagate': True
+                }
+            }
         }
 
-        run_api(self.app, host=SignalApi.connector.config.api.address, port=SignalApi.connector.config.api.port, log_config=log_config_dict) #
+        self.connector.log_handler.setLevel("DEBUG")
+        api_logger = logging.getLogger("uvicorn")
+        api_logger.addHandler(self.connector.log_handler)
+        self.connector.log_handler.new_record_appeared.connect(lambda: print("Record #"))
+        api_logger.setLevel("INFO")
+        print(api_logger.handlers)
+        print(LOGGING_CONFIG)
+        run_api(self.app, host=SignalApi.connector.config.api.address, port=SignalApi.connector.config.api.port) # , log_config=s
 
     def stop_api(self):
         raise KeyboardInterrupt

@@ -1,5 +1,6 @@
+from click import unstyle
 from os.path import basename, normpath
-from os import getcwd, kill
+from os import getcwd
 from typing import Callable
 from loguru import logger
 from pydantic import ValidationError
@@ -8,7 +9,7 @@ from PyQt6.QtWidgets import QApplication, QFileDialog
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtCore import pyqtSignal, QTimer, QDir, QThreadPool
 from common.gui.enums.GuiFilesPath import GuiFilesPath
-from common.api.SignalApiInterface import SignalApiInterface
+from common.api.fastapi.SignalApiInterface import SignalApiInterface
 from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
@@ -33,6 +34,8 @@ from common.lib.data_models.License import LicenseInfo
 from common.lib.data_models.Transaction import Transaction, TypeFields
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.gui.core.WirelessHandler import WirelessHandler
+from common.api.ApiThread import ApiThread
+from common.gui.enums.ApiMode import ApiModes
 from common.lib.exceptions.exceptions import (
     LicenceAlreadyAccepted,
     LicenseDataLoadingError,
@@ -60,6 +63,14 @@ Starts MainWindow when starting its work, being a kind of low-level adapter betw
 """
 
 
+class LogStream:
+    def __init__(self, log_browser):
+        self.log_browser = log_browser
+
+    def write(self, data):
+        self.log_browser.append(data)
+
+
 class SignalGui(Terminal):
     connector: ConnectionThread
     trans_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION)
@@ -70,7 +81,12 @@ class SignalGui(Terminal):
     _run_api = pyqtSignal()
     _stop_api = pyqtSignal()
     _handler_id: int = None
-    _api_pid: int
+    _api_thread: ApiThread = None
+    _stop_api_thread: pyqtSignal = pyqtSignal()
+
+    @property
+    def stop_api_thread(self):
+        return self._stop_api_thread
 
     def set_json_view_focus(function: callable):
 
@@ -90,6 +106,7 @@ class SignalGui(Terminal):
         super(SignalGui, self).__init__(config=config, connector=self.connector)
         self.window: MainWindow = MainWindow(self.config)
         self.thread_pool: QThreadPool = QThreadPool()
+        self._api_thread = ApiThread(self.config)
         self.connect_widgets()
         self.setup()
 
@@ -98,7 +115,6 @@ class SignalGui(Terminal):
         self._run_timer.setSingleShot(True)
         self._run_timer.start(int())
         self._handler_id = self.logger.add_wireless_handler(self.window.log_browser, self._wireless_handler)
-        logger.error("This is the message")
 
     def on_startup(self) -> None:  # Runs on startup to make all the preparation activity, then shows MainWindow
         self.show_license_dialog()
@@ -125,7 +141,8 @@ class SignalGui(Terminal):
             self.reconnect()
 
         if self.config.terminal.run_api:
-            self._run_api.emit()
+            self.process_change_api_mode(state=ApiModes.START)
+            self.window.process_api_mode_change(state=ApiModes.START)
 
         self.window.json_view.enable_json_mode_checkboxes(enable=not self.config.specification.manual_input_mode)
 
@@ -144,7 +161,7 @@ class SignalGui(Terminal):
             window.echo_test: self.echo_test,
             window.clear: self.clear_message,
             window.copy_log: self.copy_log,
-            window.copy_bitmap: lambda: logger.error("The message"),  #self.copy_bitmap,
+            window.copy_bitmap: lambda: self.copy_bitmap,
             window.reconnect: self.reconnect,
             window.parse_file: self.parse_file,
             window.window_close: self.stop_signal,
@@ -172,22 +189,37 @@ class SignalGui(Terminal):
             self.trans_timer.send_transaction: window.send,
             self.trans_timer.interval_was_set: window.process_transaction_loop_change,
             self.keep_alive_timer.interval_was_set: window.process_transaction_loop_change,
-            self._run_timer.timeout: self.on_startup
-        }   
+            self._run_timer.timeout: self.on_startup,
+        }
 
         for signal, slot in terminal_connections_map.items():
             signal.connect(slot)
 
-    def process_change_api_mode(self, state):
-        if state == "START":
-            self._api_interface: SignalApiInterface = SignalApiInterface(config=self.config, terminal=self)
-            self._api_interface.incoming_transaction.connect(self.send)
-            self._run_api.connect(self._api_interface.run_api)
-            self._run_api.emit()
+    def sigint_handler(self):
+        return
 
-        if state == "STOP":
-            self._api_interface.stop_thread()
-            del self._api_interface
+    def process_change_api_mode(self, state):
+        if state == ApiModes.START:
+            logger.info("Starting API mode")
+
+            # self._api_thread = ApiThread(self.config)
+            self._api_thread.setup(terminal=self)
+            self._api_thread.log_record.connect(lambda record: logger.info(unstyle(record)))
+            self._api_thread.create_transaction.connect(self.send)
+            self._api_thread.run_api.emit()
+
+        if state == ApiModes.STOP:
+            if self._api_thread is None:
+                return
+
+            # self._api_thread._thread.terminate()
+
+            self._api_thread.stop_thread()
+
+            # self._api_thread = None
+
+            # self._api_interface.stop_thread()
+            # del self._api_interface
 
     @staticmethod
     def show_document():

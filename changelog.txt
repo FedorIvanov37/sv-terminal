@@ -217,6 +217,7 @@
     + Setting wait for response / parallel
     + Move "Hotkeys" hint to settings
 
+
 + Add widgets
     + Radio Button
     + ToolBar
@@ -237,7 +238,18 @@ To fix
 + Fix html-document name
 + Fix non-force validation
 + Default config
++ Allow reversal for any ID
++ Mark reversal as reversal
++ Add connection to /api/connection/<action>
++ API error data model
++ Update config does not work in API
++ Run API on startup
++ Transaction timeout
 
+
+• Disable start / stop API
+• Don't wait if cannot send
+• Setting parallel mode
 
 #
 
