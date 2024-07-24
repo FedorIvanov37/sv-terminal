@@ -2,7 +2,7 @@
 import datetime
 from os import getcwd
 from os.path import normpath
-from flask import Flask, request
+from flask import Flask, request, redirect, url_for
 from flask_pydantic import validate
 from PyQt6.QtCore import QObject, pyqtSignal, QTimer, QCoreApplication
 from PyQt6.QtNetwork import QTcpSocket
@@ -220,6 +220,19 @@ class Api(QObject):
         raise KeyboardInterrupt
 
     @staticmethod
+    @app.route("/")
+    @app.route("/doc")
+    @app.route("/docs")
+    @app.route("/help")
+    @app.route("/api")
+    @app.route("/api/")
+    @app.route("/api/doc")
+    @app.route("/api/docs")
+    @app.route("/api/help")
+    def redirect_to_document():
+        return redirect(url_for("get_document"))
+
+    @staticmethod
     @app.route("/api/documentation")
     def get_document():
         doc_path = normpath(f"{getcwd()}/{GuiFilesPath.DOC}")
@@ -365,7 +378,7 @@ class Api(QObject):
     def reverse_transaction(trans_id: str):
         if trans_id not in Api.get_transactions():
             return ApiError(error=f"No transaction id '{trans_id}' in transactions queue"), HTTPStatus.NOT_FOUND
-        
+
         if trans_id not in (transaction.trans_id for transaction in Api.signal.get_reversible_transactions()):
             return ApiError(error="Cannot reverse transaction. Lost response or non-reversible MTI"), HTTPStatus.UNPROCESSABLE_ENTITY
 
