@@ -1,3 +1,4 @@
+from sys import stdout
 from loguru import logger
 from common.lib.enums.TermFilesPath import TermFilesPath
 from common.lib.data_models.Config import Config
@@ -6,19 +7,30 @@ from common.gui.core.WirelessHandler import WirelessHandler
 
 
 class Logger:
+    rotation = f"{LogDefinition.LOG_MAX_SIZE_MEGABYTES} MB"
+    format = LogDefinition.LOGFILE_DATE_FORMAT
+    compression = LogDefinition.COMPRESSION
+
     def __init__(self, config: Config):
         self.config = config
         self.setup()
 
-    def setup(self):
+    def setup(self, filename=TermFilesPath.LOG_FILE_NAME):
         logger.remove()
 
         logger.add(
-            TermFilesPath.LOG_FILE_NAME,
-            format=LogDefinition.LOGFILE_DATE_FORMAT,
+            filename,
+            format=self.format,
             level=self.config.debug.level,
-            rotation=f"{LogDefinition.LOG_MAX_SIZE_MEGABYTES} MB",
-            compression=LogDefinition.COMPRESSION
+            rotation=self.rotation,
+            compression=self.compression,
+        )
+
+    def add_stdout_handler(self):
+        logger.add(
+            stdout,
+            format=self.format,
+            level=self.config.debug.level,
         )
 
     def add_wireless_handler(self, log_browser, wireless_handler: WirelessHandler | None = None) -> int:

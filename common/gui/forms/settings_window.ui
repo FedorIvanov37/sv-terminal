@@ -643,17 +643,14 @@
             <item>
              <widget class="QLabel" name="label_2">
               <property name="text">
-               <string>URL</string>
+               <string>URL:</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="ApiAddress">
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-              <property name="placeholderText">
-               <string>Local API address</string>
+             <widget class="QLabel" name="ApiAddress">
+              <property name="text">
+               <string/>
               </property>
              </widget>
             </item>
@@ -690,6 +687,19 @@
                <string>Copy</string>
               </property>
              </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_9">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </item>

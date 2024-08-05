@@ -108,7 +108,7 @@ class Terminal(QObject):
         with open(TermFilesPath.CONFIG, "w") as file:
             file.write(config.model_dump_json(indent=4))
 
-    def send(self, transaction: Transaction | None = None) -> None:
+    def send(self, transaction: Transaction) -> None:
         self.trans_queue.put_transaction(transaction)
 
     def transaction_sent(self, request: Transaction) -> None:

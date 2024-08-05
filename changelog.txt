@@ -207,9 +207,8 @@
 • Repeat indicator
 
 • API mode
-    • Run API using CLI --api-mode
-    • README.md
-
+    + Run API using CLI --api-mode
+    + README.md
     + API activate / stop
     + PCI DSS mode
     + Swagger documentation

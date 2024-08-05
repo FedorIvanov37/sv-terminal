@@ -177,12 +177,9 @@ What's new is the Signal v0.19
 
 * New features
   * Web API in GUI and CLI mode
-    * The Postman collection
-    * Swagger documentation
+  * The Postman collection
   * Toolbar on main window
-  * User reference guide, available in browser
-  * Indicators of API mode, Keep-Alive, and transaction repeat 
-
+  * Standalone user reference guide, available in browser
 
 * Updates
   * The main window buttons set is revised. All the tools moved to the toolbar
@@ -311,9 +308,10 @@ To see usage hint call
 > signal.exe --help
 
 ```text
-usage: signal.exe [-h] -c [-f FILE] [-d DIR] [-a ADDRESS] [-p PORT] [-r] [-l LOG_LEVEL] [-i INTERVAL] [--parallel] [-t TIMEOUT] [--about] [-e] [--default] [-v] [--print-config] [--config-file CONFIG_FILE]
+usage: _signal.py [-h] -c [-f FILE] [-d DIR] [-a ADDRESS] [-p PORT] [-r] [--log-file LOG_FILE] [-l LOG_LEVEL] [-i INTERVAL] [--parallel] [-t TIMEOUT] [--about] [-e] [--default] [-v] [--print-config] [--config-file CONFIG_FILE]
+                  [--api-mode]
 
-SIGNAL v0.18
+SIGNAL v0.19
 
 options:
   -h, --help            show this help message and exit
@@ -324,8 +322,9 @@ options:
                         Host TCP/IP address
   -p PORT, --port PORT  TCP/IP port to connect
   -r, --repeat          Repeat transactions after sending
+  --log-file LOG_FILE   Set log file path. Default common/log/signal.log
   -l LOG_LEVEL, --log-level LOG_LEVEL
-                        Debug level DEBUG, INFO, etc
+                        Debug level: DEBUG, INFO, WARNING, ERROR, CRITICAL, NOTSET
   -i INTERVAL, --interval INTERVAL
                         Wait (seconds) before send next transaction
   --parallel            Send new transaction with no waiting of answer for previous one
@@ -338,11 +337,13 @@ options:
   --print-config        Print configuration parameters
   --config-file CONFIG_FILE
                         Set configuration file path
+  --api-mode            Run signal in API mode
 ```
 
 ## CLI examples
 
-Below are a few examples of CLI commands. It is not a complete list of possible combinations. See [CLI Usage](#cli-Usage) to get all the commands
+Using the command line interface, you can write flexible transaction test scenarios. Below are a few examples of 
+CLI commands. It is not a complete list of possible combinations. See [CLI Usage](#cli-Usage) to get all the commands
 
 ### Command examples
 
@@ -354,6 +355,7 @@ Below are a few examples of CLI commands. It is not a complete list of possible 
 | `signal.exe --console --file /transactions/transaction.json` | Parse specific file `/transactions/transaction.json` and send the transaction to the host |
 | `signal.exe --console --default --repeat --interval 2`       | Begin transaction loop, sending new transaction every 2 sec                               |
 | `signal.exe --console --dir /transactions --parallel`        | Immediate send all the transactions from the directory /transactions                      |
+| `signal.exe --console --api-mode`                            | Run Signal in console API mode                                                            |
 
 ## CLI output
 
@@ -503,11 +505,14 @@ for Signal v0.18
 
 The following dependencies are required to install to run the library
 
-| Dependency                                 | Version | Higher version allowed | 
-|--------------------------------------------|---------|------------------------| 
-| [Python](https://www.python.org/)          | 3.12    | Yes                    |
-| [PyQt6](https://wiki.python.org/moin/PyQt) | 6.6.1   | Yes                    |
-| [Pydantic](https://pydantic.dev/)          | 2.6.3   | Yes                    |
+| Dependency                                                 | Version | Higher version allowed | 
+|------------------------------------------------------------|---------|------------------------| 
+| [Python](https://www.python.org/)                          | 3.12    | Yes                    |
+| [PyQt6](https://wiki.python.org/moin/PyQt)                 | 6.6.1   | Yes                    |
+| [Pydantic](https://pydantic.dev/)                          | 2.6.3   | Yes                    |
+| [Flask](https://flask.palletsprojects.com/en/3.0.x/)       | 3.0.3   | Yes                    |
+| [Flask-pydantic](https://pypi.org/project/Flask-Pydantic/) | 0.12.0  | Yes                    |
+
 
 
 Refer to chapter [Library installation](#library-installation) to figure the dependencies installation process out

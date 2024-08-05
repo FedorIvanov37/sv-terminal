@@ -9,7 +9,6 @@ from PyQt6.QtWidgets import QApplication, QFileDialog
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtCore import pyqtSignal, QTimer, QDir, QThreadPool
 from common.gui.enums.GuiFilesPath import GuiFilesPath
-from common.api.fastapi.SignalApiInterface import SignalApiInterface
 from common.gui.windows.settings_window import SettingsWindow
 from common.gui.windows.main_window import MainWindow
 from common.gui.windows.reversal_window import ReversalWindow
@@ -75,7 +74,6 @@ class SignalGui(Terminal):
     connector: ConnectionThread
     trans_timer: TransactionTimer = TransactionTimer(KeepAlive.TransTypes.TRANS_TYPE_TRANSACTION)
     set_remote_spec: pyqtSignal = pyqtSignal()
-    _api_interface: SignalApiInterface
     _wireless_handler: WirelessHandler = WirelessHandler()
     _run_timer = QTimer()
     _run_api = pyqtSignal()
@@ -201,25 +199,14 @@ class SignalGui(Terminal):
     def process_change_api_mode(self, state):
         if state == ApiModes.START:
             logger.info("Starting API mode")
-
-            # self._api_thread = ApiThread(self.config)
             self._api_thread.setup(terminal=self)
+            self._api_thread.set_loger()
             self._api_thread.log_record.connect(lambda record: logger.info(unstyle(record)))
             self._api_thread.create_transaction.connect(self.send)
             self._api_thread.run_api.emit()
 
         if state == ApiModes.STOP:
-            if self._api_thread is None:
-                return
-
-            # self._api_thread._thread.terminate()
-
-            self._api_thread.stop_thread()
-
-            # self._api_thread = None
-
-            # self._api_interface.stop_thread()
-            # del self._api_interface
+            ...
 
     @staticmethod
     def show_document():

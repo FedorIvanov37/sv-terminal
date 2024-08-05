@@ -1,6 +1,6 @@
 from glob import glob
 from time import sleep
-from os import listdir, path, system, getcwd
+from os import listdir, path, system, getcwd, getpid, kill
 from os.path import normpath, basename, isfile
 from loguru import logger
 from datetime import datetime, UTC
@@ -16,11 +16,15 @@ from common.lib.core.Terminal import Terminal
 from common.lib.enums.TermFilesPath import TermFilesPath
 from common.lib.data_models.License import LicenseInfo
 from common.lib.exceptions.exceptions import LicenseRejected
+from common.api.ApiThread import ApiThread
+from common.lib.exceptions.exceptions import DataValidationWarning
 
 
 class SignalCli(Terminal):
     _cli_config: CliConfig = None
     _finished: pyqtSignal = pyqtSignal()
+    _api_thread: ApiThread = None
+    _run_api: pyqtSignal = pyqtSignal()
 
     def __init__(self, config: Config):
         super(SignalCli, self).__init__(config)
@@ -32,13 +36,6 @@ class SignalCli(Terminal):
 
     def setup(self):
         signal(SIGINT, SIG_DFL)
-
-        self.logger.create_logger()
-
-        try:
-            self.show_license_dialog()
-        except LicenseRejected:
-            exit(100)
 
         cli_args_parser: CliArgsParser = CliArgsParser(self.config, description=TextConstants.CLI_DESCRIPTION)
 
@@ -55,14 +52,19 @@ class SignalCli(Terminal):
             exit(100)
 
         if self._cli_config.log_file != TermFilesPath.LOG_FILE_NAME:
-            self.logger.setup(logfile=self._cli_config.log_file)
-            self.logger.create_logger()
+            self.logger.setup(filename=self._cli_config.log_file)
 
-        self.logger.set_debug_level()
+        self.logger.add_stdout_handler()
+
+        try:
+            self.show_license_dialog()
+        except LicenseRejected:
+            exit(100)
 
     def connect_all(self):
         self.run_timer.timeout.connect(self.main)
         self._finished.connect(self.application.quit)
+        self._run_api.connect(self.run_api_mode)
 
     def run_application(self):
         self.run_timer.setSingleShot(True)
@@ -70,16 +72,34 @@ class SignalCli(Terminal):
         self.application.exec()
 
     def main(self):
-        print_data_map = (
-            (self._cli_config.version, self.log_printer.print_version),
-            (self._cli_config.about, self.log_printer.print_about),
-            (self._cli_config.print_config,
-             lambda: self.log_printer.print_config(self.config, path=self._cli_config.config_file)),
-        )
+        """
 
-        for data_map in print_data_map:
-            need_run, function = data_map
+        This is the main function, which runs after CLI mode begin
 
+        The function goes by scenario
+
+        1. Print data if requested
+        2. Tries to parse the requested files and send the transactions if needed
+        3. Check the api-mode request and runs the API
+
+        Important: --repeat flag has a priority over --api-mode. When --repeat flag set along with the --api-mode
+        the api-mode will newer be run because the files will be parsed and sent in endless cycle
+
+        """
+
+        if self._cli_config.repeat and self._cli_config.api_mode:
+            logger.error("Mutually exclusive flags --repeat and --api-mode are set")
+            kill(getpid(), 9)
+
+        # 1. Print data if requested
+        print_data_map = {
+            self._cli_config.version: self.log_printer.print_version,
+            self._cli_config.about: self.log_printer.print_about,
+            self._cli_config.print_config: lambda: self.log_printer.print_config(
+                self.config, path=self._cli_config.config_file)
+        }
+
+        for need_run, function in print_data_map.items():
             if not need_run:
                 continue
 
@@ -93,14 +113,18 @@ class SignalCli(Terminal):
             logger.info("Press CTRL+C to exit")
             logger.info(str())
 
+        # 2. Check the api-mode request and runs the API
+        if self._cli_config.api_mode:
+            self._run_api.emit()
+
+        # 3. Tries to parse the requested files and send the transactions if needed
         if not (filenames := self.get_files_to_process()):
             if not any([self._cli_config.about, self._cli_config.version]):
-                logger.error("Cannot found specified files")
+                logger.info("No files specified to parse")
 
             return
 
         while True:
-
             for file in filenames:
                 logger.info(str())
                 logger.info(f"Processing file {basename(file)}")
@@ -118,9 +142,64 @@ class SignalCli(Terminal):
 
                 for _ in range(self._cli_config.interval * 10):
                     self.wait(0.1)
+                    self.application.processEvents()
 
             if not self._cli_config.repeat:
                 break
+
+    def run_api_mode(self):
+        logger.info("Run command line API mode")
+        self._api_thread = ApiThread(self.config)
+        self._api_thread.setup(terminal=self)
+        self._api_thread.create_transaction.connect(self.send)
+        self._api_thread.run_api.emit()
+
+    def send(self, transaction: Transaction):
+        if self.connector.connection_in_progress():
+            transaction.success = False
+            transaction.error = "Cannot send the transaction while the host connection is in progress"
+            logger.error(transaction.error)
+            return
+
+        if self.spec.is_reversal(transaction.message_type) and not transaction.trans_id.endswith("_R"):
+            transaction.trans_id = f"{transaction.trans_id}_R"
+
+        if not transaction.is_keep_alive:
+            logger.info(f"Processing transaction ID [{transaction.trans_id}]")
+
+        if self.config.fields.send_internal_id:
+            transaction: Transaction = self.generator.set_trans_id(transaction)
+
+        if transaction.generate_fields:
+            transaction: Transaction = self.generator.set_generated_fields(transaction)
+
+        validation_conditions = (
+            self.config.validation.validation_enabled,
+            self.config.validation.validate_outgoing,
+            not transaction.is_keep_alive,
+        )
+
+        if all(validation_conditions):
+            try:
+                self.trans_validator.validate_transaction(transaction)
+
+            except DataValidationWarning as validation_warning:
+                [logger.warning(warn) for warn in str(validation_warning).splitlines()]
+
+            except Exception as validation_error:
+                transaction.success = False
+                transaction.error = str(validation_error)
+                [logger.error(err) for err in transaction.error.splitlines()]
+                return
+
+        try:
+            Terminal.send(self, transaction)  # Terminal always used to real data processing
+
+        except Exception as sending_error:
+            transaction.success = False
+            transaction.error = f"Transaction sending error: {sending_error}"
+            logger.error(transaction.error)
+            return
 
     def show_license_dialog(self) -> None:
         license_info: LicenseInfo = self.get_license_info()

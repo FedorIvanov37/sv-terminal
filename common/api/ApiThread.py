@@ -46,7 +46,6 @@ class ApiThread(QObject):
         self._thread = QThread()
 
     def setup(self, terminal):
-        self.set_loger()
         self.api = Api(self.config)
         self._api_interface.terminal = terminal
         self._api_interface.config = self.config
@@ -73,7 +72,6 @@ class ApiThread(QObject):
             QCoreApplication.processEvents()  # Processes events instead of direct interaction
             QThread.msleep(10)
 
-        # self._thread.quit()
         self._thread.terminate()
         self._api_logger.removeHandler(self._wireless_handler)
         self._thread.wait()

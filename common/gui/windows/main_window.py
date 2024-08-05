@@ -1,7 +1,7 @@
 from sys import exit
 from ctypes import windll
 from PyQt6.QtNetwork import QTcpSocket
-from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QKeySequence, QShortcut, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QMenu, QPushButton, QToolBar, QMenuBar
 from common.gui.forms.mainwindow import Ui_MainWindow
