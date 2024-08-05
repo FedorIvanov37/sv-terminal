@@ -27,9 +27,14 @@ from PyQt6.QtGui import (
 
 class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
     _open_user_guide: pyqtSignal = pyqtSignal()
+    _open_api_url: pyqtSignal = pyqtSignal(str)
     audio_output = QAudioOutput()
     player = QMediaPlayer()
     movie: QMovie
+
+    @property
+    def open_api_url(self):
+        return self._open_api_url
 
     @property
     def open_user_guide(self):
@@ -68,7 +73,9 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         self.ValidationEnabled.stateChanged.connect(self.process_validation_change)
         self.ManualInputMode.stateChanged.connect(self.process_manual_entry_mode_change)
         self.ApiInfoLabel.linkActivated.connect(lambda: self.open_user_guide.emit())
+        self.ApiAddress.linkActivated.connect(lambda: self.open_api_url.emit(self.get_api_url()))
         self.CopyApiUrl.clicked.connect(self.copy_api_url)
+        self.ApiPort.textChanged.connect(self.set_api_url)
         self.process_validation_change()
         self.process_manual_entry_mode_change()
         self.process_config(self.config)
@@ -124,9 +131,9 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         self.MaxAmount.setEnabled(self.MaxAmountBox.isChecked())
         self.SvAddress.setText(config.host.host)
         self.RemoteSpecUrl.setText(config.specification.remote_spec_url)
-        self.ApiAddress.setText(f"http://{gethostbyname(gethostname())}")
         self.RemoteSpecUrl.setCursorPosition(int())
         self.ValidationReaction.setCurrentIndex(self.ValidationReaction.findText(config.validation.validation_mode))
+        self.set_api_url()
 
         if not config.fields.max_amount_limited:
             return
@@ -139,8 +146,16 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
 
         self.MaxAmount.setCurrentIndex(index)
 
+    def set_api_url(self):
+        api_url = self.get_api_url()
+        api_url_link = f'<html><head/><body><p><a href="www.a.com"><span style=" text-decoration: underline; color:#0000ff;">{api_url}</span></a></p></body></html>'
+        self.ApiAddress.setText(api_url_link)
+
+    def get_api_url(self):
+        return f"http://{gethostbyname(gethostname())}:{self.ApiPort.value()}/api"
+
     def copy_api_url(self):
-        QApplication.clipboard().setText(f"{self.ApiAddress.text()}:{self.ApiPort.value()}/api")
+        QApplication.clipboard().setText(self.get_api_url())
 
     def process_default_button(self, button):
         for button_box in self.GeneralButtonBox, self.FieldsButtonBox, self.ApiButtonBox, self.SpecificationButtonBox:

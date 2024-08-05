@@ -9,7 +9,7 @@ from common.lib.core.EpaySpecification import EpaySpecification
 
 
 class ApiThread(QObject):
-    _stop: bool = False
+    _stop: bool = True
     _api_interface: ApiInterface = ApiInterface()
     _run_api: pyqtSignal = pyqtSignal()
     _create_transaction: pyqtSignal = pyqtSignal(Transaction)
@@ -46,6 +46,7 @@ class ApiThread(QObject):
         self._thread = QThread()
 
     def setup(self, terminal):
+        self._stop = False
         self.api = Api(self.config)
         self._api_interface.terminal = terminal
         self._api_interface.config = self.config

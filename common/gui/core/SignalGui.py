@@ -213,6 +213,15 @@ class SignalGui(Terminal):
         doc_path = normpath(f"{getcwd()}/{GuiFilesPath.DOC}")
         open_url(doc_path)
 
+    def open_api_url(self, url):
+        if not self._api_thread:
+            return
+
+        if self._api_thread.stop:
+            return
+        
+        open_url(url)
+
     def show_license_dialog(self, force: bool = False) -> None:
         try:
             license_window: LicenseWindow = LicenseWindow(self.config, force=force)
@@ -293,6 +302,7 @@ class SignalGui(Terminal):
             settings_window: SettingsWindow = SettingsWindow(self.config, about=about)
             settings_window.accepted.connect(lambda: self.process_config_change(old_config))
             settings_window.open_user_guide.connect(self.show_document)
+            settings_window.open_api_url.connect(self.open_api_url)
             settings_window.exec()
 
         except Exception as settings_error:

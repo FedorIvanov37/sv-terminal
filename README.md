@@ -50,13 +50,12 @@ The document is currently under construction</p>
     * [Save specification](#save-specification)
 
 
-* [HTTP API]
+* [HTTP Transaction API](#http-transaction-api)
   * [API reference]
-  * [Swagger documentation]
   * [Data models]
-  * [Postman collection]
+  * [Postman collection](#postman-collection)
   
-
+  
 * [Command Line Interface](#command-line-interface)
   * [CLI usage](#cli-usage)
   * [CLI examples](#cli-examples)
@@ -275,6 +274,29 @@ The list of key sequences and corresponding actions
 | Ctrl + PgUp /  Ctrl + Shift + Tab | Previous tab                   | -                                |
 | Ctrl + F4                         | Close current tab              | -                                |
 | Ctrl + Alt + Q                    | Quit SIGNAL                    | -                                |
+
+
+# HTTP Transaction API
+
+Signal has a built-in HTTP WEB API. The API allows for transaction management, configuration settings, and information 
+gathering.
+
+The API is supported by both the command-line and graphic user interfaces. It runs in a separate thread so that you
+can use GUI along with API at the same time 
+
+## API reference
+## Swagger documentation
+## Data models
+
+## Postman collection
+Postman is an API platform for building and using APIs. Postman simplifies each step of the API lifecycle and 
+streamlines collaboration so you can create better APIs faster. See more about it on 
+the [Postman home page](https://www.postman.com/)
+
+Signal Postman collection covers basic API usage. You can expand the collection, write the test-scenarios using 
+this tool
+
+Press <a href="c:/fedor/sv.event.example.zip" download> here </a> to download the latest Signal Postman collection 
 
 
 # Command Line Interface

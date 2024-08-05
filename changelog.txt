@@ -206,7 +206,7 @@
 • Keep alive indicator
 • Repeat indicator
 
-• API mode
++ API mode
     + Run API using CLI --api-mode
     + README.md
     + API activate / stop
@@ -295,7 +295,6 @@ To fix
 • To do
     • Generate doc.html in TeamCity
     • TeamCity build correct settings
-    + Render doc.html by QWebEngineView # Added link to HTML instead
     • Checkable buttons
     • Buttons auto-repeat
     • Generate grip html-documentation in process of building
@@ -311,6 +310,7 @@ To fix
     • Publish on confluence
     • Spec explanation
     • Radio buttons
+    + Render doc.html by QWebEngineView # Added link to HTML instead
     + Toolbar
 
 • Bugs
