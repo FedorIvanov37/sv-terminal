@@ -1,6 +1,6 @@
 from click import unstyle
 from os.path import basename, normpath
-from os import getcwd
+from os import getcwd, kill, getpid
 from typing import Callable
 from loguru import logger
 from pydantic import ValidationError
@@ -413,6 +413,8 @@ class SignalGui(Terminal):
 
     def stop_signal(self) -> None:
         self.connector.stop_thread()
+        self._api_thread.stop_thread()
+        kill(getpid(), 3)
 
     def reconnect(self) -> None:
         Terminal.reconnect(self)

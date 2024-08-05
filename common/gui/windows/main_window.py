@@ -73,6 +73,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     _message_repeat_menu: QMenu = None
     _keep_alive_menu: QMenu = None
     _print_menu: QMenu = None
+    _api_menu: QMenu = None
     _keep_alive_interval: str = KeepAlive.IntervalNames.KEEP_ALIVE_STOP
     _message_repeat_interval: str = KeepAlive.IntervalNames.KEEP_ALIVE_STOP
     _show_license: pyqtSignal = pyqtSignal()
@@ -399,8 +400,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
                 item_menu = menu.addMenu(linked_name)
 
-                if name == ToolBarElements.PRINT:
-                    self._print_menu = item_menu
+                match name:
+                    case ToolBarElements.API:
+                        self._api_menu = item_menu
+
+                    case ToolBarElements.PRINT:
+                        self._print_menu = item_menu
 
                 set_menu_bar_items(tool_action, item_menu)
 
@@ -477,6 +482,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         set_menu_bar_items(tab_bar_structure, menu_bar)
         self.setMenuBar(menu_bar)
 
+        if not self._api_menu:
+            return
+
+        for action in self._api_menu.actions():
+            if not action.text() == f"&{ToolBarElements.STOP}":
+                continue
+
+            action.setDisabled(True)
+
     def process_transaction_loop_change(self, interval_name: str, trans_type: str):
         if not interval_name:
             return
@@ -498,8 +512,12 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             case ApiMode.ApiModes.START:
                 icon = GuiFilesPath.GREEN_CIRCLE
 
+                if self._api_menu:
+                    for action in self._api_menu.actions():
+                        action.setDisabled(True)
+                
             case _:
-                return
+                icon = GuiFilesPath.GREY_CIRCLE
 
         self.ApiStatus.setText(ApiMode.ApiModeNames[state])
         self.ApiStatusLabel.setPixmap(QPixmap(icon))

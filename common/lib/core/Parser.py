@@ -6,7 +6,7 @@ from loguru import logger
 from configparser import ConfigParser, NoSectionError, NoOptionError
 from io import StringIO
 from common.lib.toolkit.generate_trans_id import generate_trans_id
-from common.lib.toolkit.toolkit import mask_secret
+from common.lib.toolkit.toolkit import mask_secret, mask_pan
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Bitmap import Bitmap
 from common.lib.data_models.Config import Config
@@ -31,6 +31,42 @@ class Parser:
     def __init__(self, config: Config):
         self.config: Config = config
         self.generator = FieldsGenerator()
+
+    @staticmethod
+    def hide_secret_fields(transaction: Transaction) -> Transaction:
+        spec: EpaySpecification = EpaySpecification()
+        transaction: Transaction = Transaction.model_validate(transaction.dict())
+
+        for field, field_data in transaction.data_fields.items():
+            if field == spec.FIELD_SET.FIELD_001_BITMAP_SECONDARY:
+                continue
+
+            if spec.is_field_complex([field]) and isinstance(field_data, dict):
+                try:
+                    field_data = Parser.join_complex_field(field, field_data)
+                except Exception as parsing_error:
+                    logger.error(f"Cannot print field {field}: {parsing_error}")
+                    continue
+
+            if all((spec.is_field_complex([field]), isinstance(field_data, str))):
+                try:
+                    split_field_data: dict = Parser.split_complex_field(field, field_data)
+                    field_data: str = Parser.join_complex_field(field, split_field_data, hide_secrets=True)
+
+                except Exception as field_parsing_error:
+                    logger.warning(field_parsing_error)
+
+            match field:
+                case spec.FIELD_SET.FIELD_002_PRIMARY_ACCOUNT_NUMBER:
+                    field_data: str = mask_pan(field_data)
+
+                case _:
+                    if spec.is_secret([field]):
+                        field_data: str = mask_secret(field_data)
+
+            transaction.data_fields[field] = field_data
+
+        return transaction
 
     @staticmethod
     def create_dump(transaction: Transaction, body: bool = False) -> bytes | str:

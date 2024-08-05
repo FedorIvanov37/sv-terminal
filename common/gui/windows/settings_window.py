@@ -1,6 +1,7 @@
 from common.gui.forms.settings_window import Ui_SettingsWindow
 from logging import getLogger, getLevelName
 from loguru import logger
+from socket import gethostname, gethostbyname
 from PyQt6.QtCore import QRegularExpression, pyqtSignal
 from common.lib.constants import LogDefinition
 from common.lib.data_models.Config import Config
@@ -11,7 +12,7 @@ from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
 from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PyQt6.QtCore import Qt, QUrl
-from PyQt6.QtWidgets import QDialog, QDialogButtonBox, QMessageBox
+from PyQt6.QtWidgets import QDialog, QDialogButtonBox, QApplication
 from PyQt6.QtGui import (
     QRegularExpressionValidator,
     QIntValidator,
@@ -67,6 +68,7 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         self.ValidationEnabled.stateChanged.connect(self.process_validation_change)
         self.ManualInputMode.stateChanged.connect(self.process_manual_entry_mode_change)
         self.ApiInfoLabel.linkActivated.connect(lambda: self.open_user_guide.emit())
+        self.CopyApiUrl.clicked.connect(self.copy_api_url)
         self.process_validation_change()
         self.process_manual_entry_mode_change()
         self.process_config(self.config)
@@ -74,44 +76,57 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         self.MainTabs.setCurrentIndex(self.MainTabs.count() - 1 if about else int())
 
     def process_config(self, config: Config):
+        checkboxes_state_map = {
+            self.MaxAmountBox: config.fields.max_amount_limited,
+            self.ProcessDefaultDump: config.terminal.process_default_dump,
+            self.ConnectOnStartup: config.terminal.connect_on_startup,
+            self.ClearLog: config.debug.clear_log,
+            self.ParseSubfields: config.debug.parse_subfields,
+            self.BuildFld90: config.fields.build_fld_90,
+            self.SendInternalId: config.fields.send_internal_id,
+            self.ValidateWindow: config.validation.validate_window,
+            self.JsonMode: config.fields.json_mode,
+            self.KeepAliveMode: config.host.keep_alive_mode,
+            self.HeaderLengthMode: config.host.header_length_exists,
+            self.HideSecrets: config.fields.hide_secrets,
+            self.RewriteLocalSpec: config.specification.rewrite_local_spec,
+            self.LoadSpec: config.terminal.load_remote_spec,
+            self.LoadSpec2: config.terminal.load_remote_spec,
+            self.ShowLicense: config.terminal.show_license_dialog,
+            self.ValidateIncoming: config.validation.validate_incoming,
+            self.ValidateOutgoing: config.validation.validate_outgoing,
+            self.ManualInputMode: config.specification.manual_input_mode,
+            self.ValidationEnabled: config.validation.validation_enabled,
+            self.ApiRun: config.terminal.run_api,
+            self.ReduceKeepAlive: config.debug.reduce_keep_alive,
+            self.WaitForRemoteHost: config.api.wait_remote_host_response,
+            self.HideSecretsApi: config.api.hide_secrets,
+        }
+
+        scales_value_map = {
+            self.SvPort: config.host.port,
+            self.KeepAliveInterval: config.host.keep_alive_interval,
+            self.HeaderLength: config.host.header_length,
+            self.StorageDepth: config.specification.backup_storage_depth,
+            self.LogStorageDepth: config.debug.backup_storage_depth,
+            self.ApiPort: self.config.api.port,
+        }
+
+        for checkbox, state in checkboxes_state_map.items():
+            checkbox.setChecked(state)
+
+        for scale, value in scales_value_map.items():
+            scale.setValue(int(value))
+
         self.DebugLevel.setCurrentText(config.debug.level)
-        self.SvAddress.setText(config.host.host)
-        self.SvPort.setValue(int(config.host.port))
-        self.MaxAmountBox.setChecked(config.fields.max_amount_limited)
-        self.ProcessDefaultDump.setChecked(config.terminal.process_default_dump)
-        self.ConnectOnStartup.setChecked(config.terminal.connect_on_startup)
-        self.ClearLog.setChecked(config.debug.clear_log)
-        self.ParseSubfields.setChecked(config.debug.parse_subfields)
-        self.BuildFld90.setChecked(config.fields.build_fld_90)
-        self.SendInternalId.setChecked(config.fields.send_internal_id)
-        self.ValidateWindow.setChecked(config.validation.validate_window)
-        self.JsonMode.setChecked(config.fields.json_mode)
-        self.KeepAliveMode.setChecked(config.host.keep_alive_mode)
-        self.KeepAliveInterval.setValue(int(config.host.keep_alive_interval))
-        self.HeaderLengthMode.setChecked(config.host.header_length_exists)
         self.HeaderLength.setEnabled(config.host.header_length_exists)
-        self.HeaderLength.setValue(int(config.host.header_length))
-        self.HideSecrets.setChecked(config.fields.hide_secrets)
         self.KeepAliveInterval.setEnabled(self.KeepAliveMode.isChecked())
         self.MaxAmount.setEnabled(self.MaxAmountBox.isChecked())
+        self.SvAddress.setText(config.host.host)
         self.RemoteSpecUrl.setText(config.specification.remote_spec_url)
+        self.ApiAddress.setText(f"http://{gethostbyname(gethostname())}")
         self.RemoteSpecUrl.setCursorPosition(int())
-        self.RewriteLocalSpec.setChecked(config.specification.rewrite_local_spec)
-        self.StorageDepth.setValue(config.specification.backup_storage_depth)
-        self.LoadSpec.setChecked(config.terminal.load_remote_spec)
-        self.LoadSpec2.setChecked(config.terminal.load_remote_spec)
-        self.ShowLicense.setChecked(config.terminal.show_license_dialog)
-        self.ValidateIncoming.setChecked(config.validation.validate_incoming)
-        self.ValidateOutgoing.setChecked(config.validation.validate_outgoing)
         self.ValidationReaction.setCurrentIndex(self.ValidationReaction.findText(config.validation.validation_mode))
-        self.LogStorageDepth.setValue(config.debug.backup_storage_depth)
-        self.ManualInputMode.setChecked(config.specification.manual_input_mode)
-        self.ValidationEnabled.setChecked(config.validation.validation_enabled)
-        self.ApiAddress.setText(self.config.api.address)
-        self.ApiPort.setValue(self.config.api.port)
-        self.ApiRun.setChecked(self.config.terminal.run_api)
-        self.ReduceKeepAlive.setChecked(self.config.debug.reduce_keep_alive)
-        self.WaitForRemoteHost.setChecked(self.config.api.wait_remote_host_response)
 
         if not config.fields.max_amount_limited:
             return
@@ -123,6 +138,9 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
             self.MaxAmount.insertItem(index, max_amount)
 
         self.MaxAmount.setCurrentIndex(index)
+
+    def copy_api_url(self):
+        QApplication.clipboard().setText(f"{self.ApiAddress.text()}:{self.ApiPort.value()}/api")
 
     def process_default_button(self, button):
         for button_box in self.GeneralButtonBox, self.FieldsButtonBox, self.ApiButtonBox, self.SpecificationButtonBox:
@@ -243,9 +261,9 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         config.specification.manual_input_mode = self.ManualInputMode.isChecked()
         config.validation.validation_enabled = self.ValidationEnabled.isChecked()
         config.debug.reduce_keep_alive = self.ReduceKeepAlive.isChecked()
-        config.api.address = self.ApiAddress.text()
         config.api.port = self.ApiPort.value()
         config.api.wait_remote_host_response = self.WaitForRemoteHost.isChecked()
+        config.api.hide_secrets = self.HideSecretsApi.isChecked()
         config.terminal.run_api = self.ApiRun.isChecked()
 
         if not config.fields.max_amount_limited:
@@ -292,7 +310,7 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         if a0.key() == Qt.Key.Key_Escape:
             self.close()
 
-        if a0.key() == Qt.Key.Key_Return:
+        if a0.key() in (Qt.Key.Key_Enter, Qt.Key.Key_Return):
             if self.MainTabs.currentIndex() == self.MainTabs.count() - 1:
                 return
 

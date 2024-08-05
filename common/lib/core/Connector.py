@@ -61,9 +61,12 @@ class Connector(QTcpSocket, ConnectionInterface, metaclass=QObjectAbcMeta):
         logger.debug(incoming_data)
         self.incoming_transaction_data.emit(incoming_data)
 
-    def connect_sv(self):
-        host = self.config.host.host
-        port = self.config.host.port
+    def connect_sv(self, host: str | None = None, port: int | None = None):
+        if host is None:
+            host = self.config.host.host
+
+        if port is None:
+            port = self.config.host.port
 
         if "" in (host, port):
             logger.error("Lost SV host address or port number. Check the configuration.")

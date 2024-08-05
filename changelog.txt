@@ -207,11 +207,13 @@
 • Repeat indicator
 
 • API mode
-    • API activate / stop
-    • Swagger documentation
-    • README.md
-    • POSTMAN collection
     • Run API using CLI --api-mode
+    • README.md
+
+    + API activate / stop
+    + PCI DSS mode
+    + Swagger documentation
+    + POSTMAN collection
     + Render API mode
     + API settings
     + Setting wait for response / parallel
@@ -245,11 +247,16 @@ To fix
 + Update config does not work in API
 + Run API on startup
 + Transaction timeout
++ Wrong error "No transaction in queue" when try to reverse non-success transaction
++ Don't wait if cannot send
++ Setting parallel mode
++ Kill process on exit
++ Add enter key on settings window
++ Update connection does not update config
++ Disable stop API temporary
++ GUI configuration does not change API config
++ Connection management order
 
-
-• Disable start / stop API
-• Don't wait if cannot send
-• Setting parallel mode
 
 #
 

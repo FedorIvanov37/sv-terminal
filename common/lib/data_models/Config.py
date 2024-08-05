@@ -82,9 +82,18 @@ class Specification(BaseModel):
 
 
 class ApiModel(BaseModel):
-    address: str | None = ""
+    address: str | None = "0.0.0.0"
     port: int = 7777
     wait_remote_host_response: bool = True
+    hide_secrets: bool = False
+
+    @field_validator("address", mode="before")
+    @classmethod
+    def substitute_none(cls, val):
+        if val is None:
+            return "0.0.0.0"
+
+        return val
 
 
 class Config(BaseModel):

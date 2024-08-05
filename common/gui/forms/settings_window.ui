@@ -193,26 +193,8 @@
                 <height>0</height>
                </size>
               </property>
-              <property name="frame">
-               <bool>true</bool>
-              </property>
-              <property name="buttonSymbols">
-               <enum>QAbstractSpinBox::NoButtons</enum>
-              </property>
-              <property name="specialValueText">
-               <string>Val</string>
-              </property>
-              <property name="keyboardTracking">
-               <bool>false</bool>
-              </property>
-              <property name="minimum">
-               <number>1024</number>
-              </property>
               <property name="maximum">
                <number>65535</number>
-              </property>
-              <property name="value">
-               <number>16677</number>
               </property>
              </widget>
             </item>
@@ -649,73 +631,27 @@
       <attribute name="title">
        <string>API</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_10">
-       <item row="6" column="0">
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>303</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="3" column="0">
-        <spacer name="verticalSpacer_8">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="ApiInfoLabel">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Signal provides HTTP API for external integration. It also has a built-in Postman collection, which covers basic needs&lt;/p&gt;&lt;p&gt;Refer to the &lt;a href=&quot;www.link.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;user reference guide&lt;/span&gt;&lt;/a&gt; for details&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-         <property name="openExternalLinks">
-          <bool>false</bool>
-         </property>
-         <property name="textInteractionFlags">
-          <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QDialogButtonBox" name="ApiButtonBox">
-         <property name="standardButtons">
-          <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::RestoreDefaults</set>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
         <widget class="QGroupBox" name="ApiBox">
          <property name="title">
           <string>API</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_9">
           <item row="0" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_12">
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
-             <widget class="QLabel" name="IpLabel_2">
+             <widget class="QLabel" name="label_2">
               <property name="text">
-               <string>IP</string>
+               <string>URL</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLineEdit" name="ApiAddress">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
               <property name="placeholderText">
                <string>Local API address</string>
               </property>
@@ -732,41 +668,30 @@
              <widget class="QSpinBox" name="ApiPort">
               <property name="minimumSize">
                <size>
-                <width>80</width>
+                <width>0</width>
                 <height>0</height>
                </size>
-              </property>
-              <property name="frame">
-               <bool>true</bool>
-              </property>
-              <property name="buttonSymbols">
-               <enum>QAbstractSpinBox::NoButtons</enum>
-              </property>
-              <property name="specialValueText">
-               <string>Val</string>
-              </property>
-              <property name="keyboardTracking">
-               <bool>false</bool>
-              </property>
-              <property name="minimum">
-               <number>1024</number>
               </property>
               <property name="maximum">
                <number>65535</number>
               </property>
-              <property name="value">
-               <number>7777</number>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>/api</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="CopyApiUrl">
+              <property name="text">
+               <string>Copy</string>
               </property>
              </widget>
             </item>
            </layout>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="WaitForRemoteHost">
-            <property name="text">
-             <string>Wait for the remote host to respond</string>
-            </property>
-           </widget>
           </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="ApiRun">
@@ -775,7 +700,57 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="WaitForRemoteHost">
+            <property name="text">
+             <string>Wait for the remote host to respond</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="HideSecretsApi">
+            <property name="text">
+             <string>Hide secret fields in the responses</string>
+            </property>
+           </widget>
+          </item>
          </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ApiInfoLabel">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Signal provides HTTP API for external integration. It also has a built-in Postman collection, which covers basic needs&lt;/p&gt;&lt;p&gt;Refer to the &lt;a href=&quot;www.link.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;user reference guide&lt;/span&gt;&lt;/a&gt; for details&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="openExternalLinks">
+          <bool>false</bool>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>142</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QDialogButtonBox" name="ApiButtonBox">
+         <property name="standardButtons">
+          <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::RestoreDefaults</set>
+         </property>
         </widget>
        </item>
       </layout>
