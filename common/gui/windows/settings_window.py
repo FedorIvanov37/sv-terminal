@@ -1,3 +1,4 @@
+from os import getcwd
 from common.gui.forms.settings_window import Ui_SettingsWindow
 from logging import getLogger, getLevelName
 from loguru import logger
@@ -196,7 +197,7 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
             label.setText(f"{label.text()} {text}")
 
         self.player.setAudioOutput(self.audio_output)
-        self.player.setSource(QUrl.fromLocalFile(GuiFilesPath.VVVVVV))
+        self.player.setSource(QUrl.fromLocalFile(f"{getcwd()}/{GuiFilesPath.VVVVVV}"))
         self.player.playbackStateChanged.connect(self.record_finished)
 
     def set_default_settings(self) -> None:

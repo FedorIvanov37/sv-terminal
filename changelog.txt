@@ -239,14 +239,13 @@
 + Add license to toolbar Help
 
 To fix
+• Music does not play on work machine
+• Toolbar menu does not open
+
 + API reversal does not work
 + Logger cannot log message
 + Reversal optimization
 + Reversal mapping
-
-• Music does not play on work machine
-• Toolbar menu does not open
-
 + Fix repeat interval mark
 + Fix Hotkeys window - CTRL + P
 + Fix html-document name
