@@ -146,19 +146,17 @@ The document is currently under construction</p>
 ## Signal general overview
 
 The Signal simplifies the sending of banking card e-commerce transactions to banking card processing systems using a 
-useful visual and program interface
+useful visual and program interface. It uses ISO-8583 E-pay protocol for transactions sending, instead of PSP. It can be
+used during the Payment Systems certification test, for checking and setting up the system on the test environment, 
+during the application development process, and so on.
 
-The SIGNAL uses ISO-8583 E-pay protocol for transactions sending, instead of PSP. It can be used during the Payment 
-Systems certification test, for checking and setting up the system on the test environment, during the application 
-development process, and so on
+The Signal has three interfaces, which lead to the single core - Graphic User Interface, WEB Application Program 
+Interface, and Command line interface. Generally speaking, they do the same things but use different points of 
+interaction with their own specific features
 
 Also, the Signal builds like a kit of weakly connected modules like a Parser, Connector, Queue, etc. It allows to 
 reuse or extend the Signal's functionality making emulators, loaders, parsers, converters, application interfaces, 
-and many other things based on [Signal modules](#library-re-usage)
-
-[UBC SV API](http://feapi.unlimint.io:7171/documentation) is a good example of using SIGNAL modules without any GUI 
-
-See more in the chapter [About the Signal](#about-signal)
+and many other things based on [Signal modules](#library-re-usage) 
 
 In case of any questions about SIGNAL [contact the author](#author). Your feedback and suggestions are general drivers 
 of the Signal evolution
