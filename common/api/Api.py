@@ -12,8 +12,8 @@ from common.lib.data_models.Transaction import Transaction
 from common.api.data_models.types import ApiResponse
 from common.lib.data_models.Config import Config
 from common.lib.core.Parser import Parser
-from pydantic import ValidationError
 from http import HTTPStatus, HTTPMethod
+from common.api.data_models.TransData import TransData
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.api.data_models.Connection import Connection
@@ -306,7 +306,7 @@ class Api(QObject):
     @app.route("/api/transactions/<string:trans_type>", methods=[HTTPMethod.POST])
     @log_api_call
     @validate()
-    def create_predefined_transaction(trans_type: TransTypes):
+    def create_predefined_transaction(trans_type: TransTypes, body: TransData):
         try:
             transaction_request: Transaction = Api.signal.get_transaction(trans_type)
 

@@ -1,4 +1,3 @@
-from os import getcwd
 from common.gui.forms.settings_window import Ui_SettingsWindow
 from logging import getLogger, getLevelName
 from loguru import logger
@@ -8,12 +7,11 @@ from common.lib.constants import LogDefinition
 from common.lib.data_models.Config import Config
 from common.lib.enums.TermFilesPath import TermFilesPath
 from common.gui.decorators.window_settings import set_window_icon, has_close_button_only
-from common.gui.forms.unused.about import Ui_AboutWindow
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
 from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PyQt6.QtCore import Qt, QUrl
-from PyQt6.QtWidgets import QDialog, QDialogButtonBox, QApplication
+from PyQt6.QtWidgets import QDialog, QDialogButtonBox
 from PyQt6.QtGui import (
     QRegularExpressionValidator,
     QIntValidator,
@@ -26,7 +24,7 @@ from PyQt6.QtGui import (
 )
 
 
-class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
+class SettingsWindow(Ui_SettingsWindow, QDialog):
     _open_user_guide: pyqtSignal = pyqtSignal()
     _open_api_url: pyqtSignal = pyqtSignal(str)
     audio_output = QAudioOutput()
@@ -50,6 +48,8 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
     @set_window_icon
     @has_close_button_only
     def setup(self, about: bool = False):
+        self.player.setAudioOutput(self.audio_output)
+        self.player.setSource(QUrl.fromLocalFile(GuiFilesPath.VVVVVV))
         self.MainTabs.tabBar().setDocumentMode(True)
         self.MainTabs.tabBar().setExpanding(True)
         self.SvAddress.setValidator(QRegularExpressionValidator(QRegularExpression(r"(\d+\.){1,3}\d+")))
@@ -76,6 +76,8 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         self.ApiInfoLabel.linkActivated.connect(lambda: self.open_user_guide.emit())
         self.ApiAddress.linkActivated.connect(lambda: self.open_api_url.emit(self.get_api_url()))
         self.ApiPort.textChanged.connect(self.set_api_url)
+        self.MusicOnOfButton.clicked.connect(self.switch_music)
+        self.ContactLabel.linkActivated.connect(self.open_url)
         self.process_validation_change()
         self.process_manual_entry_mode_change()
         self.process_config(self.config)
@@ -182,9 +184,7 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
     def set_data_about(self):
         self.logoLabel.setPixmap(QPixmap(GuiFilesPath.SIGNED_LOGO))
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MAIN_LOGO)))
-        self.MusicOnOfButton.clicked.connect(self.switch_music)
         self.MusicOnOfButton.setIcon(QIcon(QPixmap(GuiFilesPath.MUSIC_ON)))
-        self.ContactLabel.linkActivated.connect(self.open_url)
 
         data_bind = {
             self.VersionLabel: ReleaseDefinition.VERSION,
@@ -196,8 +196,6 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         for label, text in data_bind.items():
             label.setText(f"{label.text()} {text}")
 
-        self.player.setAudioOutput(self.audio_output)
-        self.player.setSource(QUrl.fromLocalFile(f"{getcwd()}/{GuiFilesPath.VVVVVV}"))
         self.player.playbackStateChanged.connect(self.record_finished)
 
     def set_default_settings(self) -> None:

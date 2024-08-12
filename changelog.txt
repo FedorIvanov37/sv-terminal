@@ -208,8 +208,8 @@
 
 + API mode
     • Add predefined transaction data model
-    • Add locate header to the transactions resp
 
+    + Add locate header to the transactions resp
     + Resp code 201 when create resource
     + Run API using CLI --api-mode
     + README.md
@@ -240,8 +240,8 @@
 
 To fix
 • Music does not play on work machine
-• Toolbar menu does not open
 
++ Toolbar menu does not open
 + API reversal does not work
 + Logger cannot log message
 + Reversal optimization

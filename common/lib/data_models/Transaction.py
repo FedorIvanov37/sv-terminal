@@ -46,7 +46,7 @@ class Transaction(BaseModel):
             raise PydanticCustomError("Incorrect max amount", error_message)
 
         if int(amount) not in range(0, 10_000_000_000):
-            raise PydanticCustomError("Max amount aout of range", error_message)
+            raise PydanticCustomError("Max amount out of range", error_message)
 
         return amount
 
