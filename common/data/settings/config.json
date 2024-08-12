@@ -34,7 +34,7 @@
         "build_fld_90": true,
         "send_internal_id": true,
         "json_mode": true,
-        "hide_secrets": false
+        "hide_secrets": true
     },
     "specification": {
         "rewrite_local_spec": false,
@@ -47,7 +47,7 @@
         "address": "0.0.0.0",
         "port": 7777,
         "wait_remote_host_response": true,
-        "hide_secrets": false,
-        "parse_subfields": true
+        "hide_secrets": true,
+        "parse_subfields": false
     }
 }

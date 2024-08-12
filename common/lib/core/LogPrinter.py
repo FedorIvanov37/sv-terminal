@@ -2,7 +2,6 @@ from loguru import logger
 from common.lib.data_models.Transaction import Transaction
 from common.lib.core.EpaySpecification import EpaySpecification
 from common.lib.core.Parser import Parser
-from common.lib.toolkit.toolkit import mask_pan, mask_secret
 from common.lib.data_models.Config import Config
 from common.lib.enums.TextConstants import TextConstants
 from common.lib.enums.ReleaseDefinition import ReleaseDefinition
@@ -45,7 +44,7 @@ class LogPrinter(QObject):
         self.print_multi_row(config_data, level=level)
 
     def print_dump(self, transaction: Transaction, level=logger.debug):
-        if not(dump := Parser.create_sv_dump(transaction)):
+        if not (dump := Parser.create_sv_dump(transaction)):
             return
 
         self.print_multi_row(dump, level)
@@ -67,6 +66,9 @@ class LogPrinter(QObject):
     def print_transaction(self, transaction: Transaction, level=default_level):
         if transaction.is_keep_alive:
             return
+
+        transaction: Transaction = transaction.copy(deep=True)
+        transaction: Transaction = Parser.parse_complex_fields(transaction, split=False)
 
         if self.config.fields.hide_secrets:
             transaction: Transaction = Parser.hide_secret_fields(transaction)
