@@ -272,13 +272,13 @@ To fix
 #
 
 + GET /api/config
-+ PUT /api/config/update
++ PUT /api/config
 + GET /api/connection
 + POST /api/connection/{action}
 + GET /api/transactions
 + GET /api/transactions/{trans_id}
-+ POST /api/transactions/create
-+ POST /api/transactions/{trans_id}/reverse
++ POST /api/transactions
++ POST /api/transactions/{trans_id}/reversal
 + GET /api/doc
 + POST /tools/transactions/validate
 + GET /api/specification
@@ -290,7 +290,6 @@ To fix
 • POST /api/tools/fields/{action} - split or join
 
 • POST /api/transactions/{trans_type}/create
-• POST /api/transactions/{ips}/{trans_type}/create
 • GET /api/resources/{resource}/download - postman collection, documentation
 • GET /api/transactions/samples/{ips}/{type}
 • GET /api/dictionaries/{type}

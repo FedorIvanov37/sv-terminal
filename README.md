@@ -51,7 +51,8 @@ The document is currently under construction</p>
 
 
 * [HTTP Transaction API](#http-transaction-api)
-  * [API reference]
+  * [Short API reference](#short-api-reference)
+  * [Complete API reference](#complete-api-reference)
   * [Data models]
   * [Postman collection](#postman-collection)
   
@@ -209,21 +210,31 @@ Check the parameters, opened by the "Configuration" button to make your settings
 
 ## Main Window
 
-### Main Window overview
+The MainWidow is a generic user interaction point. The main purpose is transaction data representation, data 
+validations, and generators, access to the transaction processing tools, sending and receiving transactions
 
-### Complex fields parser
+### Main Window tools
 
-### Reversal
+The MainWidow is an access point to the transactions management tools. Not all the tools are presented in the MainWindow 
+directly. This chapter describes the MainWindow tools' purpose and best usage practices
 
-### Transactions auto-repeat
+#### Search line
 
-### Search line
+Accessible by `Ctrl + F` key sequence. The search line ...
 
-### Print data
+#### Complex fields parser
 
-### Fields generators
+#### Reversal
 
-### Secret features
+#### Transactions auto-repeat
+
+#### Print data
+
+#### Fields generators
+
+#### Secret features
+
+
 
 ## Specification Window
 
@@ -284,8 +295,55 @@ gathering.
 The API is supported by both the command-line and graphic user interfaces. It runs in a separate thread so that you
 can use GUI along with API at the same time 
 
-## API reference
-## Swagger documentation
+## Short API reference
+
+| URL                                   | Method | Purpose                                                       | Headers required                 | URL params                                       | Body                                         |  
+|---------------------------------------|--------|---------------------------------------------------------------|----------------------------------|--------------------------------------------------|----------------------------------------------|
+| /api/documentation                    | `GET`  | Get user reference guide                                      | -                                | -                                                | -                                            |
+| /api/transactions                     | `GET`  | Get data of all transactions made in the current runtime      | -                                | -                                                | -                                            |
+| /api/transactions/{trans_id}          | `GET`  | Get data of specific transaction made in the current runtime  | -                                | trans_id: ID of previously-made transaction      | -                                            |
+| /api/transactions                     | `POST` | Create new transaction                                        | Content-Type: application/json   | -                                                | Transaction                                  |
+| /api/transactions/{trans_id}/reversal | `POST` | Reverse specific transaction made in the current runtime      | -                                | trans_id: ID of previously-made transaction      | -                                            |
+| /transactions/{trans_type}            | `POST` | Create predefined transaction                                 | Content-Type: application/json   | TransType: Enum, see [data models](#data-models) | CardData                                     |
+| /api/connection                       | `GET`  | Get connection object                                         | -                                | -                                                | -                                            |
+| /api/connection/{action}              | `PUT`  | Perform connection action such as connect, disconnect, etc    | Content-Type: application/json   | action: Enum, see [data models](#data-models)    | Connection (optional) when action is connect |
+| /api/config                           | `GET`  | Get current configuration object                              | -                                | -                                                | -                                            |
+| /api/config                           | `PUT`  | Update current configuration object                           | Content-Type: application/json   | -                                                | Config                                       |
+| /api/specification                    | `GET`  | Get specification object                                      | -                                | -                                                | -                                            |
+| /api/tools/transactions/validate      | `POST` | Validate transaction                                          | Content-Type: application/json   | -                                                | Transaction                                  |
+
+## Complete API reference
+
+### Get API documentation
+
+**Description**: Get a user reference guide. This method is more suitable for rendering in the browser to the end user
+
+**Endpoint**: `GET /api/documentation`
+
+**Request example**: `curl --location 'http://192.168.0.3:7777/api/documentation'`
+
+**Response example**:
+
+>>>>webpage
+
+
+### Get transactions
+
+**Description**: Get data of all transactions made in the current runtime
+
+**Endpoint**: `GET /api/transactions`
+
+**Request example**: `curl --location 'http://192.168.0.3:7777/api/transactions'`
+
+**Response example**: 
+
+>>>Transactions
+
+
+
+   
+
+
 ## Data models
 
 ## Postman collection
