@@ -12,14 +12,14 @@
         "connect_on_startup": false,
         "load_remote_spec": false,
         "show_license_dialog": false,
-        "run_api": false
+        "run_api": true
     },
     "debug": {
         "level": "INFO",
-        "clear_log": true,
+        "clear_log": false,
         "parse_subfields": false,
         "backup_storage_depth": 10,
-        "reduce_keep_alive": false
+        "reduce_keep_alive": true
     },
     "validation": {
         "validation_enabled": true,
@@ -34,7 +34,7 @@
         "build_fld_90": true,
         "send_internal_id": true,
         "json_mode": true,
-        "hide_secrets": true
+        "hide_secrets": false
     },
     "specification": {
         "rewrite_local_spec": false,
@@ -47,6 +47,7 @@
         "address": "0.0.0.0",
         "port": 7777,
         "wait_remote_host_response": true,
-        "hide_secrets": true
+        "hide_secrets": false,
+        "parse_subfields": true
     }
 }

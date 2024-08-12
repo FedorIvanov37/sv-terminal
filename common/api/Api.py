@@ -2,6 +2,7 @@
 import datetime
 from os import getcwd
 from os.path import normpath
+from loguru import logger
 from flask import Flask, request, redirect, url_for
 from flask_pydantic import validate
 from PyQt6.QtCore import QObject, pyqtSignal, QTimer, QCoreApplication
@@ -14,6 +15,7 @@ from common.lib.core.Parser import Parser
 from pydantic import ValidationError
 from http import HTTPStatus, HTTPMethod
 from common.lib.data_models.EpaySpecificationModel import EpaySpecModel
+from common.lib.core.EpaySpecification import EpaySpecification
 from common.api.data_models.Connection import Connection
 from common.gui.enums.GuiFilesPath import GuiFilesPath
 from common.gui.enums.ConnectionStatus import ConnectionStatus
@@ -21,6 +23,7 @@ from common.api.enums.ConnectionActions import ConnectionActions
 from common.api.enums.TransTypes import TransTypes
 from common.api.data_models.ApiError import ApiError
 from common.lib.enums.TermFilesPath import TermFilesPath
+from common.api.decorators.log_api_call import log_api_call
 from common.api.exceptions.api_exceptions import (
     TransactionTimeout,
     LostTransactionResponse,
@@ -81,6 +84,16 @@ class ApiInterface(QObject):
         if config is not None:
             self.config = config
 
+    def prepare_response(self, transaction: Transaction) -> Transaction:
+        response: Transaction = transaction.copy(deep=True)
+
+        if self.config.api.hide_secrets:
+            response: Transaction = Parser.hide_secret_fields(response)
+
+        response: Transaction = Parser.parse_complex_fields(response, split=self.config.api.parse_subfields)
+
+        return response
+
     def build_connection(self) -> Connection:
         connection = Connection()
 
@@ -100,20 +113,19 @@ class ApiInterface(QObject):
     def disconnect(self):
         self.terminal.connector.disconnect_sv()
 
-    def build_transactions(self, hide_secrets=False) -> dict[str, dict | str]:
+    def build_transactions(self) -> dict[str, dict | str]:
         transactions: dict[str, dict | str] = dict()
 
         for transaction in self.terminal.trans_queue.queue:
-            if hide_secrets:
-                transaction: Transaction = Parser.hide_secret_fields(transaction)
-
             transactions[transaction.trans_id] = transaction.dict()
 
         return transactions
 
     def build_reversal(self, transaction_id):
+        spec: EpaySpecification = EpaySpecification()
+
         if not (original_transaction := self.terminal.trans_queue.get_transaction(transaction_id)):
-            raise LookupError
+            raise LookupError(f"No transaction id '{transaction_id}' in transaction queue")
 
         if not original_transaction.matched:
             raise LostTransactionResponse(f"Cannot reverse transaction {transaction_id}. Lost response")
@@ -121,6 +133,9 @@ class ApiInterface(QObject):
         if not original_transaction.is_request:
             if not (original_transaction := self.terminal.trans_queue.get_transaction(original_transaction.match_id)):
                 raise LostTransactionResponse(f"Cannot reverse transaction {transaction_id}. Lost response")
+
+        if not spec.get_reversal_mti(original_transaction.message_type):
+            raise ValueError(f"Non-reversible MTI {original_transaction.message_type}")
 
         reversal: Transaction = self.terminal.build_reversal(original_transaction)
 
@@ -135,10 +150,7 @@ class ApiInterface(QObject):
         self.create_transaction.emit(transaction)
 
         if not self.config.api.wait_remote_host_response:
-            if self.config.api.hide_secrets:
-                transaction: Transaction = Parser.hide_secret_fields(transaction)
-
-            return transaction
+            return self.prepare_response(transaction)
 
         begin = datetime.datetime.now()
 
@@ -154,8 +166,7 @@ class ApiInterface(QObject):
         if not (response := self.terminal.trans_queue.get_transaction(transaction.match_id)):
             raise LostTransactionResponse("Lost transaction response")
 
-        if self.config.api.hide_secrets:
-            response: Transaction = Parser.hide_secret_fields(response)
+        response: Transaction = self.prepare_response(response)
 
         return response
 
@@ -253,11 +264,14 @@ class Api(QObject):
     @app.route("/api/doc")
     @app.route("/api/docs")
     @app.route("/api/help")
+    @log_api_call
     def redirect_to_document():
+
         return redirect(url_for("get_document"))
 
     @staticmethod
     @app.route("/api/documentation")
+    @log_api_call
     def get_document():
         doc_path = normpath(f"{getcwd()}/{GuiFilesPath.DOC}")
 
@@ -266,13 +280,10 @@ class Api(QObject):
 
     @staticmethod
     @app.route("/api/tools/transactions/validate", methods=[HTTPMethod.POST])
+    @log_api_call
     @validate()
     def validate_transaction(body: Transaction):
-        transaction: Transaction = body
-
-        if Api.signal.config.api.hide_secrets:
-            transaction: Transaction = Parser.hide_secret_fields(transaction)
-
+        transaction: Transaction = Api.signal.prepare_response(body)
         return transaction
 
     @staticmethod
@@ -289,10 +300,11 @@ class Api(QObject):
         except Exception as unhandled_exception:
             return ApiError(error=unhandled_exception), HTTPStatus.INTERNAL_SERVER_ERROR
 
-        return response, HTTPStatus.OK
+        return response, HTTPStatus.CREATED
 
     @staticmethod
     @app.route("/api/transactions/<string:trans_type>", methods=[HTTPMethod.POST])
+    @log_api_call
     @validate()
     def create_predefined_transaction(trans_type: TransTypes):
         try:
@@ -303,13 +315,11 @@ class Api(QObject):
 
         response, status = Api.send_transaction(transaction_request)
 
-        if Api.signal.config.api.hide_secrets and isinstance(response, Transaction):
-            response: Transaction = Parser.hide_secret_fields(response)
-
         return response, status
 
     @staticmethod
     @app.route("/api/connection/<string:action>", methods=[HTTPMethod.PUT])
+    @log_api_call
     @validate()
     def update_connection(action: ConnectionActions):
         try:
@@ -334,6 +344,7 @@ class Api(QObject):
 
     @staticmethod
     @app.route("/api/connection", methods=[HTTPMethod.GET])
+    @log_api_call
     @validate()
     def get_connection():
         return Api.signal.build_connection()
@@ -350,14 +361,16 @@ class Api(QObject):
         return signal.specification.spec
 
     @staticmethod
-    @app.route("/api/specification/update", methods=[HTTPMethod.PUT])
+    @app.route("/api/specification", methods=[HTTPMethod.PUT])
+    @log_api_call
     @validate()
     def update_specification(body: EpaySpecModel):
         Api.signal.specification.reload_spec(body, commit=False)
         return Api.signal.specification.spec
 
     @staticmethod
-    @app.route("/api/config/update", methods=[HTTPMethod.PUT])
+    @app.route("/api/config", methods=[HTTPMethod.PUT])
+    @log_api_call
     @validate()
     def update_config(body: Config):
         Api.signal.update_config(body)
@@ -365,6 +378,7 @@ class Api(QObject):
 
     @staticmethod
     @app.route("/api/config", methods=[HTTPMethod.GET])
+    @log_api_call
     @validate()
     def get_config():
         if not Api.signal.config:
@@ -374,60 +388,60 @@ class Api(QObject):
 
     @staticmethod
     @app.route("/api/transactions/<string:trans_id>", methods=[HTTPMethod.GET])
+    @log_api_call
     @validate()
     def get_transaction(trans_id: str) -> ApiResponse | Transaction:
-        transactions = Api.signal.build_transactions(hide_secrets=Api.signal.config.api.hide_secrets)
+        transactions = Api.signal.build_transactions()
 
-        if not (transaction := transactions.get(trans_id)):
+        if not (transaction_dict := transactions.get(trans_id)):
             return ApiError(error=f"No transaction id '{trans_id}' in transactions queue"), HTTPStatus.NOT_FOUND
+
+        transaction: Transaction = Transaction.model_validate(transaction_dict)
+        transaction: Transaction = Api.signal.prepare_response(transaction)
 
         return transaction
 
     @staticmethod
     @app.route("/api/transactions", methods=[HTTPMethod.GET])
+    @log_api_call
     def get_transactions():
-        return Api.signal.build_transactions(hide_secrets=Api.signal.config.api.hide_secrets)
+        transactions = Api.signal.build_transactions()
+
+        for trans_id, trans_dict in transactions.items():
+            transaction: Transaction = Transaction.model_validate(trans_dict)
+            transaction: Transaction = Api.signal.prepare_response(transaction)
+            transactions[trans_id] = transaction.dict()
+
+        return transactions
 
     @staticmethod
-    @app.route("/api/transactions/<string:trans_id>/reverse", methods=[HTTPMethod.POST])
+    @app.route("/api/transactions/<string:trans_id>/reversal", methods=[HTTPMethod.POST])
+    @log_api_call
     @validate()
     def reverse_transaction(trans_id: str):
-        transaction: dict
-
-        if not (transaction := Api.get_transactions().get(trans_id)):
-            return ApiError(error=f"No transaction id '{trans_id}' in transactions queue"), HTTPStatus.NOT_FOUND
-
-        transaction: Transaction = Transaction.model_validate(transaction)
-
-        if not transaction.is_request:
-            if not (transaction := Api.signal.terminal.trans_queue.get_transaction(transaction.match_id)):
-                return ApiError(error="Lost original response"), HTTPStatus.NOT_FOUND
-
-        if transaction.trans_id not in (trans.trans_id for trans in Api.signal.get_reversible_transactions()):
-            return (ApiError(error="Cannot reverse transaction. Lost response or non-reversible MTI"),
-                    HTTPStatus.UNPROCESSABLE_ENTITY)
-
         try:
-            reversal: Transaction = Api.signal.build_reversal(transaction.trans_id)
+            reversal: Transaction = Api.signal.build_reversal(trans_id)
 
-        except LookupError:
-            return ApiError(error=f"No transaction id '{trans_id}' in transactions queue"), HTTPStatus.NOT_FOUND
+        except (LookupError, LostTransactionResponse) as lookup_error:
+            return ApiError(error=str(lookup_error)), HTTPStatus.NOT_FOUND
 
-        except (ValidationError, ValueError, TypeError) as validation_error:
-            return ApiError(error=validation_error), HTTPStatus.UNPROCESSABLE_ENTITY
+        except ValueError as processing_error:
+            return ApiError(error=processing_error), HTTPStatus.UNPROCESSABLE_ENTITY
 
-        except Exception as unhandled_exception:
-            return ApiError(error=unhandled_exception), HTTPStatus.INTERNAL_SERVER_ERROR
+        except Exception as reversal_building_error:
+            return ApiError(error=reversal_building_error), HTTPStatus.INTERNAL_SERVER_ERROR
 
         return Api.send_transaction(reversal)
 
     @staticmethod
     @app.route("/api/transactions", methods=[HTTPMethod.POST])
+    @log_api_call
     @validate()
     def create_transaction(body: Transaction):
         return Api.send_transaction(body)
 
     def run_api(self):
+        logger.info("Starting API...")
         self.app.json.sort_keys = False
         # waitress_logger = getLogger("waitress")
         # waitress_logger.setLevel(INFO)

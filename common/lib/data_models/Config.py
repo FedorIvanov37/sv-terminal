@@ -86,6 +86,7 @@ class ApiModel(BaseModel):
     port: int = 7777
     wait_remote_host_response: bool = True
     hide_secrets: bool = False
+    parse_subfields: bool = False
 
     @field_validator("address", mode="before")
     @classmethod

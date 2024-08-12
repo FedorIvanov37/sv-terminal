@@ -6,8 +6,5 @@ class ApiError(BaseModel):
 
     @field_validator("error", mode="before")
     @classmethod
-    def exception_to_string(cls, val):
-        if isinstance(val, Exception):
-            return str(val)
-
-        return val
+    def exception_to_string(cls, exception):
+        return str(exception)

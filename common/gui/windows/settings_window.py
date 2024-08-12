@@ -74,7 +74,6 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         self.ManualInputMode.stateChanged.connect(self.process_manual_entry_mode_change)
         self.ApiInfoLabel.linkActivated.connect(lambda: self.open_user_guide.emit())
         self.ApiAddress.linkActivated.connect(lambda: self.open_api_url.emit(self.get_api_url()))
-        self.CopyApiUrl.clicked.connect(self.copy_api_url)
         self.ApiPort.textChanged.connect(self.set_api_url)
         self.process_validation_change()
         self.process_manual_entry_mode_change()
@@ -108,6 +107,7 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
             self.ReduceKeepAlive: config.debug.reduce_keep_alive,
             self.WaitForRemoteHost: config.api.wait_remote_host_response,
             self.HideSecretsApi: config.api.hide_secrets,
+            self.ParseComplexFields: config.api.parse_subfields,
         }
 
         scales_value_map = {
@@ -153,9 +153,6 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
 
     def get_api_url(self):
         return f"http://{gethostbyname(gethostname())}:{self.ApiPort.value()}/api"
-
-    def copy_api_url(self):
-        QApplication.clipboard().setText(self.get_api_url())
 
     def process_default_button(self, button):
         for button_box in self.GeneralButtonBox, self.FieldsButtonBox, self.ApiButtonBox, self.SpecificationButtonBox:
@@ -280,6 +277,7 @@ class SettingsWindow(Ui_SettingsWindow, Ui_AboutWindow, QDialog):
         config.api.wait_remote_host_response = self.WaitForRemoteHost.isChecked()
         config.api.hide_secrets = self.HideSecretsApi.isChecked()
         config.terminal.run_api = self.ApiRun.isChecked()
+        config.api.parse_subfields = self.ParseComplexFields.isChecked()
 
         if not config.fields.max_amount_limited:
             config.fields.max_amount = 9_999_999_999

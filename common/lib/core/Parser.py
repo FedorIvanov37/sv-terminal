@@ -33,6 +33,22 @@ class Parser:
         self.generator = FieldsGenerator()
 
     @staticmethod
+    def parse_complex_fields(transaction: Transaction, split: bool = False) -> Transaction:
+        spec: EpaySpecification = EpaySpecification()
+
+        for field, field_data in transaction.data_fields.items():
+            if not spec.is_field_complex([field]):
+                continue
+
+            if not split:
+                transaction.data_fields[field] = Parser.join_complex_field(field, field_data)
+                continue
+
+            transaction.data_fields[field] = Parser.split_complex_field(field, field_data)
+
+        return transaction
+
+    @staticmethod
     def hide_secret_fields(transaction: Transaction) -> Transaction:
         spec: EpaySpecification = EpaySpecification()
         transaction: Transaction = Transaction.model_validate(transaction.dict())
@@ -137,7 +153,8 @@ class Parser:
         spec: EpaySpecification = EpaySpecification()
 
         if not isinstance(field_data, dict):
-            raise TypeError(f"Incorrect field value in {'.'.join(path) if path else field}")
+            return field_data
+            # raise TypeError(f"Incorrect field value in {'.'.join(path) if path else field}")
 
         if path is None:
             path = [field]

@@ -207,6 +207,10 @@
 • Repeat indicator
 
 + API mode
+    • Add predefined transaction data model
+    • Add locate header to the transactions resp
+
+    + Resp code 201 when create resource
     + Run API using CLI --api-mode
     + README.md
     + API activate / stop
@@ -217,6 +221,7 @@
     + API settings
     + Setting wait for response / parallel
     + Move "Hotkeys" hint to settings
+    + Add API split fields setting
 
 
 + Add widgets
@@ -234,6 +239,14 @@
 + Add license to toolbar Help
 
 To fix
++ API reversal does not work
++ Logger cannot log message
++ Reversal optimization
++ Reversal mapping
+
+• Music does not play on work machine
+• Toolbar menu does not open
+
 + Fix repeat interval mark
 + Fix Hotkeys window - CTRL + P
 + Fix html-document name
